@@ -2536,8 +2536,6 @@ public class KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibratorTest implemen
         assertTrue(numValid > 0);
     }
 
-    // TODO: test calibrate common axis
-
     @Override
     public void onCalibrateStart(
             final KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibrator calibrator) {

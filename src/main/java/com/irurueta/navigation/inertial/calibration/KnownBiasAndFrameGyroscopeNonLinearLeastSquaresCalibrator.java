@@ -33,16 +33,16 @@ import com.irurueta.units.AngularSpeedUnit;
 import java.util.Collection;
 
 /**
- * Estimates gyroscope biases, cross couplings and scaling factors
+ * Estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
  * specific forces sensed by the accelerometer.
  * <p>
  * This calibrator uses an iterative approach to find a minimum least squared error
  * solution.
  * <p>
- * To use this calibrator at least 7 measurements at different known frames must
+ * To use this calibrator at least 6 measurements at different known frames must
  * be provided. In other words, accelerometer and gyroscope (i.e. body kinematics)
- * samples must be obtained at 7 different positions, orientations and velocities
+ * samples must be obtained at 6 different positions, orientations and velocities
  * (although typically velocities are always zero).
  * <p>
  * Measured gyroscope angular rates is assumed to follow the model shown below:
@@ -63,10 +63,10 @@ import java.util.Collection;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
-        KnownFrameGyroscopeCalibrator<StandardDeviationFrameBodyKinematics,
-                KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener>,
-        GyroscopeNonLinearCalibrator, UnknownBiasNonLinearGyroscopeCalibrator {
+public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator implements
+        KnownBiasAndFrameGyroscopeCalibrator<StandardDeviationFrameBodyKinematics,
+                KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener>,
+        GyroscopeNonLinearCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -77,42 +77,24 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Required minimum number of measurements.
      */
-    public static final int MINIMUM_MEASUREMENTS = 7;
+    public static final int MINIMUM_MEASUREMENTS = 6;
 
     /**
      * Number of unknowns when common z-axis is assumed for both the accelerometer
      * and gyroscope.
      */
-    private static final int COMMON_Z_AXIS_UNKNOWNS = 18;
+    private static final int COMMON_Z_AXIS_UNKNOWNS = 15;
 
     /**
      * Number of unknowns for the general case.
      */
-    private static final int GENERAL_UNKNOWNS = 21;
+    private static final int GENERAL_UNKNOWNS = 18;
 
     /**
      * Levenberg-Marquardt fitter to find a non-linear solution.
      */
     private LevenbergMarquardtMultiVariateFitter mFitter =
             new LevenbergMarquardtMultiVariateFitter();
-
-    /**
-     * Initial x-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     */
-    private double mInitialBiasX;
-
-    /**
-     * Initial y-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     */
-    private double mInitialBiasY;
-
-    /**
-     * Initial z-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     */
-    private double mInitialBiasZ;
 
     /**
      * Initial x scaling factor.
@@ -191,13 +173,22 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Listener to handle events raised by this calibrator.
      */
-    private KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener mListener;
+    private KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener mListener;
 
     /**
-     * Estimated angular rate biases for each IMU axis expressed in radians per
-     * second (rad/s).
+     * Known x coordinate of gyroscope bias expressed in radians per second (rad/s).
      */
-    private double[] mEstimatedBiases;
+    private double mBiasX;
+
+    /**
+     * Known y coordinate of gyroscope bias expressed in radians per second (rad/s).
+     */
+    private double mBiasY;
+
+    /**
+     * Known z coordinate of gyroscope bias expressed in radians per second (rad/s).
+     */
+    private double mBiasZ;
 
     /**
      * Estimated gyroscope scale factors and cross coupling errors.
@@ -265,7 +256,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator() {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator() {
         try {
             mInitialGg = new Matrix(BodyKinematics.COMPONENTS,
                     BodyKinematics.COMPONENTS);
@@ -279,8 +270,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
         this();
         mListener = listener;
     }
@@ -292,7 +283,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements) {
         this();
         mMeasurements = measurements;
@@ -306,9 +297,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                     and velocities).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
         this(measurements);
         mListener = listener;
     }
@@ -319,7 +310,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed) {
         this();
         mCommonAxisUsed = commonAxisUsed;
@@ -332,9 +323,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
         this(commonAxisUsed);
         mListener = listener;
     }
@@ -348,7 +339,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         this(measurements);
@@ -365,10 +356,10 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
         this(measurements, commonAxisUsed);
         mListener = listener;
     }
@@ -376,22 +367,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
-     *                     (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
-     *                     (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
-     *                     (rad/s).
+     * @param biasX known x coordinate of gyroscope bias expressed in radians per second
+     *              (rad/s).
+     * @param biasY known y coordinate of gyroscope bias expressed in radians per second
+     *              (rad/s).
+     * @param biasZ known z coordinate of gyroscope bias expressed in radians per second
+     *              (rad/s).
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final double biasX, final double biasY, final double biasZ) {
         this();
         try {
-            setInitialBias(initialBiasX, initialBiasY, initialBiasZ);
+            setBiasCoordinates(biasX, biasY, biasZ);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -400,22 +387,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
-     *                     (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
-     *                     (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
-     *                     (rad/s).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX    known x coordinate of gyroscope bias expressed in radians per second
+     *                 (rad/s).
+     * @param biasY    known y coordinate of gyroscope bias expressed in radians per second
+     *                 (rad/s).
+     * @param biasZ    known z coordinate of gyroscope bias expressed in radians per second
+     *                 (rad/s).
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final double biasX, final double biasY, final double biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -425,21 +408,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per second
      *                     (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per second
      *                     (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per second
      *                     (rad/s).
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY, final double biasZ) {
+        this(biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -449,23 +428,19 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per second
      *                     (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per second
      *                     (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per second
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per second
      *                     (rad/s).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY, final double biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -474,21 +449,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ) {
+        this(biasX, biasY, biasZ);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -497,23 +468,19 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -525,22 +492,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -552,43 +515,36 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per second
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
      *                       (rad/s).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX known x coordinate of gyroscope bias.
+     * @param biasY known y coordinate of gyroscope bias.
+     * @param biasZ known z coordinate of gyroscope bias.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ) {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ) {
         this();
         try {
-            setInitialBias(initialBiasX, initialBiasY, initialBiasZ);
+            setBiasCoordinates(biasX, biasY, biasZ);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -597,19 +553,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX    known x coordinate of gyroscope bias.
+     * @param biasY    known y coordinate of gyroscope bias.
+     * @param biasZ    known z coordinate of gyroscope bias.
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -619,18 +572,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ) {
+        this(biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -640,20 +590,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ);
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -662,17 +609,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ) {
+        this(biasX, biasY, biasZ);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -681,19 +625,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -705,18 +646,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -728,44 +666,37 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param biasX     known x coordinate of gyroscope bias expressed in radians per second
+     *                  (rad/s).
+     * @param biasY     known y coordinate of gyroscope bias expressed in radians per second
+     *                  (rad/s).
+     * @param biasZ     known z coordinate of gyroscope bias expressed in radians per second
+     *                  (rad/s).
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz) {
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactors(initialSx, initialSy, initialSz);
         } catch (final LockedException ignore) {
@@ -779,26 +710,21 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
 
@@ -808,28 +734,23 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mListener = listener;
     }
 
@@ -838,26 +759,21 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -866,28 +782,23 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mListener = listener;
     }
 
@@ -899,27 +810,22 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
 
@@ -931,28 +837,24 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -960,21 +862,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param biasX     known x coordinate of gyroscope bias.
+     * @param biasY     known y coordinate of gyroscope bias.
+     * @param biasZ     known z coordinate of gyroscope bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final double initialSx, final double initialSy,
+            final double initialSz) {
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactors(initialSx, initialSy, initialSz);
         } catch (final LockedException ignore) {
@@ -985,23 +884,20 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX     known x coordinate of gyroscope bias.
+     * @param biasY     known y coordinate of gyroscope bias.
+     * @param biasZ     known z coordinate of gyroscope bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
+     * @param listener  listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final double initialSx, final double initialSy,
+            final double initialSz,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mListener = listener;
     }
 
@@ -1011,23 +907,19 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final double initialSx, final double initialSy,
+            final double initialSz) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
 
@@ -1037,25 +929,21 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final double initialSx, final double initialSy,
+            final double initialSz,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mListener = listener;
     }
 
@@ -1064,22 +952,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
-            final double initialSx, final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ, final double initialSx,
+            final double initialSy, final double initialSz) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -1088,24 +972,20 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mListener = listener;
     }
 
@@ -1117,23 +997,19 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz);
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
 
@@ -1145,24 +1021,21 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
-     * @param listener       listeners to handle events raised by this calibrator.
+     * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+            final boolean commonAxisUsed, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -1170,32 +1043,29 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param biasX      known x coordinate of gyroscope bias expressed in radians per second
+     *                   (rad/s).
+     * @param biasY      known y coordinate of gyroscope bias expressed in radians per second
+     *                   (rad/s).
+     * @param biasZ      known z coordinate of gyroscope bias expressed in radians per second
+     *                   (rad/s).
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) {
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,
                     initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
@@ -1210,15 +1080,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1229,14 +1096,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
     }
@@ -1247,15 +1114,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution. This is expressed in radians per
-     *                     second (rad/s).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per second
+     *                     (rad/s).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1267,17 +1131,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz,
+                initialMzx, initialMzy);
         mListener = listener;
     }
 
@@ -1286,15 +1150,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1305,15 +1166,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
-                initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz,
+                initialMzx, initialMzy);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -1322,15 +1184,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1342,17 +1201,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz,
+                initialMzx, initialMzy);
         mListener = listener;
     }
 
@@ -1364,15 +1223,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1383,17 +1239,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz,
+                initialMzx, initialMzy);
         mMeasurements = measurements;
     }
 
@@ -1405,15 +1261,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution. This is expressed in radians per
-     *                       second (rad/s).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1425,47 +1278,44 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
-            final double initialSz, final double initialMxy, final double initialMxz,
-            final double initialMyx, final double initialMyz, final double initialMzx,
-            final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double biasX, final double biasY, final double biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
+                initialSx, initialSy, initialSz, initialMxy, initialMxz,
+                initialMyx, initialMyz, initialMzx, initialMzy);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param biasX      known x coordinate of gyroscope bias.
+     * @param biasY      known y coordinate of gyroscope bias.
+     * @param biasZ      known z coordinate of gyroscope bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz, final double initialMxy,
-            final double initialMxz, final double initialMyx, final double initialMyz,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,
                     initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
@@ -1477,31 +1327,28 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX      known x coordinate of gyroscope bias.
+     * @param biasY      known y coordinate of gyroscope bias.
+     * @param biasZ      known z coordinate of gyroscope bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
+     * @param listener   listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz, final double initialMxy,
-            final double initialMxz, final double initialMyx, final double initialMyz,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mListener = listener;
     }
@@ -1512,12 +1359,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1528,18 +1372,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz, final double initialMxy,
-            final double initialMxz, final double initialMyx, final double initialMyz,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
     }
-
 
     /**
      * Constructor.
@@ -1547,12 +1390,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBiasX initial x-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of gyroscope bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias to be used
-     *                     to find a solution.
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1564,17 +1404,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final AngularSpeed initialBiasX, final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ, final double initialSx,
-            final double initialSy, final double initialSz, final double initialMxy,
-            final double initialMxz, final double initialMyx, final double initialMyz,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
+            final double initialSx, final double initialSy, final double initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mListener = listener;
     }
 
@@ -1583,12 +1422,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1599,13 +1438,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final double initialMxy, final double initialMxz, final double initialMyx,
-            final double initialMyz, final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -1615,12 +1455,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1632,16 +1472,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final double initialMxy, final double initialMxz, final double initialMyx,
-            final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mListener = listener;
     }
 
@@ -1653,12 +1493,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1669,16 +1509,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+            final boolean commonAxisUsed,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final double initialMxy, final double initialMxz, final double initialMyx,
-            final double initialMyz, final double initialMzx, final double initialMzy) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) {
+        this(commonAxisUsed, biasX, biasY, biasZ, initialSx, initialSy, initialSz,
+                initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
     }
 
@@ -1690,12 +1530,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of gyroscope bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of gyroscope bias to be used
-     *                       to find a solution.
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per second
+     *                       (rad/s).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1707,33 +1547,33 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY, final AngularSpeed initialBiasZ,
+            final boolean commonAxisUsed,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final double initialMxy, final double initialMxz, final double initialMyx,
-            final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
-                initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
+                initialSx, initialSy, initialSz, initialMxy, initialMxz,
+                initialMyx, initialMyz, initialMzx, initialMzy);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial gyroscope bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in radians per
-     *                    second (rad/s).
+     * @param bias known gyroscope bias expressed in radians per second (rad/s).
+     *             This must have length 3.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final double[] initialBias) {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final double[] bias) {
         this();
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -1742,16 +1582,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBias initial gyroscope bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in radians per
-     *                    second (rad/s).
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias     known gyroscope bias expressed in radians per second (rad/s).
+     *                 This must have length 3.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final double[] initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final double[] bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(bias);
         mListener = listener;
     }
 
@@ -1761,15 +1600,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial gyroscope bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in radians per
-     *                     second (rad/s).
+     * @param bias         known gyroscope bias expressed in radians per second (rad/s).
+     *                     This must have length 3.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double[] initialBias) {
-        this(initialBias);
+            final double[] bias) {
+        this(bias);
         mMeasurements = measurements;
     }
 
@@ -1779,17 +1617,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial gyroscope bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in radians per
-     *                     second (rad/s).
+     * @param bias         known gyroscope bias expressed in radians per second (rad/s).
+     *                     This must have length 3.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final double[] initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBias);
+            final double[] bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, bias);
         mListener = listener;
     }
 
@@ -1798,14 +1635,13 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial gyroscope bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in radians per
-     *                       second (rad/s).
+     * @param bias           known gyroscope bias expressed in radians per second (rad/s).
+     *                       This must have length 3.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final double[] bias) {
+        this(bias);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -1814,16 +1650,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial gyroscope bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in radians per
-     *                       second (rad/s).
+     * @param bias           known gyroscope bias expressed in radians per second (rad/s).
+     *                       This must have length 3.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final double[] initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final double[] bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, bias);
         mListener = listener;
     }
 
@@ -1835,15 +1670,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial gyroscope bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in radians per
-     *                       second (rad/s).
+     * @param bias           known gyroscope bias expressed in radians per second (rad/s).
+     *                       This must have length 3.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        this(commonAxisUsed, bias);
         mMeasurements = measurements;
     }
 
@@ -1855,31 +1689,31 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial gyroscope bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in radians per
-     *                       second (rad/s).
+     * @param bias           known gyroscope bias expressed in radians per second (rad/s).
+     *                       This must have length 3.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, bias);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known bias expressed in radians per second (rad/s). This must
+     *             be 3x1.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final Matrix initialBias) {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final Matrix bias) {
         this();
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -1888,14 +1722,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias     known bias expressed in radians per second (rad/s). This must
+     *                 be 3x1.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final Matrix initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final Matrix bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(bias);
         mListener = listener;
     }
 
@@ -1905,13 +1740,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known bias expressed in radians per second (rad/s). This must
+     *                     be 3x1.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final Matrix initialBias) {
-        this(initialBias);
+            final Matrix bias) {
+        this(bias);
         mMeasurements = measurements;
     }
 
@@ -1921,15 +1757,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known bias expressed in radians per second (rad/s). This must
+     *                     be 3x1.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final Matrix initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBias);
+            final Matrix bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, bias);
         mListener = listener;
     }
 
@@ -1938,12 +1775,13 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(bias);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -1952,14 +1790,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, bias);
         mListener = listener;
     }
 
@@ -1971,13 +1810,14 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(commonAxisUsed, bias);
         mMeasurements = measurements;
     }
 
@@ -1989,29 +1829,31 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, bias);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMg   initial scale factors and cross coupling errors matrix.
+     * @param bias      known bias expressed in radians per second (rad/s). This must
+     *                  be 3x1.
+     * @param initialMg initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final Matrix initialBias, final Matrix initialMg) {
-        this(initialBias);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final Matrix bias, final Matrix initialMg) {
+        this(bias);
         try {
             setInitialMg(initialMg);
         } catch (final LockedException ignore) {
@@ -2022,16 +1864,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMg   initial scale factors and cross coupling errors matrix.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias      known bias expressed in radians per second (rad/s). This must
+     *                  be 3x1.
+     * @param initialMg initial scale factors and cross coupling errors matrix.
+     * @param listener  listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final Matrix initialBias, final Matrix initialMg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBias, initialMg);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final Matrix bias, final Matrix initialMg,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(bias, initialMg);
         mListener = listener;
     }
 
@@ -2041,15 +1884,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known bias expressed in radians per second (rad/s). This must
+     *                     be 3x1.
      * @param initialMg    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMg) {
-        this(initialBias, initialMg);
+            final Matrix bias, final Matrix initialMg) {
+        this(bias, initialMg);
         mMeasurements = measurements;
     }
 
@@ -2059,17 +1903,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known bias expressed in radians per second (rad/s). This must
+     *                     be 3x1.
      * @param initialMg    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBias, initialMg);
+            final Matrix bias, final Matrix initialMg,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, bias, initialMg);
         mListener = listener;
     }
 
@@ -2078,15 +1923,16 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg) {
-        this(initialBias, initialMg);
+        this(bias, initialMg);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -2095,17 +1941,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBias, initialMg);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, bias, initialMg);
         mListener = listener;
     }
 
@@ -2117,16 +1964,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg) {
-        this(commonAxisUsed, initialBias, initialMg);
+        this(commonAxisUsed, bias, initialMg);
         mMeasurements = measurements;
     }
 
@@ -2138,35 +1986,37 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias, initialMg);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, bias, initialMg);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMg   initial scale factors and cross coupling errors matrix.
-     * @param initialGg   initial G-dependent cross biases.
+     * @param bias      known bias expressed in radians per second (rad/s). This must
+     *                  be 3x1.
+     * @param initialMg initial scale factors and cross coupling errors matrix.
+     * @param initialGg initial G-dependent cross biases.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1,
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final Matrix initialBias, final Matrix initialMg,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final Matrix bias, final Matrix initialMg,
             final Matrix initialGg) {
-        this(initialBias, initialMg);
+        this(bias, initialMg);
         try {
             setInitialGg(initialGg);
         } catch (final LockedException ignore) {
@@ -2177,19 +2027,20 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMg   initial scale factors and cross coupling errors matrix.
-     * @param initialGg   initial G-dependent cross biases.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias      known bias expressed in radians per second (rad/s). This must
+     *                  be 3x1.
+     * @param initialMg initial scale factors and cross coupling errors matrix.
+     * @param initialGg initial G-dependent cross biases.
+     * @param listener  listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1,
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final Matrix initialBias, final Matrix initialMg,
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final Matrix bias, final Matrix initialMg,
             final Matrix initialGg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(initialBias, initialMg, initialGg);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -2199,18 +2050,19 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known bias expressed in radians per second (rad/s). This must
+     *                     be 3x1.
      * @param initialMg    initial scale factors and cross coupling errors matrix.
      * @param initialGg    initial G-dependent cross biases.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1,
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMg,
+            final Matrix bias, final Matrix initialMg,
             final Matrix initialGg) {
-        this(initialBias, initialMg, initialGg);
+        this(bias, initialMg, initialGg);
         mMeasurements = measurements;
     }
 
@@ -2220,7 +2072,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known bias expressed in radians per second (rad/s). This must
+     *                     be 3x1.
      * @param initialMg    initial scale factors and cross coupling errors matrix.
      * @param initialGg    initial G-dependent cross biases.
      * @param listener     listener to handle events raised by this calibrator.
@@ -2228,12 +2081,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMg,
+            final Matrix bias, final Matrix initialMg,
             final Matrix initialGg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, initialBias, initialMg, initialGg);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -2242,17 +2095,18 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @param initialGg      initial G-dependent cross biases.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1,
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final Matrix initialMg, final Matrix initialGg) {
-        this(initialBias, initialMg, initialGg);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final Matrix bias, final Matrix initialMg,
+            final Matrix initialGg) {
+        this(bias, initialMg, initialGg);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -2261,7 +2115,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @param initialGg      initial G-dependent cross biases.
      * @param listener       listener to handle events raised by this calibrator.
@@ -2269,11 +2124,11 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final Matrix initialMg, final Matrix initialGg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(commonAxisUsed, initialBias, initialMg, initialGg);
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
+            final boolean commonAxisUsed, final Matrix bias, final Matrix initialMg,
+            final Matrix initialGg,
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(commonAxisUsed, bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -2285,18 +2140,19 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @param initialGg      initial G-dependent cross biases.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1,
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final Matrix initialMg, final Matrix initialGg) {
-        this(commonAxisUsed, initialBias, initialMg, initialGg);
+            final boolean commonAxisUsed, final Matrix bias, final Matrix initialMg,
+            final Matrix initialGg) {
+        this(commonAxisUsed, bias, initialMg, initialGg);
         mMeasurements = measurements;
     }
 
@@ -2308,7 +2164,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known bias expressed in radians per second (rad/s). This must
+     *                       be 3x1.
      * @param initialMg      initial scale factors and cross coupling errors matrix.
      * @param initialGg      initial G-dependent cross biases.
      * @param listener       listener to handle events raised by this calibrator.
@@ -2316,244 +2173,13 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or g-dependant cross biases is not 3x3.
      */
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibrator(
             final Collection<StandardDeviationFrameBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMg, final Matrix initialGg,
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias, initialMg, initialGg);
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener) {
+        this(measurements, commonAxisUsed, bias, initialMg, initialGg);
         mListener = listener;
-    }
-
-    /**
-     * Gets initial x-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     *
-     * @return initial x-coordinate of gyroscope bias.
-     */
-    @Override
-    public double getInitialBiasX() {
-        return mInitialBiasX;
-    }
-
-    /**
-     * Sets initial x-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBiasX(final double initialBiasX) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasX = initialBiasX;
-    }
-
-    /**
-     * Gets initial y-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     *
-     * @return initial y-coordinate of gyroscope bias.
-     */
-    @Override
-    public double getInitialBiasY() {
-        return mInitialBiasY;
-    }
-
-    /**
-     * Sets initial y-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     *
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBiasY(final double initialBiasY) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasY = initialBiasY;
-    }
-
-    /**
-     * Gets initial z-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     *
-     * @return initial z-coordinate of gyroscope bias.
-     */
-    @Override
-    public double getInitialBiasZ() {
-        return mInitialBiasZ;
-    }
-
-    /**
-     * Sets initial z-coordinate of gyroscope bias to be used to find a solution.
-     * This is expressed in radians per second (rad/s).
-     *
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBiasZ(final double initialBiasZ) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasZ = initialBiasZ;
-    }
-
-    /**
-     * Gets initial x-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @return initial x-coordinate of gyroscope bias.
-     */
-    @Override
-    public AngularSpeed getInitialBiasAngularSpeedX() {
-        return new AngularSpeed(mInitialBiasX,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Gets initial x-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @param result instance where result data will be stored.
-     */
-    @Override
-    public void getInitialBiasAngularSpeedX(final AngularSpeed result) {
-        result.setValue(mInitialBiasX);
-        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Sets initial x-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBiasX(final AngularSpeed initialBiasX)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasX = convertAngularSpeed(initialBiasX);
-    }
-
-    /**
-     * Gets initial y-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @return initial y-coordinate of gyroscope bias.
-     */
-    @Override
-    public AngularSpeed getInitialBiasAngularSpeedY() {
-        return new AngularSpeed(mInitialBiasY,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Gets initial y-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @param result instance where result data will be stored.
-     */
-    @Override
-    public void getInitialBiasAngularSpeedY(final AngularSpeed result) {
-        result.setValue(mInitialBiasY);
-        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Sets initial y-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBiasY(final AngularSpeed initialBiasY)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasY = convertAngularSpeed(initialBiasY);
-    }
-
-    /**
-     * Gets initial z-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @return initial z-coordinate of gyroscope bias.
-     */
-    @Override
-    public AngularSpeed getInitialBiasAngularSpeedZ() {
-        return new AngularSpeed(mInitialBiasZ,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Gets initial z-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @param result instance where result data will be stored.
-     */
-    @Override
-    public void getInitialBiasAngularSpeedZ(final AngularSpeed result) {
-        result.setValue(mInitialBiasZ);
-        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Sets initial z-coordinate of gyroscope bias to be used to find a solution.
-     *
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBiasZ(final AngularSpeed initialBiasZ)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasZ = convertAngularSpeed(initialBiasZ);
-    }
-
-    /**
-     * Sets initial bias coordinates of gyroscope used to find a solution
-     * expressed in radians per second (rad/s).
-     *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBias(final double initialBiasX, final double initialBiasY,
-                               final double initialBiasZ) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasX = initialBiasX;
-        mInitialBiasY = initialBiasY;
-        mInitialBiasZ = initialBiasZ;
-    }
-
-    /**
-     * Sets initial bias coordinates of gyroscope used to find a solution.
-     *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
-     * @throws LockedException if calibrator is currently running.
-     */
-    @Override
-    public void setInitialBias(final AngularSpeed initialBiasX,
-                               final AngularSpeed initialBiasY,
-                               final AngularSpeed initialBiasZ)
-            throws LockedException {
-
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mInitialBiasX = convertAngularSpeed(initialBiasX);
-        mInitialBiasY = convertAngularSpeed(initialBiasY);
-        mInitialBiasZ = convertAngularSpeed(initialBiasZ);
     }
 
     /**
@@ -2805,9 +2431,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      */
     @Override
     public void setInitialCrossCouplingErrors(
-            final double initialMxy, final double initialMxz, final double initialMyx,
-            final double initialMyz, final double initialMzx, final double initialMzy)
-            throws LockedException {
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2836,124 +2462,15 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     @Override
     public void setInitialScalingFactorsAndCrossCouplingErrors(
             final double initialSx, final double initialSy, final double initialSz,
-            final double initialMxy, final double initialMxz, final double initialMyx,
-            final double initialMyz, final double initialMzx, final double initialMzy)
-            throws LockedException {
+            final double initialMxy, final double initialMxz,
+            final double initialMyx, final double initialMyz,
+            final double initialMzx, final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
         setInitialScalingFactors(initialSx, initialSy, initialSz);
         setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
-    }
-
-    /**
-     * Gets initial bias to be used to find a solution as an array.
-     * Array values are expressed in radians per second (rad/s).
-     *
-     * @return array containing coordinates of initial bias.
-     */
-    @Override
-    public double[] getInitialBias() {
-        final double[] result = new double[BodyKinematics.COMPONENTS];
-        getInitialBias(result);
-        return result;
-    }
-
-    /**
-     * Gets initial bias to be used to find a solution as an array.
-     * Array values are expressed in radians per second (rad/s).
-     *
-     * @param result instance where result data will be copied to.
-     * @throws IllegalArgumentException if provided array does not have length 3.
-     */
-    @Override
-    public void getInitialBias(final double[] result) {
-        if (result.length != BodyKinematics.COMPONENTS) {
-            throw new IllegalArgumentException();
-        }
-        result[0] = mInitialBiasX;
-        result[1] = mInitialBiasY;
-        result[2] = mInitialBiasZ;
-    }
-
-    /**
-     * Sets initial bias to be used to find a solution as an array.
-     * Array values are expressed in radians per second (rad/s).
-     *
-     * @param initialBias initial bias to find a solution.
-     * @throws LockedException          if calibrator is currently running.
-     * @throws IllegalArgumentException if provided array does not have length 3.
-     */
-    @Override
-    public void setInitialBias(final double[] initialBias) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-
-        if (initialBias.length != BodyKinematics.COMPONENTS) {
-            throw new IllegalArgumentException();
-        }
-        mInitialBiasX = initialBias[0];
-        mInitialBiasY = initialBias[1];
-        mInitialBiasZ = initialBias[2];
-    }
-
-    /**
-     * Gets initial bias to be used to find a solution as a column matrix.
-     *
-     * @return initial bias to be used to find a solution as a column matrix.
-     */
-    @Override
-    public Matrix getInitialBiasAsMatrix() {
-        Matrix result;
-        try {
-            result = new Matrix(BodyKinematics.COMPONENTS, 1);
-            getInitialBiasAsMatrix(result);
-        } catch (final WrongSizeException ignore) {
-            // never happens
-            result = null;
-        }
-        return result;
-    }
-
-    /**
-     * Gets initial bias to be used to find a solution as a column matrix.
-     *
-     * @param result instance where result data will be copied to.
-     * @throws IllegalArgumentException if provided matrix is not 3x1.
-     */
-    @Override
-    public void getInitialBiasAsMatrix(final Matrix result) {
-        if (result.getRows() != BodyKinematics.COMPONENTS
-                || result.getColumns() != 1) {
-            throw new IllegalArgumentException();
-        }
-        result.setElementAtIndex(0, mInitialBiasX);
-        result.setElementAtIndex(1, mInitialBiasY);
-        result.setElementAtIndex(2, mInitialBiasZ);
-    }
-
-    /**
-     * Sets initial bias to be used to find a solution as an array.
-     *
-     * @param initialBias initial bias to find a solution.
-     * @throws LockedException          if calibrator is currently running.
-     * @throws IllegalArgumentException if provided matrix is not 3x1.
-     */
-    @Override
-    public void setInitialBias(final Matrix initialBias) throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        if (initialBias.getRows() != BodyKinematics.COMPONENTS
-                || initialBias.getColumns() != 1) {
-            throw new IllegalArgumentException();
-        }
-
-        mInitialBiasX = initialBias.getElementAtIndex(0);
-        mInitialBiasY = initialBias.getElementAtIndex(1);
-        mInitialBiasZ = initialBias.getElementAtIndex(2);
     }
 
     /**
@@ -2982,7 +2499,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
     @Override
-    public void getInitialMg(final Matrix result) {
+    public void getInitialMg(Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS ||
                 result.getColumns() != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
@@ -3008,7 +2525,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setInitialMg(final Matrix initialMg) throws LockedException {
+    public void setInitialMg(Matrix initialMg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -3049,7 +2566,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
     @Override
-    public void getInitialGg(final Matrix result) {
+    public void getInitialGg(Matrix result) {
 
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != BodyKinematics.COMPONENTS) {
@@ -3068,7 +2585,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @throws IllegalArgumentException if provided matrix is not 3x3.
      */
     @Override
-    public void setInitialGg(final Matrix initialGg) throws LockedException {
+    public void setInitialGg(Matrix initialGg) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -3083,8 +2600,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
 
     /**
      * Gets a collection of body kinematics measurements taken at different
-     * frames (positions, orientations and velocities) and containing the standard
-     * deviations of accelerometer and gyroscope measurements.
+     * frames (positions, orientations and velocities).
      * If a single device IMU needs to be calibrated, typically all measurements are
      * taken at the same position, with zero velocity and multiple orientations.
      * However, if we just want to calibrate a given IMU model (e.g. obtain
@@ -3105,11 +2621,10 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
 
     /**
      * Sets a collection of body kinematics measurements taken at different
-     * frames (positions, orientations and velocities) and containing the standard
-     * deviations of accelerometer and gyroscope measurements.
+     * frames (positions, orientations and velocities).
      * If a single device IMU needs to be calibrated, typically all measurements are
      * taken at the same position, with zero velocity and multiple orientations.
-     * However, if we just want to calibrate a given IMU model (e.g. obtain
+     * However, if we just want to calibrate the a given IMU model (e.g. obtain
      * an average and less precise calibration for the IMU of a given phone model),
      * we could take measurements collected throughout the planet at multiple positions
      * while the phone remains static (e.g. while charging), hence each measurement
@@ -3134,7 +2649,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
+     * When enabled, this eliminates 3 variables from Mg matrix.
      *
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
@@ -3147,7 +2662,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Specifies whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
+     * When enabled, this eliminates 3 variables from Mg matrix.
      *
      * @param commonAxisUsed true if z-axis is assumed to be common for accelerometer
      *                       and gyroscope, false otherwise.
@@ -3164,24 +2679,24 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Gets listener to handle events raised by this estimator.
+     * Gets listener to handle events raised by this calibrator.
      *
-     * @return listener to handle events raised by this estimator.
+     * @return listener to handle events raised by this calibrator.
      */
     @Override
-    public KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener getListener() {
+    public KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener getListener() {
         return mListener;
     }
 
     /**
-     * Sets listener to handle events raised by this estimator.
+     * Sets listener to handle events raised by this calibrator.
      *
-     * @param listener listener to handle events raised by this estimator.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws LockedException if calibrator is currently running.
      */
     @Override
     public void setListener(
-            final KnownFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener)
+            final KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3191,13 +2706,352 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Indicates whether calibrator is ready to start.
+     * Gets known x coordinate of gyroscope bias expressed in radians per second
+     * (rad/s).
+     *
+     * @return x coordinate of gyroscope bias.
+     */
+    @Override
+    public double getBiasX() {
+        return mBiasX;
+    }
+
+    /**
+     * Sets known x coordinate of gyroscope bias expressed in radians per second
+     * (rad/s).
+     *
+     * @param biasX x coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasX(final double biasX) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mBiasX = biasX;
+    }
+
+    /**
+     * Gets known y coordinate of gyroscope bias expressed in radians per second
+     * (rad/s).
+     *
+     * @return y coordinate of gyroscope bias.
+     */
+    @Override
+    public double getBiasY() {
+        return mBiasY;
+    }
+
+    /**
+     * Sets known y coordinate of gyroscope bias expressed in radians per second
+     * (rad/s).
+     *
+     * @param biasY y coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasY(final double biasY) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mBiasY = biasY;
+    }
+
+    /**
+     * Gets known z coordinate of gyroscope bias expressed in radians per second
+     * (rad/s).
+     *
+     * @return z coordinate of gyroscope bias.
+     */
+    @Override
+    public double getBiasZ() {
+        return mBiasZ;
+    }
+
+    /**
+     * Sets known z coordinate of gyroscope bias expressed in radians per second
+     * (rad/s).
+     *
+     * @param biasZ z coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasZ(final double biasZ) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mBiasZ = biasZ;
+    }
+
+    /**
+     * Gets known x coordinate of gyroscope bias.
+     *
+     * @return x coordinate of gyroscope bias.
+     */
+    @Override
+    public AngularSpeed getBiasAngularSpeedX() {
+        return new AngularSpeed(mBiasX, AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets known x coordinate of gyroscope bias.
+     *
+     * @param result instance where result data will be stored.
+     */
+    @Override
+    public void getBiasAngularSpeedX(final AngularSpeed result) {
+        result.setValue(mBiasX);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets known x coordinate of gyroscope bias.
+     *
+     * @param biasX x coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasX(final AngularSpeed biasX) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasX = convertAngularSpeed(biasX);
+    }
+
+    /**
+     * Gets known y coordinate of gyroscope bias.
+     *
+     * @return y coordinate of gyroscope bias.
+     */
+    @Override
+    public AngularSpeed getBiasAngularSpeedY() {
+        return new AngularSpeed(mBiasY, AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets known y coordinate of gyroscope bias.
+     *
+     * @param result instance where result data will be stored.
+     */
+    @Override
+    public void getBiasAngularSpeedY(final AngularSpeed result) {
+        result.setValue(mBiasY);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets known y coordinate of gyroscope bias.
+     *
+     * @param biasY y coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasY(final AngularSpeed biasY) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasY = convertAngularSpeed(biasY);
+    }
+
+    /**
+     * Gets known z coordinate of gyroscope bias.
+     *
+     * @return z coordinate of gyroscope bias.
+     */
+    @Override
+    public AngularSpeed getBiasAngularSpeedZ() {
+        return new AngularSpeed(mBiasZ, AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets known z coordinate of gyroscope bias.
+     *
+     * @param result instance where result data will be stored.
+     */
+    @Override
+    public void getBiasAngularSpeedZ(final AngularSpeed result) {
+        result.setValue(mBiasZ);
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets known z coordinate of gyroscope bias.
+     *
+     * @param biasZ z coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasZ(final AngularSpeed biasZ) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasZ = convertAngularSpeed(biasZ);
+    }
+
+    /**
+     * Sets known gyroscope bias coordinates expressed in radians per second
+     * (rad/s).
+     *
+     * @param biasX x coordinate of gyroscope bias.
+     * @param biasY y coordinate of gyroscope bias.
+     * @param biasZ z coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasCoordinates(
+            final double biasX, final double biasY, final double biasZ)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasX = biasX;
+        mBiasY = biasY;
+        mBiasZ = biasZ;
+    }
+
+    /**
+     * Sets known gyroscope bias coordinates.
+     *
+     * @param biasX x coordinate of gyroscope bias.
+     * @param biasY y coordinate of gyroscope bias.
+     * @param biasZ z coordinate of gyroscope bias.
+     * @throws LockedException if calibrator is currently running.
+     */
+    @Override
+    public void setBiasCoordinates(
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        mBiasX = convertAngularSpeed(biasX);
+        mBiasY = convertAngularSpeed(biasY);
+        mBiasZ = convertAngularSpeed(biasZ);
+    }
+
+    /**
+     * Gets known gyroscope bias as an array.
+     * Array values are expressed in radians per second (rad/s).
+     *
+     * @return array containing coordinate of known bias.
+     */
+    @Override
+    public double[] getBias() {
+        final double[] result = new double[BodyKinematics.COMPONENTS];
+        getBias(result);
+        return result;
+    }
+
+    /**
+     * Gets known gyroscope bias as an array.
+     * Array values are expressed in radians per second (rad/s).
+     *
+     * @param result instance where result data will be copied to.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    @Override
+    public void getBias(final double[] result) {
+        if (result.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+        result[0] = mBiasX;
+        result[1] = mBiasY;
+        result[2] = mBiasZ;
+    }
+
+    /**
+     * Sets known gyroscope bias as an array.
+     * Array values are expressed in radians per second (rad/s).
+     *
+     * @param bias known gyroscope bias.
+     * @throws LockedException          if calibrator is currently running.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    @Override
+    public void setBias(final double[] bias) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+
+        if (bias.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+        mBiasX = bias[0];
+        mBiasY = bias[1];
+        mBiasZ = bias[2];
+    }
+
+    /**
+     * Gets known gyroscope bias as a column matrix.
+     *
+     * @return known gyroscope bias as a column matrix.
+     */
+    @Override
+    public Matrix getBiasAsMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(BodyKinematics.COMPONENTS, 1);
+            getBiasAsMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Gets known gyroscope bias as a column matrix.
+     *
+     * @param result instance where result data will be copied to.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    @Override
+    public void getBiasAsMatrix(final Matrix result) {
+        if (result.getRows() != BodyKinematics.COMPONENTS
+                || result.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+        result.setElementAtIndex(0, mBiasX);
+        result.setElementAtIndex(1, mBiasY);
+        result.setElementAtIndex(2, mBiasZ);
+    }
+
+    /**
+     * Sets known gyroscope bias as a column matrix.
+     *
+     * @param bias gyroscope bias to be set.
+     * @throws LockedException          if calibrator is currently running.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    @Override
+    public void setBias(Matrix bias) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        if (bias.getRows() != BodyKinematics.COMPONENTS
+                || bias.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        mBiasX = bias.getElementAtIndex(0);
+        mBiasY = bias.getElementAtIndex(1);
+        mBiasZ = bias.getElementAtIndex(2);
+    }
+
+    /**
+     * Indicates whether calibrator is ready to start the calibration.
      *
      * @return true if calibrator is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
-        return mMeasurements != null && mMeasurements.size() >= MINIMUM_MEASUREMENTS;
+        return mMeasurements != null
+                && mMeasurements.size() >= MINIMUM_MEASUREMENTS;
     }
 
     /**
@@ -3211,12 +3065,12 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
-     * and cross-coupling errors.
+     * Estimates gyroscope calibration parameters containing bias, scale factors,
+     * cross-coupling errors and g-dependant cross biases.
      *
      * @throws LockedException      if calibrator is currently running.
      * @throws NotReadyException    if calibrator is not ready.
-     * @throws CalibrationException if estimation fails for numerical reasons.
+     * @throws CalibrationException if calibration fails for numerical reasons.
      */
     @Override
     public void calibrate() throws LockedException, NotReadyException, CalibrationException {
@@ -3250,187 +3104,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
             throw new CalibrationException(e);
         } finally {
             mRunning = false;
-        }
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @return array containing x,y,z components of estimated gyroscope biases.
-     */
-    @Override
-    public double[] getEstimatedBiases() {
-        return mEstimatedBiases;
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @param result instance where estimated gyroscope biases will be stored.
-     * @return true if result instance was updated, false otherwise (when estimation
-     * is not yet available).
-     */
-    @Override
-    public boolean getEstimatedBiases(double[] result) {
-        if (mEstimatedBiases != null) {
-            System.arraycopy(mEstimatedBiases, 0, result,
-                    0, mEstimatedBiases.length);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @return column matrix containing x,y,z components of estimated gyroscope
-     * biases.
-     */
-    @Override
-    public Matrix getEstimatedBiasesAsMatrix() {
-        return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @param result instance where result data will be stored.
-     * @return true if result was updated, false otherwise.
-     * @throws WrongSizeException if provided result instance has invalid size.
-     */
-    @Override
-    public boolean getEstimatedBiasesAsMatrix(Matrix result)
-            throws WrongSizeException {
-        if (mEstimatedBiases != null) {
-            result.fromArray(mEstimatedBiases);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets x coordinate of estimated gyroscope bias expressed in radians per
-     * second (rad/s).
-     *
-     * @return x coordinate of estimated gyroscope bias or null if not available.
-     */
-    @Override
-    public Double getEstimatedBiasX() {
-        return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated gyroscope bias expressed in radians per
-     * second (rad/s).
-     *
-     * @return y coordinate of estimated gyroscope bias or null if not available.
-     */
-    @Override
-    public Double getEstimatedBiasY() {
-        return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated gyroscope bias expressed in radians per
-     * second (rad/s).
-     *
-     * @return z coordinate of estimated gyroscope bias or null if not available.
-     */
-    @Override
-    public Double getEstimatedBiasZ() {
-        return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated gyroscope bias.
-     *
-     * @return x coordinate of estimated gyroscope bias or null if not available.
-     */
-    @Override
-    public AngularSpeed getEstimatedBiasAngularSpeedX() {
-        return mEstimatedBiases != null ?
-                new AngularSpeed(mEstimatedBiases[0],
-                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated gyroscope bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    @Override
-    public boolean getEstimatedBiasAngularSpeedX(AngularSpeed result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[0]);
-            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets y coordinate of estimated gyroscope bias.
-     *
-     * @return y coordinate of estimated gyroscope bias or null if not available.
-     */
-    @Override
-    public AngularSpeed getEstimatedBiasAngularSpeedY() {
-        return mEstimatedBiases != null ?
-                new AngularSpeed(mEstimatedBiases[1],
-                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated gyroscope bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    @Override
-    public boolean getEstimatedBiasAngularSpeedY(AngularSpeed result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[1]);
-            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets z coordinate of estimated gyroscope bias.
-     *
-     * @return z coordinate of estimated gyroscope bias or null if not available.
-     */
-    @Override
-    public AngularSpeed getEstimatedBiasAngularSpeedZ() {
-        return mEstimatedBiases != null ?
-                new AngularSpeed(mEstimatedBiases[2],
-                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated gyroscope bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    @Override
-    public boolean getEstimatedBiasAngularSpeedZ(AngularSpeed result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[2]);
-            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -3473,8 +3146,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * </pre>
      * Values of this matrix are unitless.
      *
-     * @return estimated gyroscope scale factors and cross coupling errors, or null
-     * if not available.
+     * @return estimated gyroscope scale factors and cross coupling errors.
      */
     @Override
     public Matrix getEstimatedMg() {
@@ -3583,9 +3255,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Gets estimated G-dependent cross biases introduced on the gyroscope by the
      * specific forces sensed by the accelerometer.
-     * This instance allows any 3x3 matrix.
      *
-     * @return estimated G-dependent cross biases.
+     * @return a 3x3 matrix containing g-dependent cross biases.
      */
     @Override
     public Matrix getEstimatedGg() {
@@ -3644,34 +3315,31 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         // Ωmeasy = by + (1+sy) * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
         // Ωmeasz = bz + (1+sz) * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-        // Where the unknowns are: bx, by, bz, sx, sy, sz, mxy mxz, myz, g11, g12, g13, g21, g22, g23, g31, g32, g33
+        // Where the unknowns are: sx, sy, sz, mxy mxz, myz, g11, g12, g13, g21, g22, g23, g31, g32, g33
         // Reordering:
         // Ωmeasx = bx + Ωtruex + sx * Ωtruex + mxy * Ωtruey + mxz * Ωtruez + g11 * ftruex + g12 * ftruey + g13 * ftruez
         // Ωmeasy = by + Ωtruey + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
         // Ωmeasz = bz + Ωtruez + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-        // Ωmeasx - Ωtruex = bx + sx * Ωtruex + mxy * Ωtruey + mxz * Ωtruez + g11 * ftruex + g12 * ftruey + g13 * ftruez
-        // Ωmeasy - Ωtruey = by + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
-        // Ωmeasz - Ωtruez = bz + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
+        // Ωmeasx - Ωtruex - bx = sx * Ωtruex + mxy * Ωtruey + mxz * Ωtruez + g11 * ftruex + g12 * ftruey + g13 * ftruez
+        // Ωmeasy - Ωtruey - by = sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
+        // Ωmeasz - Ωtruez - bz = sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-        // [1   0   0   Ωtruex  0       0       Ωtruey  Ωtruez  0       ftruex  ftruey  ftruez  0       0       0       0       0       0     ][bx ] =  [Ωmeasx - Ωtruex]
-        // [0   1   0   0       Ωtruey  0       0       0       Ωtruez  0       0       0       ftruex  ftruey  ftruez  0       0       0     ][by ]    [Ωmeasy - Ωtruey]
-        // [0   0   1   0       0       Ωtruez  0       0       0       0       0       0       0       0       0       ftruex  ftruey  ftruez][bz ]    [Ωmeasz - Ωtruez]
-        //                                                                                                                                              [sx ]
-        //                                                                                                                                              [sy ]
-        //                                                                                                                                              [sz ]
-        //                                                                                                                                              [mxy]
-        //                                                                                                                                              [mxz]
-        //                                                                                                                                              [myz]
-        //                                                                                                                                              [g11]
-        //                                                                                                                                              [g12]
-        //                                                                                                                                              [g13]
-        //                                                                                                                                              [g21]
-        //                                                                                                                                              [g22]
-        //                                                                                                                                              [g23]
-        //                                                                                                                                              [g31]
-        //                                                                                                                                              [g32]
-        //                                                                                                                                              [g33]
+        // [Ωtruex  0       0       Ωtruey  Ωtruez  0       ftruex  ftruey  ftruez  0       0       0       0       0       0     ][sx ] =  [Ωmeasx - Ωtruex - bx]
+        // [0       Ωtruey  0       0       0       Ωtruez  0       0       0       ftruex  ftruey  ftruez  0       0       0     ][sy ]    [Ωmeasy - Ωtruey - by]
+        // [0       0       Ωtruez  0       0       0       0       0       0       0       0       0       ftruex  ftruey  ftruez][sz ]    [Ωmeasz - Ωtruez - bz]
+        //                                                                                                                         [mxy]
+        //                                                                                                                         [mxz]
+        //                                                                                                                         [myz]
+        //                                                                                                                         [g11]
+        //                                                                                                                         [g12]
+        //                                                                                                                         [g13]
+        //                                                                                                                         [g21]
+        //                                                                                                                         [g22]
+        //                                                                                                                         [g23]
+        //                                                                                                                         [g31]
+        //                                                                                                                         [g32]
+        //                                                                                                                         [g33]
 
         mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
             @Override
@@ -3690,21 +3358,17 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
             public double[] createInitialParametersArray() {
                 final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
 
-                initial[0] = mInitialBiasX;
-                initial[1] = mInitialBiasY;
-                initial[2] = mInitialBiasZ;
+                initial[0] = mInitialSx;
+                initial[1] = mInitialSy;
+                initial[2] = mInitialSz;
 
-                initial[3] = mInitialSx;
-                initial[4] = mInitialSy;
-                initial[5] = mInitialSz;
-
-                initial[6] = mInitialMxy;
-                initial[7] = mInitialMxz;
-                initial[8] = mInitialMyz;
+                initial[3] = mInitialMxy;
+                initial[4] = mInitialMxz;
+                initial[5] = mInitialMyz;
 
                 final double[] buffer = mInitialGg.getBuffer();
                 int num = buffer.length;
-                System.arraycopy(buffer, 0, initial, 9, num);
+                System.arraycopy(buffer, 0, initial, 6, num);
 
                 return initial;
             }
@@ -3718,13 +3382,10 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // Ωmeasy = by + Ωtruey + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
                 // Ωmeasz = bz + Ωtruez + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-                // Hence, the derivatives respect the parameters bx, by, bz,
+                // Hence, the derivatives respect the parameters
                 // sx, sy, sz, mxy mxz, myz, g11, g12, g13, g21, g22, g23,
                 // g31, g32, and g33 is:
 
-                // d(Ωmeasx)/d(bx) = 1.0
-                // d(Ωmeasx)/d(by) = 0.0
-                // d(Ωmeasx)/d(bz) = 0.0
                 // d(Ωmeasx)/d(sx) = Ωtruex
                 // d(Ωmeasx)/d(sy) = 0.0
                 // d(Ωmeasx)/d(sz) = 0.0
@@ -3741,9 +3402,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // d(Ωmeasx)/d(g32) = 0.0
                 // d(Ωmeasx)/d(g33) = 0.0
 
-                // d(Ωmeasy)/d(bx) = 0.0
-                // d(Ωmeasy)/d(by) = 1.0
-                // d(Ωmeasy)/d(bz) = 0.0
                 // d(Ωmeasy)/d(sx) = 0.0
                 // d(Ωmeasy)/d(sy) = Ωtruey
                 // d(Ωmeasy)/d(sz) = 0.0
@@ -3760,9 +3418,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // d(Ωmeasx)/d(g32) = 0.0
                 // d(Ωmeasx)/d(g33) = 0.0
 
-                // d(Ωmeasz)/d(bx) = 0.0
-                // d(Ωmeasz)/d(by) = 0.0
-                // d(Ωmeasz)/d(bz) = 1.0
                 // d(Ωmeasz)/d(sx) = 0.0
                 // d(Ωmeasz)/d(sy) = 0.0
                 // d(Ωmeasz)/d(sz) = Ωtruez
@@ -3779,27 +3434,23 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // d(Ωmeasx)/d(g32) = ftruey
                 // d(Ωmeasx)/d(g33) = ftruez
 
-                final double bx = params[0];
-                final double by = params[1];
-                final double bz = params[2];
+                final double sx = params[0];
+                final double sy = params[1];
+                final double sz = params[2];
 
-                final double sx = params[3];
-                final double sy = params[4];
-                final double sz = params[5];
+                final double mxy = params[3];
+                final double mxz = params[4];
+                final double myz = params[5];
 
-                final double mxy = params[6];
-                final double mxz = params[7];
-                final double myz = params[8];
-
-                final double g11 = params[9];
-                final double g21 = params[10];
-                final double g31 = params[11];
-                final double g12 = params[12];
-                final double g22 = params[13];
-                final double g32 = params[14];
-                final double g13 = params[15];
-                final double g23 = params[16];
-                final double g33 = params[17];
+                final double g11 = params[6];
+                final double g21 = params[7];
+                final double g31 = params[8];
+                final double g12 = params[9];
+                final double g22 = params[10];
+                final double g32 = params[11];
+                final double g13 = params[12];
+                final double g23 = params[13];
+                final double g33 = params[14];
 
                 final double omegatruex = point[0];
                 final double omegatruey = point[1];
@@ -3809,69 +3460,60 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 final double ftruey = point[4];
                 final double ftruez = point[5];
 
-                result[0] = bx + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez
+                result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez
                         + g11 * ftruex + g12 * ftruey + g13 * ftruez;
-                result[1] = by + omegatruey + sy * omegatruey + myz * omegatruez
+                result[1] = mBiasY + omegatruey + sy * omegatruey + myz * omegatruez
                         + g21 * ftruex * g22 * ftruey + g23 * ftruez;
-                result[2] = bz + omegatruez + sz * omegatruez
+                result[2] = mBiasZ + omegatruez + sz * omegatruez
                         + g31 * ftruex + g32 * ftruey + g33 * ftruez;
 
-                jacobian.setElementAt(0, 0, 1.0);
+                jacobian.setElementAt(0, 0, omegatruex);
                 jacobian.setElementAt(0, 1, 0.0);
                 jacobian.setElementAt(0, 2, 0.0);
-                jacobian.setElementAt(0, 3, omegatruex);
-                jacobian.setElementAt(0, 4, 0.0);
+                jacobian.setElementAt(0, 3, omegatruey);
+                jacobian.setElementAt(0, 4, omegatruez);
                 jacobian.setElementAt(0, 5, 0.0);
-                jacobian.setElementAt(0, 6, omegatruey);
-                jacobian.setElementAt(0, 7, omegatruez);
-                jacobian.setElementAt(0, 8, 0.0);
-                jacobian.setElementAt(0, 9, ftruex);
-                jacobian.setElementAt(0, 10, ftruey);
-                jacobian.setElementAt(0, 11, ftruez);
+                jacobian.setElementAt(0, 6, ftruex);
+                jacobian.setElementAt(0, 7, ftruey);
+                jacobian.setElementAt(0, 8, ftruez);
+                jacobian.setElementAt(0, 9, 0.0);
+                jacobian.setElementAt(0, 10, 0.0);
+                jacobian.setElementAt(0, 11, 0.0);
                 jacobian.setElementAt(0, 12, 0.0);
                 jacobian.setElementAt(0, 13, 0.0);
                 jacobian.setElementAt(0, 14, 0.0);
-                jacobian.setElementAt(0, 15, 0.0);
-                jacobian.setElementAt(0, 16, 0.0);
-                jacobian.setElementAt(0, 17, 0.0);
 
                 jacobian.setElementAt(1, 0, 0.0);
-                jacobian.setElementAt(1, 1, 1.0);
+                jacobian.setElementAt(1, 1, omegatruey);
                 jacobian.setElementAt(1, 2, 0.0);
                 jacobian.setElementAt(1, 3, 0.0);
-                jacobian.setElementAt(1, 4, omegatruey);
-                jacobian.setElementAt(1, 5, 0.0);
+                jacobian.setElementAt(1, 4, 0.0);
+                jacobian.setElementAt(1, 5, omegatruez);
                 jacobian.setElementAt(1, 6, 0.0);
                 jacobian.setElementAt(1, 7, 0.0);
-                jacobian.setElementAt(1, 8, omegatruez);
-                jacobian.setElementAt(1, 9, 0.0);
-                jacobian.setElementAt(1, 10, 0.0);
-                jacobian.setElementAt(1, 11, 0.0);
-                jacobian.setElementAt(1, 12, ftruex);
-                jacobian.setElementAt(1, 13, ftruey);
-                jacobian.setElementAt(1, 14, ftruez);
-                jacobian.setElementAt(1, 15, 0.0);
-                jacobian.setElementAt(1, 16, 0.0);
-                jacobian.setElementAt(1, 17, 0.0);
+                jacobian.setElementAt(1, 8, 0.0);
+                jacobian.setElementAt(1, 9, ftruex);
+                jacobian.setElementAt(1, 10, ftruey);
+                jacobian.setElementAt(1, 11, ftruez);
+                jacobian.setElementAt(1, 12, 0.0);
+                jacobian.setElementAt(1, 13, 0.0);
+                jacobian.setElementAt(1, 14, 0.0);
 
                 jacobian.setElementAt(2, 0, 0.0);
                 jacobian.setElementAt(2, 1, 0.0);
-                jacobian.setElementAt(2, 2, 1.0);
+                jacobian.setElementAt(2, 2, omegatruez);
                 jacobian.setElementAt(2, 3, 0.0);
                 jacobian.setElementAt(2, 4, 0.0);
-                jacobian.setElementAt(2, 5, omegatruez);
+                jacobian.setElementAt(2, 5, 0.0);
                 jacobian.setElementAt(2, 6, 0.0);
                 jacobian.setElementAt(2, 7, 0.0);
                 jacobian.setElementAt(2, 8, 0.0);
                 jacobian.setElementAt(2, 9, 0.0);
                 jacobian.setElementAt(2, 10, 0.0);
                 jacobian.setElementAt(2, 11, 0.0);
-                jacobian.setElementAt(2, 12, 0.0);
-                jacobian.setElementAt(2, 13, 0.0);
-                jacobian.setElementAt(2, 14, 0.0);
-                jacobian.setElementAt(2, 15, ftruex);
-                jacobian.setElementAt(2, 16, ftruey);
-                jacobian.setElementAt(2, 17, ftruez);
+                jacobian.setElementAt(2, 12, ftruex);
+                jacobian.setElementAt(2, 13, ftruey);
+                jacobian.setElementAt(2, 14, ftruez);
             }
         });
 
@@ -3881,35 +3523,23 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double sx = result[0];
+        final double sy = result[1];
+        final double sz = result[2];
 
-        final double sx = result[3];
-        final double sy = result[4];
-        final double sz = result[5];
+        final double mxy = result[3];
+        final double mxz = result[4];
+        final double myz = result[5];
 
-        final double mxy = result[6];
-        final double mxz = result[7];
-        final double myz = result[8];
-
-        final double g11 = result[9];
-        final double g21 = result[10];
-        final double g31 = result[11];
-        final double g12 = result[12];
-        final double g22 = result[13];
-        final double g32 = result[14];
-        final double g13 = result[15];
-        final double g23 = result[16];
-        final double g33 = result[17];
-
-        if (mEstimatedBiases == null) {
-            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
-        }
-
-        mEstimatedBiases[0] = bx;
-        mEstimatedBiases[1] = by;
-        mEstimatedBiases[2] = bz;
+        final double g11 = result[6];
+        final double g21 = result[7];
+        final double g31 = result[8];
+        final double g12 = result[9];
+        final double g22 = result[10];
+        final double g32 = result[11];
+        final double g13 = result[12];
+        final double g23 = result[13];
+        final double g33 = result[14];
 
         if (mEstimatedMg == null) {
             mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,
@@ -3977,38 +3607,35 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         // Ωmeasy = by + myx * Ωtruex + (1+sy) * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
         // Ωmeasz = bz + mzx * Ωtruex + mzy * Ωtruey + (1+sz) * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-        // Where the unknowns are: bx, by, bz, sx, sy, sz, mxy mxz, myx, myz, mzx, mzy, g11, g12, g13, g21, g22, g23,
+        // Where the unknowns are: sx, sy, sz, mxy mxz, myx, myz, mzx, mzy, g11, g12, g13, g21, g22, g23,
         // g31, g32, g33
         // Reordering:
         // Ωmeasx = bx + Ωtruex + sx * Ωtruex + mxy * Ωtruey + mxz * Ωtruez + g11 * ftruex + g12 * ftruey + g13 * ftruez
         // Ωmeasy = by + myx * Ωtruex + Ωtruey + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
         // Ωmeasz = bz + mzx * Ωtruex + mzy * Ωtruey + Ωtruez + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-        // Ωmeasx - Ωtruex = bx + sx * Ωtruex + mxy * Ωtruey + mxz * Ωtruez + g11 * ftruex + g12 * ftruey + g13 * ftruez
-        // Ωmeasy - Ωtruey = by + myx * Ωtruex + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
-        // Ωmeasz - Ωtruez = bz + mzx * Ωtruex + mzy * Ωtruey + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
+        // Ωmeasx - Ωtruex - bx = sx * Ωtruex + mxy * Ωtruey + mxz * Ωtruez + g11 * ftruex + g12 * ftruey + g13 * ftruez
+        // Ωmeasy - Ωtruey - by = myx * Ωtruex + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
+        // Ωmeasz - Ωtruez - bz = mzx * Ωtruex + mzy * Ωtruey + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-        // [1   0   0   Ωtruex  0       0       Ωtruey  Ωtruez  0       0       0       0       ftruex  ftruey  ftruez  0       0       0       0       0       0     ][bx ] =  [Ωmeasx - Ωtruex]
-        // [0   1   0   0       Ωtruey  0       0       0       Ωtruex  Ωtruez  0       0       0       0       0       ftruex  ftruey  ftruez  0       0       0     ][by ]    [Ωmeasy - Ωtruey]
-        // [0   0   1   0       0       Ωtruez  0       0       0       0       Ωtruex  Ωtruey  0       0       0       0       0       0       ftruex  ftruey  ftruez][bz ]    [Ωmeasz - Ωtruez]
-        //                                                                                                                                                             [sx ]
-        //                                                                                                                                                             [sy ]
-        //                                                                                                                                                             [sz ]
-        //                                                                                                                                                             [mxy]
-        //                                                                                                                                                             [mxz]
-        //                                                                                                                                                             [myx]
-        //                                                                                                                                                             [myz]
-        //                                                                                                                                                             [mzx]
-        //                                                                                                                                                             [mzy]
-        //                                                                                                                                                             [g11]
-        //                                                                                                                                                             [g12]
-        //                                                                                                                                                             [g13]
-        //                                                                                                                                                             [g21]
-        //                                                                                                                                                             [g22]
-        //                                                                                                                                                             [g23]
-        //                                                                                                                                                             [g31]
-        //                                                                                                                                                             [g32]
-        //                                                                                                                                                             [g33]
+        // [Ωtruex  0       0       Ωtruey  Ωtruez  0       0       0       0       ftruex  ftruey  ftruez  0       0       0       0       0       0     ][sx ] =  [Ωmeasx - Ωtruex - bx]
+        // [0       Ωtruey  0       0       0       Ωtruex  Ωtruez  0       0       0       0       0       ftruex  ftruey  ftruez  0       0       0     ][sy ]    [Ωmeasy - Ωtruey - by]
+        // [0       0       Ωtruez  0       0       0       0       Ωtruex  Ωtruey  0       0       0       0       0       0       ftruex  ftruey  ftruez][sz ]    [Ωmeasz - Ωtruez - bz]
+        //                                                                                                                                                 [mxy]
+        //                                                                                                                                                 [mxz]
+        //                                                                                                                                                 [myx]
+        //                                                                                                                                                 [myz]
+        //                                                                                                                                                 [mzx]
+        //                                                                                                                                                 [mzy]
+        //                                                                                                                                                 [g11]
+        //                                                                                                                                                 [g12]
+        //                                                                                                                                                 [g13]
+        //                                                                                                                                                 [g21]
+        //                                                                                                                                                 [g22]
+        //                                                                                                                                                 [g23]
+        //                                                                                                                                                 [g31]
+        //                                                                                                                                                 [g32]
+        //                                                                                                                                                 [g33]
 
         mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
             @Override
@@ -4027,24 +3654,20 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
             public double[] createInitialParametersArray() {
                 final double[] initial = new double[GENERAL_UNKNOWNS];
 
-                initial[0] = mInitialBiasX;
-                initial[1] = mInitialBiasY;
-                initial[2] = mInitialBiasZ;
+                initial[0] = mInitialSx;
+                initial[1] = mInitialSy;
+                initial[2] = mInitialSz;
 
-                initial[3] = mInitialSx;
-                initial[4] = mInitialSy;
-                initial[5] = mInitialSz;
-
-                initial[6] = mInitialMxy;
-                initial[7] = mInitialMxz;
-                initial[8] = mInitialMyx;
-                initial[9] = mInitialMyz;
-                initial[10] = mInitialMzx;
-                initial[11] = mInitialMzy;
+                initial[3] = mInitialMxy;
+                initial[4] = mInitialMxz;
+                initial[5] = mInitialMyx;
+                initial[6] = mInitialMyz;
+                initial[7] = mInitialMzx;
+                initial[8] = mInitialMzy;
 
                 final double[] buffer = mInitialGg.getBuffer();
                 int num = buffer.length;
-                System.arraycopy(buffer, 0, initial, 12, num);
+                System.arraycopy(buffer, 0, initial, 9, num);
 
                 return initial;
             }
@@ -4058,13 +3681,10 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // Ωmeasy = by + myx * Ωtruex + Ωtruey + sy * Ωtruey + myz * Ωtruez + g21 * ftruex * g22 * ftruey + g23 * ftruez
                 // Ωmeasz = bz + mzx * Ωtruex + mzy * Ωtruey + Ωtruez + sz * Ωtruez + g31 * ftruex + g32 * ftruey + g33 * ftruez
 
-                // Hence, the derivatives respect the parameters bx, by, bz, sx, sy,
+                // Hence, the derivatives respect the parameters sx, sy,
                 // sz, mxy, mxz, myx, myz, mzx, mzy, g11, g12, g13, g21, g22, g23,
                 // g31, g32 and g33 is:
 
-                // d(Ωmeasx)/d(bx) = 1.0
-                // d(Ωmeasx)/d(by) = 0.0
-                // d(Ωmeasx)/d(bz) = 0.0
                 // d(Ωmeasx)/d(sx) = Ωtruex
                 // d(Ωmeasx)/d(sy) = 0.0
                 // d(Ωmeasx)/d(sz) = 0.0
@@ -4084,9 +3704,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // d(Ωmeasx)/d(g32) = 0.0
                 // d(Ωmeasx)/d(g33) = 0.0
 
-                // d(Ωmeasy)/d(bx) = 0.0
-                // d(Ωmeasy)/d(by) = 1.0
-                // d(Ωmeasy)/d(bz) = 0.0
                 // d(Ωmeasy)/d(sx) = 0.0
                 // d(Ωmeasy)/d(sy) = Ωtruey
                 // d(Ωmeasy)/d(sz) = 0.0
@@ -4106,9 +3723,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // d(Ωmeasx)/d(g32) = 0.0
                 // d(Ωmeasx)/d(g33) = 0.0
 
-                // d(Ωmeasz)/d(bx) = 0.0
-                // d(Ωmeasz)/d(by) = 0.0
-                // d(Ωmeasz)/d(bz) = 1.0
                 // d(Ωmeasz)/d(sx) = 0.0
                 // d(Ωmeasz)/d(sy) = 0.0
                 // d(Ωmeasz)/d(sz) = Ωtruez
@@ -4128,30 +3742,26 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 // d(Ωmeasx)/d(g32) = ftruey
                 // d(Ωmeasx)/d(g33) = ftruez
 
-                final double bx = params[0];
-                final double by = params[1];
-                final double bz = params[2];
+                final double sx = params[0];
+                final double sy = params[1];
+                final double sz = params[2];
 
-                final double sx = params[3];
-                final double sy = params[4];
-                final double sz = params[5];
+                final double mxy = params[3];
+                final double mxz = params[4];
+                final double myx = params[5];
+                final double myz = params[6];
+                final double mzx = params[7];
+                final double mzy = params[8];
 
-                final double mxy = params[6];
-                final double mxz = params[7];
-                final double myx = params[8];
-                final double myz = params[9];
-                final double mzx = params[10];
-                final double mzy = params[11];
-
-                final double g11 = params[12];
-                final double g21 = params[13];
-                final double g31 = params[14];
-                final double g12 = params[15];
-                final double g22 = params[16];
-                final double g32 = params[17];
-                final double g13 = params[18];
-                final double g23 = params[19];
-                final double g33 = params[20];
+                final double g11 = params[9];
+                final double g21 = params[10];
+                final double g31 = params[11];
+                final double g12 = params[12];
+                final double g22 = params[13];
+                final double g32 = params[14];
+                final double g13 = params[15];
+                final double g23 = params[16];
+                final double g33 = params[17];
 
                 final double omegatruex = point[0];
                 final double omegatruey = point[1];
@@ -4161,78 +3771,69 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 final double ftruey = point[4];
                 final double ftruez = point[5];
 
-                result[0] = bx + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez
+                result[0] = mBiasX + omegatruex + sx * omegatruex + mxy * omegatruey + mxz * omegatruez
                         + g11 * ftruex + g12 * ftruey + g13 * ftruez;
-                result[1] = by + myx * omegatruex + omegatruey + sy * omegatruey + myz * omegatruez
+                result[1] = mBiasY + myx * omegatruex + omegatruey + sy * omegatruey + myz * omegatruez
                         + g21 * ftruex * g22 * ftruey + g23 * ftruez;
-                result[2] = bz + mzx * omegatruex + mzy * omegatruey + omegatruez + sz * omegatruez
+                result[2] = mBiasZ + mzx * omegatruex + mzy * omegatruey + omegatruez + sz * omegatruez
                         + g31 * ftruex + g32 * ftruey + g33 * ftruez;
 
-                jacobian.setElementAt(0, 0, 1.0);
+                jacobian.setElementAt(0, 0, omegatruex);
                 jacobian.setElementAt(0, 1, 0.0);
                 jacobian.setElementAt(0, 2, 0.0);
-                jacobian.setElementAt(0, 3, omegatruex);
-                jacobian.setElementAt(0, 4, 0.0);
+                jacobian.setElementAt(0, 3, omegatruey);
+                jacobian.setElementAt(0, 4, omegatruez);
                 jacobian.setElementAt(0, 5, 0.0);
-                jacobian.setElementAt(0, 6, omegatruey);
-                jacobian.setElementAt(0, 7, omegatruez);
+                jacobian.setElementAt(0, 6, 0.0);
+                jacobian.setElementAt(0, 7, 0.0);
                 jacobian.setElementAt(0, 8, 0.0);
-                jacobian.setElementAt(0, 9, 0.0);
-                jacobian.setElementAt(0, 10, 0.0);
-                jacobian.setElementAt(0, 11, 0.0);
-                jacobian.setElementAt(0, 12, ftruex);
-                jacobian.setElementAt(0, 13, ftruey);
-                jacobian.setElementAt(0, 14, ftruez);
+                jacobian.setElementAt(0, 9, ftruex);
+                jacobian.setElementAt(0, 10, ftruey);
+                jacobian.setElementAt(0, 11, ftruez);
+                jacobian.setElementAt(0, 12, 0.0);
+                jacobian.setElementAt(0, 13, 0.0);
+                jacobian.setElementAt(0, 14, 0.0);
                 jacobian.setElementAt(0, 15, 0.0);
                 jacobian.setElementAt(0, 16, 0.0);
                 jacobian.setElementAt(0, 17, 0.0);
-                jacobian.setElementAt(0, 18, 0.0);
-                jacobian.setElementAt(0, 19, 0.0);
-                jacobian.setElementAt(0, 20, 0.0);
 
                 jacobian.setElementAt(1, 0, 0.0);
-                jacobian.setElementAt(1, 1, 1.0);
+                jacobian.setElementAt(1, 1, omegatruey);
                 jacobian.setElementAt(1, 2, 0.0);
                 jacobian.setElementAt(1, 3, 0.0);
-                jacobian.setElementAt(1, 4, omegatruey);
-                jacobian.setElementAt(1, 5, 0.0);
-                jacobian.setElementAt(1, 6, 0.0);
+                jacobian.setElementAt(1, 4, 0.0);
+                jacobian.setElementAt(1, 5, omegatruex);
+                jacobian.setElementAt(1, 6, omegatruez);
                 jacobian.setElementAt(1, 7, 0.0);
-                jacobian.setElementAt(1, 8, omegatruex);
-                jacobian.setElementAt(1, 9, omegatruez);
+                jacobian.setElementAt(1, 8, 0.0);
+                jacobian.setElementAt(1, 9, 0.0);
                 jacobian.setElementAt(1, 10, 0.0);
                 jacobian.setElementAt(1, 11, 0.0);
-                jacobian.setElementAt(1, 12, 0.0);
-                jacobian.setElementAt(1, 13, 0.0);
-                jacobian.setElementAt(1, 14, 0.0);
-                jacobian.setElementAt(1, 15, ftruex);
-                jacobian.setElementAt(1, 16, ftruey);
-                jacobian.setElementAt(1, 17, ftruez);
-                jacobian.setElementAt(1, 18, 0.0);
-                jacobian.setElementAt(1, 19, 0.0);
-                jacobian.setElementAt(1, 20, 0.0);
+                jacobian.setElementAt(1, 12, ftruex);
+                jacobian.setElementAt(1, 13, ftruey);
+                jacobian.setElementAt(1, 14, ftruez);
+                jacobian.setElementAt(1, 15, 0.0);
+                jacobian.setElementAt(1, 16, 0.0);
+                jacobian.setElementAt(1, 17, 0.0);
 
                 jacobian.setElementAt(2, 0, 0.0);
                 jacobian.setElementAt(2, 1, 0.0);
-                jacobian.setElementAt(2, 2, 1.0);
+                jacobian.setElementAt(2, 2, omegatruez);
                 jacobian.setElementAt(2, 3, 0.0);
                 jacobian.setElementAt(2, 4, 0.0);
-                jacobian.setElementAt(2, 5, omegatruez);
+                jacobian.setElementAt(2, 5, 0.0);
                 jacobian.setElementAt(2, 6, 0.0);
-                jacobian.setElementAt(2, 7, 0.0);
-                jacobian.setElementAt(2, 8, 0.0);
+                jacobian.setElementAt(2, 7, omegatruex);
+                jacobian.setElementAt(2, 8, omegatruey);
                 jacobian.setElementAt(2, 9, 0.0);
-                jacobian.setElementAt(2, 10, omegatruex);
-                jacobian.setElementAt(2, 11, omegatruey);
+                jacobian.setElementAt(2, 10, 0.0);
+                jacobian.setElementAt(2, 11, 0.0);
                 jacobian.setElementAt(2, 12, 0.0);
                 jacobian.setElementAt(2, 13, 0.0);
                 jacobian.setElementAt(2, 14, 0.0);
-                jacobian.setElementAt(2, 15, 0.0);
-                jacobian.setElementAt(2, 16, 0.0);
-                jacobian.setElementAt(2, 17, 0.0);
-                jacobian.setElementAt(2, 18, ftruex);
-                jacobian.setElementAt(2, 19, ftruey);
-                jacobian.setElementAt(2, 20, ftruez);
+                jacobian.setElementAt(2, 15, ftruex);
+                jacobian.setElementAt(2, 16, ftruey);
+                jacobian.setElementAt(2, 17, ftruez);
             }
         });
 
@@ -4242,38 +3843,26 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double sx = result[0];
+        final double sy = result[1];
+        final double sz = result[2];
 
-        final double sx = result[3];
-        final double sy = result[4];
-        final double sz = result[5];
+        final double mxy = result[3];
+        final double mxz = result[4];
+        final double myx = result[5];
+        final double myz = result[6];
+        final double mzx = result[7];
+        final double mzy = result[8];
 
-        final double mxy = result[6];
-        final double mxz = result[7];
-        final double myx = result[8];
-        final double myz = result[9];
-        final double mzx = result[10];
-        final double mzy = result[11];
-
-        final double g11 = result[12];
-        final double g21 = result[13];
-        final double g31 = result[14];
-        final double g12 = result[15];
-        final double g22 = result[16];
-        final double g32 = result[17];
-        final double g13 = result[18];
-        final double g23 = result[19];
-        final double g33 = result[20];
-
-        if (mEstimatedBiases == null) {
-            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
-        }
-
-        mEstimatedBiases[0] = bx;
-        mEstimatedBiases[1] = by;
-        mEstimatedBiases[2] = bz;
+        final double g11 = result[9];
+        final double g21 = result[10];
+        final double g31 = result[11];
+        final double g12 = result[12];
+        final double g22 = result[13];
+        final double g32 = result[14];
+        final double g13 = result[15];
+        final double g23 = result[16];
+        final double g33 = result[17];
 
         if (mEstimatedMg == null) {
             mEstimatedMg = new Matrix(BodyKinematics.COMPONENTS,
@@ -4378,7 +3967,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Converts angular speed instance to radians per second.
+     * Converts angular speed instance to radians per second (rad/s).
      *
      * @param angularSpeed angular speed instance to be converted.
      * @return converted value.

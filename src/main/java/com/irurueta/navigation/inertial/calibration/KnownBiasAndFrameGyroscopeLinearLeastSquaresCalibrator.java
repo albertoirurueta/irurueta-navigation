@@ -31,7 +31,7 @@ import com.irurueta.units.AngularSpeedUnit;
 import java.util.Collection;
 
 /**
- * Estimates gyroscope biases, cross couplings and scaling factors
+ * Estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
  * specific forces sensed by the accelerometer.
  * This estimator assumes that biases are known.
@@ -39,9 +39,9 @@ import java.util.Collection;
  * This calibrator uses a linear approach to find a minimum least squared error
  * solution.
  * <p>
- * To use this calibrator at least 7 measurements at different known frames must
+ * To use this calibrator at least 6 measurements at different known frames must
  * be provided. In other words, accelerometer and gyroscope (i.e. body kinematics)
- * samples must be obtained at 7 different positions, orientations and velocities
+ * samples must be obtained at 6 different positions, orientations and velocities
  * (although typically velocities are always zero).
  * <p>
  * Measured gyroscope angular rates is assumed to follow the model shown below:
