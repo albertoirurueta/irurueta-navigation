@@ -26,30 +26,36 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates accelerometer biases, cross couplings and scaling factors
- * using an LMedS algorithm to discard outliers.
+ * Robustly estimates gyroscope biases, cross couplings and scaling factors
+ * along with G-dependent cross biases introduced on the gyroscope by the
+ * specific forces sensed by the accelerometer using an LMedS algorithm to discard
+ * outliers.
  * <p>
- * To use this calibrator at least 4 measurements at different known frames must
- * be provided. In other words, accelerometer samples must be obtained at 4
- * different positions, orientations and velocities (although typically velocities are
- * always zero).
+ * To use this calibrator at least 7 measurements at different known frames must
+ * be provided. In other words, accelerometer and gyroscope (i.e. body kinematics)
+ * samples must be obtained at 7 different positions, orientations and velocities
+ * (although typically velocities are always zero).
  * <p>
- * Measured specific force is assumed to follow the model shown below:
+ * Measured gyroscope angular rates is assumed to follow the model shown below:
  * <pre>
- *     fmeas = ba + (I + Ma) * ftrue + w
+ *     Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue + w
  * </pre>
  * Where:
- * - fmeas is the measured specific force. This is a 3x1 vector.
- * - ba is accelerometer bias. Ideally, on a perfect accelerometer, this should be a
+ * - Ωmeas is the measured gyroscope angular rates. This is a 3x1 vector.
+ * - bg is the gyroscope bias. Ideally, on a perfect gyroscope, this should be a
  * 3x1 zero vector.
  * - I is the 3x3 identity matrix.
- * - Ma is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
- * a perfect accelerometer, this should be a 3x3 zero matrix.
- * - ftrue is ground-trush specific force.
- * - w is measurement noise.
+ * - Mg is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
+ * a perfect gyroscope, this should be a 3x3 zero matrix.
+ * - Ωtrue is ground-truth gyroscope angular rates.
+ * - Gg is the G-dependent cross biases introduced by the specific forces sensed
+ * by the accelerometer. Ideally, on a perfect gyroscope, this should be a 3x3
+ * zero matrix.
+ * - ftrue is ground-truth specific force. This is a 3x1 vector.
+ * - w is measurement noise. This is a 3x1 vector.
  */
-public class LMedSRobustKnownFrameAccelerometerCalibrator extends
-        RobustKnownFrameAccelerometerCalibrator {
+public class LMedSRobustKnownFrameGyroscopeCalibrator extends
+        RobustKnownFrameGyroscopeCalibrator {
 
     /**
      * Default value to be used for stop threshold. Stop threshold can be used to
@@ -68,7 +74,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_STOP_THRESHOLD = 1e-8;
+    public static final double DEFAULT_STOP_THRESHOLD = 5e-4;
 
     /**
      * Minimum allowed stop threshold value.
@@ -96,7 +102,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
     /**
      * Constructor.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator() {
+    public LMedSRobustKnownFrameGyroscopeCalibrator() {
     }
 
     /**
@@ -105,8 +111,8 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+    public LMedSRobustKnownFrameGyroscopeCalibrator(
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(listener);
     }
 
@@ -117,7 +123,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(
+    public LMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements) {
         super(measurements);
     }
@@ -128,11 +134,12 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      * @param measurements list of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param listener     listener to be notified of events such as when estimation
+     *                     starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(
+    public LMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, listener);
     }
 
@@ -142,7 +149,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public LMedSRobustKnownFrameGyroscopeCalibrator(final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -153,9 +160,9 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(
+    public LMedSRobustKnownFrameGyroscopeCalibrator(
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(commonAxisUsed, listener);
     }
 
@@ -168,7 +175,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(
+    public LMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -184,10 +191,10 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public LMedSRobustKnownFrameAccelerometerCalibrator(
+    public LMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
     }
 
@@ -288,38 +295,38 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return LMedSRobustKnownFrameAccelerometerCalibrator.super.isReady();
+                        return LMedSRobustKnownFrameGyroscopeCalibrator.super.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(LMedSRobustKnownFrameAccelerometerCalibrator.this);
+                            mListener.onCalibrateStart(LMedSRobustKnownFrameGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(LMedSRobustKnownFrameAccelerometerCalibrator.this);
+                            mListener.onCalibrateEnd(LMedSRobustKnownFrameGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
-                    public void onEstimateNextIteration(final RobustEstimator<PreliminaryResult> estimator,
-                                                        final int iteration) {
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    LMedSRobustKnownFrameAccelerometerCalibrator.this, iteration);
+                                    LMedSRobustKnownFrameGyroscopeCalibrator.this, iteration);
                         }
                     }
 
                     @Override
-                    public void onEstimateProgressChange(final RobustEstimator<PreliminaryResult> estimator,
-                                                         final float progress) {
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    LMedSRobustKnownFrameAccelerometerCalibrator.this, progress);
+                                    LMedSRobustKnownFrameGyroscopeCalibrator.this, progress);
                         }
                     }
                 });

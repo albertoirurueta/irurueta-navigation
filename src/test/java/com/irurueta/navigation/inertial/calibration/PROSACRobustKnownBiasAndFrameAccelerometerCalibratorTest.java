@@ -143,7 +143,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -238,7 +238,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -335,7 +335,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -433,7 +433,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -529,7 +529,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -625,7 +625,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -723,7 +723,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -821,7 +821,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -922,7 +922,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1023,7 +1023,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1125,7 +1125,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1227,7 +1227,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1328,7 +1328,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1429,7 +1429,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1532,7 +1532,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1636,7 +1636,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1742,7 +1742,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1848,7 +1848,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1957,7 +1957,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2066,7 +2066,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2173,7 +2173,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2281,7 +2281,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2390,7 +2390,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2499,7 +2499,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2601,7 +2601,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2713,7 +2713,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2827,7 +2827,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2941,7 +2941,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3053,7 +3053,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3165,7 +3165,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3279,7 +3279,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3393,7 +3393,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3502,7 +3502,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3618,7 +3618,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3737,7 +3737,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3856,7 +3856,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3974,7 +3974,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4091,7 +4091,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4210,7 +4210,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4329,7 +4329,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4446,7 +4446,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4557,7 +4557,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4668,7 +4668,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4779,7 +4779,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4892,7 +4892,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5005,7 +5005,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5120,7 +5120,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5235,7 +5235,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5348,7 +5348,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5461,7 +5461,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5576,7 +5576,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5692,7 +5692,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5812,7 +5812,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -5931,7 +5931,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6052,7 +6052,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6173,7 +6173,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6293,7 +6293,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6413,7 +6413,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6535,7 +6535,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6658,7 +6658,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6773,7 +6773,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -6903,7 +6903,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7025,7 +7025,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7147,7 +7147,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7267,7 +7267,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7387,7 +7387,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7510,7 +7510,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7633,7 +7633,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7754,7 +7754,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -7879,7 +7879,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -8006,7 +8006,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -8133,7 +8133,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -8260,7 +8260,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -8387,7 +8387,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -8517,7 +8517,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -8646,7 +8646,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -9447,13 +9447,13 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator();
 
         // check default value
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
 
         // set new value
-        calibrator.setPreliminarySolutionRefined(false);
+        calibrator.setPreliminarySolutionRefined(true);
 
         // check
-        assertFalse(calibrator.isPreliminarySolutionRefined());
+        assertTrue(calibrator.isPreliminarySolutionRefined());
     }
 
     @Test
@@ -10084,6 +10084,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
             calibrator.setThreshold(THRESHOLD);
             calibrator.setInitialMa(ma);
             calibrator.setLinearCalibratorUsed(false);
+            calibrator.setPreliminarySolutionRefined(true);
 
             // estimate
             reset();

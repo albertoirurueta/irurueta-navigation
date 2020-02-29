@@ -7959,7 +7959,6 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         assertTrue(ma.equals(estimatedMa, VERY_LARGE_ABSOLUTE_ERROR));
 
         assertNotNull(calibrator.getEstimatedCovariance());
-        assertTrue(calibrator.getEstimatedChiSq() < 0.0);
     }
 
     @Test

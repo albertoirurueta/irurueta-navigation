@@ -26,35 +26,41 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates accelerometer biases, cross couplings and scaling factors
- * using a PROSAC algorithm to discard outliers.
+ * Robustly estimates gyroscope biases, cross couplings and scaling factors
+ * along with G-dependent cross biases introduced on the gyroscope by the
+ * specific forces sensed by the accelerometer using a PROSAC algorithm to discard
+ * outliers.
  * <p>
- * To use this calibrator at least 4 measurements at different known frames must
- * be provided. In other words, accelerometer samples must be obtained at 4
- * different positions, orientations and velocities (although typically velocities are
- * always zero).
+ * To use this calibrator at least 7 measurements at different known frames must
+ * be provided. In other words, accelerometer and gyroscope (i.e. body kinematics)
+ * samples must be obtained at 7 different positions, orientations and velocities
+ * (although typically velocities are always zero).
  * <p>
- * Measured specific force is assumed to follow the model shown below:
+ * Measured gyroscope angular rates is assumed to follow the model shown below:
  * <pre>
- *     fmeas = ba + (I + Ma) * ftrue + w
+ *     Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue + w
  * </pre>
  * Where:
- * - fmeas is the measured specific force. This is a 3x1 vector.
- * - ba is accelerometer bias. Ideally, on a perfect accelerometer, this should be a
+ * - Ωmeas is the measured gyroscope angular rates. This is a 3x1 vector.
+ * - bg is the gyroscope bias. Ideally, on a perfect gyroscope, this should be a
  * 3x1 zero vector.
  * - I is the 3x3 identity matrix.
- * - Ma is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
- * a perfect accelerometer, this should be a 3x3 zero matrix.
- * - ftrue is ground-trush specific force.
- * - w is measurement noise.
+ * - Mg is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
+ * a perfect gyroscope, this should be a 3x3 zero matrix.
+ * - Ωtrue is ground-truth gyroscope angular rates.
+ * - Gg is the G-dependent cross biases introduced by the specific forces sensed
+ * by the accelerometer. Ideally, on a perfect gyroscope, this should be a 3x3
+ * zero matrix.
+ * - ftrue is ground-truth specific force. This is a 3x1 vector.
+ * - w is measurement noise. This is a 3x1 vector.
  */
-public class PROSACRobustKnownFrameAccelerometerCalibrator extends
-        RobustKnownFrameAccelerometerCalibrator {
+public class PROSACRobustKnownFrameGyroscopeCalibrator extends
+        RobustKnownFrameGyroscopeCalibrator {
 
     /**
      * Constant defining default threshold to determine whether samples are inliers or not.
      */
-    public static final double DEFAULT_THRESHOLD = 1e-2;
+    public static final double DEFAULT_THRESHOLD = 5e-4;
 
     /**
      * Minimum value that can be set as threshold.
@@ -98,7 +104,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
     /**
      * Constructor.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator() {
+    public PROSACRobustKnownFrameGyroscopeCalibrator() {
     }
 
     /**
@@ -107,8 +113,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(listener);
     }
 
@@ -119,7 +125,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements) {
         super(measurements);
     }
@@ -132,9 +138,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                     and velocities).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, listener);
     }
 
@@ -144,7 +150,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public PROSACRobustKnownFrameGyroscopeCalibrator(final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -155,9 +161,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(commonAxisUsed, listener);
     }
 
@@ -170,7 +176,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -186,10 +192,10 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
     }
 
@@ -200,9 +206,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores) {
         internalSetQualityScores(qualityScores);
     }
@@ -216,11 +222,11 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -235,9 +241,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      deviations taken at different frames (positions, orientations
      *                      and velocities).
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements) {
         super(measurements);
@@ -255,12 +261,12 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      and velocities).
      * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -274,10 +280,10 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(final double[] qualityScores,
-                                                         final boolean commonAxisUsed) {
+    public PROSACRobustKnownFrameGyroscopeCalibrator(final double[] qualityScores,
+                                                     final boolean commonAxisUsed) {
         super(commonAxisUsed);
         internalSetQualityScores(qualityScores);
     }
@@ -292,12 +298,12 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(commonAxisUsed, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -314,9 +320,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -337,20 +343,20 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROSACRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
+     * The threshold refers to the amount of error on norm between measured angular rates and the
      * ones generated with estimated calibration parameters provided for each sample.
      *
      * @return threshold to determine whether samples are inliers or not.
@@ -361,7 +367,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
 
     /**
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
+     * The threshold refers to the amount of error on norm between measured angular rates and the
      * ones generated with estimated calibration parameters provided for each sample.
      *
      * @param threshold threshold to determine whether samples are inliers or not.
@@ -469,8 +475,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
-     * and cross-coupling errors.
+     * Estimates gyroscope calibration parameters containing bias, scale factors
+     * cross-coupling errors and g-dependant cross biases.
      *
      * @throws LockedException      if calibrator is currently running.
      * @throws NotReadyException    if calibrator is not ready.
@@ -520,20 +526,20 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return PROSACRobustKnownFrameAccelerometerCalibrator.this.isReady();
+                        return PROSACRobustKnownFrameGyroscopeCalibrator.this.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(PROSACRobustKnownFrameAccelerometerCalibrator.this);
+                            mListener.onCalibrateStart(PROSACRobustKnownFrameGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(PROSACRobustKnownFrameAccelerometerCalibrator.this);
+                            mListener.onCalibrateEnd(PROSACRobustKnownFrameGyroscopeCalibrator.this);
                         }
                     }
 
@@ -542,7 +548,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    PROSACRobustKnownFrameAccelerometerCalibrator.this, iteration);
+                                    PROSACRobustKnownFrameGyroscopeCalibrator.this, iteration);
                         }
                     }
 
@@ -551,7 +557,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    PROSACRobustKnownFrameAccelerometerCalibrator.this, progress);
+                                    PROSACRobustKnownFrameGyroscopeCalibrator.this, progress);
                         }
                     }
                 });
@@ -599,11 +605,10 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
-        if (qualityScores == null ||
-                qualityScores.length < MINIMUM_MEASUREMENTS) {
+        if (qualityScores == null || qualityScores.length < MINIMUM_MEASUREMENTS) {
             throw new IllegalArgumentException();
         }
 

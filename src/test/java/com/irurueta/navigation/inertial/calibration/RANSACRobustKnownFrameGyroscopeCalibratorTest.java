@@ -30,8 +30,8 @@ import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.UniformRandomizer;
-import com.irurueta.units.Acceleration;
-import com.irurueta.units.AccelerationUnit;
+import com.irurueta.units.AngularSpeed;
+import com.irurueta.units.AngularSpeedUnit;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -40,10 +40,9 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
-public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
-        RobustKnownFrameAccelerometerCalibratorListener {
+public class RANSACRobustKnownFrameGyroscopeCalibratorTest
+        implements RobustKnownFrameGyroscopeCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -61,15 +60,14 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     private static final double MAX_HEIGHT = 50.0;
 
     private static final int MEASUREMENT_NUMBER = 1000;
-    private static final int LARGE_MEASUREMENT_NUMBER = 100000;
 
     private static final int OUTLIER_PERCENTAGE = 20;
 
-    private static final double THRESHOLD = 1e-4;
-    private static final double LARGE_THRESHOLD = 5e-2;
+    private static final double THRESHOLD = 1e-18;
+    private static final double LARGE_THRESHOLD = 5e-4;
 
-    private static final double ABSOLUTE_ERROR = 1e-9;
     private static final double LARGE_ABSOLUTE_ERROR = 5e-5;
+    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-2;
 
     private static final double OUTLIER_ERROR_FACTOR = 100.0;
 
@@ -81,39 +79,42 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     private int mCalibrateProgressChange;
 
     @Test
-    public void testConstructor() throws WrongSizeException {
-        // test empty constructor
-        MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testConstructor1() throws WrongSizeException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        Acceleration acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -123,21 +124,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        double[] bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        double[] bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        Matrix biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        Matrix biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        Matrix ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -146,12 +152,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -160,16 +166,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -179,42 +185,49 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
-        // test constructor with listener
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(this);
+    @Test
+    public void testConstructor2() throws WrongSizeException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -224,21 +237,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -247,12 +265,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -261,16 +279,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -280,44 +298,51 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
+    @Test
+    public void testConstructor3() throws WrongSizeException {
+        final List<StandardDeviationFrameBodyKinematics> measurements = Collections.emptyList();
 
-        // test constructor with measurements
-        final List<StandardDeviationFrameBodyKinematics> measurements =
-                Collections.emptyList();
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(measurements);
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(measurements);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -327,21 +352,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -350,12 +380,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -364,16 +394,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -383,43 +413,51 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
+    @Test
+    public void testConstructor4() throws WrongSizeException {
+        final List<StandardDeviationFrameBodyKinematics> measurements = Collections.emptyList();
 
-        // test constructor with measurements and listener
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
-                this);
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(measurements, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -429,21 +467,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -452,12 +495,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -466,16 +509,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -485,43 +528,49 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
-        // test constructor with common axis used
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(
-                true);
+    @Test
+    public void testConstructor5() throws WrongSizeException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -531,21 +580,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -554,12 +608,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -568,16 +622,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -587,43 +641,49 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
-        // test constructor with common axis used and listener
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(
-                true, this);
+    @Test
+    public void testConstructor6() throws WrongSizeException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -633,21 +693,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -656,12 +721,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -670,16 +735,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -689,43 +754,51 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
+    @Test
+    public void testConstructor7() throws WrongSizeException {
+        final List<StandardDeviationFrameBodyKinematics> measurements = Collections.emptyList();
 
-        // test constructor with measurements and common axis used
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(
-                measurements, true);
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(measurements, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -735,21 +808,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -758,12 +836,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -772,16 +850,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -791,43 +869,51 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
+    @Test
+    public void testConstructor8() throws WrongSizeException {
+        final List<StandardDeviationFrameBodyKinematics> measurements = Collections.emptyList();
 
-        // test constructor with measurements and common axis used
-        calibrator = new MSACRobustKnownFrameAccelerometerCalibrator(
-                measurements, true, this);
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator(measurements, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getInitialBiasXAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
-        assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
-        assertEquals(acceleration1, acceleration2);
+        final AngularSpeed bgx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(bgy1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgy1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        final AngularSpeed bgz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bgz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bgz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -837,21 +923,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getInitialBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getInitialBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
-        assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(mg1, new Matrix(3, 3));
+        final Matrix mg2 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg2);
+        assertEquals(mg1, mg2);
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+        final Matrix gg2 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg2);
+        assertEquals(gg1, gg2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -860,12 +951,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertTrue(calibrator.isLinearCalibratorUsed());
         assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownFrameAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
@@ -874,16 +965,16 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.getEstimatedBiases(null));
         assertNull(calibrator.getEstimatedBiasesAsMatrix());
         assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
-        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedBiasX());
+        assertNull(calibrator.getEstimatedBiasY());
+        assertNull(calibrator.getEstimatedBiasZ());
+        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
+        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
+        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
+        assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
         assertNull(calibrator.getEstimatedSz());
@@ -893,26 +984,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMyz());
         assertNull(calibrator.getEstimatedMzx());
         assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedGg());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
     }
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getThreshold(),
-                MSACRobustKnownFrameAccelerometerCalibrator.DEFAULT_THRESHOLD,
-                0.0);
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
 
         // set new value
-        calibrator.setThreshold(0.1);
+        calibrator.setThreshold(1.0);
 
         // check
-        assertEquals(calibrator.getThreshold(), 0.1, 0.0);
+        assertEquals(calibrator.getThreshold(), 1.0, 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -923,16 +1014,46 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Test
+    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
+
+        // set new value
+        calibrator.setComputeAndKeepInliersEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
+    }
+
+    @Test
+    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isComputeAndKeepResiduals());
+
+        // set new value
+        calibrator.setComputeAndKeepResidualsEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepResiduals());
+    }
+
+    @Test
     public void testGetSetInitialBiasX() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
 
         // set new value
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
+        final Matrix bg = generateBg();
+        final double biasX = bg.getElementAtIndex(0);
 
         calibrator.setInitialBiasX(biasX);
 
@@ -942,15 +1063,15 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasY() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
 
         // set new value
-        final Matrix ba = generateBa();
-        final double biasY = ba.getElementAtIndex(1);
+        final Matrix bg = generateBg();
+        final double biasY = bg.getElementAtIndex(1);
 
         calibrator.setInitialBiasY(biasY);
 
@@ -960,15 +1081,15 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasZ() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
 
         // set new value
-        final Matrix ba = generateBa();
-        final double biasZ = ba.getElementAtIndex(2);
+        final Matrix bg = generateBg();
+        final double biasZ = bg.getElementAtIndex(2);
 
         calibrator.setInitialBiasZ(biasZ);
 
@@ -977,107 +1098,104 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialBiasXAsAcceleration() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testGetSetInitialBiasAngularSpeedX() throws LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        final Acceleration biasX1 = calibrator.getInitialBiasXAsAcceleration();
-
-        assertEquals(biasX1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(biasX1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed bx1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(bx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
 
         // set new value
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
+        final Matrix bg = generateBg();
+        final double biasX = bg.getElementAtIndex(0);
+        final AngularSpeed bx2 = new AngularSpeed(biasX,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Acceleration biasX2 = new Acceleration(biasX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator.setInitialBiasX(biasX2);
+        calibrator.setInitialBiasX(bx2);
 
         // check
-        final Acceleration biasX3 = calibrator.getInitialBiasXAsAcceleration();
-        final Acceleration biasX4 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(biasX4);
+        final AngularSpeed bx3 = calibrator.getInitialBiasAngularSpeedX();
+        final AngularSpeed bx4 = new AngularSpeed(0.0,
+                AngularSpeedUnit.DEGREES_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedX(bx4);
 
-        assertEquals(biasX2, biasX3);
-        assertEquals(biasX2, biasX4);
+        assertEquals(bx2, bx3);
+        assertEquals(bx2, bx4);
     }
 
     @Test
-    public void testGetSetInitialBiasYAsAcceleration() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testGetSetInitialBiasAngularSpeedY() throws LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        final Acceleration biasY1 = calibrator.getInitialBiasYAsAcceleration();
-
-        assertEquals(biasY1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(biasY1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed by1 = calibrator.getInitialBiasAngularSpeedY();
+        assertEquals(by1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(by1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
 
         // set new value
-        final Matrix ba = generateBa();
-        final double biasY = ba.getElementAtIndex(1);
+        final Matrix bg = generateBg();
+        final double biasY = bg.getElementAtIndex(1);
+        final AngularSpeed by2 = new AngularSpeed(biasY,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Acceleration biasY2 = new Acceleration(biasY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator.setInitialBiasY(biasY2);
+        calibrator.setInitialBiasY(by2);
 
         // check
-        final Acceleration biasY3 = calibrator.getInitialBiasYAsAcceleration();
-        final Acceleration biasY4 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(biasY4);
+        final AngularSpeed by3 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed by4 = new AngularSpeed(0.0,
+                AngularSpeedUnit.DEGREES_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedY(by4);
 
-        assertEquals(biasY2, biasY3);
-        assertEquals(biasY2, biasY4);
+        assertEquals(by2, by3);
+        assertEquals(by2, by4);
     }
 
     @Test
-    public void testGetSetInitialBiasZAsAcceleration() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testGetSetInitialBiasAngularSpeedZ() throws LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        final Acceleration biasZ1 = calibrator.getInitialBiasZAsAcceleration();
-
-        assertEquals(biasZ1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(biasZ1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed bz1 = calibrator.getInitialBiasAngularSpeedZ();
+        assertEquals(bz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bz1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
 
         // set new value
-        final Matrix ba = generateBa();
-        final double biasZ = ba.getElementAtIndex(2);
+        final Matrix bg = generateBg();
+        final double biasZ = bg.getElementAtIndex(2);
+        final AngularSpeed bz2 = new AngularSpeed(biasZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Acceleration biasZ2 = new Acceleration(biasZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator.setInitialBiasZ(biasZ2);
+        calibrator.setInitialBiasZ(bz2);
 
         // check
-        final Acceleration biasZ3 = calibrator.getInitialBiasZAsAcceleration();
-        final Acceleration biasZ4 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(biasZ4);
+        final AngularSpeed bz3 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed bz4 = new AngularSpeed(0.0,
+                AngularSpeedUnit.DEGREES_PER_SECOND);
+        calibrator.getInitialBiasAngularSpeedZ(bz4);
 
-        assertEquals(biasZ2, biasZ3);
-        assertEquals(biasZ2, biasZ4);
+        assertEquals(bz2, bz3);
+        assertEquals(bz2, bz4);
     }
 
     @Test
-    public void tesSetInitialBias1() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testSetInitialBias1() throws LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
-        // check default values
+        // check initial values
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
 
-        // set new value
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
+        // set new values
+        final Matrix bg = generateBg();
+        final double biasX = bg.getElementAtIndex(0);
+        final double biasY = bg.getElementAtIndex(1);
+        final double biasZ = bg.getElementAtIndex(2);
 
         calibrator.setInitialBias(biasX, biasY, biasZ);
 
@@ -1089,227 +1207,259 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testSetInitialBias2() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
-        // check default values
+        // check initial values
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
 
-        // set new value
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
+        // set new values
+        final Matrix bg = generateBg();
+        final double biasX = bg.getElementAtIndex(0);
+        final double biasY = bg.getElementAtIndex(1);
+        final double biasZ = bg.getElementAtIndex(2);
 
-        final Acceleration bax = new Acceleration(biasX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bay = new Acceleration(biasY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration baz = new Acceleration(biasZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final AngularSpeed bx = new AngularSpeed(biasX,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed by = new AngularSpeed(biasY,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        final AngularSpeed bz = new AngularSpeed(biasZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setInitialBias(bax, bay, baz);
+        calibrator.setInitialBias(bx, by, bz);
 
         // check
-        assertEquals(calibrator.getInitialBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), biasZ, 0.0);
+        assertEquals(biasX, calibrator.getInitialBiasX(), 0.0);
+        assertEquals(biasY, calibrator.getInitialBiasY(), 0.0);
+        assertEquals(biasZ, calibrator.getInitialBiasZ(), 0.0);
     }
 
     @Test
     public void testGetSetInitialSx() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialSx = ma.getElementAt(0, 0);
+        final Matrix mg = generateMg();
+        final double initialSx = mg.getElementAt(0, 0);
 
         calibrator.setInitialSx(initialSx);
 
         // check
-        assertEquals(calibrator.getInitialSx(), initialSx, 0.0);
+        assertEquals(initialSx, calibrator.getInitialSx(), 0.0);
     }
 
     @Test
     public void testGetSetInitialSy() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialSy = ma.getElementAt(1, 1);
+        final Matrix mg = generateMg();
+        final double initialSy = mg.getElementAt(1, 1);
 
         calibrator.setInitialSy(initialSy);
 
         // check
-        assertEquals(calibrator.getInitialSy(), initialSy, 0.0);
+        assertEquals(initialSy, calibrator.getInitialSy(), 0.0);
     }
 
     @Test
     public void testGetSetInitialSz() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialSz = ma.getElementAt(2, 2);
+        final Matrix mg = generateMg();
+        final double initialSz = mg.getElementAt(2, 2);
 
         calibrator.setInitialSz(initialSz);
 
         // check
-        assertEquals(calibrator.getInitialSz(), initialSz, 0.0);
+        assertEquals(initialSz, calibrator.getInitialSz(), 0.0);
     }
 
     @Test
     public void testGetSetInitialMxy() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialMxy = ma.getElementAt(0, 1);
+        final Matrix mg = generateMg();
+        final double initialMxy = mg.getElementAt(0, 1);
 
         calibrator.setInitialMxy(initialMxy);
 
         // check
-        assertEquals(calibrator.getInitialMxy(), initialMxy, 0.0);
+        assertEquals(initialMxy, calibrator.getInitialMxy(), 0.0);
     }
 
     @Test
     public void testGetSetInitialMxz() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialMxz = ma.getElementAt(0, 2);
+        final Matrix mg = generateMg();
+        final double initialMxz = mg.getElementAt(0, 2);
 
         calibrator.setInitialMxz(initialMxz);
 
         // check
-        assertEquals(calibrator.getInitialMxz(), initialMxz, 0.0);
+        assertEquals(initialMxz, calibrator.getInitialMxz(), 0.0);
     }
 
     @Test
     public void testGetSetInitialMyx() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialMyx = ma.getElementAt(1, 0);
+        final Matrix mg = generateMg();
+        final double initialMyx = mg.getElementAt(1, 0);
 
         calibrator.setInitialMyx(initialMyx);
 
         // check
-        assertEquals(calibrator.getInitialMyx(), initialMyx, 0.0);
+        assertEquals(initialMyx, calibrator.getInitialMyx(), 0.0);
     }
 
     @Test
     public void testGetSetInitialMyz() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialMyz = ma.getElementAt(1, 2);
+        final Matrix mg = generateMg();
+        final double initialMyz = mg.getElementAt(1, 2);
 
         calibrator.setInitialMyz(initialMyz);
 
         // check
-        assertEquals(calibrator.getInitialMyz(), initialMyz, 0.0);
+        assertEquals(initialMyz, calibrator.getInitialMyz(), 0.0);
     }
 
     @Test
     public void testGetSetInitialMzx() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialMzx = ma.getElementAt(2, 0);
+        final Matrix mg = generateMg();
+        final double initialMzx = mg.getElementAt(2, 0);
 
         calibrator.setInitialMzx(initialMzx);
 
         // check
-        assertEquals(calibrator.getInitialMzx(), initialMzx, 0.0);
+        assertEquals(initialMzx, calibrator.getInitialMzx(), 0.0);
     }
 
     @Test
     public void testGetSetInitialMzy() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
 
         // set new value
-        final Matrix ma = generateMaGeneral();
-        final double initialMzy = ma.getElementAt(2, 1);
+        final Matrix mg = generateMg();
+        final double initialMzy = mg.getElementAt(2, 1);
 
         calibrator.setInitialMzy(initialMzy);
 
         // check
-        assertEquals(calibrator.getInitialMzy(), initialMzy, 0.0);
+        assertEquals(initialMzy, calibrator.getInitialMzy(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialScalingFactors() throws WrongSizeException,
-            LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testSetInitialScalingFactors() throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
 
-        // set new values
-        final Matrix ma = generateMaGeneral();
-        final double initialSx = ma.getElementAt(0, 0);
-        final double initialSy = ma.getElementAt(1, 1);
-        final double initialSz = ma.getElementAt(2, 2);
+        // set new value
+        final Matrix mg = generateMg();
+        final double initialSx = mg.getElementAt(0, 0);
+        final double initialSy = mg.getElementAt(1, 1);
+        final double initialSz = mg.getElementAt(2, 2);
 
         calibrator.setInitialScalingFactors(initialSx, initialSy, initialSz);
 
         // check
-        assertEquals(calibrator.getInitialSx(), initialSx, 0.0);
-        assertEquals(calibrator.getInitialSy(), initialSy, 0.0);
-        assertEquals(calibrator.getInitialSz(), initialSz, 0.0);
+        assertEquals(initialSx, calibrator.getInitialSx(), 0.0);
+        assertEquals(initialSy, calibrator.getInitialSy(), 0.0);
+        assertEquals(initialSz, calibrator.getInitialSz(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialCrossCouplingErrors() throws WrongSizeException,
-            LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testSetInitialCrossCouplingErrors() throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
+
+        // check default values
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+
+        // set new values
+        final Matrix mg = generateMg();
+        final double initialMxy = mg.getElementAt(0, 1);
+        final double initialMxz = mg.getElementAt(0, 2);
+        final double initialMyx = mg.getElementAt(1, 0);
+        final double initialMyz = mg.getElementAt(1, 2);
+        final double initialMzx = mg.getElementAt(2, 0);
+        final double initialMzy = mg.getElementAt(2, 1);
+
+        calibrator.setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,
+                initialMyz, initialMzx, initialMzy);
+
+        // check
+        assertEquals(initialMxy, calibrator.getInitialMxy(), 0.0);
+        assertEquals(initialMxz, calibrator.getInitialMxz(), 0.0);
+        assertEquals(initialMyx, calibrator.getInitialMyx(), 0.0);
+        assertEquals(initialMyz, calibrator.getInitialMyz(), 0.0);
+        assertEquals(initialMzx, calibrator.getInitialMzx(), 0.0);
+        assertEquals(initialMzy, calibrator.getInitialMzy(), 0.0);
+    }
+
+    @Test
+    public void testSetInitialScalingFactorsAndCrossCouplingErrors() throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -1323,79 +1473,46 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
 
         // set new values
-        final Matrix ma = generateMaGeneral();
-        final double initialSx = ma.getElementAt(0, 0);
-        final double initialSy = ma.getElementAt(1, 1);
-        final double initialSz = ma.getElementAt(2, 2);
-        final double initialMxy = ma.getElementAt(0, 1);
-        final double initialMxz = ma.getElementAt(0, 2);
-        final double initialMyx = ma.getElementAt(1, 0);
-        final double initialMyz = ma.getElementAt(1, 2);
-        final double initialMzx = ma.getElementAt(2, 0);
-        final double initialMzy = ma.getElementAt(2, 1);
+        final Matrix mg = generateMg();
+        final double initialSx = mg.getElementAt(0, 0);
+        final double initialSy = mg.getElementAt(1, 1);
+        final double initialSz = mg.getElementAt(2, 2);
+        final double initialMxy = mg.getElementAt(0, 1);
+        final double initialMxz = mg.getElementAt(0, 2);
+        final double initialMyx = mg.getElementAt(1, 0);
+        final double initialMyz = mg.getElementAt(1, 2);
+        final double initialMzx = mg.getElementAt(2, 0);
+        final double initialMzy = mg.getElementAt(2, 1);
 
         calibrator.setInitialScalingFactorsAndCrossCouplingErrors(
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
 
         // check
-        assertEquals(calibrator.getInitialSx(), initialSx, 0.0);
-        assertEquals(calibrator.getInitialSy(), initialSy, 0.0);
-        assertEquals(calibrator.getInitialSz(), initialSz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), initialMxy, 0.0);
-        assertEquals(calibrator.getInitialMxz(), initialMxz, 0.0);
-        assertEquals(calibrator.getInitialMyx(), initialMyx, 0.0);
-        assertEquals(calibrator.getInitialMyz(), initialMyz, 0.0);
-        assertEquals(calibrator.getInitialMzx(), initialMzx, 0.0);
-        assertEquals(calibrator.getInitialMzy(), initialMzy, 0.0);
-    }
-
-    @Test
-    public void testSetInitialScalingFactorsAndCrossCouplingErrors()
-            throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
-
-        // check default values
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-
-        // set new values
-        final Matrix ma = generateMaGeneral();
-        final double initialMxy = ma.getElementAt(0, 1);
-        final double initialMxz = ma.getElementAt(0, 2);
-        final double initialMyx = ma.getElementAt(1, 0);
-        final double initialMyz = ma.getElementAt(1, 2);
-        final double initialMzx = ma.getElementAt(2, 0);
-        final double initialMzy = ma.getElementAt(2, 1);
-
-        calibrator.setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
-
-        // check
-        assertEquals(calibrator.getInitialMxy(), initialMxy, 0.0);
-        assertEquals(calibrator.getInitialMxz(), initialMxz, 0.0);
-        assertEquals(calibrator.getInitialMyx(), initialMyx, 0.0);
-        assertEquals(calibrator.getInitialMyz(), initialMyz, 0.0);
-        assertEquals(calibrator.getInitialMzx(), initialMzx, 0.0);
-        assertEquals(calibrator.getInitialMzy(), initialMzy, 0.0);
+        assertEquals(initialSx, calibrator.getInitialSx(), 0.0);
+        assertEquals(initialSy, calibrator.getInitialSy(), 0.0);
+        assertEquals(initialSz, calibrator.getInitialSz(), 0.0);
+        assertEquals(initialMxy, calibrator.getInitialMxy(), 0.0);
+        assertEquals(initialMxz, calibrator.getInitialMxz(), 0.0);
+        assertEquals(initialMyx, calibrator.getInitialMyx(), 0.0);
+        assertEquals(initialMyz, calibrator.getInitialMyz(), 0.0);
+        assertEquals(initialMzx, calibrator.getInitialMzx(), 0.0);
+        assertEquals(initialMzy, calibrator.getInitialMzy(), 0.0);
     }
 
     @Test
     public void testGetSetInitialBias() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         final double[] bias1 = calibrator.getInitialBias();
-        assertArrayEquals(bias1, new double[3], 0.0);
+        assertArrayEquals(new double[3], bias1, 0.0);
 
         // set new value
-        final double[] bias2 = generateBa().getBuffer();
+        final Matrix bg = generateBg();
+        final double[] bias2 = bg.getBuffer();
+
         calibrator.setInitialBias(bias2);
 
         // check
@@ -1408,11 +1525,6 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
         // Force IllegalArgumentException
         try {
-            calibrator.getInitialBias(new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
             calibrator.setInitialBias(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1420,17 +1532,18 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialBiasAsMatrix() throws LockedException,
-            WrongSizeException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testGetSetInitialBiasAsMatrix() throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         final Matrix bias1 = calibrator.getInitialBiasAsMatrix();
-        assertArrayEquals(bias1.getBuffer(), new double[3], 0.0);
 
-        // set new values
-        final Matrix bias2 = generateBa();
+        assertEquals(bias1, new Matrix(3, 1));
+
+        // set new value
+        final Matrix bias2 = generateBg();
+
         calibrator.setInitialBias(bias2);
 
         // check
@@ -1465,65 +1578,88 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialMa() throws WrongSizeException, LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+    public void testGetSetInitialMg() throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix mg1 = calibrator.getInitialMg();
+        assertEquals(new Matrix(3, 3), mg1);
 
         // set new value
-        final Matrix ma2 = generateMaGeneral();
-        calibrator.setInitialMa(ma2);
-
-        final double initialSx = ma2.getElementAt(0, 0);
-        final double initialSy = ma2.getElementAt(1, 1);
-        final double initialSz = ma2.getElementAt(2, 2);
-        final double initialMxy = ma2.getElementAt(0, 1);
-        final double initialMxz = ma2.getElementAt(0, 2);
-        final double initialMyx = ma2.getElementAt(1, 0);
-        final double initialMyz = ma2.getElementAt(1, 2);
-        final double initialMzx = ma2.getElementAt(2, 0);
-        final double initialMzy = ma2.getElementAt(2, 1);
-
+        final Matrix mg2 = generateMg();
+        calibrator.setInitialMg(mg2);
 
         // check
-        final Matrix ma3 = calibrator.getInitialMa();
-        final Matrix ma4 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma4);
+        final Matrix mg3 = calibrator.getInitialMg();
+        final Matrix mg4 = new Matrix(3, 3);
+        calibrator.getInitialMg(mg4);
 
-        assertEquals(ma2, ma3);
-        assertEquals(ma2, ma3);
-
-        assertEquals(initialSx, calibrator.getInitialSx(), 0.0);
-        assertEquals(initialSy, calibrator.getInitialSy(), 0.0);
-        assertEquals(initialSz, calibrator.getInitialSz(), 0.0);
-        assertEquals(initialMxy, calibrator.getInitialMxy(), 0.0);
-        assertEquals(initialMxz, calibrator.getInitialMxz(), 0.0);
-        assertEquals(initialMyx, calibrator.getInitialMyx(), 0.0);
-        assertEquals(initialMyz, calibrator.getInitialMyz(), 0.0);
-        assertEquals(initialMzx, calibrator.getInitialMzx(), 0.0);
-        assertEquals(initialMzy, calibrator.getInitialMzy(), 0.0);
+        assertEquals(mg2, mg3);
+        assertEquals(mg2, mg4);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getInitialMa(new Matrix(1, 3));
+            calibrator.getInitialMg(new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.getInitialMa(new Matrix(3, 1));
+            calibrator.getInitialMg(new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialMa(new Matrix(1, 3));
+            calibrator.setInitialMg(new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialMa(new Matrix(3, 1));
+            calibrator.setInitialMg(new Matrix(3, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetSetInitialGg() throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
+
+        // check default value
+        final Matrix gg1 = calibrator.getInitialGg();
+        assertEquals(gg1, new Matrix(3, 3));
+
+        // set new value
+        final Matrix gg2 = generateGg();
+        calibrator.setInitialGg(gg2);
+
+        // check
+        final Matrix gg3 = calibrator.getInitialGg();
+        final Matrix gg4 = new Matrix(3, 3);
+        calibrator.getInitialGg(gg4);
+
+        assertEquals(gg2, gg3);
+        assertEquals(gg2, gg4);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.getInitialGg(new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.getInitialGg(new Matrix(3, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setInitialGg(new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setInitialGg(new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1531,8 +1667,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetMeasurements() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -1540,16 +1676,17 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         // set new value
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
+
         calibrator.setMeasurements(measurements);
 
         // check
-        assertSame(calibrator.getMeasurements(), measurements);
+        assertSame(measurements, calibrator.getMeasurements());
     }
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertFalse(calibrator.isCommonAxisUsed());
@@ -1563,8 +1700,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -1578,8 +1715,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetLinearCalibratorUsed() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1593,8 +1730,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertFalse(calibrator.isPreliminarySolutionRefined());
@@ -1608,19 +1745,20 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getProgressDelta(), 0.05f, 0.0);
+        assertEquals(calibrator.getProgressDelta(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
 
         // set new value
-        calibrator.setProgressDelta(0.01f);
+        calibrator.setProgressDelta(0.5f);
 
         // check
-        assertEquals(calibrator.getProgressDelta(), 0.01f, 0.0);
+        assertEquals(calibrator.getProgressDelta(), 0.5f, 0.0);
 
-        // force IllegalArgumentException
+        // Force IllegalArgumentException
         try {
             calibrator.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
@@ -1635,17 +1773,18 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getConfidence(), 0.99, 0.0);
+        assertEquals(calibrator.getConfidence(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
 
         // set new value
-        calibrator.setConfidence(0.5);
+        calibrator.setConfidence(0.8);
 
         // check
-        assertEquals(calibrator.getConfidence(), 0.5, 0.0);
+        assertEquals(calibrator.getConfidence(), 0.8, 0.0);
 
         // Force IllegalArgumentException
         try {
@@ -1662,28 +1801,30 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getMaxIterations(), 5000);
+        assertEquals(calibrator.getMaxIterations(),
+                RANSACRobustKnownFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
 
         // set new value
-        calibrator.setMaxIterations(100);
+        calibrator.setMaxIterations(1);
 
-        assertEquals(calibrator.getMaxIterations(), 100);
+        assertEquals(calibrator.getMaxIterations(), 1);
 
-        // Force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             calibrator.setMaxIterations(0);
+            fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
     }
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -1697,8 +1838,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -1712,8 +1853,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
@@ -1727,22 +1868,22 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator();
+        final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                new RANSACRobustKnownFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RANSACRobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+                RANSACRobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
 
         // set new value
-        calibrator.setPreliminarySubsetSize(5);
+        calibrator.setPreliminarySubsetSize(8);
 
         // check
-        assertEquals(calibrator.getPreliminarySubsetSize(), 5);
+        assertEquals(calibrator.getPreliminarySubsetSize(), 8);
 
-        // Force IllegalArgumentException
+        // force IllegalArgumentException
         try {
-            calibrator.setPreliminarySubsetSize(3);
+            calibrator.setPreliminarySubsetSize(6);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1750,514 +1891,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
     @Test
     public void testCalibrateGeneralNoNoiseInlier() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
-        final Matrix ba = generateBa();
-        final Matrix bg = generateBg();
-        final Matrix ma = generateMaGeneral();
-        final Matrix mg = generateMg();
-        final Matrix gg = generateGg();
-        final double accelNoiseRootPSD = getAccelNoiseRootPSD();
-        final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
-        final double accelQuantLevel = 0.0;
-        final double gyroQuantLevel = 0.0;
-
-        final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
-                accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
-        final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
-                0.0, 0.0, accelQuantLevel,
-                gyroQuantLevel);
-
-
-        final Random random = new Random();
-        final UniformRandomizer randomizer = new UniformRandomizer(random);
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-        final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
-        final double specificForceStandardDeviation = getAccelNoiseRootPSD()
-                / sqrtTimeInterval;
-        final double angularRateStandardDeviation = getGyroNoiseRootPSD()
-                / sqrtTimeInterval;
-
-        final List<StandardDeviationFrameBodyKinematics> measurements =
-                new ArrayList<>();
-        for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
-            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame);
-
-            // compute ground-truth kinematics that should be generated at provided
-            // position, velocity and orientation
-            final BodyKinematics trueKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
-                            ecefFrame);
-
-            // apply known calibration parameters to distort ground-truth and generate a
-            // measured kinematics sample
-            final BodyKinematics measuredKinematics;
-            if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
-                // outlier
-                measuredKinematics = BodyKinematicsGenerator
-                        .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                errorsOutlier, random);
-
-            } else {
-                // inlier
-                measuredKinematics = BodyKinematicsGenerator
-                        .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                errorsInlier, random);
-            }
-
-            final StandardDeviationFrameBodyKinematics measurement =
-                    new StandardDeviationFrameBodyKinematics(measuredKinematics,
-                            ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
-                            specificForceStandardDeviation,
-                            angularRateStandardDeviation);
-            measurements.add(measurement);
-        }
-
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
-                        false, this);
-        calibrator.setThreshold(THRESHOLD);
-
-        // estimate
-        reset();
-        assertTrue(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertEquals(mCalibrateStart, 0);
-        assertEquals(mCalibrateEnd, 0);
-        assertEquals(mCalibrateNextIteration, 0);
-        assertEquals(mCalibrateProgressChange, 0);
-
-        calibrator.calibrate();
-
-        // check
-        assertTrue(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertEquals(mCalibrateStart, 1);
-        assertEquals(mCalibrateEnd, 1);
-        assertTrue(mCalibrateNextIteration > 0);
-        assertTrue(mCalibrateProgressChange >= 0);
-
-        final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-        final Matrix estimatedMa = calibrator.getEstimatedMa();
-
-        assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
-        assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
-
-        assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
-
-        assertNotNull(calibrator.getEstimatedCovariance());
-    }
-
-    @Test
-    public void testCalibrateCommonAxisNoNoiseInlier() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
-        final Matrix ba = generateBa();
-        final Matrix bg = generateBg();
-        final Matrix ma = generateMaCommonAxis();
-        final Matrix mg = generateMg();
-        final Matrix gg = generateGg();
-        final double accelNoiseRootPSD = getAccelNoiseRootPSD();
-        final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
-        final double accelQuantLevel = 0.0;
-        final double gyroQuantLevel = 0.0;
-
-        final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
-                accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
-        final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
-                0.0, 0.0, accelQuantLevel,
-                gyroQuantLevel);
-
-
-        final Random random = new Random();
-        final UniformRandomizer randomizer = new UniformRandomizer(random);
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-        final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
-        final double specificForceStandardDeviation = getAccelNoiseRootPSD()
-                / sqrtTimeInterval;
-        final double angularRateStandardDeviation = getGyroNoiseRootPSD()
-                / sqrtTimeInterval;
-
-        final List<StandardDeviationFrameBodyKinematics> measurements =
-                new ArrayList<>();
-        for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation nedC = new CoordinateTransformation(
-                    roll, pitch, yaw, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
-            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-                    .convertNEDtoECEFAndReturnNew(nedFrame);
-
-            // compute ground-truth kinematics that should be generated at provided
-            // position, velocity and orientation
-            final BodyKinematics trueKinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
-                            ecefFrame);
-
-            // apply known calibration parameters to distort ground-truth and generate a
-            // measured kinematics sample
-            final BodyKinematics measuredKinematics;
-            if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
-                // outlier
-                measuredKinematics = BodyKinematicsGenerator
-                        .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                errorsOutlier, random);
-
-            } else {
-                // inlier
-                measuredKinematics = BodyKinematicsGenerator
-                        .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                errorsInlier, random);
-            }
-
-            final StandardDeviationFrameBodyKinematics measurement =
-                    new StandardDeviationFrameBodyKinematics(measuredKinematics,
-                            ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
-                            specificForceStandardDeviation,
-                            angularRateStandardDeviation);
-            measurements.add(measurement);
-        }
-
-        final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
-                        true, this);
-        calibrator.setThreshold(THRESHOLD);
-
-        // estimate
-        reset();
-        assertTrue(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertEquals(mCalibrateStart, 0);
-        assertEquals(mCalibrateEnd, 0);
-        assertEquals(mCalibrateNextIteration, 0);
-        assertEquals(mCalibrateProgressChange, 0);
-
-        calibrator.calibrate();
-
-        // check
-        assertTrue(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertEquals(mCalibrateStart, 1);
-        assertEquals(mCalibrateEnd, 1);
-        assertTrue(mCalibrateNextIteration > 0);
-        assertTrue(mCalibrateProgressChange >= 0);
-
-        final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-        final Matrix estimatedMa = calibrator.getEstimatedMa();
-
-        assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
-        assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
-
-        assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
-
-        assertNotNull(calibrator.getEstimatedCovariance());
-    }
-
-    @Test
-    public void testCalibrateGeneralWithInlierNoise() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final Matrix ba = generateBa();
-            final Matrix bg = generateBg();
-            final Matrix ma = generateMaGeneral();
-            final Matrix mg = generateMg();
-            final Matrix gg = generateGg();
-            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
-            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
-            final double accelQuantLevel = 0.0;
-            final double gyroQuantLevel = 0.0;
-
-            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
-                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
-                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
-                    accelQuantLevel, gyroQuantLevel);
-            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
-                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
-                    gyroQuantLevel);
-
-
-            final Random random = new Random();
-            final UniformRandomizer randomizer = new UniformRandomizer(random);
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
-            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
-                    / sqrtTimeInterval;
-            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
-                    / sqrtTimeInterval;
-
-            final List<StandardDeviationFrameBodyKinematics> measurements =
-                    new ArrayList<>();
-            for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
-                final double roll = Math.toRadians(
-                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-                final double pitch = Math.toRadians(
-                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-                final double yaw = Math.toRadians(
-                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-                final CoordinateTransformation nedC = new CoordinateTransformation(
-                        roll, pitch, yaw, FrameType.BODY_FRAME,
-                        FrameType.LOCAL_NAVIGATION_FRAME);
-
-                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
-                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-                        .convertNEDtoECEFAndReturnNew(nedFrame);
-
-                // compute ground-truth kinematics that should be generated at provided
-                // position, velocity and orientation
-                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
-                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
-                                ecefFrame);
-
-                // apply known calibration parameters to distort ground-truth and generate a
-                // measured kinematics sample
-                final BodyKinematics measuredKinematics;
-                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
-                    // outlier
-                    measuredKinematics = BodyKinematicsGenerator
-                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                    errorsOutlier, random);
-
-                } else {
-                    // inlier
-                    measuredKinematics = BodyKinematicsGenerator
-                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                    errorsInlier, random);
-                }
-
-                final StandardDeviationFrameBodyKinematics measurement =
-                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
-                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
-                                specificForceStandardDeviation,
-                                angularRateStandardDeviation);
-                measurements.add(measurement);
-            }
-
-            final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                    new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
-                            false, this);
-            calibrator.setThreshold(LARGE_THRESHOLD);
-
-            // estimate
-            reset();
-            assertTrue(calibrator.isReady());
-            assertFalse(calibrator.isRunning());
-            assertEquals(mCalibrateStart, 0);
-            assertEquals(mCalibrateEnd, 0);
-            assertEquals(mCalibrateNextIteration, 0);
-            assertEquals(mCalibrateProgressChange, 0);
-
-            calibrator.calibrate();
-
-            // check
-            assertTrue(calibrator.isReady());
-            assertFalse(calibrator.isRunning());
-            assertEquals(mCalibrateStart, 1);
-            assertEquals(mCalibrateEnd, 1);
-            assertTrue(mCalibrateNextIteration > 0);
-            assertTrue(mCalibrateProgressChange >= 0);
-
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-            final Matrix estimatedMa = calibrator.getEstimatedMa();
-
-            if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            if (!ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
-
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
-
-            assertNotNull(calibrator.getEstimatedCovariance());
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testCalibrateCommonAxisWithInlierNoise() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final Matrix ba = generateBa();
-            final Matrix bg = generateBg();
-            final Matrix ma = generateMaCommonAxis();
-            final Matrix mg = generateMg();
-            final Matrix gg = generateGg();
-            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
-            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
-            final double accelQuantLevel = 0.0;
-            final double gyroQuantLevel = 0.0;
-
-            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
-                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
-                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
-                    accelQuantLevel, gyroQuantLevel);
-            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
-                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
-                    gyroQuantLevel);
-
-
-            final Random random = new Random();
-            final UniformRandomizer randomizer = new UniformRandomizer(random);
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
-            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
-                    / sqrtTimeInterval;
-            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
-                    / sqrtTimeInterval;
-
-            final List<StandardDeviationFrameBodyKinematics> measurements =
-                    new ArrayList<>();
-            for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
-                final double roll = Math.toRadians(
-                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-                final double pitch = Math.toRadians(
-                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-                final double yaw = Math.toRadians(
-                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-                final CoordinateTransformation nedC = new CoordinateTransformation(
-                        roll, pitch, yaw, FrameType.BODY_FRAME,
-                        FrameType.LOCAL_NAVIGATION_FRAME);
-
-                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
-                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
-                        .convertNEDtoECEFAndReturnNew(nedFrame);
-
-                // compute ground-truth kinematics that should be generated at provided
-                // position, velocity and orientation
-                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
-                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
-                                ecefFrame);
-
-                // apply known calibration parameters to distort ground-truth and generate a
-                // measured kinematics sample
-                final BodyKinematics measuredKinematics;
-                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
-                    // outlier
-                    measuredKinematics = BodyKinematicsGenerator
-                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                    errorsOutlier, random);
-
-                } else {
-                    // inlier
-                    measuredKinematics = BodyKinematicsGenerator
-                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
-                                    errorsInlier, random);
-                }
-
-                final StandardDeviationFrameBodyKinematics measurement =
-                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
-                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
-                                specificForceStandardDeviation,
-                                angularRateStandardDeviation);
-                measurements.add(measurement);
-            }
-
-            final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                    new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
-                            true, this);
-            calibrator.setThreshold(LARGE_THRESHOLD);
-
-            // estimate
-            reset();
-            assertTrue(calibrator.isReady());
-            assertFalse(calibrator.isRunning());
-            assertEquals(mCalibrateStart, 0);
-            assertEquals(mCalibrateEnd, 0);
-            assertEquals(mCalibrateNextIteration, 0);
-            assertEquals(mCalibrateProgressChange, 0);
-
-            calibrator.calibrate();
-
-            // check
-            assertTrue(calibrator.isReady());
-            assertFalse(calibrator.isRunning());
-            assertEquals(mCalibrateStart, 1);
-            assertEquals(mCalibrateEnd, 1);
-            assertTrue(mCalibrateNextIteration > 0);
-            assertTrue(mCalibrateProgressChange >= 0);
-
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-            final Matrix estimatedMa = calibrator.getEstimatedMa();
-
-            if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            if (!ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
-
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
-
-            assertNotNull(calibrator.getEstimatedCovariance());
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testCalibrateGeneralNoRefinement() throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -2276,7 +1911,6 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
             final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
                     0.0, 0.0, accelQuantLevel,
                     gyroQuantLevel);
-
 
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
@@ -2340,8 +1974,549 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
                 measurements.add(measurement);
             }
 
-            final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                    new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                    new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,
+                            false, this);
+            calibrator.setThreshold(THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertNotNull(estimatedMg);
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisNoNoiseInlier() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaCommonAxis();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    0.0, 0.0, accelQuantLevel,
+                    gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final List<StandardDeviationFrameBodyKinematics> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                }
+
+                final StandardDeviationFrameBodyKinematics measurement =
+                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
+                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+            }
+
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                    new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,
+                            true, this);
+            calibrator.setThreshold(THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, VERY_LARGE_ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralWithInlierNoise() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaGeneral();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
+                    gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final List<StandardDeviationFrameBodyKinematics> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                }
+
+                final StandardDeviationFrameBodyKinematics measurement =
+                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
+                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+            }
+
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                    new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,
+                            false, this);
+            calibrator.setThreshold(LARGE_THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertNotNull(estimatedMg);
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisWithInlierNoise() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaCommonAxis();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
+                    gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final List<StandardDeviationFrameBodyKinematics> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                }
+
+                final StandardDeviationFrameBodyKinematics measurement =
+                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
+                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+            }
+
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                    new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,
+                            true, this);
+            calibrator.setThreshold(LARGE_THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertNotNull(estimatedMg);
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralNoRefinement() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaGeneral();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    0.0, 0.0, accelQuantLevel,
+                    gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final List<StandardDeviationFrameBodyKinematics> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                }
+
+                final StandardDeviationFrameBodyKinematics measurement =
+                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
+                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+            }
+
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                    new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,
                             false, this);
             calibrator.setThreshold(THRESHOLD);
             calibrator.setResultRefined(false);
@@ -2366,19 +2541,21 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-            final Matrix estimatedMa = calibrator.getEstimatedMa();
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            if (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertNotNull(estimatedMg);
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNull(calibrator.getEstimatedCovariance());
 
@@ -2390,10 +2567,9 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testCalibrateGeneralNonLinearWithInitialValue()
-            throws WrongSizeException,
-            InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
+    public void testCalibrateGeneralNonLinearWithInitialValue() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -2412,7 +2588,6 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
             final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
                     0.0, 0.0, accelQuantLevel,
                     gyroQuantLevel);
-
 
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
@@ -2476,14 +2651,14 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
                 measurements.add(measurement);
             }
 
-            final MSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                    new MSACRobustKnownFrameAccelerometerCalibrator(measurements,
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator =
+                    new RANSACRobustKnownFrameGyroscopeCalibrator(measurements,
                             false, this);
             calibrator.setThreshold(THRESHOLD);
-            calibrator.setInitialBias(ba);
-            calibrator.setInitialMa(ma);
+            calibrator.setInitialBias(bg);
+            calibrator.setInitialMg(mg);
+            calibrator.setInitialGg(gg);
             calibrator.setLinearCalibratorUsed(false);
-            calibrator.setPreliminarySolutionRefined(true);
 
             // estimate
             reset();
@@ -2504,19 +2679,21 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
-            final Matrix estimatedMa = calibrator.getEstimatedMa();
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            if (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertNotNull(estimatedMg);
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -2528,32 +2705,26 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Override
-    public void onCalibrateStart(
-            final RobustKnownFrameAccelerometerCalibrator calibrator) {
-        checkLocked((MSACRobustKnownFrameAccelerometerCalibrator) calibrator);
+    public void onCalibrateStart(RobustKnownFrameGyroscopeCalibrator calibrator) {
+        checkLocked((RANSACRobustKnownFrameGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(
-            final RobustKnownFrameAccelerometerCalibrator calibrator) {
-        checkLocked((MSACRobustKnownFrameAccelerometerCalibrator) calibrator);
+    public void onCalibrateEnd(RobustKnownFrameGyroscopeCalibrator calibrator) {
+        checkLocked((RANSACRobustKnownFrameGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
-    public void onCalibrateNextIteration(
-            final RobustKnownFrameAccelerometerCalibrator calibrator,
-            final int iteration) {
-        checkLocked((MSACRobustKnownFrameAccelerometerCalibrator) calibrator);
+    public void onCalibrateNextIteration(RobustKnownFrameGyroscopeCalibrator calibrator, int iteration) {
+        checkLocked((RANSACRobustKnownFrameGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
-    public void onCalibrateProgressChange(
-            final RobustKnownFrameAccelerometerCalibrator calibrator,
-            final float progress) {
-        checkLocked((MSACRobustKnownFrameAccelerometerCalibrator) calibrator);
+    public void onCalibrateProgressChange(RobustKnownFrameGyroscopeCalibrator calibrator, float progress) {
+        checkLocked((RANSACRobustKnownFrameGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -2564,7 +2735,8 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         mCalibrateProgressChange = 0;
     }
 
-    private void checkLocked(final MSACRobustKnownFrameAccelerometerCalibrator calibrator) {
+    private void checkLocked(final RANSACRobustKnownFrameGyroscopeCalibrator calibrator) {
+        assertTrue(calibrator.isRunning());
         try {
             calibrator.setInitialBiasX(0.0);
             fail("LockedException expected but not thrown");
@@ -2681,7 +2853,12 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialMa(null);
+            calibrator.setInitialMg(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setInitialGg(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -2752,77 +2929,86 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
+        try {
+            calibrator.setComputeAndKeepInliersEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setComputeAndKeepResidualsEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
     }
 
     private void assertEstimatedResult(
-            final Matrix ba, final Matrix ma,
-            final MSACRobustKnownFrameAccelerometerCalibrator calibrator)
+            final Matrix bg, final Matrix mg, final Matrix gg,
+            final RANSACRobustKnownFrameGyroscopeCalibrator calibrator)
             throws WrongSizeException {
 
         final double[] estimatedBiases = calibrator.getEstimatedBiases();
-        assertArrayEquals(ba.getBuffer(), estimatedBiases, 0.0);
+        assertArrayEquals(bg.getBuffer(), estimatedBiases, 0.0);
 
         final double[] estimatedBiases2 = new double[3];
         calibrator.getEstimatedBiases(estimatedBiases2);
         assertArrayEquals(estimatedBiases, estimatedBiases2, 0.0);
 
-        final Matrix ba2 = new Matrix(3, 1);
-        calibrator.getEstimatedBiasesAsMatrix(ba2);
+        final Matrix bg2 = new Matrix(3, 1);
+        calibrator.getEstimatedBiasesAsMatrix(bg2);
 
-        assertEquals(ba, ba2);
+        assertEquals(bg, bg2);
 
-        assertEquals(ba.getElementAtIndex(0), calibrator.getEstimatedBiasFx(),
+        assertEquals(bg.getElementAtIndex(0), calibrator.getEstimatedBiasX(), 0.0);
+        assertEquals(bg.getElementAtIndex(1), calibrator.getEstimatedBiasY(), 0.0);
+        assertEquals(bg.getElementAtIndex(2), calibrator.getEstimatedBiasZ(), 0.0);
+
+        final AngularSpeed bgx1 = calibrator.getEstimatedBiasAngularSpeedX();
+        final AngularSpeed bgx2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getEstimatedBiasAngularSpeedX(bgx2);
+        assertEquals(bgx1, bgx2);
+        assertEquals(calibrator.getEstimatedBiasX(),
+                bgx1.getValue().doubleValue(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgx1.getUnit());
+
+        final AngularSpeed bgy1 = calibrator.getEstimatedBiasAngularSpeedY();
+        final AngularSpeed bgy2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getEstimatedBiasAngularSpeedY(bgy2);
+        assertEquals(bgy1, bgy2);
+        assertEquals(calibrator.getEstimatedBiasY(),
+                bgy1.getValue().doubleValue(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgy1.getUnit());
+
+        final AngularSpeed bgz1 = calibrator.getEstimatedBiasAngularSpeedZ();
+        final AngularSpeed bgz2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        calibrator.getEstimatedBiasAngularSpeedZ(bgz2);
+        assertEquals(bgz1, bgz2);
+        assertEquals(calibrator.getEstimatedBiasZ(),
+                bgz1.getValue().doubleValue(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgz1.getUnit());
+
+        assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);
-        assertEquals(ba.getElementAtIndex(1), calibrator.getEstimatedBiasFy(),
+        assertEquals(mg.getElementAt(1, 1), calibrator.getEstimatedSy(),
                 0.0);
-        assertEquals(ba.getElementAtIndex(2), calibrator.getEstimatedBiasFz(),
+        assertEquals(mg.getElementAt(2, 2), calibrator.getEstimatedSz(),
+                0.0);
+        assertEquals(mg.getElementAt(0, 1), calibrator.getEstimatedMxy(),
+                0.0);
+        assertEquals(mg.getElementAt(0, 2), calibrator.getEstimatedMxz(),
+                0.0);
+        assertEquals(mg.getElementAt(1, 0), calibrator.getEstimatedMyx(),
+                0.0);
+        assertEquals(mg.getElementAt(1, 2), calibrator.getEstimatedMyz(),
+                0.0);
+        assertEquals(mg.getElementAt(2, 0), calibrator.getEstimatedMzx(),
+                0.0);
+        assertEquals(mg.getElementAt(2, 1), calibrator.getEstimatedMzy(),
                 0.0);
 
-        final Acceleration bax1 = calibrator.getEstimatedBiasFxAsAcceleration();
-        final Acceleration bax2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getEstimatedBiasFxAsAcceleration(bax2);
-        assertEquals(bax1, bax2);
-        assertEquals(calibrator.getEstimatedBiasFx(),
-                bax1.getValue().doubleValue(), 0.0);
-        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bax1.getUnit());
-
-        final Acceleration bay1 = calibrator.getEstimatedBiasFyAsAcceleration();
-        final Acceleration bay2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getEstimatedBiasFyAsAcceleration(bay2);
-        assertEquals(bay1, bay2);
-        assertEquals(calibrator.getEstimatedBiasFy(),
-                bay1.getValue().doubleValue(), 0.0);
-        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bay1.getUnit());
-
-        final Acceleration baz1 = calibrator.getEstimatedBiasFzAsAcceleration();
-        final Acceleration baz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getEstimatedBiasFzAsAcceleration(baz2);
-        assertEquals(baz1, baz2);
-        assertEquals(calibrator.getEstimatedBiasFz(),
-                baz1.getValue().doubleValue(), 0.0);
-        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, baz1.getUnit());
-
-        assertEquals(ma.getElementAt(0, 0), calibrator.getEstimatedSx(),
-                0.0);
-        assertEquals(ma.getElementAt(1, 1), calibrator.getEstimatedSy(),
-                0.0);
-        assertEquals(ma.getElementAt(2, 2), calibrator.getEstimatedSz(),
-                0.0);
-        assertEquals(ma.getElementAt(0, 1), calibrator.getEstimatedMxy(),
-                0.0);
-        assertEquals(ma.getElementAt(0, 2), calibrator.getEstimatedMxz(),
-                0.0);
-        assertEquals(ma.getElementAt(1, 0), calibrator.getEstimatedMyx(),
-                0.0);
-        assertEquals(ma.getElementAt(1, 2), calibrator.getEstimatedMyz(),
-                0.0);
-        assertEquals(ma.getElementAt(2, 0), calibrator.getEstimatedMzx(),
-                0.0);
-        assertEquals(ma.getElementAt(2, 1), calibrator.getEstimatedMzy(),
-                0.0);
+        assertEquals(gg, calibrator.getEstimatedGg());
     }
 
     private Matrix generateBa() {
@@ -2891,5 +3077,4 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
     private double getGyroNoiseRootPSD() {
         return 0.01 * DEG_TO_RAD / 60.0;
     }
-
 }

@@ -17,8 +17,8 @@ package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.numerical.robust.PROSACRobustEstimator;
-import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.PROMedSRobustEstimator;
+import com.irurueta.numerical.robust.PROMedSRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -26,68 +26,78 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates accelerometer biases, cross couplings and scaling factors
- * using a PROSAC algorithm to discard outliers.
+ * Robustly estimates gyroscope biases, cross couplings and scaling factors
+ * along with G-dependent cross biases introduced on the gyroscope by the
+ * specific forces sensed by the accelerometer using a PROMedS algorithm to discard
+ * outliers.
  * <p>
- * To use this calibrator at least 4 measurements at different known frames must
- * be provided. In other words, accelerometer samples must be obtained at 4
- * different positions, orientations and velocities (although typically velocities are
- * always zero).
+ * To use this calibrator at least 7 measurements at different known frames must
+ * be provided. In other words, accelerometer and gyroscope (i.e. body kinematics)
+ * samples must be obtained at 7 different positions, orientations and velocities
+ * (although typically velocities are always zero).
  * <p>
- * Measured specific force is assumed to follow the model shown below:
+ * Measured gyroscope angular rates is assumed to follow the model shown below:
  * <pre>
- *     fmeas = ba + (I + Ma) * ftrue + w
+ *     Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue + w
  * </pre>
  * Where:
- * - fmeas is the measured specific force. This is a 3x1 vector.
- * - ba is accelerometer bias. Ideally, on a perfect accelerometer, this should be a
+ * - Ωmeas is the measured gyroscope angular rates. This is a 3x1 vector.
+ * - bg is the gyroscope bias. Ideally, on a perfect gyroscope, this should be a
  * 3x1 zero vector.
  * - I is the 3x3 identity matrix.
- * - Ma is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
- * a perfect accelerometer, this should be a 3x3 zero matrix.
- * - ftrue is ground-trush specific force.
- * - w is measurement noise.
+ * - Mg is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
+ * a perfect gyroscope, this should be a 3x3 zero matrix.
+ * - Ωtrue is ground-truth gyroscope angular rates.
+ * - Gg is the G-dependent cross biases introduced by the specific forces sensed
+ * by the accelerometer. Ideally, on a perfect gyroscope, this should be a 3x3
+ * zero matrix.
+ * - ftrue is ground-truth specific force. This is a 3x1 vector.
+ * - w is measurement noise. This is a 3x1 vector.
  */
-public class PROSACRobustKnownFrameAccelerometerCalibrator extends
-        RobustKnownFrameAccelerometerCalibrator {
+public class PROMedSRobustKnownFrameGyroscopeCalibrator extends
+        RobustKnownFrameGyroscopeCalibrator {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 1e-2;
+    public static final double DEFAULT_STOP_THRESHOLD = 5e-4;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Quality scores corresponding to each provided sample.
@@ -98,7 +108,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
     /**
      * Constructor.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator() {
+    public PROMedSRobustKnownFrameGyroscopeCalibrator() {
     }
 
     /**
@@ -107,8 +117,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(listener);
     }
 
@@ -119,7 +129,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements) {
         super(measurements);
     }
@@ -132,9 +142,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                     and velocities).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, listener);
     }
 
@@ -144,7 +154,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -155,9 +165,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(commonAxisUsed, listener);
     }
 
@@ -170,7 +180,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -186,10 +196,10 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
     }
 
@@ -200,9 +210,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores) {
         internalSetQualityScores(qualityScores);
     }
@@ -216,11 +226,11 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param listener      listener to be notified of events such as when estimation
      *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -235,9 +245,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      deviations taken at different frames (positions, orientations
      *                      and velocities).
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements) {
         super(measurements);
@@ -255,12 +265,12 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      and velocities).
      * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -274,10 +284,10 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(final double[] qualityScores,
-                                                         final boolean commonAxisUsed) {
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(final double[] qualityScores,
+                                                     final boolean commonAxisUsed) {
         super(commonAxisUsed);
         internalSetQualityScores(qualityScores);
     }
@@ -292,12 +302,12 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(commonAxisUsed, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -314,9 +324,9 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -337,45 +347,70 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustKnownFrameAccelerometerCalibrator(
+    public PROMedSRobustKnownFrameGyroscopeCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameAccelerometerCalibratorListener listener) {
+            final RobustKnownFrameGyroscopeCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
         internalSetQualityScores(qualityScores);
     }
-
+    
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @return threshold to determine whether samples are inliers or not.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+
+        mStopThreshold = stopThreshold;
     }
 
     /**
@@ -408,64 +443,14 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
     }
 
     /**
-     * Indicates whether calibrator is ready to find a solution.
+     * Indicates whether solver is ready to find a solution.
      *
-     * @return true if calibrator is ready, false otherwise.
+     * @return true if solver is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
         return super.isReady() && mQualityScores != null &&
                 mQualityScores.length == mMeasurements.size();
-    }
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     *
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     *
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     *
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     *
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
     }
 
     /**
@@ -485,8 +470,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<PreliminaryResult>() {
+        final PROMedSRobustEstimator<PreliminaryResult> innerEstimator =
+                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -494,7 +479,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
 
                     @Override
                     public double getThreshold() {
-                        return mThreshold;
+                        return mStopThreshold;
                     }
 
                     @Override
@@ -508,32 +493,35 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                            final List<PreliminaryResult> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<PreliminaryResult> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
+                    public double computeResidual(
+                            final PreliminaryResult currentEstimation, final int i) {
                         return computeError(mMeasurements.get(i), currentEstimation);
                     }
 
                     @Override
                     public boolean isReady() {
-                        return PROSACRobustKnownFrameAccelerometerCalibrator.this.isReady();
+                        return PROMedSRobustKnownFrameGyroscopeCalibrator.this.isReady();
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(PROSACRobustKnownFrameAccelerometerCalibrator.this);
+                            mListener.onCalibrateStart(PROMedSRobustKnownFrameGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateEnd(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(PROSACRobustKnownFrameAccelerometerCalibrator.this);
+                            mListener.onCalibrateEnd(PROMedSRobustKnownFrameGyroscopeCalibrator.this);
                         }
                     }
 
@@ -542,7 +530,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    PROSACRobustKnownFrameAccelerometerCalibrator.this, iteration);
+                                    PROMedSRobustKnownFrameGyroscopeCalibrator.this, iteration);
                         }
                     }
 
@@ -551,7 +539,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    PROSACRobustKnownFrameAccelerometerCalibrator.this, progress);
+                                    PROMedSRobustKnownFrameGyroscopeCalibrator.this, progress);
                         }
                     }
                 });
@@ -559,10 +547,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
         try {
             mRunning = true;
             mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
+            innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -589,7 +574,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROSAC;
+        return RobustEstimatorMethod.PROMedS;
     }
 
     /**
@@ -599,7 +584,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
+     *                                  is smaller than 3 samples.
      */
     private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||

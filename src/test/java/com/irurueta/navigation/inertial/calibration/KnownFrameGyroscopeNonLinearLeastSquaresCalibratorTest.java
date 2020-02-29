@@ -96,7 +96,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         angularSpeed1 = calibrator.getInitialBiasAngularSpeedZ();
         angularSpeed2 = new AngularSpeed(0.0,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
-        assertEquals(angularSpeed1, angularSpeed2);;
+        assertEquals(angularSpeed1, angularSpeed2);
         calibrator.getInitialBiasAngularSpeedZ(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -187,7 +187,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         angularSpeed1 = calibrator.getInitialBiasAngularSpeedZ();
         angularSpeed2 = new AngularSpeed(0.0,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
-        assertEquals(angularSpeed1, angularSpeed2);;
+        assertEquals(angularSpeed1, angularSpeed2);
         calibrator.getInitialBiasAngularSpeedZ(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);

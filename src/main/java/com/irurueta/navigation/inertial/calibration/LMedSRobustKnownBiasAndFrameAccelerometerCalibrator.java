@@ -871,6 +871,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
+            innerEstimator.setStopThreshold(mStopThreshold);
             final Matrix preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 

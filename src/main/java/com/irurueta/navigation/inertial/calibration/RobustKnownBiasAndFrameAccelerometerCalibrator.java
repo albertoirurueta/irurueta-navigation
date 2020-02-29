@@ -78,13 +78,13 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
     /**
      * Indicates that by default preliminary solutions are refined.
      */
-    public static final boolean DEFAULT_REFINE_PRELIMINARY_SOLUTIONS = true;
+    public static final boolean DEFAULT_REFINE_PRELIMINARY_SOLUTIONS = false;
 
     /**
      * Default robust estimator method when none is provided.
      */
     public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.RANSAC;
+            RobustEstimatorMethod.LMedS;
 
     /**
      * Indicates that result is refined by default using a non-linear calibrator

@@ -53,7 +53,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
     private static final double MAX_ANGLE_DEGREES = 180.0;
 
     private static final double MIN_LATITUDE_DEGREES = -90.0;
-    private static final double MAX_LATITUDE_DEGREEs = 90.0;
+    private static final double MAX_LATITUDE_DEGREES = 90.0;
     private static final double MIN_LONGITUDE_DEGREES = -180.0;
     private static final double MAX_LONGITUDE_DEGREES = 180.0;
     private static final double MIN_HEIGHT = -50.0;
@@ -147,7 +147,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -252,7 +252,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -359,7 +359,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -465,7 +465,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -571,7 +571,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -677,7 +677,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -783,7 +783,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -889,7 +889,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1658,13 +1658,13 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
                 new RANSACRobustKnownFrameAccelerometerCalibrator();
 
         // check default value
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
 
         // set new value
-        calibrator.setPreliminarySolutionRefined(false);
+        calibrator.setPreliminarySolutionRefined(true);
 
         // check
-        assertFalse(calibrator.isPreliminarySolutionRefined());
+        assertTrue(calibrator.isPreliminarySolutionRefined());
     }
 
     @Test
@@ -1833,7 +1833,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         final Random random = new Random();
         final UniformRandomizer randomizer = new UniformRandomizer(random);
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -1951,7 +1951,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         final Random random = new Random();
         final UniformRandomizer randomizer = new UniformRandomizer(random);
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2074,7 +2074,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2209,7 +2209,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2342,7 +2342,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2478,7 +2478,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -2544,6 +2544,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
             calibrator.setInitialBias(ba);
             calibrator.setInitialMa(ma);
             calibrator.setLinearCalibratorUsed(false);
+            calibrator.setPreliminarySolutionRefined(true);
 
             // estimate
             reset();
@@ -2621,6 +2622,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     private void checkLocked(final RANSACRobustKnownFrameAccelerometerCalibrator calibrator) {
+        assertTrue(calibrator.isRunning());
         try {
             calibrator.setInitialBiasX(0.0);
             fail("LockedException expected but not thrown");

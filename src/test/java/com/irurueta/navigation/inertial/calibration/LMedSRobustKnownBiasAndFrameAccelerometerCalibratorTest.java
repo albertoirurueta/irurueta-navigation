@@ -54,17 +54,21 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
     private static final double MAX_ANGLE_DEGREES = 180.0;
 
     private static final double MIN_LATITUDE_DEGREES = -90.0;
-    private static final double MAX_LATITUDE_DEGREEs = 90.0;
+    private static final double MAX_LATITUDE_DEGREES = 90.0;
     private static final double MIN_LONGITUDE_DEGREES = -180.0;
     private static final double MAX_LONGITUDE_DEGREES = 180.0;
     private static final double MIN_HEIGHT = -50.0;
     private static final double MAX_HEIGHT = 50.0;
 
     private static final int MEASUREMENT_NUMBER = 1000;
+    private static final int LARGE_MEASUREMENT_NUMBER = 100000;
 
     private static final int OUTLIER_PERCENTAGE = 20;
 
-    private static final double THRESHOLD = 1e-5;
+    private static final double THRESHOLD = 1e-8;
+    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-2;
+
+    private static final double OUTLIER_ERROR_FACTOR = 100.0;
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
@@ -139,7 +143,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -227,7 +231,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -318,7 +322,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -407,7 +411,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -496,7 +500,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -585,7 +589,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -674,7 +678,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -763,7 +767,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -857,7 +861,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -946,7 +950,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1035,7 +1039,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1124,7 +1128,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1213,7 +1217,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1302,7 +1306,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1391,7 +1395,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1481,7 +1485,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1576,7 +1580,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1665,7 +1669,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1754,7 +1758,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1843,7 +1847,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -1932,7 +1936,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2022,7 +2026,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2111,7 +2115,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2200,7 +2204,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2290,7 +2294,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2389,7 +2393,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2488,7 +2492,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2587,7 +2591,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2686,7 +2690,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2785,7 +2789,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2884,7 +2888,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -2983,7 +2987,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3081,7 +3085,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3185,7 +3189,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3290,7 +3294,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3395,7 +3399,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3500,7 +3504,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3605,7 +3609,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3710,7 +3714,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -3815,7 +3819,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertTrue(calibrator.isLinearCalibratorUsed());
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
         assertEquals(calibrator.getProgressDelta(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
@@ -4554,13 +4558,13 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 new LMedSRobustKnownBiasAndFrameAccelerometerCalibrator();
 
         // check default value
-        assertTrue(calibrator.isPreliminarySolutionRefined());
+        assertFalse(calibrator.isPreliminarySolutionRefined());
 
         // set new value
-        calibrator.setPreliminarySolutionRefined(false);
+        calibrator.setPreliminarySolutionRefined(true);
 
         // check
-        assertFalse(calibrator.isPreliminarySolutionRefined());
+        assertTrue(calibrator.isPreliminarySolutionRefined());
     }
 
     @Test
@@ -4729,7 +4733,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         final Random random = new Random();
         final UniformRandomizer randomizer = new UniformRandomizer(random);
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -4848,7 +4852,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         final Random random = new Random();
         final UniformRandomizer randomizer = new UniformRandomizer(random);
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -4944,6 +4948,269 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
     }
 
     @Test
+    public void testCalibrateGeneralWithInlierNoise() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaGeneral();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final List<StandardDeviationFrameBodyKinematics> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                }
+
+                final StandardDeviationFrameBodyKinematics measurement =
+                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
+                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+            }
+
+            final double biasX = ba.getElementAtIndex(0);
+            final double biasY = ba.getElementAtIndex(1);
+            final double biasZ = ba.getElementAtIndex(2);
+            final LMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                            measurements, biasX, biasY, biasZ, false, this);
+            calibrator.setStopThreshold(THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedMa = calibrator.getEstimatedMa();
+
+            if (!ma.equals(estimatedMa, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(ma.equals(estimatedMa, VERY_LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedMa, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisWithInlierNoise() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaCommonAxis();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
+                    gyroQuantLevel);
+
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final List<StandardDeviationFrameBodyKinematics> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                }
+
+                final StandardDeviationFrameBodyKinematics measurement =
+                        new StandardDeviationFrameBodyKinematics(measuredKinematics,
+                                ecefFrame, ecefFrame, TIME_INTERVAL_SECONDS,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+            }
+
+            final double biasX = ba.getElementAtIndex(0);
+            final double biasY = ba.getElementAtIndex(1);
+            final double biasZ = ba.getElementAtIndex(2);
+            final LMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                            measurements, biasX, biasY, biasZ, true, this);
+            calibrator.setStopThreshold(THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedMa = calibrator.getEstimatedMa();
+
+            if (!ma.equals(estimatedMa, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(ma.equals(estimatedMa, VERY_LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedMa, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
     public void testCalibrateGeneralNoRefinement() throws WrongSizeException,
             InvalidSourceAndDestinationFrameTypeException,
             LockedException, NotReadyException, CalibrationException {
@@ -4970,7 +5237,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -5102,7 +5369,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -5170,6 +5437,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
             calibrator.setStopThreshold(THRESHOLD);
             calibrator.setInitialMa(ma);
             calibrator.setLinearCalibratorUsed(false);
+            calibrator.setPreliminarySolutionRefined(true);
 
             // estimate
             reset();

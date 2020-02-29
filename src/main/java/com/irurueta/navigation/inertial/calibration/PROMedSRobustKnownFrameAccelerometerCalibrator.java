@@ -68,7 +68,7 @@ public class PROMedSRobustKnownFrameAccelerometerCalibrator extends
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_STOP_THRESHOLD = 1e-5;
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-8;
 
     /**
      * Minimum allowed stop threshold value.
@@ -538,7 +538,7 @@ public class PROMedSRobustKnownFrameAccelerometerCalibrator extends
         try {
             mRunning = true;
             mInliersData = null;
-            innerEstimator.setUseInlierThresholds(false);
+            innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
