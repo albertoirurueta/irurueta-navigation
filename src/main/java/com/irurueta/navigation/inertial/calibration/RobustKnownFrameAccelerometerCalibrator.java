@@ -140,11 +140,6 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
     public static final int MIN_ITERATIONS = 1;
 
     /**
-     * Minimum allowed distance for a given circle or sphere.
-     */
-    public static final double EPSILON = 1e-7;
-
-    /**
      * Contains a list of body kinematics measurements taken at different
      * frames (positions, orientations and velocities) and containing the standard
      * deviations of accelerometer and gyroscope measurements.

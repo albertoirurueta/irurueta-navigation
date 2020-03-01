@@ -141,11 +141,6 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
     public static final int MIN_ITERATIONS = 1;
 
     /**
-     * Minimum allowed distance for a given circle or sphere.
-     */
-    public static final double EPSILON = 1e-7;
-
-    /**
      * Contains a list of body kinematics measurements taken at different
      * frames (positions, orientations and velocities) and containing the standard
      * deviations of accelerometer and gyroscope measurements.
@@ -1036,7 +1031,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * second (m/s^2).
      *
      * @param biasX x coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasX(final double biasX) throws LockedException {
         if (mRunning) {
@@ -1060,7 +1055,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * second (m/s^2).
      *
      * @param biasY y coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasY(final double biasY) throws LockedException {
         if (mRunning) {
@@ -1085,7 +1080,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * second (m/s^2).
      *
      * @param biasZ z coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasZ(final double biasZ) throws LockedException {
         if (mRunning) {
@@ -1118,7 +1113,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * Sets known x coordinate of accelerometer bias.
      *
      * @param biasX x coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasX(final Acceleration biasX) throws LockedException {
         if (mRunning) {
@@ -1151,7 +1146,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * Sets known y coordinate of accelerometer bias.
      *
      * @param biasY y coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasY(final Acceleration biasY) throws LockedException {
         if (mRunning) {
@@ -1184,7 +1179,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * Sets known z coordinate of accelerometer bias.
      *
      * @param biasZ z coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasZ(final Acceleration biasZ) throws LockedException {
         if (mRunning) {
@@ -1201,7 +1196,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @param biasX x coordinate of accelerometer bias.
      * @param biasY y coordinate of accelerometer bias.
      * @param biasZ z coordinate of accelerometer bias.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasCoordinates(
             final double biasX, final double biasY, final double biasZ)
@@ -1216,10 +1211,10 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
     /**
      * Sets known accelerometer bias coordinates.
      *
-     * @param biasX z coordinate of accelerometer bias.
+     * @param biasX x coordinate of accelerometer bias.
      * @param biasY y coordinate of accelerometer bias.
      * @param biasZ z coordinate of accelerometer bias.
-     * @throws LockedException if estimator is curently running.
+     * @throws LockedException if calibrator is currently running.
      */
     public void setBiasCoordinates(final Acceleration biasX, final Acceleration biasY,
                                    final Acceleration biasZ) throws LockedException {
@@ -6021,7 +6016,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
 
     /**
      * Internally sets known accelerometer bias as an array.
-     * Array values are expressed in meters per squared second m/s^2).
+     * Array values are expressed in meters per squared second (m/s^2).
      *
      * @param bias known accelerometer bias.
      * @throws IllegalArgumentException if provided array does not have length 3.
@@ -6037,7 +6032,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
 
     /**
      * Internally sets known accelerometer bias as a column matrix.
-     * Matrix values are expressed in meters per squared second m/s^2).
+     * Matrix values are expressed in meters per squared second (m/s^2).
      *
      * @param bias accelerometer bias to be set.
      * @throws IllegalArgumentException if provided matrix is not 3x1.

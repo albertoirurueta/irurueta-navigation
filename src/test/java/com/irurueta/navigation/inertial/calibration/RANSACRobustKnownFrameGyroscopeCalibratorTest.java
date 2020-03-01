@@ -98,7 +98,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibratorTest
         assertEquals(bgx1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(bgx1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed bgx2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
+                AngularSpeedUnit.DEGREES_PER_SECOND);
         calibrator.getInitialBiasAngularSpeedX(bgx2);
         assertEquals(bgx1, bgx2);
         final AngularSpeed bgy1 = calibrator.getInitialBiasAngularSpeedY();
