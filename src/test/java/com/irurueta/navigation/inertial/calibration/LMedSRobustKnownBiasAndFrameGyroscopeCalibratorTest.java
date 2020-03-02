@@ -40,8 +40,9 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
+public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         implements RobustKnownBiasAndFrameGyroscopeCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
@@ -80,18 +81,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -183,18 +180,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testConstructor2() throws WrongSizeException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(this);
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -289,18 +282,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -395,19 +384,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         measurements, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -499,19 +484,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testConstructor5() throws WrongSizeException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -603,19 +584,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testConstructor6() throws WrongSizeException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -710,19 +687,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         measurements, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -817,19 +790,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         measurements, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -927,19 +896,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         biasX, biasY, biasZ);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1037,19 +1002,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         biasX, biasY, biasZ, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1149,19 +1110,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         biasX, biasY, biasZ);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1261,19 +1218,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         biasX, biasY, biasZ, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1371,19 +1324,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         biasX, biasY, biasZ, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1481,19 +1430,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         biasX, biasY, biasZ, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1593,19 +1538,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         biasX, biasY, biasZ, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1705,19 +1646,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         biasX, biasY, biasZ, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1822,19 +1759,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final AngularSpeed bz = new AngularSpeed(biasZ,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         bx, by, bz);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -1939,19 +1872,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final AngularSpeed bz = new AngularSpeed(biasZ,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         bx, by, bz, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2059,19 +1988,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bx, by, bz);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2179,19 +2104,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bx, by, bz, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2296,19 +2217,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final AngularSpeed bz = new AngularSpeed(biasZ,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bx, by, bz,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bx, by, bz,
                         true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2413,19 +2330,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final AngularSpeed bz = new AngularSpeed(biasZ,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bx, by, bz,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bx, by, bz,
                         true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2533,19 +2446,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bx, by, bz, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2653,19 +2562,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bx, by, bz, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2763,18 +2668,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2866,7 +2767,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(new double[1]);
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -2881,18 +2782,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias, this);
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -2984,7 +2881,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3003,19 +2900,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         measurements, bias);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3107,7 +3000,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3126,19 +3019,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         measurements, bias, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3230,7 +3119,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3246,19 +3135,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
                         true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3350,7 +3235,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new double[1], true);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3366,19 +3251,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
                         true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3470,7 +3351,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new double[1], true, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3489,19 +3370,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bias, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3593,7 +3470,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new double[1], true);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3612,19 +3489,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bias, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3716,7 +3589,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new double[1], true, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3732,18 +3605,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bg);
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bg);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3835,13 +3704,13 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3857,18 +3726,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bg, this);
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bg, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -3960,13 +3825,13 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -3985,18 +3850,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements, bg);
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements, bg);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -4088,13 +3949,13 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4113,19 +3974,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         measurements, bg, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -4217,13 +4074,13 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4239,18 +4096,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bg, true);
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bg, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -4342,13 +4195,13 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(1, 1), true);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(3, 3), true);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4364,19 +4217,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final double biasZ = bg.getElementAtIndex(2);
         final double[] bias = bg.getBuffer();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                         bg, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -4468,14 +4317,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(1, 1), true,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     new Matrix(3, 3), true,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -4495,19 +4344,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bg, true);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -4599,14 +4444,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(1, 1),
                     true);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(3, 3),
                     true);
             fail("IllegalArgumentException expected but not thrown");
@@ -4626,19 +4471,15 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
 
-        RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+        LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
                         bg, true, this);
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
@@ -4730,14 +4571,14 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(1, 1),
                     true, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            calibrator = new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                     measurements, new Matrix(3, 3),
                     true, this);
             fail("IllegalArgumentException expected but not thrown");
@@ -4747,63 +4588,33 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+    public void testGetSetStopThreshold() throws LockedException {
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
 
         // set new value
-        calibrator.setThreshold(1.0);
-
+        calibrator.setStopThreshold(1.0);
+        
         // check
-        assertEquals(calibrator.getThreshold(), 1.0, 0.0);
+        assertEquals(calibrator.getStopThreshold(), 1.0, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.setThreshold(0.0);
+            calibrator.setStopThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
-
-        // check default value
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-
-        // set new value
-        calibrator.setComputeAndKeepInliersEnabled(true);
-
-        // check
-        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
-    }
-
-    @Test
-    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
-
-        // check default value
-        assertFalse(calibrator.isComputeAndKeepResiduals());
-
-        // set new value
-        calibrator.setComputeAndKeepResidualsEnabled(true);
-
-        // check
-        assertTrue(calibrator.isComputeAndKeepResiduals());
-    }
-
-    @Test
     public void testGetSetBiasX() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -4820,8 +4631,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBiasY() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
@@ -4838,8 +4649,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBiasZ() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -4856,8 +4667,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBiasAngularSpeedX() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed bx1 = calibrator.getBiasAngularSpeedX();
@@ -4884,8 +4695,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBiasAngularSpeedY() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed by1 = calibrator.getBiasAngularSpeedY();
@@ -4912,8 +4723,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBiasAngularSpeedZ() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed bz1 = calibrator.getBiasAngularSpeedZ();
@@ -4940,8 +4751,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testSetInitialBias1() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check initial values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -4964,8 +4775,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testSetInitialBias2() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check initial values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -4995,8 +4806,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialSx() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -5013,8 +4824,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialSy() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -5031,8 +4842,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialSz() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -5049,8 +4860,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMxy() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -5067,8 +4878,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMxz() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
@@ -5085,8 +4896,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMyx() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
@@ -5103,8 +4914,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMyz() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
@@ -5121,8 +4932,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMzx() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
@@ -5139,8 +4950,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMzy() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
@@ -5157,8 +4968,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testSetInitialScalingFactors() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -5181,8 +4992,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testSetInitialCrossCouplingErrors() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -5215,8 +5026,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testSetInitialScalingFactorsAndCrossCouplingErrors() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -5259,8 +5070,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBias() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final double[] bias1 = calibrator.getBias();
@@ -5290,8 +5101,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetBiasAsMatrix() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final Matrix bias1 = calibrator.getBiasAsMatrix();
@@ -5336,8 +5147,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialMg() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final Matrix mg1 = calibrator.getInitialMg();
@@ -5380,8 +5191,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetInitialGg() throws WrongSizeException, LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         final Matrix gg1 = calibrator.getInitialGg();
@@ -5424,8 +5235,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetMeasurements() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -5442,8 +5253,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertFalse(calibrator.isCommonAxisUsed());
@@ -5457,8 +5268,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -5472,8 +5283,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testIsSetLinearCalibratorUsed() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -5487,8 +5298,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertFalse(calibrator.isPreliminarySolutionRefined());
@@ -5502,12 +5313,12 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getProgressDelta(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
 
         // set new value
@@ -5531,12 +5342,12 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getConfidence(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
 
         // set new value
@@ -5560,12 +5371,12 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getMaxIterations(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
 
         // set new value
         calibrator.setMaxIterations(1);
@@ -5582,8 +5393,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -5597,8 +5408,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -5612,8 +5423,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
@@ -5627,12 +5438,12 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+        final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
+                LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS);
 
         // set new value
         calibrator.setPreliminarySubsetSize(8);
@@ -5733,10 +5544,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
                 measurements.add(measurement);
             }
 
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                    new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                             measurements, bg, false, this);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -5862,10 +5673,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
                 measurements.add(measurement);
             }
 
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                    new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                             measurements, bg, true, this);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -5995,10 +5806,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
                 measurements.add(measurement);
             }
 
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                    new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                             measurements, bg, false, this);
-            calibrator.setThreshold(LARGE_THRESHOLD);
+            calibrator.setStopThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -6125,10 +5936,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
                 measurements.add(measurement);
             }
 
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                    new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                             measurements, bg, true, this);
-            calibrator.setThreshold(LARGE_THRESHOLD);
+            calibrator.setStopThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -6254,10 +6065,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
                 measurements.add(measurement);
             }
 
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                    new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                             measurements, bg, false, this);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
             calibrator.setResultRefined(false);
             calibrator.setPreliminarySolutionRefined(false);
 
@@ -6385,10 +6196,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
                 measurements.add(measurement);
             }
 
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
-                    new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
+                    new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
                             measurements, bg, false, this);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
             calibrator.setInitialMg(mg);
             calibrator.setInitialGg(gg);
             calibrator.setLinearCalibratorUsed(false);
@@ -6435,22 +6246,22 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
-        checkLocked((RANSACRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
+        checkLocked((LMedSRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
     public void onCalibrateEnd(
             final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
-        checkLocked((RANSACRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
+        checkLocked((LMedSRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
     public void onCalibrateNextIteration(
-            final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator,
+            final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator, 
             final int iteration) {
-        checkLocked((RANSACRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
+        checkLocked((LMedSRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
@@ -6458,7 +6269,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
     public void onCalibrateProgressChange(
             final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator,
             final float progress) {
-        checkLocked((RANSACRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
+        checkLocked((LMedSRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -6469,7 +6280,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
         mCalibrateProgressChange = 0;
     }
 
-    private void checkLocked(final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
+    private void checkLocked(final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
             calibrator.setInitialSx(0.0);
@@ -6609,17 +6420,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
             fail("LockedException expected but not thrown");
         }
         try {
-            calibrator.setThreshold(0.1);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            calibrator.setComputeAndKeepInliersEnabled(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            calibrator.setComputeAndKeepResidualsEnabled(true);
+            calibrator.setStopThreshold(0.1);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -6627,7 +6428,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     private void assertEstimatedResult(
             final Matrix mg, final Matrix gg,
-            final RANSACRobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
+            final LMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {
 
         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);

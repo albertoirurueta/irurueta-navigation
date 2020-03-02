@@ -18,8 +18,8 @@ package com.irurueta.navigation.inertial.calibration;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.numerical.robust.RANSACRobustEstimator;
-import com.irurueta.numerical.robust.RANSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Robustly estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using a RANSAC algorithm to discard
+ * specific forces sensed by the accelerometer using an LMedS algorithm to discard
  * outliers.
  * This estimator assumes that biases are known.
  * <p>
@@ -57,50 +57,55 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
+public class LMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
         RobustKnownBiasAndFrameGyroscopeCalibrator {
-    /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
-     */
-    public static final double DEFAULT_THRESHOLD = 1e-2;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-5;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Minimum allowed stop threshold value.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default residuals will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Constructor.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator() {
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator() {
         super();
     }
 
@@ -110,7 +115,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(listener);
     }
@@ -122,7 +127,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements) {
         super(measurements);
     }
@@ -135,7 +140,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                     and velocities).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(measurements, listener);
@@ -147,7 +152,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
@@ -159,7 +164,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(commonAxisUsed, listener);
@@ -174,7 +179,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -190,7 +195,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -207,7 +212,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param biasZ known z coordinate of gyroscope bias expressed in radians per
      *              second (rad/s).
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double biasX, final double biasY, final double biasZ) {
         super(biasX, biasY, biasZ);
     }
@@ -224,7 +229,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(biasX, biasY, biasZ, listener);
@@ -243,7 +248,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param biasZ        known z coordinate of gyroscope bias expressed in radians per
      *                     second (rad/s).
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double biasX, final double biasY, final double biasZ) {
         super(measurements, biasX, biasY, biasZ);
@@ -263,7 +268,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                     second (rad/s).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double biasX, final double biasY, final double biasZ,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -282,7 +287,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed) {
         super(biasX, biasY, biasZ, commonAxisUsed);
@@ -301,7 +306,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -323,7 +328,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed) {
@@ -346,7 +351,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double biasX, final double biasY, final double biasZ,
             final boolean commonAxisUsed,
@@ -361,7 +366,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param biasY known y coordinate of gyroscope bias.
      * @param biasZ known z coordinate of gyroscope bias.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ) {
         super(biasX, biasY, biasZ);
     }
@@ -375,7 +380,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(biasX, biasY, biasZ, listener);
@@ -391,7 +396,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param biasY        known y coordinate of gyroscope bias.
      * @param biasZ        known z coordinate of gyroscope bias.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ) {
         super(measurements, biasX, biasY, biasZ);
@@ -408,7 +413,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param biasZ        known z coordinate of gyroscope bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -424,7 +429,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final boolean commonAxisUsed) {
         super(biasX, biasY, biasZ, commonAxisUsed);
@@ -440,7 +445,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -459,7 +464,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final boolean commonAxisUsed) {
@@ -479,7 +484,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
             final boolean commonAxisUsed,
@@ -493,7 +498,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param bias known gyroscope bias.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double[] bias) {
         super(bias);
     }
@@ -506,7 +511,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                 starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double[] bias,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(bias, listener);
@@ -521,7 +526,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param bias         known gyroscope bias.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double[] bias) {
         super(measurements, bias);
@@ -537,7 +542,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double[] bias,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -552,7 +557,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double[] bias, final boolean commonAxisUsed) {
         super(bias, commonAxisUsed);
     }
@@ -566,7 +571,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final double[] bias, final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(bias, commonAxisUsed, listener);
@@ -583,7 +588,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double[] bias,
             final boolean commonAxisUsed) {
@@ -602,7 +607,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final double[] bias, final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -615,7 +620,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param bias known gyroscope bias.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final Matrix bias) {
         super(bias);
     }
@@ -628,7 +633,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                 starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final Matrix bias,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(bias, listener);
@@ -643,7 +648,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param bias         known gyroscope bias.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final Matrix bias) {
         super(measurements, bias);
@@ -659,7 +664,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final Matrix bias,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -674,7 +679,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final Matrix bias, final boolean commonAxisUsed) {
         super(bias, commonAxisUsed);
     }
@@ -688,7 +693,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final Matrix bias, final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
         super(bias, commonAxisUsed, listener);
@@ -705,7 +710,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      *                       accelerometer and gyroscope.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final Matrix bias,
             final boolean commonAxisUsed) {
@@ -724,7 +729,7 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+    public LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final Matrix bias, final boolean commonAxisUsed,
             final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
@@ -732,83 +737,58 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured angular rates and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @return threshold to determine whether samples are inliers or not.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured angular rates and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
-    }
 
-    /**
-     * Indicates whether inliers must be computed and kept.
-     *
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     *
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     *
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     *
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
+        mStopThreshold = stopThreshold;
     }
 
     /**
@@ -828,13 +808,8 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
+        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
+                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public int getTotalSamples() {
                         return mMeasurements.size();
@@ -852,44 +827,53 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
                     }
 
                     @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
+                    public double computeResidual(
+                            final PreliminaryResult currentEstimation, final int i) {
                         return computeError(mMeasurements.get(i), currentEstimation);
                     }
 
                     @Override
                     public boolean isReady() {
-                        return RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.super.isReady();
+                        return LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this.isReady();
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.this);
+                            mListener.onCalibrateStart(
+                                    LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateEnd(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.this);
+                            mListener.onCalibrateEnd(
+                                    LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.this, iteration);
+                                    LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this,
+                                    iteration);
                         }
                     }
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    RANSACRobustKnownBiasAndFrameGyroscopeCalibrator.this, progress);
+                                    LMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this,
+                                    progress);
                         }
                     }
                 });
@@ -897,13 +881,10 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
         try {
             mRunning = true;
             mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
+            innerEstimator.setStopThreshold(mStopThreshold);
             final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
@@ -927,6 +908,6 @@ public class RANSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.RANSAC;
+        return RobustEstimatorMethod.LMedS;
     }
 }

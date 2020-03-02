@@ -827,7 +827,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return LMedSRobustKnownBiasAndFrameAccelerometerCalibrator.super.isReady();
+                        return LMedSRobustKnownBiasAndFrameAccelerometerCalibrator.this.isReady();
                     }
 
                     @Override
