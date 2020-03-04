@@ -2861,7 +2861,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
                     / sqrtTimeInterval;
 
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    random, 0.0, specificForceStandardDeviation);
+                    random, 0.0, angularRateStandardDeviation);
 
             final List<StandardDeviationFrameBodyKinematics> measurements =
                     new ArrayList<>();
@@ -3004,7 +3004,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
                     / sqrtTimeInterval;
 
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    random, 0.0, specificForceStandardDeviation);
+                    random, 0.0, angularRateStandardDeviation);
 
             final List<StandardDeviationFrameBodyKinematics> measurements =
                     new ArrayList<>();
@@ -3151,7 +3151,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
                     / sqrtTimeInterval;
 
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    random, 0.0, specificForceStandardDeviation);
+                    random, 0.0, angularRateStandardDeviation);
 
             final List<StandardDeviationFrameBodyKinematics> measurements =
                     new ArrayList<>();
@@ -3295,7 +3295,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
                     / sqrtTimeInterval;
 
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    random, 0.0, specificForceStandardDeviation);
+                    random, 0.0, angularRateStandardDeviation);
 
             final List<StandardDeviationFrameBodyKinematics> measurements =
                     new ArrayList<>();
@@ -3438,7 +3438,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
                     / sqrtTimeInterval;
 
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    random, 0.0, specificForceStandardDeviation);
+                    random, 0.0, angularRateStandardDeviation);
 
             final List<StandardDeviationFrameBodyKinematics> measurements =
                     new ArrayList<>();
@@ -3583,7 +3583,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
                     / sqrtTimeInterval;
 
             final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                    random, 0.0, specificForceStandardDeviation);
+                    random, 0.0, angularRateStandardDeviation);
 
             final List<StandardDeviationFrameBodyKinematics> measurements =
                     new ArrayList<>();

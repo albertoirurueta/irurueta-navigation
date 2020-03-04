@@ -2319,6 +2319,55 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
     public abstract RobustEstimatorMethod getMethod();
 
     /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param method robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator();
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator();
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method   robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(listener);
+        }
+    }
+
+    /**
      * Computes error of a preliminary result respect a given measurement.
      *
      * @param measurement       a measurement.
