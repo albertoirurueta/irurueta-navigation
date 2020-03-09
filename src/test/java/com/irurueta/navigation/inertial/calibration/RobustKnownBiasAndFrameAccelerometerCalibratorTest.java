@@ -116,7 +116,8 @@ public class RobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
 
         // test create with measurements and method
-        List<StandardDeviationFrameBodyKinematics> measurements = Collections.emptyList();
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
 
         // RANSAC
         calibrator = RobustKnownBiasAndFrameAccelerometerCalibrator.create(
@@ -514,7 +515,7 @@ public class RobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertSame(calibrator.getListener(), this);
 
 
-        // test create measurements, bias coordinates and method
+        // test create with measurements, bias coordinates and method
 
         // RANSAC
         calibrator = RobustKnownBiasAndFrameAccelerometerCalibrator.create(

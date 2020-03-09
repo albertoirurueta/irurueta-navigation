@@ -2368,6 +2368,3564 @@ public abstract class RobustKnownBiasAndFrameGyroscopeCalibrator {
     }
 
     /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX  known x coordinate of gyroscope bias expressed in radians per
+     *               second (rad/s).
+     * @param biasY  known y coordinate of gyroscope bias expressed in radians per
+     *               second (rad/s).
+     * @param biasZ  known z coordinate of gyroscope bias expressed in radians per
+     *               second (rad/s).
+     * @param method robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX    known x coordinate of gyroscope bias expressed in radians per
+     *                 second (rad/s).
+     * @param biasY    known y coordinate of gyroscope bias expressed in radians per
+     *                 second (rad/s).
+     * @param biasZ    known z coordinate of gyroscope bias expressed in radians per
+     *                 second (rad/s).
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method   robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creaates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX  known x coordinate of gyroscope bias.
+     * @param biasY  known y coordinate of gyroscope bias.
+     * @param biasZ  known z coordinate of gyroscope bias.
+     * @param method robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX    known x coordinate of gyroscope bias.
+     * @param biasY    known y coordinate of gyroscope bias.
+     * @param biasZ    known z coordinate of gyroscope bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method   robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        biasX, biasY, biasZ, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias   known gyroscope bias.
+     * @param method robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias     known gyroscope bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method   robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias   known gyroscope bias.
+     * @param method robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias     known gyroscope bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method   robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @param method       robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         a robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param biasX         known x coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasY         known y coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasZ         known z coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double biasX, final double biasY,
+            final double biasZ, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param biasX         known x coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasY         known y coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasZ         known z coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double biasX, final double biasY,
+            final double biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Cretes a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param biasX         known x coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasY         known y coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasZ         known z coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param biasX         known x coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasY         known y coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param biasZ         known z coordinate of gyroscope bias expressed in radians per
+     *                      second (rad/s).
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double biasX, final double biasY,
+            final double biasZ, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed,
+                        listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed,
+                        listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param biasX         known x coordinate of gyroscope bias.
+     * @param biasY         known y coordinate of gyroscope bias.
+     * @param biasZ         known z coordinate of gyroscope bias.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param biasX         known x coordinate of gyroscope bias.
+     * @param biasY         known y coordinate of gyroscope bias.
+     * @param biasZ         known z coordinate of gyroscope bias.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param biasX         known x coordinate of gyroscope bias.
+     * @param biasY         known y coordinate of gyroscope bias.
+     * @param biasZ         known z coordinate of gyroscope bias.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param biasX         known x coordinate of gyroscope bias.
+     * @param biasY         known y coordinate of gyroscope bias.
+     * @param biasZ         known z coordinate of gyroscope bias.
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY, final AngularSpeed biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final AngularSpeed biasX,
+            final AngularSpeed biasY, final AngularSpeed biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(biasX,
+                        biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, biasX, biasY, biasZ, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyrocope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, biasX, biasY, biasZ, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, biasX, biasY, biasZ,
+                        commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param bias          known gyroscope bias.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double[] bias,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param bias          known gyroscope bias.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double[] bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param bias          known gyroscope bias.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param bias          known gyroscope bias.
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+                        bias, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+                        bias, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(measurements,
+                        bias, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double[] bias,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final double[] bias,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(qualityScores,
+                        measurements, bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(qualityScores,
+                        measurements, bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param bias          known gyroscope bias.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final Matrix bias,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param bias          known gyroscope bias.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final Matrix bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param bias          known gyroscope bias.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body kinematics measurements with standard
+     *                      deviations taken at different frames (positions, orientations
+     *                      and velocities).
+     * @param bias          known gyroscope bias.
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final Matrix bias,
+            final boolean commonAxisUsed, final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores, final Matrix bias,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(bias,
+                        commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1 or
+     *                                  if provided quality scores length is smaller
+     *                                  than 6 samples.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        measurements, bias, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator(
+                        qualityScores, measurements, bias, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create() {
+        return create(DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements) {
+        return create(measurements, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final boolean commonAxisUsed) {
+        return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed) {
+        return create(measurements, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX known x coordinate of gyroscope bias expressed in radians per
+     *              second (rad/s).
+     * @param biasY known y coordinate of gyroscope bias expressed in radians per
+     *              second (rad/s).
+     * @param biasZ known z coordinate of gyroscope bias expressed in radians per
+     *              second (rad/s).
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ) {
+        return create(biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX    known x coordinate of gyroscope bias expressed in radians per
+     *                 second (rad/s).
+     * @param biasY    known y coordinate of gyroscope bias expressed in radians per
+     *                 second (rad/s).
+     * @param biasZ    known z coordinate of gyroscope bias expressed in radians per
+     *                 second (rad/s).
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ) {
+        return create(measurements, biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasY        known y coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param biasZ        known z coordinate of gyroscope bias expressed in radians per
+     *                     second (rad/s).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasY          known y coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param biasZ          known z coordinate of gyroscope bias expressed in radians per
+     *                       second (rad/s).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX known x coordinate of gyroscope bias.
+     * @param biasY known y coordinate of gyroscope bias.
+     * @param biasZ known z coordinate of gyroscope bias.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ) {
+        return create(biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX    known x coordinate of gyroscope bias.
+     * @param biasY    known y coordinate of gyroscope bias.
+     * @param biasZ    known z coordinate of gyroscope bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ) {
+        return create(measurements, biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of gyroscope bias.
+     * @param biasY        known y coordinate of gyroscope bias.
+     * @param biasZ        known z coordinate of gyroscope bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of gyroscope bias.
+     * @param biasY          known y coordinate of gyroscope bias.
+     * @param biasZ          known z coordinate of gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final AngularSpeed biasX, final AngularSpeed biasY,
+            final AngularSpeed biasZ, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias known gyroscope bias.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias) {
+        return create(bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias     known gyroscope bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias) {
+        return create(measurements, bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias, final boolean commonAxisUsed) {
+        return create(bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(bias, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed) {
+        return create(measurements, bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, bias, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias known gyroscope bias.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias) {
+        return create(bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias     known gyroscope bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias) {
+        return create(measurements, bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known gyroscope bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias, final boolean commonAxisUsed) {
+        return create(bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(bias, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed) {
+        return create(measurements, bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust estimator method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known gyroscope bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameGyroscopeCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameGyroscopeCalibratorListener listener) {
+        return create(measurements, bias, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
      * Computes error of a preliminary result respect a given measurement.
      *
      * @param measurement       a measurement.
