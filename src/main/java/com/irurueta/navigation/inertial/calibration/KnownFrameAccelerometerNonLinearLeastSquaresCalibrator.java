@@ -154,7 +154,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
     private double mInitialMzy;
 
     /**
-     * Contains a collections of body kinematics measurements taken at different
+     * Contains a collection of body kinematics measurements taken at different
      * frames (positions, orientations and velocities) and containing the standard
      * deviations of accelerometer and gyroscope measurements.
      * If a single device IMU needs to be calibrated, typically all measurements are
