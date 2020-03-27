@@ -56,6 +56,7 @@ public class KnownPositionAccelerometerCalibratorTest implements
 
     private static final double ABSOLUTE_ERROR = 1e-8;
     private static final double LARGE_ABSOLUTE_ERROR = 5e-5;
+    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-3;
 
     private static final int TIMES = 100;
 
@@ -29871,12 +29872,12 @@ public class KnownPositionAccelerometerCalibratorTest implements
             if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!ma.equals(estimatedMa, 3.0 * LARGE_ABSOLUTE_ERROR)) {
+            if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
                 continue;
             }
 
             assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, 3.0 * LARGE_ABSOLUTE_ERROR));
+            assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
             numValid++;
 
@@ -29898,8 +29899,6 @@ public class KnownPositionAccelerometerCalibratorTest implements
             final Matrix ma = generateMaGeneral();
             final Matrix mg = generateMg();
             final Matrix gg = generateGg();
-            // when using minimum number of measurements we must not add any noise so that
-            // a solution is found, when adding more measurements, certain noise can be added
             final double accelNoiseRootPSD = getAccelNoiseRootPSD();
             final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
             final double accelQuantLevel = 0.0;
@@ -29955,11 +29954,11 @@ public class KnownPositionAccelerometerCalibratorTest implements
                 measurements.add(measurement);
             }
 
-            // When we have the minimum number of measurements, we need to provide
-            // an initial solution close to the true solution
+            // When we have a large number of measurements, we do not need to provide
+            // an initial solution as it will probably converge to true true solution
             final KnownPositionAccelerometerCalibrator calibrator =
                     new KnownPositionAccelerometerCalibrator(nedPosition,
-                            measurements, false, ba, ma, this);
+                            measurements, false, this);
 
             // estimate
             reset();
@@ -29986,15 +29985,15 @@ public class KnownPositionAccelerometerCalibratorTest implements
             // since we have used the minimum number of measurements,
             // result is quite unstable (calibration exception is usually thrown)
             // and inaccurate.
-            if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
+            if (!ba.equals(estimatedBa, VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!ma.equals(estimatedMa, 3.0 * LARGE_ABSOLUTE_ERROR)) {
+            if (!ma.equals(estimatedMa, 6.0 * LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
 
-            assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, 3.0 * LARGE_ABSOLUTE_ERROR));
+            assertTrue(ba.equals(estimatedBa, VERY_LARGE_ABSOLUTE_ERROR));
+            assertTrue(ma.equals(estimatedMa, 6.0 * LARGE_ABSOLUTE_ERROR));
 
             numValid++;
 
@@ -30003,7 +30002,6 @@ public class KnownPositionAccelerometerCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-
 
     @Test
     public void testCalibrateForCommonAxisCaseWithMinimumMeasuresAndNoNoise()
@@ -30108,12 +30106,12 @@ public class KnownPositionAccelerometerCalibratorTest implements
             if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!ma.equals(estimatedMa, 20.0 * LARGE_ABSOLUTE_ERROR)) {
+            if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
                 continue;
             }
 
             assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, 20.0 * LARGE_ABSOLUTE_ERROR));
+            assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
             numValid++;
 
@@ -30135,8 +30133,6 @@ public class KnownPositionAccelerometerCalibratorTest implements
             final Matrix ma = generateMaCommonAxis();
             final Matrix mg = generateMg();
             final Matrix gg = generateGg();
-            // when using minimum number of measurements we must not add any noise so that
-            // a solution is found, when adding more measurements, certain noise can be added
             final double accelNoiseRootPSD = getAccelNoiseRootPSD();
             final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
             final double accelQuantLevel = 0.0;
@@ -30192,11 +30188,11 @@ public class KnownPositionAccelerometerCalibratorTest implements
                 measurements.add(measurement);
             }
 
-            // When we have the minimum number of measurements, we need to provide
-            // an initial solution close to the true solution
+            // When we have a large number of measurements, we do not need to provide
+            // an initial solution as it will probably converge to true true solution
             final KnownPositionAccelerometerCalibrator calibrator =
                     new KnownPositionAccelerometerCalibrator(nedPosition,
-                            measurements, true, ba, ma, this);
+                            measurements, true, this);
 
             // estimate
             reset();
@@ -30223,15 +30219,15 @@ public class KnownPositionAccelerometerCalibratorTest implements
             // since we have used the minimum number of measurements,
             // result is quite unstable (calibration exception is usually thrown)
             // and inaccurate.
-            if (!ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR)) {
+            if (!ba.equals(estimatedBa, VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!ma.equals(estimatedMa, 20.0 * LARGE_ABSOLUTE_ERROR)) {
+            if (!ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
 
-            assertTrue(ba.equals(estimatedBa, LARGE_ABSOLUTE_ERROR));
-            assertTrue(ma.equals(estimatedMa, 20.0 * LARGE_ABSOLUTE_ERROR));
+            assertTrue(ba.equals(estimatedBa, VERY_LARGE_ABSOLUTE_ERROR));
+            assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
 
             numValid++;
 
@@ -30241,10 +30237,16 @@ public class KnownPositionAccelerometerCalibratorTest implements
         assertTrue(numValid > 0);
     }
 
-    @Ignore
     @Test
     public void testNorms() throws InvalidSourceAndDestinationFrameTypeException {
 
+        // This test checks that the norm of true specific force and true angular
+        // rates are equal to the gravity value (approximately 9.81 m/s^2), and the
+        // Earth rotation rate respectively for any Earth location.
+        // This property is the principle used for KnownPositionAccelerometerCalibrator
+        // to be able to calibrate the accelerometer by taking kinemtics measurements
+        // with unknown orientation, but known Earth location.
+        
         final Random random = new Random();
         final UniformRandomizer randomizer = new UniformRandomizer(random);
         final double latitude = Math.toRadians(

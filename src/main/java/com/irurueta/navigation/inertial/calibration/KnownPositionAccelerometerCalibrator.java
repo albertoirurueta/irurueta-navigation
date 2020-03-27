@@ -30,6 +30,9 @@ import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
+import com.irurueta.numerical.EvaluationException;
+import com.irurueta.numerical.GradientEstimator;
+import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
 import com.irurueta.numerical.fitting.FittingException;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
@@ -244,6 +247,48 @@ public class KnownPositionAccelerometerCalibrator {
      * Indicates whether estimator is running.
      */
     private boolean mRunning;
+
+    /**
+     * Internally holds x-coordinate of measured specific force during calibration.
+     */
+    private double mFmeasX;
+
+    /**
+     * Internally holds y-coordinate of measured specific force during calibration.
+     */
+    private double mFmeasY;
+
+    /**
+     * Internally holds z-coordinate of measured specific force during calibration.
+     */
+    private double mFmeasZ;
+
+    /**
+     * Internaly holds measured specific force during calibration expressed as
+     * a column matrix.
+     */
+    private Matrix mFmeas;
+
+    /**
+     * Internally holds cross-coupling errors during calibration.
+     */
+    private Matrix mM;
+
+    /**
+     * Internally holds inverse of cross-coupling errors during calibration.
+     */
+    private Matrix mInvM;
+
+    /**
+     * Internally holds biases during calibration.
+     */
+    private Matrix mB;
+
+    /**
+     * Internally holds computed true specific force during calibration.
+     */
+    private Matrix mFtrue;
+
 
     /**
      * Constructor.
@@ -7368,488 +7413,6 @@ public class KnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Internal method to perform calibration when common z-axis is assumed for both
-     * the accelerometer and gyroscope.
-     *
-     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.
-     * @throws AlgebraException                         if there are numerical unstabilities that prevent
-     *                                                  matrix inversion.
-     * @throws com.irurueta.numerical.NotReadyException never happens.
-     */
-    private void calibrateCommonAxis() throws AlgebraException, FittingException,
-            com.irurueta.numerical.NotReadyException {
-
-        // The accelerometer model is:
-        // fmeas = ba + (I + Ma) * ftrue + w
-
-        // Ideally a least squares solution tries to minimize noise component, so:
-        // fmeas = ba + (I + Ma) * ftrue
-
-        // Where we can say that:
-        // A = (I + Ma)
-
-        // Hence
-        // fmeas = ba + A * ftrue
-
-        // ftrue = A^-1 * (fmeas - ba)
-
-        // And we can assume:
-        // B = A^- 1
-
-        // So that:
-        // ftrue = B * (fmeas - ba)
-
-        // We know that the norm of ftrue  should be equal to the norm of gravity at a given
-        // Earth location regardless of the IMU orientation:
-
-        // ||ftrue|| = ||g|| ~ 9.81 m/s^2
-
-        // ||ftrue||^2 = ||g||^2 = (B * (fmeas - ba))^T * (B * (fmeas - ba))
-        // ||g||^2 = (fmeas - ba)^T * B^T * B * (fmeas - ba)
-        // ||g||^2 = (fmeas - ba)^T * ||B||^2 * (fmeas - ba)
-        // ||g||^2 = ||fmeas - ba||^2 * ||B||^2
-
-        // It is assumed that Ma is:
-        // Ma = [sx    mxy  mxz]
-        //      [myx   sy   myz]
-        //      [mzx   mzy  sz ]
-
-        // where myx = mzx = mzy = 0
-
-        // Hence:
-        // Ma = [sx    mxy  mxz]
-        //      [0     sy   myz]
-        //      [0     0    sz ]
-
-        // We know that a triangular matrix (upper or lower) is invertible if
-        // and only if no element on its principal diagonal is 0. If the
-        // inverse U−1 of an upper triangular matrix U exists, then it is
-        // upper triangular. If the inverse L−1 of an lower triangular matrix
-        // L exists, then it is lower triangular.
-
-        // We know that:
-        // A = (I + Ma)
-        // B = A^-1
-
-        // Since Ma is upper triangular then A = (I + Ma) is also upper triangular
-        // Hence B = A^-1, if exists, is also upper triangular
-
-        // Hence:
-        // B = (I + Ma)^-1
-        // invB = B^-1 = I + Ma
-
-        // Compute identity + Ma
-        final Matrix invB1 = getInitialMa();
-        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-            invB1.setElementAt(i, i, invB1.getElementAt(i, i) + 1.0);
-        }
-        invB1.setElementAt(1, 0, 0.0);
-        invB1.setElementAt(2, 0, 0.0);
-        invB1.setElementAt(2, 1, 0.0);
-
-        final Matrix b1 = Utils.inverse(invB1);
-
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Input points are measured specific force coordinates
-                return BodyKinematics.COMPONENTS;
-            }
-
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
-
-                initial[0] = mInitialBiasX;
-                initial[1] = mInitialBiasY;
-                initial[2] = mInitialBiasZ;
-
-                // set B matrix values on the upper diagonal matrix
-                int k = BodyKinematics.COMPONENTS;
-                for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
-                    for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                        if (i <= j) {
-                            initial[k] = b1.getElementAt(i, j);
-                            k++;
-                        }
-                    }
-                }
-
-                return initial;
-            }
-
-            @Override
-            public double evaluate(
-                    final int i, final double[] point, final double[] params,
-                    final double[] derivatives) {
-
-                // We know that:
-                // ||g||^2 = ||fmeas - ba||^2 * ||B||^2
-
-                final double bx = params[0];
-                final double by = params[1];
-                final double bz = params[2];
-
-                final double b11 = params[3];
-
-                final double b12 = params[4];
-                final double b22 = params[5];
-
-                final double b13 = params[6];
-                final double b23 = params[7];
-                final double b33 = params[8];
-
-                final double fmeasX = point[0];
-                final double fmeasY = point[1];
-                final double fmeasZ = point[2];
-
-                //f = f(fmeas) = ||g||^2 = ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * (b11^2 + b12^2 + b22^2 + b13^2 + b23^2 + b33^2)
-
-                // d(f)/dbax = -2 * (fmeasX - bax) * (b11^2 + b12^2 + b22^2 + b13^2 + b23^2 + b33^2)
-                // d(f)/dbay = -2 * (fmeasY - bay) * (b11^2 + b12^2 + b22^2 + b13^2 + b23^2 + b33^2)
-                // d(f)/dbaz = -2 * (fmeasZ - baz) * (b11^2 + b12^2 + b22^2 + b13^2 + b23^2 + b33^2)
-
-                // d(f)/db11 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b11
-
-                // d(f)/db12 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b12
-                // d(f)/db22 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b22
-
-                // d(f)/db13 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b13
-                // d(f)/db23 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b23
-                // d(f)/db33 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b33
-
-                final double diffX = fmeasX - bx;
-                final double diffY = fmeasY - by;
-                final double diffZ = fmeasZ - bz;
-
-                final double diffX2 = diffX * diffX;
-                final double diffY2 = diffY * diffY;
-                final double diffZ2 = diffZ * diffZ;
-
-                final double sqrDiffNorm = diffX2 + diffY2 + diffZ2;
-
-                final double sqrB11 = b11 * b11;
-
-                final double sqrB12 = b12 * b12;
-                final double sqrB22 = b22 * b22;
-
-                final double sqrB13 = b13 * b13;
-                final double sqrB23 = b23 * b23;
-                final double sqrB33 = b33 * b33;
-
-                final double sqrBNorm = sqrB11 + sqrB12 + sqrB22
-                        + sqrB13 + sqrB23 + sqrB33;
-
-                final double tmp1 = -2.0 * sqrBNorm;
-                final double tmp2 = 2 * sqrDiffNorm;
-
-                derivatives[0] = diffX * tmp1;
-                derivatives[1] = diffY * tmp1;
-                derivatives[2] = diffZ * tmp1;
-
-                derivatives[3] = tmp2 * b11;
-
-                derivatives[4] = tmp2 * b12;
-                derivatives[5] = tmp2 * b22;
-
-                derivatives[6] = tmp2 * b13;
-                derivatives[7] = tmp2 * b23;
-                derivatives[8] = tmp2 * b33;
-
-                return sqrDiffNorm * sqrBNorm;
-            }
-        });
-
-        setInputData();
-
-        mFitter.fit();
-
-        final double[] result = mFitter.getA();
-
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
-
-        final Matrix b2 = new Matrix(BodyKinematics.COMPONENTS,
-                BodyKinematics.COMPONENTS);
-
-        // set B matrix values on the upper diagonal matrix
-        int k = BodyKinematics.COMPONENTS;
-        for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
-            for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                if (i <= j) {
-                    b2.setElementAt(i, j, result[k]);
-                    k++;
-                }
-            }
-        }
-
-        // We know that:
-        // A = (I + Ma)
-        // B = A^- 1
-
-        // Hence:
-        // B = (I + Ma)^-1
-        // invB = B^-1 = I + Ma
-
-        final Matrix invB2 = Utils.inverse(b2);
-
-        if (mEstimatedBiases == null) {
-            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
-        }
-
-        mEstimatedBiases[0] = bx;
-        mEstimatedBiases[1] = by;
-        mEstimatedBiases[2] = bz;
-
-        // Since Ma = invB - I, then:
-        if (mEstimatedMa == null) {
-            mEstimatedMa = invB2;
-        } else {
-            mEstimatedMa.copyFrom(invB2);
-        }
-
-        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-            mEstimatedMa.setElementAt(i, i,
-                    invB2.getElementAt(i, i) - 1.0);
-        }
-        mEstimatedMa.setElementAt(1, 0, 0.0);
-        mEstimatedMa.setElementAt(2, 0, 0.0);
-        mEstimatedMa.setElementAt(2, 1, 0.0);
-
-        mEstimatedCovariance = mFitter.getCovar();
-        mEstimatedChiSq = mFitter.getChisq();
-    }
-
-    /**
-     * Internal method to perform general calibration.
-     *
-     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.
-     * @throws AlgebraException                         if there are numerical unstabilities that prevent
-     *                                                  matrix inversion.
-     * @throws com.irurueta.numerical.NotReadyException never happens.
-     */
-    private void calibrateGeneral() throws AlgebraException, FittingException,
-            com.irurueta.numerical.NotReadyException {
-
-        // The accelerometer model is:
-        // fmeas = ba + (I + Ma) * ftrue + w
-
-        // Ideally a least squares solution tries to minimize noise component, so:
-        // fmeas = ba + (I + Ma) * ftrue
-
-        // Where we can say that:
-        // A = (I + Ma)
-
-        // Hence
-        // fmeas = ba + A * ftrue
-
-        // ftrue = A^-1 * (fmeas - ba)
-
-        // And we can assume:
-        // B = A^- 1
-
-        // So that:
-        // ftrue = B * (fmeas - ba)
-
-        // We know that the norm of ftrue  should be equal to the norm of gravity at a given
-        // Earth location regardless of the IMU orientation:
-
-        // ||ftrue|| = ||g|| ~ 9.81 m/s^2
-
-        // ||ftrue||^2 = ||g||^2 = (B * (fmeas - ba))^T * (B * (fmeas - ba))
-        // ||g||^2 = (fmeas - ba)^T * B^T * B * (fmeas - ba)
-        // ||g||^2 = (fmeas - ba)^T * ||B||^2 * (fmeas - ba)
-        // ||g||^2 = ||fmeas - ba||^2 * ||B||^2
-
-        // We know that:
-        // A = (I + Ma)
-        // B = A^-1
-
-        // Hence:
-        // B = (I + Ma)^-1
-        // invB = B^-1 = I + Ma
-
-        // Compute identity + Ma
-        final Matrix invB1 = getInitialMa();
-        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-            invB1.setElementAt(i, i, invB1.getElementAt(i, i) + 1.0);
-        }
-
-        final Matrix b1 = Utils.inverse(invB1);
-
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Input points are measured specific force coordinates
-                return BodyKinematics.COMPONENTS;
-            }
-
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[GENERAL_UNKNOWNS];
-
-                initial[0] = mInitialBiasX;
-                initial[1] = mInitialBiasY;
-                initial[2] = mInitialBiasZ;
-
-                // set B matrix values
-                int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = b1.getElementAtIndex(i);
-                }
-
-                return initial;
-            }
-
-            @Override
-            public double evaluate(
-                    final int i, final double[] point, final double[] params,
-                    final double[] derivatives) {
-
-                // We know that:
-                // ||g||^2 = ||fmeas - ba||^2 * ||B||^2
-
-                final double bx = params[0];
-                final double by = params[1];
-                final double bz = params[2];
-
-                final double b11 = params[3];
-                final double b21 = params[4];
-                final double b31 = params[5];
-
-                final double b12 = params[6];
-                final double b22 = params[7];
-                final double b32 = params[8];
-
-                final double b13 = params[9];
-                final double b23 = params[10];
-                final double b33 = params[11];
-
-                final double fmeasX = point[0];
-                final double fmeasY = point[1];
-                final double fmeasZ = point[2];
-
-                //f = f(fmeas) = ||g||^2 = ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * (b11^2 + b21^2 + b31^2 + b12^2 + b22^2 + b32^2 + b13^2 + b23^2 + b33^2)
-
-                // d(f)/dbax = -2 * (fmeasX - bax) * (b11^2 + b21^2 + b31^2 + b12^2 + b22^2 + b32^2 + b13^2 + b23^2 + b33^2)
-                // d(f)/dbay = -2 * (fmeasY - bay) * (b11^2 + b21^2 + b31^2 + b12^2 + b22^2 + b32^2 + b13^2 + b23^2 + b33^2)
-                // d(f)/dbaz = -2 * (fmeasZ - baz) * (b11^2 + b21^2 + b31^2 + b12^2 + b22^2 + b32^2 + b13^2 + b23^2 + b33^2)
-
-                // d(f)/db11 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b11
-                // d(f)/db21 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b21
-                // d(f)/db31 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b31
-
-                // d(f)/db12 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b12
-                // d(f)/db22 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b22
-                // d(f)/db32 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b32
-
-                // d(f)/db13 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b13
-                // d(f)/db23 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b23
-                // d(f)/db33 = 2 * ((fmeasX - bax)^2 + (fmeasY - bay)^2 + (fmeasZ - baz)^2) * b33
-
-                final double diffX = fmeasX - bx;
-                final double diffY = fmeasY - by;
-                final double diffZ = fmeasZ - bz;
-
-                final double diffX2 = diffX * diffX;
-                final double diffY2 = diffY * diffY;
-                final double diffZ2 = diffZ * diffZ;
-
-                final double sqrDiffNorm = diffX2 + diffY2 + diffZ2;
-
-                final double sqrB11 = b11 * b11;
-                final double sqrB21 = b21 * b21;
-                final double sqrB31 = b31 * b31;
-
-                final double sqrB12 = b12 * b12;
-                final double sqrB22 = b22 * b22;
-                final double sqrB32 = b32 * b32;
-
-                final double sqrB13 = b13 * b13;
-                final double sqrB23 = b23 * b23;
-                final double sqrB33 = b33 * b33;
-
-                final double sqrBNorm = sqrB11 + sqrB21 + sqrB31
-                        + sqrB12 + sqrB22 + sqrB32
-                        + sqrB13 + sqrB23 + sqrB33;
-
-                final double tmp1 = -2.0 * sqrBNorm;
-                final double tmp2 = 2 * sqrDiffNorm;
-
-                derivatives[0] = diffX * tmp1;
-                derivatives[1] = diffY * tmp1;
-                derivatives[2] = diffZ * tmp1;
-
-                derivatives[3] = tmp2 * b11;
-                derivatives[4] = tmp2 * b21;
-                derivatives[5] = tmp2 * b31;
-
-                derivatives[6] = tmp2 * b12;
-                derivatives[7] = tmp2 * b22;
-                derivatives[8] = tmp2 * b32;
-
-                derivatives[9] = tmp2 * b13;
-                derivatives[10] = tmp2 * b23;
-                derivatives[11] = tmp2 * b33;
-
-                return sqrDiffNorm * sqrBNorm;
-            }
-        });
-
-        setInputData();
-
-        mFitter.fit();
-
-        final double[] result = mFitter.getA();
-
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
-
-        final Matrix b2 = new Matrix(BodyKinematics.COMPONENTS,
-                BodyKinematics.COMPONENTS);
-
-        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-        for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-            b2.setElementAtIndex(i, result[j]);
-        }
-
-        // We know that:
-        // A = (I + Ma)
-        // B = A^- 1
-
-        // Hence:
-        // B = (I + Ma)^-1
-        // invB = B^-1 = I + Ma
-
-        final Matrix invB2 = Utils.inverse(b2);
-
-        if (mEstimatedBiases == null) {
-            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
-        }
-
-        mEstimatedBiases[0] = bx;
-        mEstimatedBiases[1] = by;
-        mEstimatedBiases[2] = bz;
-
-        // Since Ma = invB - I, then:
-        if (mEstimatedMa == null) {
-            mEstimatedMa = invB2;
-        } else {
-            mEstimatedMa.copyFrom(invB2);
-        }
-
-        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-            mEstimatedMa.setElementAt(i, i,
-                    invB2.getElementAt(i, i) - 1.0);
-        }
-
-        mEstimatedCovariance = mFitter.getCovar();
-        mEstimatedChiSq = mFitter.getChisq();
-    }
-
-    /**
      * Converts provided NED position expressed in terms of latitude, longitude and height respect
      * mean Earth surface, to position expressed in ECEF coordinates.
      *
@@ -7874,5 +7437,488 @@ public class KnownPositionAccelerometerCalibrator {
     private static double convertAcceleration(final Acceleration acceleration) {
         return AccelerationConverter.convert(acceleration.getValue().doubleValue(),
                 acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Internal method to perform general calibration.
+     *
+     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.
+     * @throws AlgebraException                         if there are numerical instabilities that prevent
+     *                                                  matrix inversion.
+     * @throws com.irurueta.numerical.NotReadyException never happens.
+     */
+    private void calibrateGeneral() throws AlgebraException, FittingException,
+            com.irurueta.numerical.NotReadyException {
+        // The accelerometer model is:
+        // fmeas = ba + (I + Ma) * ftrue + w
+
+        // Ideally a least squares solution tries to minimize noise component, so:
+        // fmeas = ba + (I + Ma) * ftrue
+
+        // For convergence purposes of the Levenberg-Marquardt algorithm, the
+        // accelerometer model can be better expressed as:
+        // fmeas = T*K*(ftrue + b)
+        // fmeas = M*(ftrue + b)
+        // fmeas = M*ftrue + M*b
+
+        //where:
+        // M = I + Ma
+        // ba = M*b = (I + Ma)*b --> b = M^-1*ba
+
+        // We know that the norm of the true specific force is equal to the amount
+        // of gravity at a certain Earth position
+        // ||ftrue|| = ||g|| ~ 9.81 m/s^2
+
+        // Hence:
+        // fmeas - M*b = M*ftrue
+
+        // M^-1 * (fmeas - M*b) = ftrue
+
+        // ||g||^2 = ||ftrue||^2 = (M^-1 * (fmeas - M*b))^T * (M^-1 * (fmeas - M*b))
+        // ||g||^2 = (fmeas - M*b)^T*(M^-1)^T * M^-1 * (fmeas - M*b)
+        // ||g||^2 = (fmeas - M * b)^T * ||M^-1||^2 * (fmeas - M * b)
+        // ||g||^2 = ||fmeas - M * b||^2 * ||M^-1||^2
+
+        // Where:
+
+        // b = [bx]
+        //     [by]
+        //     [bz]
+
+        // M = [m11 	m12 	m13]
+        //     [m21 	m22 	m23]
+        //     [m31 	m32 	m33]
+
+        final GradientEstimator gradientEstimator = new GradientEstimator(
+                new MultiDimensionFunctionEvaluatorListener() {
+            @Override
+            public double evaluate(double[] point) throws EvaluationException {
+                return evaluateGeneral(point);
+            }
+        });
+
+        final Matrix initialM = Matrix.identity(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
+        initialM.add(getInitialMa());
+
+        final Matrix invInitialM = Utils.inverse(initialM);
+        final Matrix initialBa = getInitialBiasAsMatrix();
+        final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBa);
+
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+            @Override
+            public int getNumberOfDimensions() {
+                // Input points are measured specific force coordinates
+                return BodyKinematics.COMPONENTS;
+            }
+
+            @Override
+            public double[] createInitialParametersArray() {
+                final double[] initial = new double[GENERAL_UNKNOWNS];
+
+                // biases b
+                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                    initial[i] = initialB.getElementAtIndex(i);
+                }
+
+                // cross coupling errors M
+                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
+                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
+                    initial[j] = initialM.getElementAtIndex(i);
+                }
+
+                return initial;
+            }
+
+            @Override
+            public double evaluate(final int i, final double[] point,
+                                   final double[] params, final double[] derivatives)
+                    throws EvaluationException {
+
+                mFmeasX = point[0];
+                mFmeasY = point[1];
+                mFmeasZ = point[2];
+
+                gradientEstimator.gradient(params, derivatives);
+
+                return evaluateGeneral(params);
+            }
+        });
+
+        setInputData();
+
+        mFitter.fit();
+
+        final double[] result = mFitter.getA();
+
+        final double bx = result[0];
+        final double by = result[1];
+        final double bz = result[2];
+
+        final double m11 = result[3];
+        final double m21 = result[4];
+        final double m31 = result[5];
+
+        final double m12 = result[6];
+        final double m22 = result[7];
+        final double m32 = result[8];
+
+        final double m13 = result[9];
+        final double m23 = result[10];
+        final double m33 = result[11];
+
+        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
+        b.setElementAtIndex(0, bx);
+        b.setElementAtIndex(1, by);
+        b.setElementAtIndex(2, bz);
+
+        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
+                BodyKinematics.COMPONENTS);
+        m.setElementAtIndex(0, m11);
+        m.setElementAtIndex(1, m21);
+        m.setElementAtIndex(2, m31);
+
+        m.setElementAtIndex(3, m12);
+        m.setElementAtIndex(4, m22);
+        m.setElementAtIndex(5, m32);
+
+        m.setElementAtIndex(6, m13);
+        m.setElementAtIndex(7, m23);
+        m.setElementAtIndex(8, m33);
+
+        setResult(m, b);
+    }
+
+    /**
+     * Internal method to perform calibration when common z-axis is assumed for both
+     * the accelerometer and gyroscope.
+     *
+     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.
+     * @throws AlgebraException                         if there are numerical instabilities that prevent
+     *                                                  matrix inversion.
+     * @throws com.irurueta.numerical.NotReadyException never happens.
+     */
+    private void calibrateCommonAxis() throws AlgebraException, FittingException,
+            com.irurueta.numerical.NotReadyException {
+        // The accelerometer model is:
+        // fmeas = ba + (I + Ma) * ftrue + w
+
+        // Ideally a least squares solution tries to minimize noise component, so:
+        // fmeas = ba + (I + Ma) * ftrue
+
+        // For convergence purposes of the Levenberg-Marquardt algorithm, the
+        // accelerometer model can be better expressed as:
+        // fmeas = T*K*(ftrue + b)
+        // fmeas = M*(ftrue + b)
+        // fmeas = M*ftrue + M*b
+
+        //where:
+        // M = I + Ma
+        // ba = M*b = (I + Ma)*b --> b = M^-1*ba
+
+        // We know that the norm of the true specific force is equal to the amount
+        // of gravity at a certain Earth position
+        // ||ftrue|| = ||g|| ~ 9.81 m/s^2
+
+        // Hence:
+        // fmeas - M*b = M*ftrue
+
+        // M^-1 * (fmeas - M*b) = ftrue
+
+        // ||g||^2 = ||ftrue||^2 = (M^-1 * (fmeas - M*b))^T * (M^-1 * (fmeas - M*b))
+        // ||g||^2 = (fmeas - M*b)^T*(M^-1)^T * M^-1 * (fmeas - M*b)
+        // ||g||^2 = (fmeas - M * b)^T * ||M^-1||^2 * (fmeas - M * b)
+        // ||g||^2 = ||fmeas - M * b||^2 * ||M^-1||^2
+
+        // Where:
+
+        // b = [bx]
+        //     [by]
+        //     [bz]
+
+        // M = [m11 	m12 	m13]
+        //     [0 		m22 	m23]
+        //     [0 	 	0 		m33]
+
+
+        final GradientEstimator gradientEstimator = new GradientEstimator(
+                new MultiDimensionFunctionEvaluatorListener() {
+                    @Override
+                    public double evaluate(double[] point) throws EvaluationException {
+                        return evaluateCommonAxis(point);
+                    }
+                });
+
+        final Matrix initialM = Matrix.identity(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
+        initialM.add(getInitialMa());
+
+        // Force initial M to be upper diagonal
+        initialM.setElementAt(1, 0, 0.0);
+        initialM.setElementAt(2, 0, 0.0);
+        initialM.setElementAt(2, 1, 0.0);
+
+        final Matrix invInitialM = Utils.inverse(initialM);
+        final Matrix initialBa = getInitialBiasAsMatrix();
+        final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBa);
+
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Input points are measured specific force coordinates
+                        return BodyKinematics.COMPONENTS;
+                    }
+
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
+
+                        // biases b
+                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                            initial[i] = initialB.getElementAtIndex(i);
+                        }
+
+                        // upper diagonal cross coupling errors M
+                        int k = BodyKinematics.COMPONENTS;
+                        for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
+                            for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                                if (i <= j) {
+                                    initial[k] = initialM.getElementAt(i, j);
+                                    k++;
+                                }
+                            }
+                        }
+
+                        return initial;
+                    }
+
+                    @Override
+                    public double evaluate(final int i, final double[] point,
+                                           final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+
+                        mFmeasX = point[0];
+                        mFmeasY = point[1];
+                        mFmeasZ = point[2];
+
+                        gradientEstimator.gradient(params, derivatives);
+
+                        return evaluateCommonAxis(params);
+                    }
+                });
+
+        setInputData();
+
+        mFitter.fit();
+
+        final double[] result = mFitter.getA();
+
+        final double bx = result[0];
+        final double by = result[1];
+        final double bz = result[2];
+
+        final double m11 = result[3];
+
+        final double m12 = result[4];
+        final double m22 = result[5];
+
+        final double m13 = result[6];
+        final double m23 = result[7];
+        final double m33 = result[8];
+
+        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
+        b.setElementAtIndex(0, bx);
+        b.setElementAtIndex(1, by);
+        b.setElementAtIndex(2, bz);
+
+        final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
+                BodyKinematics.COMPONENTS);
+        m.setElementAtIndex(0, m11);
+        m.setElementAtIndex(1, 0.0);
+        m.setElementAtIndex(2, 0.0);
+
+        m.setElementAtIndex(3, m12);
+        m.setElementAtIndex(4, m22);
+        m.setElementAtIndex(5, 0.0);
+
+        m.setElementAtIndex(6, m13);
+        m.setElementAtIndex(7, m23);
+        m.setElementAtIndex(8, m33);
+
+        setResult(m, b);
+    }
+
+    private void setResult(final Matrix m, final Matrix b) throws AlgebraException {
+        // Because:
+        // M = I + Ma
+        // b = M^-1*ba
+
+        // Then:
+        // Ma = M - I
+        // ba = M*b
+
+        if (mEstimatedBiases == null) {
+            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
+        }
+
+        final Matrix ba = m.multiplyAndReturnNew(b);
+        ba.toArray(mEstimatedBiases);
+
+        if (mEstimatedMa == null) {
+            mEstimatedMa = m;
+        } else {
+            mEstimatedMa.copyFrom(m);
+        }
+
+        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+            mEstimatedMa.setElementAt(i, i,
+                    mEstimatedMa.getElementAt(i, i) - 1.0);
+        }
+
+        mEstimatedCovariance = mFitter.getCovar();
+        mEstimatedChiSq = mFitter.getChisq();
+    }
+
+    /**
+     * Computes estimated true specific force squared norm using current measured
+     * specific force and provided parameters for the general case.
+     * This method is internally executed during gradient estimation and
+     * Levenberg-Marquardt fitting needed for calibration computation.
+     *
+     * @param params array containing current parameters for the general purpose case.
+     *               Must have length 12.
+     * @return estimated true specific force squared norm.
+     * @throws EvaluationException if there are numerical instabilities.
+     */
+    private double evaluateGeneral(final double[] params) throws EvaluationException {
+        final double bx = params[0];
+        final double by = params[1];
+        final double bz = params[2];
+
+        final double m11 = params[3];
+        final double m21 = params[4];
+        final double m31 = params[5];
+
+        final double m12 = params[6];
+        final double m22 = params[7];
+        final double m32 = params[8];
+
+        final double m13 = params[9];
+        final double m23 = params[10];
+        final double m33 = params[11];
+
+        return evaluate(bx, by, bz, m11, m21, m31, m12, m22, m32,
+                m13, m23, m33);
+    }
+
+    /**
+     * Computes estimated true specific force squared norm using current measured
+     * specific force and provided parameters when common z-axis is assumed.
+     * This method is internally executed during gradient estimation and
+     * Levenberg-Marquardt fitting needed for calibration computation.
+     *
+     * @param params array containing current parameters for the common z-axis case.
+     *               Must have length 9.
+     * @return estimated true specific force squared norm.
+     * @throws EvaluationException if there are numerical instabilities.
+     */
+    private double evaluateCommonAxis(final double[] params) throws EvaluationException {
+        final double bx = params[0];
+        final double by = params[1];
+        final double bz = params[2];
+
+        final double m11 = params[3];
+
+        final double m12 = params[4];
+        final double m22 = params[5];
+
+        final double m13 = params[6];
+        final double m23 = params[7];
+        final double m33 = params[8];
+
+        return evaluate(bx, by, bz, m11, 0.0, 0.0, m12, m22, 0.0,
+                m13, m23, m33);
+    }
+
+    /**
+     * Computes estimated true specific force squared norm using current measured
+     * specific force and provided parameters.
+     * This method is internally executed during gradient estimation and
+     * Levenberg-Marquardt fitting needed for calibration computation.
+     *
+     * @param bx x-coordinate of bias.
+     * @param by y-coordinate of bias.
+     * @param bz z-coordinate of bias.
+     * @param m11 element 1,1 of cross-coupling error matrix.
+     * @param m21 element 2,1 of cross-coupling error matrix.
+     * @param m31 element 3,1 of cross-coupling error matrix.
+     * @param m12 element 1,2 of cross-coupling error matrix.
+     * @param m22 element 2,2 of cross-coupling error matrix.
+     * @param m32 element 3,2 of cross-coupling error matrix.
+     * @param m13 element 1,3 of cross-coupling error matrix.
+     * @param m23 element 2,3 of cross-coupling error matrix.
+     * @param m33 element 3,3 of cross-coupling error matrix.
+     * @return estimated true specific force squared norm.
+     * @throws EvaluationException if there are numerical instabilities.
+     */
+    private double evaluate(final double bx, final double by, final double bz,
+                            final double m11, final double m21, final double m31,
+                            final double m12, final double m22, final double m32,
+                            final double m13, final double m23, final double m33)
+            throws EvaluationException {
+
+        // fmeas = M*(ftrue + b)
+
+        // ftrue = M^-1*fmeas - b
+
+        try {
+            if (mFmeas == null) {
+                mFmeas = new Matrix(BodyKinematics.COMPONENTS, 1);
+            }
+            if (mM == null) {
+                mM = new Matrix(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
+            }
+            if (mInvM == null) {
+                mInvM = new Matrix(BodyKinematics.COMPONENTS,
+                        BodyKinematics.COMPONENTS);
+            }
+            if (mB == null) {
+                mB = new Matrix(BodyKinematics.COMPONENTS, 1);
+            }
+            if (mFtrue == null) {
+                mFtrue = new Matrix(BodyKinematics.COMPONENTS, 1);
+            }
+
+            mFmeas.setElementAtIndex(0, mFmeasX);
+            mFmeas.setElementAtIndex(1, mFmeasY);
+            mFmeas.setElementAtIndex(2, mFmeasZ);
+
+            mM.setElementAt(0, 0, m11);
+            mM.setElementAt(1, 0, m21);
+            mM.setElementAt(2, 0, m31);
+
+            mM.setElementAt(0, 1, m12);
+            mM.setElementAt(1, 1, m22);
+            mM.setElementAt(2, 1, m32);
+
+            mM.setElementAt(0, 2, m13);
+            mM.setElementAt(1, 2, m23);
+            mM.setElementAt(2, 2, m33);
+
+            Utils.inverse(mM, mInvM);
+
+            mB.setElementAtIndex(0, bx);
+            mB.setElementAtIndex(1, by);
+            mB.setElementAtIndex(2, bz);
+
+            mInvM.multiply(mFmeas, mFtrue);
+            mFtrue.subtract(mB);
+
+            final double norm = Utils.normF(mFtrue);
+            return norm * norm;
+
+        } catch (final AlgebraException e) {
+            throw new EvaluationException(e);
+        }
     }
 }
