@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.algebra.AlgebraException;
@@ -43,13 +28,14 @@ import com.irurueta.units.AccelerationUnit;
 import java.util.Collection;
 
 /**
- * Estimates accelerometer biases, cross couplings and scaling factors.
+ * Estimates accelerometer cross couplings and scaling factors when accelerometer biases
+ * are known.
  * This calibrator uses Levenberg-Marquardt to find a minimum least squared error
  * solution.
  * <p>
- * To use this calibrator at least 10 measurements taken at a single known position must
- * be taken at 10 different unknown orientations and zero velocity when common z-axis
- * is assumed, otherwise at least 13 measurements are required.
+ * To use this calibrator at least 7 measurements taken at a single known position must
+ * be taken at 7 different unknown orientations and zero velocity when common z-axis
+ * is assumed, otherwise at least 10 measurements are required.
  * <p>
  * Measured specific force is assumed to follow the model shown below:
  * <pre>
@@ -57,15 +43,14 @@ import java.util.Collection;
  * </pre>
  * Where:
  * - fmeas is the measured specific force. This is a 3x1 vector.
- * - ba is accelerometer bias. Ideally, on a perfect accelerometer, this should be a
- * 3x1 zero vector.
+ * - ba is accelerometer bias, which is known. This is a 3x1 vector.
  * - I is the 3x3 identity matrix.
  * - Ma is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
  * a perfect accelerometer, this should be a 3x3 zero matrix.
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public class KnownPositionAccelerometerCalibrator {
+public class KnownBiasAndPositionAccelerometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -77,12 +62,12 @@ public class KnownPositionAccelerometerCalibrator {
      * Number of unknowns when common z-axis is assumed for both the accelerometer
      * and gyroscope.
      */
-    public static final int COMMON_Z_AXIS_UNKNOWNS = 9;
+    public static final int COMMON_Z_AXIS_UNKNOWNS = 6;
 
     /**
      * Number of unknowns for the general case.
      */
-    public static final int GENERAL_UNKNOWNS = 12;
+    public static final int GENERAL_UNKNOWNS = 9;
 
     /**
      * Required minimum number of measurements when common z-axis is assumed.
@@ -101,22 +86,22 @@ public class KnownPositionAccelerometerCalibrator {
             new LevenbergMarquardtMultiDimensionFitter();
 
     /**
-     * Initial x-coordinate of accelerometer bias to be used to find a solution.
+     * X-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      */
-    private double mInitialBiasX;
+    private double mBiasX;
 
     /**
-     * Initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Y-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      */
-    private double mInitialBiasY;
+    private double mBiasY;
 
     /**
-     * Initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Z-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      */
-    private double mInitialBiasZ;
+    private double mBiasZ;
 
     /**
      * Initial x scaling factor.
@@ -185,13 +170,7 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Listener to handle events raised by this calibrator.
      */
-    private KnownPositionAccelerometerCalibratorListener mListener;
-
-    /**
-     * Estimated accelerometer biases for each IMU axis expressed in meter per squared
-     * second (m/s^2).
-     */
-    private double[] mEstimatedBiases;
+    private KnownBiasAndPositionAccelerometerCalibrationListener mListener;
 
     /**
      * Estimated accelerometer scale factors and cross coupling errors.
@@ -281,7 +260,7 @@ public class KnownPositionAccelerometerCalibrator {
     private Matrix mInvM;
 
     /**
-     * Internally holds biases during calibration.
+     * Internally holds biases during calibration in internal format.
      */
     private Matrix mB;
 
@@ -290,11 +269,15 @@ public class KnownPositionAccelerometerCalibrator {
      */
     private Matrix mFtrue;
 
+    /**
+     * Internally hold biases during calibration in external format.
+     */
+    private Matrix mBa;
 
     /**
      * Constructor.
      */
-    public KnownPositionAccelerometerCalibrator() {
+    public KnownBiasAndPositionAccelerometerCalibrator() {
     }
 
     /**
@@ -302,8 +285,8 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final KnownPositionAccelerometerCalibratorListener listener) {
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         mListener = listener;
     }
 
@@ -314,7 +297,7 @@ public class KnownPositionAccelerometerCalibrator {
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements) {
         mMeasurements = measurements;
     }
@@ -327,9 +310,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                     and unknown different orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(measurements);
         mListener = listener;
     }
@@ -340,7 +323,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final boolean commonAxisUsed) {
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -352,9 +335,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final boolean commonAxisUsed,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(commonAxisUsed);
         mListener = listener;
     }
@@ -368,7 +351,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         this(measurements);
@@ -385,10 +368,10 @@ public class KnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(measurements, commonAxisUsed);
         mListener = listener;
     }
@@ -396,21 +379,18 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX x-coordinate of accelerometer bias.
+     *              This is expressed in meters per squared second (m/s^2).
+     * @param biasY y-coordinate of accelerometer bias.
+     *              This is expressed in meters per squared second (m/s^2).
+     * @param biasZ z-coordinate of accelerometer bias.
+     *              This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final double biasX, final double biasY,
+            final double biasZ) {
         try {
-            setInitialBias(initialBiasX, initialBiasY, initialBiasZ);
+            setBias(biasX, biasY, biasZ);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -419,22 +399,19 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX    x-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasY    y-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasZ    z-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -444,21 +421,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -468,23 +442,20 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -493,21 +464,18 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(biasX, biasY, biasZ);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -516,23 +484,20 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -544,22 +509,19 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -571,42 +533,36 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX x-coordinate of accelerometer bias.
+     * @param biasY y-coordinate of accelerometer bias.
+     * @param biasZ z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ) {
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ) {
         try {
-            setInitialBias(initialBiasX, initialBiasY, initialBiasZ);
+            setBias(biasX, biasY, biasZ);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -615,19 +571,16 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX    x-coordinate of accelerometer bias.
+     * @param biasY    y-coordinate of accelerometer bias.
+     * @param biasZ    z-coordinate of accelerometer bias.
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -637,18 +590,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ) {
+        this(biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -658,20 +608,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ);
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -680,17 +627,14 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
+        this(biasX, biasY, biasZ);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -699,19 +643,16 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
@@ -723,18 +664,15 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mMeasurements = measurements;
     }
 
@@ -746,44 +684,38 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param biasX     x-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param biasY     y-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param biasZ     z-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactors(initialSx, initialSy, initialSz);
         } catch (final LockedException ignore) {
@@ -797,25 +729,22 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
@@ -826,27 +755,24 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ, initialSx, initialSy,
                 initialSz);
         mListener = listener;
     }
@@ -856,24 +782,21 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -883,26 +806,23 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -915,25 +835,22 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double initialBiasX,
-            final double initialBiasY, final double initialBiasZ, final double initialSx,
+            final boolean commonAxisUsed, final double biasX,
+            final double biasY, final double biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
@@ -946,27 +863,24 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double initialBiasX,
-            final double initialBiasY, final double initialBiasZ, final double initialSx,
+            final boolean commonAxisUsed, final double biasX,
+            final double biasY, final double biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -974,21 +888,18 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param biasX     x-coordinate of accelerometer bias.
+     * @param biasY     y-coordinate of accelerometer bias.
+     * @param biasZ     z-coordinate of accelerometer bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactors(initialSx, initialSy, initialSz);
         } catch (final LockedException ignore) {
@@ -999,23 +910,20 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX     x-coordinate of accelerometer bias.
+     * @param biasY     y-coordinate of accelerometer bias.
+     * @param biasZ     z-coordinate of accelerometer bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
+     * @param listener  listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -1026,22 +934,19 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
@@ -1052,24 +957,21 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -1079,21 +981,18 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -1103,23 +1002,20 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -1132,22 +1028,19 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mMeasurements = measurements;
     }
@@ -1160,24 +1053,21 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mListener = listener;
     }
@@ -1185,32 +1075,29 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param biasX      x-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param biasY      y-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param biasZ      z-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,
                     initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
@@ -1225,15 +1112,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1244,14 +1128,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
     }
@@ -1262,15 +1146,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1282,15 +1163,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mListener = listener;
@@ -1301,15 +1182,12 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1320,14 +1198,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -1337,15 +1215,12 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1357,15 +1232,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mListener = listener;
@@ -1379,15 +1254,12 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1398,15 +1270,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
@@ -1420,15 +1292,12 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1440,16 +1309,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mListener = listener;
@@ -1458,29 +1327,26 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param biasX      x-coordinate of accelerometer bias.
+     * @param biasY      y-coordinate of accelerometer bias.
+     * @param biasZ      z-coordinate of accelerometer bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+        this(biasX, biasY, biasZ);
         try {
             setInitialScalingFactorsAndCrossCouplingErrors(initialSx, initialSy, initialSz,
                     initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
@@ -1492,31 +1358,28 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX      x-coordinate of accelerometer bias.
+     * @param biasY      y-coordinate of accelerometer bias.
+     * @param biasZ      z-coordinate of accelerometer bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
+     * @param listener   listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mListener = listener;
     }
@@ -1527,12 +1390,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1543,14 +1403,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
     }
@@ -1561,12 +1421,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -1578,15 +1435,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mListener = listener;
@@ -1597,12 +1454,9 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1613,13 +1467,13 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -1629,12 +1483,9 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1646,14 +1497,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mListener = listener;
@@ -1667,12 +1518,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1683,14 +1531,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mMeasurements = measurements;
@@ -1704,12 +1552,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -1721,15 +1566,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mListener = listener;
@@ -1738,15 +1583,14 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
+     * @param bias known accelerometer bias. This must have length 3 and is expressed
+     *             in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final double[] initialBias) {
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final double[] bias) {
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -1755,16 +1599,15 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias     known accelerometer bias. This must have length 3 and is expressed
+     *                 in meters per squared second (m/s^2).
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(bias);
         mListener = listener;
     }
 
@@ -1774,15 +1617,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        this(initialBias);
+            final double[] bias) {
+        this(bias);
         mMeasurements = measurements;
     }
 
@@ -1792,17 +1634,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBias);
+            final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, bias);
         mListener = listener;
     }
 
@@ -1811,14 +1652,13 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final double[] bias) {
+        this(bias);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -1827,16 +1667,15 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, bias);
         mListener = listener;
     }
 
@@ -1848,15 +1687,14 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        this(commonAxisUsed, bias);
         mMeasurements = measurements;
     }
 
@@ -1868,29 +1706,28 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, bias);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(final Matrix initialBias) {
+    public KnownBiasAndPositionAccelerometerCalibrator(final Matrix bias) {
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -1899,14 +1736,14 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias     known accelerometer bias.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(bias);
         mListener = listener;
     }
 
@@ -1916,13 +1753,13 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        this(initialBias);
+            final Matrix bias) {
+        this(bias);
         mMeasurements = measurements;
     }
 
@@ -1932,14 +1769,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBias);
+            final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, bias);
         mListener = listener;
     }
 
@@ -1948,12 +1785,12 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(bias);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -1962,14 +1799,14 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, bias);
         mListener = listener;
     }
 
@@ -1981,13 +1818,13 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(commonAxisUsed, bias);
         mMeasurements = measurements;
     }
 
@@ -1999,29 +1836,29 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, bias);
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Matrix initialBias, final Matrix initialMa) {
-        this(initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias, final Matrix initialMa) {
+        this(bias);
         try {
             setInitialMa(initialMa);
         } catch (final LockedException ignore) {
@@ -2032,16 +1869,16 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
+     * @param listener  listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final Matrix initialBias, final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBias, initialMa);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias, final Matrix initialMa,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(bias, initialMa);
         mListener = listener;
     }
 
@@ -2051,15 +1888,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        this(bias, initialMa);
         mMeasurements = measurements;
     }
 
@@ -2069,17 +1906,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, bias, initialMa);
         mListener = listener;
     }
 
@@ -2088,15 +1925,15 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(initialBias, initialMa);
+        this(bias, initialMa);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -2105,17 +1942,17 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed, final Matrix initialBias,
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBias, initialMa);
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, bias, initialMa);
         mListener = listener;
     }
 
@@ -2127,16 +1964,16 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(commonAxisUsed, initialBias, initialMa);
+        this(commonAxisUsed, bias, initialMa);
         mMeasurements = measurements;
     }
 
@@ -2148,18 +1985,18 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias, initialMa);
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, bias, initialMa);
         mListener = listener;
     }
 
@@ -2168,7 +2005,7 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public KnownPositionAccelerometerCalibrator(final ECEFPosition position) {
+    public KnownBiasAndPositionAccelerometerCalibrator(final ECEFPosition position) {
         mPosition = position;
     }
 
@@ -2178,9 +2015,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position position where body kinematics measures have been taken.
      * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(position);
         mListener = listener;
     }
@@ -2193,7 +2030,7 @@ public class KnownPositionAccelerometerCalibrator {
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements) {
         this(position);
@@ -2209,10 +2046,10 @@ public class KnownPositionAccelerometerCalibrator {
      *                     and unknown different orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(measurements, listener);
         mPosition = position;
     }
@@ -2224,7 +2061,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position, final boolean commonAxisUsed) {
         this(commonAxisUsed);
         mPosition = position;
@@ -2238,9 +2075,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position, final boolean commonAxisUsed,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(commonAxisUsed, listener);
         mPosition = position;
     }
@@ -2255,7 +2092,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -2274,11 +2111,11 @@ public class KnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(measurements, commonAxisUsed, listener);
         mPosition = position;
     }
@@ -2286,72 +2123,40 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasY    y-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasZ    z-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(biasX, biasY, biasZ);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasY    y-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasZ    z-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ, listener);
-        mPosition = position;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     */
-    public KnownPositionAccelerometerCalibrator(
-            final ECEFPosition position,
-            final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ, listener);
         mPosition = position;
     }
 
@@ -2362,24 +2167,44 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(measurements, biasX, biasY, biasZ);
+        mPosition = position;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position     position where body kinematics measures have been taken.
+     * @param measurements collection of body kinematics measurements with standard
+     *                     deviations taken at the same position with zero velocity
+     *                     and unknown different orientations.
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param listener     listener to handle events raised by this calibrator.
+     */
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position,
+            final Collection<StandardDeviationBodyKinematics> measurements,
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 listener);
         mPosition = position;
     }
@@ -2390,22 +2215,19 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mPosition = position;
     }
 
@@ -2415,24 +2237,21 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 listener);
         mPosition = position;
     }
@@ -2446,24 +2265,21 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY,
-                initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(measurements, commonAxisUsed, biasX, biasY,
+                biasZ);
         mPosition = position;
     }
 
@@ -2476,87 +2292,55 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ, listener);
+                biasX, biasY, biasZ, listener);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     * @param biasY    y-coordinate of accelerometer bias.
+     * @param biasZ    z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final ECEFPosition position, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
-        this(initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
+        this(biasX, biasY, biasZ);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     * @param biasY    y-coordinate of accelerometer bias.
+     * @param biasZ    z-coordinate of accelerometer bias.
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final ECEFPosition position, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ, listener);
-        mPosition = position;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     */
-    public KnownPositionAccelerometerCalibrator(
-            final ECEFPosition position,
-            final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ, listener);
         mPosition = position;
     }
 
@@ -2567,21 +2351,38 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ) {
+        this(measurements, biasX, biasY, biasZ);
+        mPosition = position;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position     position where body kinematics measures have been taken.
+     * @param measurements collection of body kinematics measurements with standard
+     *                     deviations taken at the same position with zero velocity
+     *                     and unknown different orientations.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     */
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position,
+            final Collection<StandardDeviationBodyKinematics> measurements,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 listener);
         mPosition = position;
     }
@@ -2592,18 +2393,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
+        this(commonAxisUsed, biasX, biasY, biasZ);
         mPosition = position;
     }
 
@@ -2613,20 +2411,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 listener);
         mPosition = position;
     }
@@ -2640,20 +2435,17 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
         this(measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ);
+                biasX, biasY, biasZ);
         mPosition = position;
     }
 
@@ -2666,21 +2458,18 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 listener);
         mPosition = position;
     }
@@ -2688,26 +2477,23 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param position  position where body kinematics measures have been taken.
+     * @param biasX     x-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param biasY     y-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param biasZ     z-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy,
+        this(biasX, biasY, biasZ, initialSx, initialSy,
                 initialSz);
         mPosition = position;
     }
@@ -2719,26 +2505,23 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -2750,28 +2533,25 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -2782,25 +2562,22 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -2811,27 +2588,24 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -2845,26 +2619,23 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double initialBiasX,
-            final double initialBiasY, final double initialBiasZ, final double initialSx,
+            final boolean commonAxisUsed, final double biasX,
+            final double biasY, final double biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -2878,28 +2649,25 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double initialBiasX,
-            final double initialBiasY, final double initialBiasZ, final double initialSx,
+            final boolean commonAxisUsed, final double biasX,
+            final double biasY, final double biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -2907,23 +2675,20 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param position  position where body kinematics measures have been taken.
+     * @param biasX     x-coordinate of accelerometer bias.
+     * @param biasY     y-coordinate of accelerometer bias.
+     * @param biasZ     z-coordinate of accelerometer bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -2931,25 +2696,22 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position  position where body kinematics measures have been taken.
+     * @param biasX     x-coordinate of accelerometer bias.
+     * @param biasY     y-coordinate of accelerometer bias.
+     * @param biasZ     z-coordinate of accelerometer bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
+     * @param listener  listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -2961,23 +2723,20 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -2989,25 +2748,22 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -3018,22 +2774,19 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -3044,24 +2797,21 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -3075,23 +2825,20 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
         mPosition = position;
     }
@@ -3105,25 +2852,22 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
         mPosition = position;
     }
@@ -3131,34 +2875,31 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param position   position where body kinematics measures have been taken.
+     * @param biasX      x-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param biasY      y-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param biasZ      z-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ, initialSx, initialSy, initialSz,
+        this(biasX, biasY, biasZ, initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx, initialMyz, initialMzx, initialMzy);
         mPosition = position;
     }
@@ -3170,15 +2911,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -3189,15 +2927,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
         mPosition = position;
@@ -3210,15 +2948,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -3230,16 +2965,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy, listener);
         mPosition = position;
@@ -3251,15 +2986,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3270,15 +3002,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -3291,15 +3023,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3311,16 +3040,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -3336,15 +3065,12 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3355,16 +3081,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
         mPosition = position;
@@ -3379,15 +3105,12 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3399,17 +3122,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy, listener);
         mPosition = position;
@@ -3418,31 +3141,28 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param position   position where body kinematics measures have been taken.
+     * @param biasX      x-coordinate of accelerometer bias.
+     * @param biasY      y-coordinate of accelerometer bias.
+     * @param biasZ      z-coordinate of accelerometer bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -3452,33 +3172,30 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position   position where body kinematics measures have been taken.
+     * @param biasX      x-coordinate of accelerometer bias.
+     * @param biasY      y-coordinate of accelerometer bias.
+     * @param biasZ      z-coordinate of accelerometer bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
+     * @param listener   listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -3492,12 +3209,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -3508,15 +3222,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -3530,12 +3244,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -3547,16 +3258,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -3569,12 +3280,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3585,14 +3293,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -3605,12 +3313,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3622,15 +3327,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -3646,12 +3351,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3662,15 +3364,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
         mPosition = position;
@@ -3685,12 +3387,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -3702,16 +3401,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
         mPosition = position;
@@ -3720,32 +3419,30 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias. This must have length 3 and is expressed
+     *                 in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final ECEFPosition position, final double[] initialBias) {
-        this(initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position, final double[] bias) {
+        this(bias);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias. This must have length 3 and is expressed
+     *                 in meters per squared second (m/s^2).
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final ECEFPosition position, final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBias, listener);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position, final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(bias, listener);
         mPosition = position;
     }
 
@@ -3756,16 +3453,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        this(measurements, initialBias);
+            final double[] bias) {
+        this(measurements, bias);
         mPosition = position;
     }
 
@@ -3776,18 +3472,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBias, listener);
+            final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, bias, listener);
         mPosition = position;
     }
 
@@ -3797,15 +3492,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position, final boolean commonAxisUsed,
-            final double[] initialBias) {
-        this(commonAxisUsed, initialBias);
+            final double[] bias) {
+        this(commonAxisUsed, bias);
         mPosition = position;
     }
 
@@ -3815,17 +3509,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position, final boolean commonAxisUsed,
-            final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBias, listener);
+            final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, bias, listener);
         mPosition = position;
     }
 
@@ -3838,16 +3531,15 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        this(measurements, commonAxisUsed, bias);
         mPosition = position;
     }
 
@@ -3860,48 +3552,47 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, bias, listener);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Matrix initialBias) {
-        this(initialBias);
+            final Matrix bias) {
+        this(bias);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBias, listener);
+            final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(bias, listener);
         mPosition = position;
     }
 
@@ -3912,14 +3603,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        this(measurements, initialBias);
+            final Matrix bias) {
+        this(measurements, bias);
         mPosition = position;
     }
 
@@ -3930,15 +3621,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBias, listener);
+            final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, bias, listener);
         mPosition = position;
     }
 
@@ -3948,13 +3639,13 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(commonAxisUsed, bias);
         mPosition = position;
     }
 
@@ -3964,15 +3655,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, bias, listener);
         mPosition = position;
     }
 
@@ -3985,14 +3676,14 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(measurements, commonAxisUsed, bias);
         mPosition = position;
     }
 
@@ -4005,50 +3696,50 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, bias, listener);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
+     * @param position  position where body kinematics measures have been taken.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        this(bias, initialMa);
         mPosition = position;
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param position  position where body kinematics measures have been taken.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
+     * @param listener  listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final Matrix initialBias, final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(initialBias, initialMa, listener);
+            final Matrix bias, final Matrix initialMa,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(bias, initialMa, listener);
         mPosition = position;
     }
 
@@ -4059,16 +3750,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(measurements, initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        this(measurements, bias, initialMa);
         mPosition = position;
     }
 
@@ -4079,18 +3770,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, initialBias, initialMa, listener);
+            final Matrix bias, final Matrix initialMa,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, bias, initialMa, listener);
         mPosition = position;
     }
 
@@ -4100,16 +3791,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(commonAxisUsed, initialBias, initialMa);
+        this(commonAxisUsed, bias, initialMa);
         mPosition = position;
     }
 
@@ -4119,18 +3810,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(commonAxisUsed, initialBias, initialMa, listener);
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(commonAxisUsed, bias, initialMa, listener);
         mPosition = position;
     }
 
@@ -4143,17 +3834,17 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(measurements, commonAxisUsed, initialBias, initialMa);
+        this(measurements, commonAxisUsed, bias, initialMa);
         mPosition = position;
     }
 
@@ -4166,19 +3857,19 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(measurements, commonAxisUsed, initialBias, initialMa, listener);
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(measurements, commonAxisUsed, bias, initialMa, listener);
         mPosition = position;
     }
 
@@ -4187,7 +3878,7 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public KnownPositionAccelerometerCalibrator(final NEDPosition position) {
+    public KnownBiasAndPositionAccelerometerCalibrator(final NEDPosition position) {
         this(convertPosition(position));
     }
 
@@ -4197,9 +3888,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position position where body kinematics measures have been taken.
      * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), listener);
     }
 
@@ -4211,7 +3902,7 @@ public class KnownPositionAccelerometerCalibrator {
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements) {
         this(convertPosition(position), measurements);
@@ -4226,10 +3917,10 @@ public class KnownPositionAccelerometerCalibrator {
      *                     and unknown different orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, listener);
     }
 
@@ -4240,7 +3931,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position, final boolean commonAxisUsed) {
         this(convertPosition(position), commonAxisUsed);
     }
@@ -4253,9 +3944,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position, final boolean commonAxisUsed,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), commonAxisUsed, listener);
     }
 
@@ -4269,7 +3960,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -4287,11 +3978,11 @@ public class KnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
                 listener);
     }
@@ -4299,73 +3990,41 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasY    y-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasZ    z-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(convertPosition(position), initialBiasX, initialBiasY,
-                initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(convertPosition(position), biasX, biasY,
+                biasZ);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasY    y-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param biasZ    z-coordinate of accelerometer bias.
+     *                 This is expressed in meters per squared second (m/s^2).
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBiasX, initialBiasY,
-                initialBiasZ, listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     */
-    public KnownPositionAccelerometerCalibrator(
-            final NEDPosition position,
-            final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(convertPosition(position), measurements, initialBiasX,
-                initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), biasX, biasY,
+                biasZ, listener);
     }
 
     /**
@@ -4375,25 +4034,45 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBiasX,
-                initialBiasY, initialBiasZ, listener);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(convertPosition(position), measurements, biasX,
+                biasY, biasZ);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position     position where body kinematics measures have been taken.
+     * @param measurements collection of body kinematics measurements with standard
+     *                     deviations taken at the same position with zero velocity
+     *                     and unknown different orientations.
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param listener     listener to handle events raised by this calibrator.
+     */
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position,
+            final Collection<StandardDeviationBodyKinematics> measurements,
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), measurements, biasX,
+                biasY, biasZ, listener);
     }
 
     /**
@@ -4402,23 +4081,20 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
-        this(convertPosition(position), commonAxisUsed, initialBiasX,
-                initialBiasY, initialBiasZ);
+            final double biasX, final double biasY,
+            final double biasZ) {
+        this(convertPosition(position), commonAxisUsed, biasX,
+                biasY, biasZ);
     }
 
     /**
@@ -4427,25 +4103,22 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), commonAxisUsed, initialBiasX,
-                initialBiasY, initialBiasZ, listener);
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), commonAxisUsed, biasX,
+                biasY, biasZ, listener);
     }
 
     /**
@@ -4457,24 +4130,21 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) {
+            final double biasX, final double biasY,
+            final double biasZ) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ);
+                biasX, biasY, biasZ);
     }
 
     /**
@@ -4486,64 +4156,55 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final double biasX, final double biasY,
+            final double biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ, listener);
+                biasX, biasY, biasZ, listener);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     * @param biasY    y-coordinate of accelerometer bias.
+     * @param biasZ    z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final NEDPosition position, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
-        this(convertPosition(position), initialBiasX, initialBiasY,
-                initialBiasZ);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
+        this(convertPosition(position), biasX, biasY,
+                biasZ);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param biasX    x-coordinate of accelerometer bias.
+     * @param biasY    y-coordinate of accelerometer bias.
+     * @param biasZ    z-coordinate of accelerometer bias.
+     * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final NEDPosition position, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBiasX, initialBiasY,
-                initialBiasZ, listener);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), biasX, biasY,
+                biasZ, listener);
     }
 
     /**
@@ -4553,20 +4214,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ) {
-        this(convertPosition(position), measurements, initialBiasX,
-                initialBiasY, initialBiasZ);
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ) {
+        this(convertPosition(position), measurements, biasX,
+                biasY, biasZ);
     }
 
     /**
@@ -4576,22 +4234,19 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBiasX,
-                initialBiasY, initialBiasZ, listener);
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), measurements, biasX,
+                biasY, biasZ, listener);
     }
 
     /**
@@ -4600,19 +4255,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
-        this(convertPosition(position), commonAxisUsed, initialBiasX,
-                initialBiasY, initialBiasZ);
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
+        this(convertPosition(position), commonAxisUsed, biasX,
+                biasY, biasZ);
     }
 
     /**
@@ -4621,21 +4273,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), commonAxisUsed, initialBiasX,
-                initialBiasY, initialBiasZ, listener);
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), commonAxisUsed, biasX,
+                biasY, biasZ, listener);
     }
 
     /**
@@ -4647,20 +4296,17 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ) {
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ);
+                biasX, biasY, biasZ);
     }
 
     /**
@@ -4672,48 +4318,42 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ, listener);
+                biasX, biasY, biasZ, listener);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param position  position where body kinematics measures have been taken.
+     * @param biasX     x-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param biasY     y-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param biasZ     z-coordinate of accelerometer bias.
+     *                  This is expressed in meters per squared second (m/s^2).
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
-        this(convertPosition(position), initialBiasX, initialBiasY,
-                initialBiasZ, initialSx, initialSy, initialSz);
+        this(convertPosition(position), biasX, biasY,
+                biasZ, initialSx, initialSy, initialSz);
     }
 
     /**
@@ -4723,27 +4363,24 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
@@ -4754,29 +4391,26 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
@@ -4786,26 +4420,23 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
@@ -4815,28 +4446,25 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final boolean commonAxisUsed, final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
@@ -4849,27 +4477,24 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double initialBiasX,
-            final double initialBiasY, final double initialBiasZ, final double initialSx,
+            final boolean commonAxisUsed, final double biasX,
+            final double biasY, final double biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
@@ -4882,77 +4507,68 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double initialBiasX,
-            final double initialBiasY, final double initialBiasZ, final double initialSx,
+            final boolean commonAxisUsed, final double biasX,
+            final double biasY, final double biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
+     * @param position  position where body kinematics measures have been taken.
+     * @param biasX     x-coordinate of accelerometer bias.
+     * @param biasY     y-coordinate of accelerometer bias.
+     * @param biasZ     z-coordinate of accelerometer bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
-        this(convertPosition(position), initialBiasX, initialBiasY, initialBiasZ,
+        this(convertPosition(position), biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position  position where body kinematics measures have been taken.
+     * @param biasX     x-coordinate of accelerometer bias.
+     * @param biasY     y-coordinate of accelerometer bias.
+     * @param biasZ     z-coordinate of accelerometer bias.
+     * @param initialSx initial x scaling factor.
+     * @param initialSy initial y scaling factor.
+     * @param initialSz initial z scaling factor.
+     * @param listener  listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
@@ -4963,24 +4579,21 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
@@ -4991,26 +4604,23 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
@@ -5020,23 +4630,20 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
@@ -5046,25 +4653,22 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
@@ -5077,24 +4681,21 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz);
     }
 
@@ -5107,60 +4708,54 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, listener);
     }
 
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param position   position where body kinematics measures have been taken.
+     * @param biasX      x-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param biasY      y-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param biasZ      z-coordinate of accelerometer bias.
+     *                   This is expressed in meters per squared second (m/s^2).
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
-        this(convertPosition(position), initialBiasX, initialBiasY, initialBiasZ,
+        this(convertPosition(position), biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
     }
@@ -5172,15 +4767,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -5191,16 +4783,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
     }
@@ -5212,15 +4804,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution. This is expressed in meters per squared
-     *                     second (m/s^2).
+     * @param biasX        x-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasY        y-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
+     * @param biasZ        z-coordinate of accelerometer bias.
+     *                     This is expressed in meters per squared second (m/s^2).
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -5232,17 +4821,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy, listener);
     }
@@ -5253,15 +4842,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5272,16 +4858,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -5293,15 +4879,12 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5313,17 +4896,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -5338,15 +4921,12 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5357,17 +4937,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy);
     }
@@ -5381,15 +4961,12 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution. This is expressed in meters per squared
-     *                       second (m/s^2).
+     * @param biasX          x-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasY          y-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
+     * @param biasZ          z-coordinate of accelerometer bias.
+     *                       This is expressed in meters per squared second (m/s^2).
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5401,18 +4978,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ, final double initialSx, final double initialSy,
+            final double biasX, final double biasY,
+            final double biasZ, final double initialSx, final double initialSy,
             final double initialSz, final double initialMxy, final double initialMxz,
             final double initialMyx, final double initialMyz, final double initialMzx,
             final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz,
                 initialMyx, initialMyz, initialMzx, initialMzy, listener);
     }
@@ -5420,31 +4997,28 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
+     * @param position   position where body kinematics measures have been taken.
+     * @param biasX      x-coordinate of accelerometer bias.
+     * @param biasY      y-coordinate of accelerometer bias.
+     * @param biasZ      z-coordinate of accelerometer bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
-        this(convertPosition(position), initialBiasX, initialBiasY, initialBiasZ,
+        this(convertPosition(position), biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -5453,33 +5027,30 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position     position where body kinematics measures have been taken.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialSx    initial x scaling factor.
-     * @param initialSy    initial y scaling factor.
-     * @param initialSz    initial z scaling factor.
-     * @param initialMxy   initial x-y cross coupling error.
-     * @param initialMxz   initial x-z cross coupling error.
-     * @param initialMyx   initial y-x cross coupling error.
-     * @param initialMyz   initial y-z cross coupling error.
-     * @param initialMzx   initial z-x cross coupling error.
-     * @param initialMzy   initial z-y cross coupling error.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position   position where body kinematics measures have been taken.
+     * @param biasX      x-coordinate of accelerometer bias.
+     * @param biasY      y-coordinate of accelerometer bias.
+     * @param biasZ      z-coordinate of accelerometer bias.
+     * @param initialSx  initial x scaling factor.
+     * @param initialSy  initial y scaling factor.
+     * @param initialSz  initial z scaling factor.
+     * @param initialMxy initial x-y cross coupling error.
+     * @param initialMxz initial x-z cross coupling error.
+     * @param initialMyx initial y-x cross coupling error.
+     * @param initialMyz initial y-z cross coupling error.
+     * @param initialMzx initial z-x cross coupling error.
+     * @param initialMzy initial z-y cross coupling error.
+     * @param listener   listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBiasX, initialBiasY, initialBiasZ,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -5492,12 +5063,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -5508,16 +5076,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx   initial z-x cross coupling error.
      * @param initialMzy   initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -5530,12 +5098,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBiasX initial x-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasY initial y-coordinate of accelerometer bias to be used
-     *                     to find a solution.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias to be used
-     *                     to find a solution.
+     * @param biasX        x-coordinate of accelerometer bias.
+     * @param biasY        y-coordinate of accelerometer bias.
+     * @param biasZ        z-coordinate of accelerometer bias.
      * @param initialSx    initial x scaling factor.
      * @param initialSy    initial y scaling factor.
      * @param initialSz    initial z scaling factor.
@@ -5547,17 +5112,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy   initial z-y cross coupling error.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Acceleration initialBiasX, final Acceleration initialBiasY,
-            final Acceleration initialBiasZ, final double initialSx,
+            final Acceleration biasX, final Acceleration biasY,
+            final Acceleration biasZ, final double initialSx,
             final double initialSy, final double initialSz, final double initialMxy,
             final double initialMxz, final double initialMyx, final double initialMyz,
             final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -5569,12 +5134,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5585,15 +5147,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
@@ -5605,12 +5167,9 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5622,16 +5181,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz,
                 initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
@@ -5646,12 +5205,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5662,16 +5218,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzx     initial z-x cross coupling error.
      * @param initialMzy     initial z-y cross coupling error.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy);
     }
@@ -5685,12 +5241,9 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBiasX   initial x-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasY   initial y-coordinate of accelerometer bias to be used
-     *                       to find a solution.
-     * @param initialBiasZ   initial z-coordinate of accelerometer bias to be used
-     *                       to find a solution.
+     * @param biasX          x-coordinate of accelerometer bias.
+     * @param biasY          y-coordinate of accelerometer bias.
+     * @param biasZ          z-coordinate of accelerometer bias.
      * @param initialSx      initial x scaling factor.
      * @param initialSy      initial y scaling factor.
      * @param initialSz      initial z scaling factor.
@@ -5702,17 +5255,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param initialMzy     initial z-y cross coupling error.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Acceleration initialBiasX,
-            final Acceleration initialBiasY, final Acceleration initialBiasZ,
+            final boolean commonAxisUsed, final Acceleration biasX,
+            final Acceleration biasY, final Acceleration biasZ,
             final double initialSx, final double initialSy, final double initialSz,
             final double initialMxy, final double initialMxz, final double initialMyx,
             final double initialMyz, final double initialMzx, final double initialMzy,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBiasX, initialBiasY, initialBiasZ,
+                biasX, biasY, biasZ,
                 initialSx, initialSy, initialSz, initialMxy, initialMxz, initialMyx,
                 initialMyz, initialMzx, initialMzy, listener);
     }
@@ -5720,31 +5273,29 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias. This must have length 3 and is expressed
+     *                 in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final NEDPosition position, final double[] initialBias) {
-        this(convertPosition(position), initialBias);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position, final double[] bias) {
+        this(convertPosition(position), bias);
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias. This must have length 3 and is expressed
+     *                 in meters per squared second (m/s^2).
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
-            final NEDPosition position, final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBias, listener);
+    public KnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position, final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), bias, listener);
     }
 
     /**
@@ -5754,16 +5305,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        this(convertPosition(position), measurements, initialBias);
+            final double[] bias) {
+        this(convertPosition(position), measurements, bias);
     }
 
     /**
@@ -5773,18 +5323,17 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBias, listener);
+            final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), measurements, bias, listener);
     }
 
     /**
@@ -5793,15 +5342,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position, final boolean commonAxisUsed,
-            final double[] initialBias) {
-        this(convertPosition(position), commonAxisUsed, initialBias);
+            final double[] bias) {
+        this(convertPosition(position), commonAxisUsed, bias);
     }
 
     /**
@@ -5810,17 +5358,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position, final boolean commonAxisUsed,
-            final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), commonAxisUsed, initialBias,
+            final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), commonAxisUsed, bias,
                 listener);
     }
 
@@ -5833,17 +5380,16 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
+            final boolean commonAxisUsed, final double[] bias) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBias);
+                bias);
     }
 
     /**
@@ -5855,47 +5401,46 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, commonAxisUsed, initialBias,
+            final boolean commonAxisUsed, final double[] bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), measurements, commonAxisUsed, bias,
                 listener);
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Matrix initialBias) {
-        this(convertPosition(position), initialBias);
+            final Matrix bias) {
+        this(convertPosition(position), bias);
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param position position where body kinematics measures have been taken.
+     * @param bias     known accelerometer bias.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBias, listener);
+            final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), bias, listener);
     }
 
     /**
@@ -5905,14 +5450,14 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        this(convertPosition(position), measurements, initialBias);
+            final Matrix bias) {
+        this(convertPosition(position), measurements, bias);
     }
 
     /**
@@ -5922,15 +5467,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBias,
+            final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), measurements, bias,
                 listener);
     }
 
@@ -5940,13 +5485,13 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(convertPosition(position), commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(convertPosition(position), commonAxisUsed, bias);
     }
 
     /**
@@ -5955,15 +5500,15 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), commonAxisUsed, bias, listener);
     }
 
     /**
@@ -5975,15 +5520,15 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
+            final boolean commonAxisUsed, final Matrix bias) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBias);
+                bias);
     }
 
     /**
@@ -5995,49 +5540,49 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final boolean commonAxisUsed, final Matrix bias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBias, listener);
+                bias, listener);
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
+     * @param position  position where body kinematics measures have been taken.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(convertPosition(position), initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        this(convertPosition(position), bias, initialMa);
     }
 
     /**
      * Constructor.
      *
-     * @param position    position where body kinematics measures have been taken.
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
-     * @param listener    listener to handle events raised by this calibrator.
+     * @param position  position where body kinematics measures have been taken.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
+     * @param listener  listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final Matrix initialBias, final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), initialBias, initialMa, listener);
+            final Matrix bias, final Matrix initialMa,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), bias, initialMa, listener);
     }
 
     /**
@@ -6047,16 +5592,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(convertPosition(position), measurements, initialBias,
+            final Matrix bias, final Matrix initialMa) {
+        this(convertPosition(position), measurements, bias,
                 initialMa);
     }
 
@@ -6067,18 +5612,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBias,
+            final Matrix bias, final Matrix initialMa,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), measurements, bias,
                 initialMa, listener);
     }
 
@@ -6088,16 +5633,16 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(convertPosition(position), commonAxisUsed, initialBias,
+        this(convertPosition(position), commonAxisUsed, bias,
                 initialMa);
     }
 
@@ -6107,18 +5652,18 @@ public class KnownPositionAccelerometerCalibrator {
      * @param position       position where body kinematics measures have been taken.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), commonAxisUsed, initialBias,
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
+        this(convertPosition(position), commonAxisUsed, bias,
                 initialMa, listener);
     }
 
@@ -6131,18 +5676,18 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBias, initialMa);
+                bias, initialMa);
     }
 
     /**
@@ -6154,232 +5699,232 @@ public class KnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public KnownPositionAccelerometerCalibrator(
+    public KnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final Collection<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final KnownPositionAccelerometerCalibratorListener listener) {
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBias, initialMa, listener);
+                bias, initialMa, listener);
     }
 
     /**
-     * Gets initial x-coordinate of accelerometer bias to be used to find a solution.
+     * Gets x-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      *
-     * @return initial x-coordinate of accelerometer bias.
+     * @return x-coordinate of known accelerometer bias.
      */
-    public double getInitialBiasX() {
-        return mInitialBiasX;
+    public double getBiasX() {
+        return mBiasX;
     }
 
     /**
-     * Sets initial x-coordinate of accelerometer bias to be used to find a solution.
+     * Sets x-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasX(final double initialBiasX) throws LockedException {
+    public void setBiasX(final double biasX) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = initialBiasX;
+        mBiasX = biasX;
     }
 
     /**
-     * Gets initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Gets y-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      *
-     * @return initial y-coordinate of accelerometer bias.
+     * @return y-coordinate of known accelerometer bias.
      */
-    public double getInitialBiasY() {
-        return mInitialBiasY;
+    public double getBiasY() {
+        return mBiasY;
     }
 
     /**
-     * Sets initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Sets y-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      *
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasY(final double initialBiasY) throws LockedException {
+    public void setBiasY(final double biasY) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasY = initialBiasY;
+        mBiasY = biasY;
     }
 
     /**
-     * Gets initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Gets z-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      *
-     * @return initial z-coordinate of accelerometer bias.
+     * @return z-coordinate of known accelerometer bias.
      */
-    public double getInitialBiasZ() {
-        return mInitialBiasZ;
+    public double getBiasZ() {
+        return mBiasZ;
     }
 
     /**
-     * Sets initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Sets z-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      *
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasZ(final double initialBiasZ) throws LockedException {
+    public void setBiasZ(final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasZ = initialBiasZ;
+        mBiasZ = biasZ;
     }
 
     /**
-     * Gets initial x-coordinate of accelerometer bias to be used to find a solution.
+     * Gets x-coordinate of known accelerometer bias.
      *
-     * @return initial x-coordinate of accelerometer bias.
+     * @return x-coordinate of known accelerometer bias.
      */
-    public Acceleration getInitialBiasXAsAcceleration() {
-        return new Acceleration(mInitialBiasX,
+    public Acceleration getBiasXAsAcceleration() {
+        return new Acceleration(mBiasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Gets initial x-coordinate of accelerometer bias to be used to find a solution.
+     * Gets x-coordinate of known accelerometer bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasXAsAcceleration(final Acceleration result) {
-        result.setValue(mInitialBiasX);
+    public void getBiasXAsAcceleration(final Acceleration result) {
+        result.setValue(mBiasX);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Sets initial x-coordinate of accelerometer bias to be used to find a solution.
+     * Sets x-coordinate of known accelerometer bias.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasX(final Acceleration initialBiasX)
+    public void setBiasX(final Acceleration biasX)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = convertAcceleration(initialBiasX);
+        mBiasX = convertAcceleration(biasX);
     }
 
     /**
-     * Gets initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Gets y-coordinate of known accelerometer bias.
      *
-     * @return initial y-coordinate of accelerometer bias.
+     * @return y-coordinate of known accelerometer bias.
      */
-    public Acceleration getInitialBiasYAsAcceleration() {
-        return new Acceleration(mInitialBiasY,
+    public Acceleration getBiasYAsAcceleration() {
+        return new Acceleration(mBiasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Gets initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Gets y-coordinate of known accelerometer bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasYAsAcceleration(final Acceleration result) {
-        result.setValue(mInitialBiasY);
+    public void getBiasYAsAcceleration(final Acceleration result) {
+        result.setValue(mBiasY);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Sets initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Sets y-coordinate of known accelerometer bias.
      *
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasY(final Acceleration initialBiasY)
+    public void setBiasY(final Acceleration biasY)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasY = convertAcceleration(initialBiasY);
+        mBiasY = convertAcceleration(biasY);
     }
 
     /**
-     * Gets initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Gets z-coordinate of known accelerometer bias.
      *
-     * @return initial z-coordinate of accelerometer bias.
+     * @return z-coordinate of known accelerometer bias.
      */
-    public Acceleration getInitialBiasZAsAcceleration() {
-        return new Acceleration(mInitialBiasZ,
+    public Acceleration getBiasZAsAcceleration() {
+        return new Acceleration(mBiasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Gets initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Gets z-coordinate of known accelerometer bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasZAsAcceleration(final Acceleration result) {
-        result.setValue(mInitialBiasZ);
+    public void getBiasZAsAcceleration(final Acceleration result) {
+        result.setValue(mBiasZ);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Sets initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Sets z-coordinate of known accelerometer bias to be used to find a solution.
      *
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasZ(final Acceleration initialBiasZ)
+    public void setBiasZ(final Acceleration biasZ)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasZ = convertAcceleration(initialBiasZ);
+        mBiasZ = convertAcceleration(biasZ);
     }
 
     /**
-     * Sets initial bias coordinates of accelerometer used to find a solution
-     * expressed in meters per squared second (m/s^2).
+     * Sets known bias coordinates of accelerometer expressed in meters
+     * per squared second (m/s^2).
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBias(final double initialBiasX, final double initialBiasY,
-                               final double initialBiasZ) throws LockedException {
+    public void setBias(final double biasX, final double biasY,
+                        final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = initialBiasX;
-        mInitialBiasY = initialBiasY;
-        mInitialBiasZ = initialBiasZ;
+        mBiasX = biasX;
+        mBiasY = biasY;
+        mBiasZ = biasZ;
     }
 
     /**
-     * Sets initial bias coordinates of accelerometer used to find a solution.
+     * Sets known bias coordinates of accelerometer.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBias(final Acceleration initialBiasX,
-                               final Acceleration initialBiasY,
-                               final Acceleration initialBiasZ) throws LockedException {
+    public void setBias(final Acceleration biasX,
+                        final Acceleration biasY,
+                        final Acceleration biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = convertAcceleration(initialBiasX);
-        mInitialBiasY = convertAcceleration(initialBiasY);
-        mInitialBiasZ = convertAcceleration(initialBiasZ);
+        mBiasX = convertAcceleration(biasX);
+        mBiasY = convertAcceleration(biasY);
+        mBiasZ = convertAcceleration(biasZ);
     }
 
     /**
@@ -6653,64 +6198,64 @@ public class KnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Gets initial bias to be used to find a solution as an array.
+     * Gets known bias as an array.
      * Array values are expressed in meters per squared second (m/s^2).
      *
-     * @return array containing coordinates of initial bias.
+     * @return array containing coordinates of known bias.
      */
-    public double[] getInitialBias() {
+    public double[] getBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        getInitialBias(result);
+        getBias(result);
         return result;
     }
 
     /**
-     * Gets initial bias to be used to find a solution as an array.
+     * Gets known bias as an array.
      * Array values are expressed in meters per squared second (m/s^2).
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public void getInitialBias(final double[] result) {
+    public void getBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        result[0] = mInitialBiasX;
-        result[1] = mInitialBiasY;
-        result[2] = mInitialBiasZ;
+        result[0] = mBiasX;
+        result[1] = mBiasY;
+        result[2] = mBiasZ;
     }
 
     /**
-     * Sets initial bias to be used to find a solution as an array.
+     * Sets known bias as an array.
      * Array values are expressed in meters per squared second (m/s^2).
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known bias to be set
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public void setInitialBias(final double[] initialBias) throws LockedException {
+    public void setBias(final double[] bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
 
-        if (initialBias.length != BodyKinematics.COMPONENTS) {
+        if (bias.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        mInitialBiasX = initialBias[0];
-        mInitialBiasY = initialBias[1];
-        mInitialBiasZ = initialBias[2];
+        mBiasX = bias[0];
+        mBiasY = bias[1];
+        mBiasZ = bias[2];
     }
 
     /**
-     * Gets initial bias to be used to find a solution as a column matrix.
+     * Gets known bias as a column matrix.
      *
-     * @return initial bias to be used to find a solution as a column matrix.
+     * @return known bias as a column matrix.
      */
-    public Matrix getInitialBiasAsMatrix() {
+    public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
             result = new Matrix(BodyKinematics.COMPONENTS, 1);
-            getInitialBiasAsMatrix(result);
+            getBiasAsMatrix(result);
         } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
@@ -6719,40 +6264,40 @@ public class KnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Gets initial bias to be used to find a solution as a column matrix.
+     * Gets known bias as a column matrix.
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void getInitialBiasAsMatrix(final Matrix result) {
+    public void getBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
-        result.setElementAtIndex(0, mInitialBiasX);
-        result.setElementAtIndex(1, mInitialBiasY);
-        result.setElementAtIndex(2, mInitialBiasZ);
+        result.setElementAtIndex(0, mBiasX);
+        result.setElementAtIndex(1, mBiasY);
+        result.setElementAtIndex(2, mBiasZ);
     }
 
     /**
-     * Sets initial bias to be used to find a solution as an array.
+     * Sets known bias as an array.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias bias to be set.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void setInitialBias(final Matrix initialBias) throws LockedException {
+    public void setBias(final Matrix bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (initialBias.getRows() != BodyKinematics.COMPONENTS
-                || initialBias.getColumns() != 1) {
+        if (bias.getRows() != BodyKinematics.COMPONENTS
+                || bias.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
 
-        mInitialBiasX = initialBias.getElementAtIndex(0);
-        mInitialBiasY = initialBias.getElementAtIndex(1);
-        mInitialBiasZ = initialBias.getElementAtIndex(2);
+        mBiasX = bias.getElementAtIndex(0);
+        mBiasY = bias.getElementAtIndex(1);
+        mBiasZ = bias.getElementAtIndex(2);
     }
 
     /**
@@ -6961,7 +6506,7 @@ public class KnownPositionAccelerometerCalibrator {
      *
      * @return listener to handle events raised by this estimator.
      */
-    public KnownPositionAccelerometerCalibratorListener getListener() {
+    public KnownBiasAndPositionAccelerometerCalibrationListener getListener() {
         return mListener;
     }
 
@@ -6972,7 +6517,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setListener(
-            final KnownPositionAccelerometerCalibratorListener listener)
+            final KnownBiasAndPositionAccelerometerCalibrationListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -7011,7 +6556,7 @@ public class KnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
+     * Estimates accelerometer calibration parameters containing scale factors
      * and cross-coupling errors.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -7049,174 +6594,6 @@ public class KnownPositionAccelerometerCalibrator {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;
-        }
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @return array containing x,y,z components of estimated accelerometer biases.
-     */
-    public double[] getEstimatedBiases() {
-        return mEstimatedBiases;
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @param result instance where estimated accelerometer biases will be stored.
-     * @return true if result instance was updated, false otherwise (when estimation
-     * is not yet available).
-     */
-    public boolean getEstimatedBiases(final double[] result) {
-        if (mEstimatedBiases != null) {
-            System.arraycopy(mEstimatedBiases, 0, result,
-                    0, mEstimatedBiases.length);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @return column matrix containing x,y,z components of estimated accelerometer
-     * biases.
-     */
-    public Matrix getEstimatedBiasesAsMatrix() {
-        return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @param result instance where result data will be stored.
-     * @return true if result was updated, false otherwise.
-     * @throws WrongSizeException if provided result instance has invalid size.
-     */
-    public boolean getEstimatedBiasesAsMatrix(final Matrix result)
-            throws WrongSizeException {
-        if (mEstimatedBiases != null) {
-            result.fromArray(mEstimatedBiases);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets x coordinate of estimated accelerometer bias expressed in meters per
-     * squared second (m/s^2).
-     *
-     * @return x coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Double getEstimatedBiasFx() {
-        return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated accelerometer bias expressed in meters per
-     * squared second (m/s^2).
-     *
-     * @return y coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Double getEstimatedBiasFy() {
-        return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated accelerometer bias expressed in meters per
-     * squared second (m/s^2).
-     *
-     * @return z coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Double getEstimatedBiasFz() {
-        return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated accelerometer bias.
-     *
-     * @return x coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Acceleration getEstimatedBiasFxAsAcceleration() {
-        return mEstimatedBiases != null ?
-                new Acceleration(mEstimatedBiases[0],
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated accelerometer bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasFxAsAcceleration(final Acceleration result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[0]);
-            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets y coordinate of estimated accelerometer bias.
-     *
-     * @return y coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Acceleration getEstimatedBiasFyAsAcceleration() {
-        return mEstimatedBiases != null ?
-                new Acceleration(mEstimatedBiases[1],
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated accelerometer bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasFyAsAcceleration(final Acceleration result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[1]);
-            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets z coordinate of estimated accelerometer bias.
-     *
-     * @return z coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Acceleration getEstimatedBiasFzAsAcceleration() {
-        return mEstimatedBiases != null ?
-                new Acceleration(mEstimatedBiases[2],
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated accelerometer bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasFzAsAcceleration(final Acceleration result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[2]);
-            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -7490,61 +6867,47 @@ public class KnownPositionAccelerometerCalibrator {
         //     [m21 	m22 	m23]
         //     [m31 	m32 	m33]
 
+        // Notice that bias b is known, hence only terms in matrix M need to be estimated
+
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
-            @Override
-            public double evaluate(double[] point) throws EvaluationException {
-                return evaluateGeneral(point);
-            }
-        });
+                    @Override
+                    public double evaluate(double[] point) throws EvaluationException {
+                        return evaluateGeneral(point);
+                    }
+                });
 
         final Matrix initialM = Matrix.identity(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
         initialM.add(getInitialMa());
 
-        final Matrix invInitialM = Utils.inverse(initialM);
-        final Matrix initialBa = getInitialBiasAsMatrix();
-        final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBa);
-
         mFitter.setFunctionEvaluator(
                 new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Input points are measured specific force coordinates
-                return BodyKinematics.COMPONENTS;
-            }
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Input points are measured specific force coordinates
+                        return BodyKinematics.COMPONENTS;
+                    }
 
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[GENERAL_UNKNOWNS];
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        // cross coupling errors M
+                        return initialM.toArray();
+                    }
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
+                    @Override
+                    public double evaluate(final int i, final double[] point,
+                                           final double[] params, final double[] derivatives)
+                            throws EvaluationException {
 
-                // cross coupling errors M
-                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = initialM.getElementAtIndex(i);
-                }
+                        mFmeasX = point[0];
+                        mFmeasY = point[1];
+                        mFmeasZ = point[2];
 
-                return initial;
-            }
+                        gradientEstimator.gradient(params, derivatives);
 
-            @Override
-            public double evaluate(final int i, final double[] point,
-                                   final double[] params, final double[] derivatives)
-                    throws EvaluationException {
-
-                mFmeasX = point[0];
-                mFmeasY = point[1];
-                mFmeasZ = point[2];
-
-                gradientEstimator.gradient(params, derivatives);
-
-                return evaluateGeneral(params);
-            }
-        });
+                        return evaluateGeneral(params);
+                    }
+                });
 
         setInputData();
 
@@ -7552,26 +6915,17 @@ public class KnownPositionAccelerometerCalibrator {
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double m11 = result[0];
+        final double m21 = result[1];
+        final double m31 = result[2];
 
-        final double m11 = result[3];
-        final double m21 = result[4];
-        final double m31 = result[5];
+        final double m12 = result[3];
+        final double m22 = result[4];
+        final double m32 = result[5];
 
-        final double m12 = result[6];
-        final double m22 = result[7];
-        final double m32 = result[8];
-
-        final double m13 = result[9];
-        final double m23 = result[10];
-        final double m33 = result[11];
-
-        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
-        b.setElementAtIndex(0, bx);
-        b.setElementAtIndex(1, by);
-        b.setElementAtIndex(2, bz);
+        final double m13 = result[6];
+        final double m23 = result[7];
+        final double m33 = result[8];
 
         final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
                 BodyKinematics.COMPONENTS);
@@ -7587,7 +6941,7 @@ public class KnownPositionAccelerometerCalibrator {
         m.setElementAtIndex(7, m23);
         m.setElementAtIndex(8, m33);
 
-        setResult(m, b);
+        setResult(m);
     }
 
     /**
@@ -7641,6 +6995,7 @@ public class KnownPositionAccelerometerCalibrator {
         //     [0 		m22 	m23]
         //     [0 	 	0 		m33]
 
+        // Notice that bias b is known, hence only terms in matrix M need to be estimated
 
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
@@ -7658,10 +7013,6 @@ public class KnownPositionAccelerometerCalibrator {
         initialM.setElementAt(2, 0, 0.0);
         initialM.setElementAt(2, 1, 0.0);
 
-        final Matrix invInitialM = Utils.inverse(initialM);
-        final Matrix initialBa = getInitialBiasAsMatrix();
-        final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBa);
-
         mFitter.setFunctionEvaluator(
                 new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
                     @Override
@@ -7674,13 +7025,8 @@ public class KnownPositionAccelerometerCalibrator {
                     public double[] createInitialParametersArray() {
                         final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
 
-                        // biases b
-                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                            initial[i] = initialB.getElementAtIndex(i);
-                        }
-
                         // upper diagonal cross coupling errors M
-                        int k = BodyKinematics.COMPONENTS;
+                        int k = 0;
                         for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
                             for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
                                 if (i <= j) {
@@ -7714,23 +7060,14 @@ public class KnownPositionAccelerometerCalibrator {
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double m11 = result[0];
 
-        final double m11 = result[3];
+        final double m12 = result[1];
+        final double m22 = result[2];
 
-        final double m12 = result[4];
-        final double m22 = result[5];
-
-        final double m13 = result[6];
-        final double m23 = result[7];
-        final double m33 = result[8];
-
-        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
-        b.setElementAtIndex(0, bx);
-        b.setElementAtIndex(1, by);
-        b.setElementAtIndex(2, bz);
+        final double m13 = result[3];
+        final double m23 = result[4];
+        final double m33 = result[5];
 
         final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
                 BodyKinematics.COMPONENTS);
@@ -7746,31 +7083,20 @@ public class KnownPositionAccelerometerCalibrator {
         m.setElementAtIndex(7, m23);
         m.setElementAtIndex(8, m33);
 
-        setResult(m, b);
+        setResult(m);
     }
 
     /**
      * Makes proper conversion of internal cross-coupling and bias matrices.
      *
      * @param m internal cross-coupling matrix.
-     * @param b internal bias matrix.
-     * @throws AlgebraException if a numerical instability occurs.
      */
-    private void setResult(final Matrix m, final Matrix b) throws AlgebraException {
+    private void setResult(final Matrix m) {
         // Because:
         // M = I + Ma
-        // b = M^-1*ba
 
         // Then:
         // Ma = M - I
-        // ba = M*b
-
-        if (mEstimatedBiases == null) {
-            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
-        }
-
-        final Matrix ba = m.multiplyAndReturnNew(b);
-        ba.toArray(mEstimatedBiases);
 
         if (mEstimatedMa == null) {
             mEstimatedMa = m;
@@ -7794,28 +7120,24 @@ public class KnownPositionAccelerometerCalibrator {
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
      * @param params array containing current parameters for the general purpose case.
-     *               Must have length 12.
+     *               Must have length 9.
      * @return estimated true specific force squared norm.
      * @throws EvaluationException if there are numerical instabilities.
      */
     private double evaluateGeneral(final double[] params) throws EvaluationException {
-        final double bx = params[0];
-        final double by = params[1];
-        final double bz = params[2];
+        final double m11 = params[0];
+        final double m21 = params[1];
+        final double m31 = params[2];
 
-        final double m11 = params[3];
-        final double m21 = params[4];
-        final double m31 = params[5];
+        final double m12 = params[3];
+        final double m22 = params[4];
+        final double m32 = params[5];
 
-        final double m12 = params[6];
-        final double m22 = params[7];
-        final double m32 = params[8];
+        final double m13 = params[6];
+        final double m23 = params[7];
+        final double m33 = params[8];
 
-        final double m13 = params[9];
-        final double m23 = params[10];
-        final double m33 = params[11];
-
-        return evaluate(bx, by, bz, m11, m21, m31, m12, m22, m32,
+        return evaluate(m11, m21, m31, m12, m22, m32,
                 m13, m23, m33);
     }
 
@@ -7826,25 +7148,21 @@ public class KnownPositionAccelerometerCalibrator {
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
      * @param params array containing current parameters for the common z-axis case.
-     *               Must have length 9.
+     *               Must have length 6.
      * @return estimated true specific force squared norm.
      * @throws EvaluationException if there are numerical instabilities.
      */
     private double evaluateCommonAxis(final double[] params) throws EvaluationException {
-        final double bx = params[0];
-        final double by = params[1];
-        final double bz = params[2];
+        final double m11 = params[0];
 
-        final double m11 = params[3];
+        final double m12 = params[1];
+        final double m22 = params[2];
 
-        final double m12 = params[4];
-        final double m22 = params[5];
+        final double m13 = params[3];
+        final double m23 = params[4];
+        final double m33 = params[5];
 
-        final double m13 = params[6];
-        final double m23 = params[7];
-        final double m33 = params[8];
-
-        return evaluate(bx, by, bz, m11, 0.0, 0.0, m12, m22, 0.0,
+        return evaluate(m11, 0.0, 0.0, m12, m22, 0.0,
                 m13, m23, m33);
     }
 
@@ -7854,9 +7172,6 @@ public class KnownPositionAccelerometerCalibrator {
      * This method is internally executed during gradient estimation and
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
-     * @param bx x-coordinate of bias.
-     * @param by y-coordinate of bias.
-     * @param bz z-coordinate of bias.
      * @param m11 element 1,1 of cross-coupling error matrix.
      * @param m21 element 2,1 of cross-coupling error matrix.
      * @param m31 element 3,1 of cross-coupling error matrix.
@@ -7869,8 +7184,7 @@ public class KnownPositionAccelerometerCalibrator {
      * @return estimated true specific force squared norm.
      * @throws EvaluationException if there are numerical instabilities.
      */
-    private double evaluate(final double bx, final double by, final double bz,
-                            final double m11, final double m21, final double m31,
+    private double evaluate(final double m11, final double m21, final double m31,
                             final double m12, final double m22, final double m32,
                             final double m13, final double m23, final double m33)
             throws EvaluationException {
@@ -7896,6 +7210,11 @@ public class KnownPositionAccelerometerCalibrator {
             if (mFtrue == null) {
                 mFtrue = new Matrix(BodyKinematics.COMPONENTS, 1);
             }
+            if (mBa == null) {
+                mBa = new Matrix(BodyKinematics.COMPONENTS, 1);
+            }
+
+            getBiasAsMatrix(mBa);
 
             mFmeas.setElementAtIndex(0, mFmeasX);
             mFmeas.setElementAtIndex(1, mFmeasY);
@@ -7915,9 +7234,8 @@ public class KnownPositionAccelerometerCalibrator {
 
             Utils.inverse(mM, mInvM);
 
-            mB.setElementAtIndex(0, bx);
-            mB.setElementAtIndex(1, by);
-            mB.setElementAtIndex(2, bz);
+            // b = M^-1*ba
+            mInvM.multiply(mBa, mB);
 
             mInvM.multiply(mFmeas, mFtrue);
             mFtrue.subtract(mB);
@@ -7929,4 +7247,5 @@ public class KnownPositionAccelerometerCalibrator {
             throw new EvaluationException(e);
         }
     }
+
 }
