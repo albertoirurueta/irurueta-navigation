@@ -162,7 +162,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
     protected RobustKnownFrameAccelerometerCalibratorListener mListener;
 
     /**
-     * Indicates whether estimator is running.
+     * Indicates whether calibrator is running.
      */
     protected boolean mRunning;
 
@@ -2743,7 +2743,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
         }
 
         try {
-            PreliminaryResult result = new PreliminaryResult();
+            final PreliminaryResult result = new PreliminaryResult();
             result.mEstimatedBiases = getInitialBias();
             result.mEstimatedMa = getInitialMa();
 
@@ -2768,7 +2768,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
             }
 
             solutions.add(result);
-        } catch (LockedException | CalibrationException | NotReadyException e) {
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
         }
     }
@@ -2812,7 +2812,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
                     mEstimatedCovariance = null;
                 }
 
-            } catch (LockedException | CalibrationException | NotReadyException e) {
+            } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMa = preliminaryResult.mEstimatedMa;
