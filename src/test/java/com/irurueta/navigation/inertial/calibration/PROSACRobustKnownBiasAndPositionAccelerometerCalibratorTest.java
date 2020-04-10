@@ -45,9 +45,10 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
-        RobustKnownPositionAccelerometerCalibratorListener {
+public class PROSACRobustKnownBiasAndPositionAccelerometerCalibratorTest implements
+        RobustKnownBiasAndPositionAccelerometerCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -69,8 +70,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     private static final int OUTLIER_PERCENTAGE = 10;
 
-    private static final double THRESHOLD = 1e-8;
-    private static final double LARGE_THRESHOLD = 1e-4;
+    private static final double THRESHOLD = 1e-10;
+    private static final double LARGE_THRESHOLD = 1e-2;
 
     private static final double ABSOLUTE_ERROR = 1e-8;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
@@ -86,36 +87,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -127,14 +132,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -148,33 +153,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -187,41 +179,45 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
     public void testConstructor2() throws WrongSizeException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(this);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -233,14 +229,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -254,33 +250,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -293,7 +276,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -301,36 +284,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(measurements);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(measurements);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -342,14 +329,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -363,33 +350,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -402,41 +376,45 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
     public void testConstructor4() throws WrongSizeException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(true);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(true);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -448,14 +426,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -469,33 +447,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -508,7 +473,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -519,36 +484,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(bias);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -559,13 +528,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -579,33 +548,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -618,12 +574,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -639,36 +595,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ba);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -679,13 +639,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -699,33 +659,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -738,18 +685,18 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -776,36 +723,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ba, ma);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -816,13 +767,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -835,33 +786,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -874,30 +812,30 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -920,36 +858,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -961,14 +903,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -984,33 +926,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1023,7 +952,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -1044,37 +973,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1086,14 +1019,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1109,33 +1042,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1148,7 +1068,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -1169,37 +1089,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1211,14 +1135,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1234,33 +1158,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1273,7 +1184,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -1294,37 +1205,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1336,14 +1251,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1359,33 +1274,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1398,7 +1300,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -1419,37 +1321,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1461,14 +1367,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1484,33 +1390,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1523,7 +1416,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -1550,37 +1443,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1591,13 +1488,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1613,33 +1510,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1652,12 +1536,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1689,37 +1573,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1730,13 +1618,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1752,33 +1640,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1791,12 +1666,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1828,37 +1703,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -1869,13 +1748,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -1891,33 +1770,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1930,12 +1796,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1967,37 +1833,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -2008,13 +1878,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -2030,33 +1900,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2069,12 +1926,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, new double[1],
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2107,37 +1964,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -2148,13 +2009,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -2170,33 +2031,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2209,18 +2057,18 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2252,37 +2100,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, ba, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -2293,13 +2145,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -2315,33 +2167,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2354,19 +2193,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(1, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(3, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2399,37 +2238,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -2440,13 +2283,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -2462,33 +2305,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2501,19 +2331,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true,
                     new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
@@ -2546,37 +2376,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, ba, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -2587,13 +2421,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -2609,33 +2443,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2648,19 +2469,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true,
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true,
                     new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2704,37 +2525,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -2745,13 +2570,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -2766,33 +2591,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2805,30 +2617,30 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2871,37 +2683,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -2912,13 +2728,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -2933,33 +2749,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2972,33 +2775,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(1, 1), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, new Matrix(3, 3), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, ba, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, ba, new Matrix(3, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -3042,37 +2845,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3083,13 +2890,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -3104,33 +2911,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3143,33 +2937,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, new Matrix(1, 1),
                     ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, new Matrix(
                     3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, ba,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -3213,37 +3007,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(ecefPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
                         measurements, true, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3254,13 +3052,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -3275,33 +3073,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3314,33 +3099,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true,
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true,
                     new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, ba,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, ba,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -3364,36 +3149,40 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -3405,14 +3194,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -3428,33 +3217,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3467,7 +3243,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -3488,37 +3264,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -3530,14 +3310,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -3553,33 +3333,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3592,7 +3359,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -3613,37 +3380,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -3655,14 +3426,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -3678,33 +3449,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3717,7 +3475,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -3738,37 +3496,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -3780,14 +3542,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -3803,33 +3565,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3842,7 +3591,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -3863,37 +3612,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -3905,14 +3658,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -3928,33 +3681,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3967,7 +3707,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -3994,37 +3734,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4035,13 +3779,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4057,33 +3801,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4096,12 +3827,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4133,37 +3864,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4174,13 +3909,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4196,33 +3931,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4235,12 +3957,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4272,37 +3994,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4313,13 +4039,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4335,33 +4061,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4374,12 +4087,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4411,37 +4124,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4452,13 +4169,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4474,33 +4191,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4513,12 +4217,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, new double[1],
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -4551,37 +4255,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4592,13 +4300,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4614,33 +4322,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4653,18 +4348,18 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4696,37 +4391,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, ba, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4737,13 +4436,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4759,33 +4458,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4798,19 +4484,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(1, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(3, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -4843,37 +4529,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -4884,13 +4574,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -4906,33 +4596,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4945,19 +4622,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
@@ -4990,37 +4667,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, ba, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -5031,13 +4712,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -5053,33 +4734,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5092,19 +4760,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -5148,37 +4816,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5189,13 +4861,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -5210,33 +4882,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5249,30 +4908,30 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -5315,37 +4974,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5356,13 +5019,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -5377,33 +5040,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5416,33 +5066,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(1, 1), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, new Matrix(3, 3), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, ba, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, ba, new Matrix(3, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -5486,37 +5136,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5527,13 +5181,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -5548,33 +5202,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5587,33 +5228,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, ba,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -5657,37 +5298,41 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(nedPosition,
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(nedPosition,
                         measurements, true, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5698,13 +5343,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -5719,33 +5364,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5758,33 +5390,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true,
                     new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, ba,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, ba,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -5811,39 +5443,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -5855,14 +5491,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -5878,33 +5514,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5917,17 +5540,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -5948,39 +5561,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, this);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -5992,14 +5610,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6015,33 +5633,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6054,17 +5659,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -6085,39 +5680,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -6129,14 +5729,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6152,33 +5752,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6191,17 +5778,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -6222,40 +5799,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true,
-                        this);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -6267,14 +5848,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6290,33 +5871,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6329,18 +5897,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -6367,39 +5924,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, bias);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -6410,13 +5971,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6432,33 +5993,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6471,19 +6019,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, bias);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6514,39 +6056,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, bias, this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements, bias,
+                        this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -6557,13 +6104,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6579,33 +6126,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6618,21 +6152,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, new double[1],
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, bias,
-                    this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6663,39 +6189,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true, bias);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -6706,13 +6237,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6728,33 +6259,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6767,21 +6285,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    true, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements,
-                    true, bias);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6812,40 +6322,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true, bias,
-                        this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -6856,13 +6370,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -6878,33 +6392,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6917,21 +6418,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    new double[1], this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true,
-                    bias, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, new double[1],
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6962,39 +6456,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, ba);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -7005,13 +6503,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -7027,33 +6525,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7066,27 +6551,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(1, 1));
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(3, 3));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, ba);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7117,39 +6594,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, ba, this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements, ba,
+                        this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -7160,13 +6642,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -7182,33 +6664,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7221,27 +6690,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(1, 1), this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(1, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(3, 3), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, ba, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(3, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7272,39 +6735,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true, ba);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -7315,13 +6783,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -7337,33 +6805,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7376,28 +6831,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true,
                     new Matrix(3, 3));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true,
-                    ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7428,40 +6876,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true, ba,
-                        this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, ba, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -7472,13 +6924,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -7494,33 +6946,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7533,28 +6972,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true,
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true,
                     new Matrix(3, 3), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true,
-                    ba, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7596,39 +7028,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, ba, ma);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7639,13 +7075,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -7660,33 +7096,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7699,41 +7122,31 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(1, 1), ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(3, 3), ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, ba,
-                    new Matrix(1, 3));
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, ba,
-                    new Matrix(3, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, ba, ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7775,39 +7188,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, ba, ma, this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements, ba, ma,
+                        this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7818,13 +7236,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -7839,33 +7257,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7878,42 +7283,35 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(1, 1), ma, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(1, 1), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements,
-                    new Matrix(3, 3), ma, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, new Matrix(3, 3), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, ba,
-                    new Matrix(1, 3), this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, ba, new Matrix(1, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, ba,
-                    new Matrix(3, 1), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, ba,
-                    ma, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, ba, new Matrix(3, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7955,39 +7353,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true, ba, ma);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7998,13 +7401,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -8019,33 +7422,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8058,42 +7448,35 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    new Matrix(1, 1), ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, new Matrix(1, 1),
+                    ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    new Matrix(3, 3), ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, new Matrix(
+                    3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    ba, new Matrix(1, 3));
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, ba,
+                    new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    ba, new Matrix(3, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true,
-                    ba, ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, ba,
+                    new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8135,40 +7518,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        ecefPosition, measurements, true, ba, ma,
-                        this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, ecefPosition, measurements,
+                        true, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -8179,13 +7566,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -8200,33 +7587,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8239,42 +7613,35 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true,
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true,
                     new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    ba, new Matrix(1, 3), this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, ba,
+                    new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, ecefPosition, measurements, true,
-                    ba, new Matrix(3, 1), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], ecefPosition, measurements, true,
-                    ba, ma, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    ecefPosition, measurements, true, ba,
+                    new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8299,39 +7666,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -8343,14 +7714,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -8366,33 +7737,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8405,17 +7763,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -8436,39 +7784,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, this);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -8480,14 +7832,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -8503,33 +7855,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8542,16 +7881,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -8572,39 +7902,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -8616,14 +7951,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -8639,33 +7974,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8678,17 +8000,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -8709,39 +8021,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final List<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, this);
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -8753,14 +8070,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
         double[] bias1 = new double[3];
-        assertArrayEquals(calibrator.getInitialBias(), bias1, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
         Matrix biasMatrix1 = new Matrix(3, 1);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), biasMatrix1);
+        assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -8776,33 +8093,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8815,18 +8119,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
     }
 
     @Test
@@ -8853,39 +8146,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, bias);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -8896,13 +8193,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -8918,33 +8215,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8957,19 +8241,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, bias);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9000,39 +8278,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, bias, this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9043,13 +8325,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9065,33 +8347,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9104,20 +8373,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, new double[1],
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, bias, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9148,39 +8410,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, bias);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true, bias);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9191,13 +8458,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9213,33 +8480,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9252,20 +8506,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
-                    new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true, bias);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9296,40 +8543,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, bias,
-                        this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true, bias, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9340,13 +8591,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9362,33 +8613,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9401,20 +8639,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                     nedPosition, measurements, true, new double[1],
                     this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true, bias, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9445,39 +8677,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, ba);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9488,13 +8724,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9510,33 +8746,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9549,27 +8772,19 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(1, 1));
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(3, 3));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, ba);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9600,39 +8815,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, ba, this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, ba,
+                        this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9643,13 +8863,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9665,33 +8885,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9704,28 +8911,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(1, 1),
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(1, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(3, 3), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, ba, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(3, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9756,39 +8956,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, ba);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true, ba);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9799,13 +9004,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9821,33 +9026,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9860,27 +9052,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(3, 3));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9911,40 +9097,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double bz = ba.getElementAtIndex(2);
         final double[] bias = ba.getBuffer();
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, ba,
-                        this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true, ba, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -9955,13 +9145,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
@@ -9977,33 +9167,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10016,27 +9193,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(3, 3), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true, ba, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10078,39 +9249,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, ba, ma);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10121,13 +9296,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -10142,33 +9317,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10181,41 +9343,31 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(1, 1), ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(3, 3), ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, ba,
-                    new Matrix(1, 3));
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, ba,
-                    new Matrix(3, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, ba, ma);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10257,39 +9409,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, ba, ma, this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10300,13 +9456,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -10321,33 +9477,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10360,43 +9503,35 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(1, 1), ma,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(1, 1), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements,
-                    new Matrix(3, 3), ma,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, new Matrix(3, 3), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, ba,
-                    new Matrix(1, 3), this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, ba, new Matrix(1, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, ba,
-                    new Matrix(3, 1), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, ba, ma, this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, ba, new Matrix(3, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10438,39 +9573,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, ba, ma);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements, true, ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10481,13 +9620,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -10502,33 +9641,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10541,42 +9667,35 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true, ba,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true, ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true, ba,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true, ba,
                     new Matrix(3, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true, ba,
-                    ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10618,40 +9737,44 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] qualityScores = new double[13];
+        final double[] qualityScores = new double[10];
 
-        PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                        nedPosition, measurements, true, ba, ma,
-                        this);
+        PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, nedPosition, measurements,
+                        true, ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
-        Acceleration acceleration1 = calibrator.getInitialBiasXAsAcceleration();
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bx, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(acceleration2);
+        calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasYAsAcceleration();
+        acceleration1 = calibrator.getBiasYAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), by, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(acceleration2);
+        calibrator.getBiasYAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
-        acceleration1 = calibrator.getInitialBiasZAsAcceleration();
+        acceleration1 = calibrator.getBiasZAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), bz, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(acceleration2);
+        calibrator.getBiasZAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10662,13 +9785,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        assertArrayEquals(calibrator.getInitialBias(), bias, 0.0);
+        assertArrayEquals(calibrator.getBias(), bias, 0.0);
         double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias, bias2, 0.0);
-        assertEquals(calibrator.getInitialBiasAsMatrix(), ba);
+        assertEquals(calibrator.getBiasAsMatrix(), ba);
         Matrix biasMatrix2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(biasMatrix2);
+        calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(ba, biasMatrix2);
         assertEquals(calibrator.getInitialMa(), ma);
         Matrix ma2 = new Matrix(3, 3);
@@ -10683,33 +9806,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                RobustKnownPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_MAX_ITERATIONS, 0.0);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasFx());
-        assertNull(calibrator.getEstimatedBiasFy());
-        assertNull(calibrator.getEstimatedBiasFz());
-        assertNull(calibrator.getEstimatedBiasFxAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFxAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFyAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFyAsAcceleration(null));
-        assertNull(calibrator.getEstimatedBiasFzAsAcceleration());
-        assertFalse(calibrator.getEstimatedBiasFzAsAcceleration(null));
         assertNull(calibrator.getEstimatedMa());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10722,42 +9832,35 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                RobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true,
                     new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
-                    ba, new Matrix(1, 3), this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true, ba,
+                    new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    qualityScores, nedPosition, measurements, true,
-                    ba, new Matrix(3, 1), this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                    new double[1], nedPosition, measurements, true, ba, ma,
-                    this);
+            calibrator = new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                    nedPosition, measurements, true, ba,
+                    new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10765,89 +9868,119 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetStopThreshold() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+    public void testGetSetThreshold() throws LockedException {
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.DEFAULT_THRESHOLD, 0.0);
 
         // set new value
-        calibrator.setStopThreshold(0.1);
+        calibrator.setThreshold(0.1);
 
         // check
-        assertEquals(calibrator.getStopThreshold(), 0.1, 0.0);
+        assertEquals(calibrator.getThreshold(), 0.1, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.setStopThreshold(0.0);
+            calibrator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
     }
 
     @Test
-    public void testGetSetInitialBiasX() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+    public void testIsSetComputeandKeepInliersEnabled() throws LockedException {
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
+        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
+
+        // set new value
+        calibrator.setComputeAndKeepInliersEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
+    }
+
+    @Test
+    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isComputeAndKeepResiduals());
+
+        // set new value
+        calibrator.setComputeAndKeepResidualsEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepResiduals());
+    }
+
+    @Test
+    public void testGetSetInitialBiasX() throws LockedException {
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
 
         // set new value
         final Matrix ba = generateBa();
         final double biasX = ba.getElementAtIndex(0);
 
-        calibrator.setInitialBiasX(biasX);
+        calibrator.setBiasX(biasX);
 
         // check
-        assertEquals(calibrator.getInitialBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
     }
 
     @Test
     public void testGetSetInitialBiasY() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
 
         // set new value
         final Matrix ba = generateBa();
         final double biasY = ba.getElementAtIndex(1);
 
-        calibrator.setInitialBiasY(biasY);
+        calibrator.setBiasY(biasY);
 
         // check
-        assertEquals(calibrator.getInitialBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
     }
 
     @Test
     public void testGetSetInitialBiasZ() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
         // set new value
         final Matrix ba = generateBa();
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator.setInitialBiasZ(biasZ);
+        calibrator.setBiasZ(biasZ);
 
         // check
-        assertEquals(calibrator.getInitialBiasZ(), biasZ, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
     }
 
     @Test
     public void testGetSetInitialBiasXAsAcceleration() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        final Acceleration biasX1 = calibrator.getInitialBiasXAsAcceleration();
+        final Acceleration biasX1 = calibrator.getBiasXAsAcceleration();
 
         assertEquals(biasX1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(biasX1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -10858,13 +9991,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
         final Acceleration biasX2 = new Acceleration(biasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator.setInitialBiasX(biasX2);
+        calibrator.setBiasX(biasX2);
 
         // check
-        final Acceleration biasX3 = calibrator.getInitialBiasXAsAcceleration();
+        final Acceleration biasX3 = calibrator.getBiasXAsAcceleration();
         final Acceleration biasX4 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasXAsAcceleration(biasX4);
+        calibrator.getBiasXAsAcceleration(biasX4);
 
         assertEquals(biasX2, biasX3);
         assertEquals(biasX2, biasX4);
@@ -10872,11 +10005,11 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasYAsAcceleration() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        final Acceleration biasY1 = calibrator.getInitialBiasYAsAcceleration();
+        final Acceleration biasY1 = calibrator.getBiasYAsAcceleration();
 
         assertEquals(biasY1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(biasY1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -10887,13 +10020,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
         final Acceleration biasY2 = new Acceleration(biasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator.setInitialBiasY(biasY2);
+        calibrator.setBiasY(biasY2);
 
         // check
-        final Acceleration biasY3 = calibrator.getInitialBiasYAsAcceleration();
+        final Acceleration biasY3 = calibrator.getBiasYAsAcceleration();
         final Acceleration biasY4 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasYAsAcceleration(biasY4);
+        calibrator.getBiasYAsAcceleration(biasY4);
 
         assertEquals(biasY2, biasY3);
         assertEquals(biasY2, biasY4);
@@ -10901,11 +10034,11 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasZAsAcceleration() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        final Acceleration biasZ1 = calibrator.getInitialBiasZAsAcceleration();
+        final Acceleration biasZ1 = calibrator.getBiasZAsAcceleration();
 
         assertEquals(biasZ1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(biasZ1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -10916,13 +10049,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
         final Acceleration biasZ2 = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator.setInitialBiasZ(biasZ2);
+        calibrator.setBiasZ(biasZ2);
 
         // check
-        final Acceleration biasZ3 = calibrator.getInitialBiasZAsAcceleration();
+        final Acceleration biasZ3 = calibrator.getBiasZAsAcceleration();
         final Acceleration biasZ4 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getInitialBiasZAsAcceleration(biasZ4);
+        calibrator.getBiasZAsAcceleration(biasZ4);
 
         assertEquals(biasZ2, biasZ3);
         assertEquals(biasZ2, biasZ4);
@@ -10930,13 +10063,13 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testSetInitialBias1() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default values
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
         // set new value
         final Matrix ba = generateBa();
@@ -10944,23 +10077,23 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator.setInitialBias(biasX, biasY, biasZ);
+        calibrator.setBias(biasX, biasY, biasZ);
 
         // check
-        assertEquals(biasX, calibrator.getInitialBiasX(), 0.0);
-        assertEquals(biasY, calibrator.getInitialBiasY(), 0.0);
-        assertEquals(biasZ, calibrator.getInitialBiasZ(), 0.0);
+        assertEquals(biasX, calibrator.getBiasX(), 0.0);
+        assertEquals(biasY, calibrator.getBiasY(), 0.0);
+        assertEquals(biasZ, calibrator.getBiasZ(), 0.0);
     }
 
     @Test
     public void testSetInitialBias2() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default values
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
         // set new value
         final Matrix ba = generateBa();
@@ -10975,18 +10108,18 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         final Acceleration baz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        calibrator.setInitialBias(bax, bay, baz);
+        calibrator.setBias(bax, bay, baz);
 
         // check
-        assertEquals(calibrator.getInitialBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), biasZ, 0.0);
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
     }
 
     @Test
     public void testGetSetInitialSx() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -11003,8 +10136,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSy() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -11021,8 +10154,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSz() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -11039,8 +10172,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMxy() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -11057,8 +10190,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMxz() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
@@ -11075,8 +10208,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMyx() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
@@ -11093,8 +10226,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMyz() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
@@ -11111,8 +10244,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMzx() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
@@ -11129,8 +10262,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMzy() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
@@ -11147,8 +10280,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialScalingFactors() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -11171,8 +10304,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialCrossCouplingErrors() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -11206,8 +10339,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
     @Test
     public void testSetInitialScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -11250,33 +10383,33 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialBias() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, new double[3], 0.0);
 
         // set new value
         final double[] bias2 = generateBa().getBuffer();
-        calibrator.setInitialBias(bias2);
+        calibrator.setBias(bias2);
 
         // check
-        final double[] bias3 = calibrator.getInitialBias();
+        final double[] bias3 = calibrator.getBias();
         final double[] bias4 = new double[3];
-        calibrator.getInitialBias(bias4);
+        calibrator.getBias(bias4);
 
         assertArrayEquals(bias2, bias3, 0.0);
         assertArrayEquals(bias2, bias4, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getInitialBias(new double[1]);
+            calibrator.getBias(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialBias(new double[1]);
+            calibrator.setBias(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -11284,43 +10417,43 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasAsMatrix() throws LockedException, WrongSizeException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
-        final Matrix bias1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bias1 = calibrator.getBiasAsMatrix();
         assertArrayEquals(bias1.getBuffer(), new double[3], 0.0);
 
         // set new values
         final Matrix bias2 = generateBa();
-        calibrator.setInitialBias(bias2);
+        calibrator.setBias(bias2);
 
         // check
-        final Matrix bias3 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bias3 = calibrator.getBiasAsMatrix();
         final Matrix bias4 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bias4);
+        calibrator.getBiasAsMatrix(bias4);
 
         assertEquals(bias2, bias3);
         assertEquals(bias2, bias4);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getInitialBiasAsMatrix(new Matrix(1, 1));
+            calibrator.getBiasAsMatrix(new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.getInitialBiasAsMatrix(new Matrix(3, 3));
+            calibrator.getBiasAsMatrix(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialBias(new Matrix(1, 1));
+            calibrator.setBias(new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialBias(new Matrix(3, 3));
+            calibrator.setBias(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -11328,8 +10461,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMa() throws WrongSizeException, LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         final Matrix ma1 = calibrator.getInitialMa();
@@ -11393,8 +10526,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetEcefPosition() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getEcefPosition());
@@ -11421,8 +10554,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetNedPosition() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getNedPosition());
@@ -11450,8 +10583,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetMeasurements() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -11467,8 +10600,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertFalse(calibrator.isCommonAxisUsed());
@@ -11482,8 +10615,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -11497,8 +10630,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testIsReady() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check
         assertFalse(calibrator.isReady());
@@ -11517,7 +10650,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         calibrator.setCommonAxisUsed(false);
 
         final List<StandardDeviationBodyKinematics> measurements2 = new ArrayList<>();
-        for (int i = 0; i < RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL; i++) {
+        for (int i = 0; i < KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL; i++) {
             measurements2.add(new StandardDeviationBodyKinematics());
         }
         calibrator.setMeasurements(measurements2);
@@ -11533,20 +10666,20 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
 
         // set quality scores with different length
-        double[] qualityScores = new double[14];
+        double[] qualityScores = new double[11];
         calibrator.setQualityScores(qualityScores);
 
         assertFalse(calibrator.isReady());
 
         // set quality scores with equal length
-        qualityScores = new double[13];
+        qualityScores = new double[10];
         calibrator.setQualityScores(qualityScores);
 
         assertTrue(calibrator.isReady());
 
         // set enough measurements for common axis case
         measurements2.clear();
-        for (int i = 0; i < KnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS; i++) {
+        for (int i = 0; i < KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS; i++) {
             measurements2.add(new StandardDeviationBodyKinematics());
         }
         calibrator.setMeasurements(measurements2);
@@ -11559,7 +10692,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
 
         // set quality scores with equal length
-        qualityScores = new double[10];
+        qualityScores = new double[7];
         calibrator.setQualityScores(qualityScores);
 
         assertTrue(calibrator.isReady());
@@ -11567,8 +10700,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getProgressDelta(), 0.05f, 0.0);
@@ -11594,8 +10727,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getConfidence(), 0.99, 0.0);
@@ -11621,8 +10754,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getMaxIterations(), 5000);
@@ -11641,8 +10774,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -11656,8 +10789,8 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -11671,15 +10804,15 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
 
         // set new value
         final double[] qualityScores = new double[
-                PROMedSRobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL];
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL];
         calibrator.setQualityScores(qualityScores);
 
         // check
@@ -11687,7 +10820,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
         // Force IllegalArgumentException
         try {
-            calibrator.setQualityScores(new double[12]);
+            calibrator.setQualityScores(new double[9]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -11695,12 +10828,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                new PROMedSRobustKnownPositionAccelerometerCalibrator();
+        final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                PROMedSRobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
+                PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL);
 
         // set new value
         calibrator.setPreliminarySubsetSize(14);
@@ -11811,11 +10944,11 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
                 qualityScores[i] = 1.0 / (1.0 + error);
             }
 
-            final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                    new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
+            final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                    new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(qualityScores,
                             nedPosition, measurements, false, ba, ma,
                             this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -11836,19 +10969,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMa = calibrator.getEstimatedMa();
 
-            if (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
-                continue;
-            }
             if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedMa, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -11954,11 +11082,11 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
                 qualityScores[i] = 1.0 / (1.0 + error);
             }
 
-            final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                    new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
+            final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                    new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(qualityScores,
                             nedPosition, measurements, true, ba, ma,
                             this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -11979,19 +11107,290 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMa = calibrator.getEstimatedMa();
 
-            if (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
-                continue;
-            }
             if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedMa, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralWithInlierNoise() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaGeneral();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
+                    accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
+                    gyroQuantLevel);
+
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                    random, 0.0, specificForceStandardDeviation);
+
+            final List<StandardDeviationBodyKinematics> measurements =
+                    new ArrayList<>();
+            final double[] qualityScores = new double[LARGE_MEASUREMENT_NUMBER];
+            double error;
+            for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+                    error = Math.abs(errorRandomizer.nextDouble());
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                    error = 0.0;
+                }
+
+                final StandardDeviationBodyKinematics measurement =
+                        new StandardDeviationBodyKinematics(measuredKinematics,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+
+                qualityScores[i] = 1.0 / (1.0 + error);
+            }
+
+            final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                    new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                            qualityScores, nedPosition, measurements,
+                            false, this);
+            calibrator.setThreshold(LARGE_THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedMa = calibrator.getEstimatedMa();
+
+            if (!ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedMa, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisWithInlierNoise() throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException, LockedException,
+            CalibrationException, NotReadyException {
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMaCommonAxis();
+            final Matrix mg = generateMg();
+            final Matrix gg = generateGg();
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errorsOutlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    OUTLIER_ERROR_FACTOR * accelNoiseRootPSD,
+                    OUTLIER_ERROR_FACTOR * gyroNoiseRootPSD,
+                    accelQuantLevel, gyroQuantLevel);
+            final IMUErrors errorsInlier = new IMUErrors(ba, bg, ma, mg, gg,
+                    accelNoiseRootPSD, gyroNoiseRootPSD, accelQuantLevel,
+                    gyroQuantLevel);
+
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD()
+                    / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD()
+                    / sqrtTimeInterval;
+
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                    random, 0.0, specificForceStandardDeviation);
+
+            final List<StandardDeviationBodyKinematics> measurements =
+                    new ArrayList<>();
+            final double[] qualityScores = new double[LARGE_MEASUREMENT_NUMBER];
+            double error;
+            for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                // compute ground-truth kinematics that should be generated at provided
+                // position, velocity and orientation
+                final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, ecefFrame,
+                                ecefFrame);
+
+                // apply known calibration parameters to distort ground-truth and generate a
+                // measured kinematics sample
+                final BodyKinematics measuredKinematics;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsOutlier, random);
+                    error = Math.abs(errorRandomizer.nextDouble());
+
+                } else {
+                    // inlier
+                    measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics,
+                                    errorsInlier, random);
+                    error = 0.0;
+                }
+
+                final StandardDeviationBodyKinematics measurement =
+                        new StandardDeviationBodyKinematics(measuredKinematics,
+                                specificForceStandardDeviation,
+                                angularRateStandardDeviation);
+                measurements.add(measurement);
+
+                qualityScores[i] = 1.0 / (1.0 + error);
+            }
+
+            final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                    new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                            qualityScores, nedPosition, measurements,
+                            true, this);
+            calibrator.setThreshold(LARGE_THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedMa = calibrator.getEstimatedMa();
+
+            if (!ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(ma.equals(estimatedMa, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedMa, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -12097,11 +11496,11 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
                 qualityScores[i] = 1.0 / (1.0 + error);
             }
 
-            final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator =
-                    new PROMedSRobustKnownPositionAccelerometerCalibrator(qualityScores,
-                            nedPosition, measurements, false, ba, ma,
-                            this);
-            calibrator.setStopThreshold(THRESHOLD);
+            final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator =
+                    new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                            qualityScores, nedPosition, measurements,
+                            false, ba, ma, this);
+            calibrator.setThreshold(THRESHOLD);
             calibrator.setResultRefined(false);
 
             // estimate
@@ -12123,19 +11522,14 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBa = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMa = calibrator.getEstimatedMa();
 
-            if (!ba.equals(estimatedBa, ABSOLUTE_ERROR)) {
-                continue;
-            }
             if (!ma.equals(estimatedMa, ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(ba.equals(estimatedBa, ABSOLUTE_ERROR));
             assertTrue(ma.equals(estimatedMa, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
+            assertEstimatedResult(estimatedMa, calibrator);
 
             assertNull(calibrator.getEstimatedCovariance());
 
@@ -12147,28 +11541,32 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
     }
 
     @Override
-    public void onCalibrateStart(final RobustKnownPositionAccelerometerCalibrator calibrator) {
-        checkLocked((PROMedSRobustKnownPositionAccelerometerCalibrator) calibrator);
+    public void onCalibrateStart(
+            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator) {
+        checkLocked((PROSACRobustKnownBiasAndPositionAccelerometerCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(final RobustKnownPositionAccelerometerCalibrator calibrator) {
-        checkLocked((PROMedSRobustKnownPositionAccelerometerCalibrator) calibrator);
+    public void onCalibrateEnd(
+            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator) {
+        checkLocked((PROSACRobustKnownBiasAndPositionAccelerometerCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
-    public void onCalibrateNextIteration(final RobustKnownPositionAccelerometerCalibrator calibrator,
-                                         final int iteration) {
-        checkLocked((PROMedSRobustKnownPositionAccelerometerCalibrator) calibrator);
+    public void onCalibrateNextIteration(
+            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator,
+            final int iteration) {
+        checkLocked((PROSACRobustKnownBiasAndPositionAccelerometerCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
-    public void onCalibrateProgressChange(final RobustKnownPositionAccelerometerCalibrator calibrator,
-                                          final float progress) {
-        checkLocked((PROMedSRobustKnownPositionAccelerometerCalibrator) calibrator);
+    public void onCalibrateProgressChange(
+            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator,
+            final float progress) {
+        checkLocked((PROSACRobustKnownBiasAndPositionAccelerometerCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -12179,45 +11577,45 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         mCalibrateProgressChange = 0;
     }
 
-    private void checkLocked(final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator) {
+    private void checkLocked(final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
-            calibrator.setInitialBiasX(0.0);
+            calibrator.setBiasX(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasY(0.0);
+            calibrator.setBiasY(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasZ(0.0);
+            calibrator.setBiasZ(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasX(null);
+            calibrator.setBiasX(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasY(null);
+            calibrator.setBiasY(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasZ(null);
+            calibrator.setBiasZ(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias(0.0, 0.0, 0.0);
+            calibrator.setBias(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias(null, null, null);
+            calibrator.setBias(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -12287,12 +11685,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias((double[]) null);
+            calibrator.setBias((double[]) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias((Matrix) null);
+            calibrator.setBias((Matrix) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -12354,7 +11752,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             fail("LockedException expected but not thrown");
         }
         try {
-            calibrator.setStopThreshold(0.1);
+            calibrator.setThreshold(0.1);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -12363,58 +11761,21 @@ public class PROMedSRobustKnownPositionAccelerometerCalibratorTest implements
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
+        try {
+            calibrator.setComputeAndKeepInliersEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setComputeAndKeepResidualsEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
     }
 
     private void assertEstimatedResult(
-            final Matrix ba, final Matrix ma,
-            final PROMedSRobustKnownPositionAccelerometerCalibrator calibrator)
-            throws WrongSizeException {
-
-        final double[] estimatedBiases = calibrator.getEstimatedBiases();
-        assertArrayEquals(ba.getBuffer(), estimatedBiases, 0.0);
-
-        final double[] estimatedBiases2 = new double[3];
-        calibrator.getEstimatedBiases(estimatedBiases2);
-        assertArrayEquals(estimatedBiases, estimatedBiases2, 0.0);
-
-        final Matrix ba2 = new Matrix(3, 1);
-        calibrator.getEstimatedBiasesAsMatrix(ba2);
-
-        assertEquals(ba, ba2);
-
-        assertEquals(ba.getElementAtIndex(0), calibrator.getEstimatedBiasFx(),
-                0.0);
-        assertEquals(ba.getElementAtIndex(1), calibrator.getEstimatedBiasFy(),
-                0.0);
-        assertEquals(ba.getElementAtIndex(2), calibrator.getEstimatedBiasFz(),
-                0.0);
-
-        final Acceleration bax1 = calibrator.getEstimatedBiasFxAsAcceleration();
-        final Acceleration bax2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getEstimatedBiasFxAsAcceleration(bax2);
-        assertEquals(bax1, bax2);
-        assertEquals(calibrator.getEstimatedBiasFx(),
-                bax1.getValue().doubleValue(), 0.0);
-        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bax1.getUnit());
-
-        final Acceleration bay1 = calibrator.getEstimatedBiasFyAsAcceleration();
-        final Acceleration bay2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getEstimatedBiasFyAsAcceleration(bay2);
-        assertEquals(bay1, bay2);
-        assertEquals(calibrator.getEstimatedBiasFy(),
-                bay1.getValue().doubleValue(), 0.0);
-        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, bay1.getUnit());
-
-        final Acceleration baz1 = calibrator.getEstimatedBiasFzAsAcceleration();
-        final Acceleration baz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getEstimatedBiasFzAsAcceleration(baz2);
-        assertEquals(baz1, baz2);
-        assertEquals(calibrator.getEstimatedBiasFz(),
-                baz1.getValue().doubleValue(), 0.0);
-        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, baz1.getUnit());
+            final Matrix ma,
+            final PROSACRobustKnownBiasAndPositionAccelerometerCalibrator calibrator) {
 
         assertEquals(ma.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);

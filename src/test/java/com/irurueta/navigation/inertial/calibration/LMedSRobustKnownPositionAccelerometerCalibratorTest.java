@@ -468,7 +468,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1358,7 +1358,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1483,7 +1483,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1890,7 +1890,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -2029,7 +2029,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -2461,7 +2461,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -2608,7 +2608,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3103,7 +3103,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3274,7 +3274,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3802,7 +3802,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3927,7 +3927,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -4334,7 +4334,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -4473,7 +4473,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -4905,7 +4905,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5052,7 +5052,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5547,7 +5547,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5718,7 +5718,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS);
+                RobustKnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),

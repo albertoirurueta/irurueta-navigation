@@ -41,12 +41,12 @@ import java.util.BitSet;
 import java.util.List;
 
 /**
- * This is an abstract class to robustly estimate accelerometer biases,
- * cross couplings and scaling factors.
+ * This is an abstract class to robustly estimate accelerometer cross couplings
+ * and scaling factors.
  * <p>
- * To use this calibrator at least 10 measurements taken at a single known position must
- * be taken at 10 different unknown orientations and zero velocity when common z-axis
- * is assumed, otherwise at least 13 measurements are required.
+ * To use this calibrator at least 7 measurements taken at a single known position must
+ * be taken at 7 different unknown orientations and zero velocity when common z-axis
+ * is assumed, otherwise at least 10 measurements are required.
  * <p>
  * Measured specific force is assumed to follow the model shown below:
  * <pre>
@@ -54,15 +54,15 @@ import java.util.List;
  * </pre>
  * Where:
  * - fmeas is the measured specific force. This is a 3x1 vector.
- * - ba is accelerometer bias. Ideally, on a perfect accelerometer, this should be a
- * 3x1 zero vector.
+ * - ba is accelerometer bias, which is known. This is a 3x1 vector.
  * - I is the 3x3 identity matrix.
  * - Ma is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
  * a perfect accelerometer, this should be a 3x3 zero matrix.
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public abstract class RobustKnownPositionAccelerometerCalibrator {
+public abstract class RobustKnownBiasAndPositionAccelerometerCalibrator {
+
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
      * and gyroscope.
@@ -73,13 +73,13 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * Required minimum number of measurements when common z-axis is assumed.
      */
     public static final int MINIMUM_MEASUREMENTS_COMMON_Z_AXIS =
-            KnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS;
+            KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS;
 
     /**
      * Required minimum number of measurements for the general case.
      */
     public static final int MINIMUM_MEASUREMENTS_GENERAL =
-            KnownPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL;
+            KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL;
 
     /**
      * Default robust estimator method when none is provided.
@@ -151,7 +151,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * Listener to be notified of events such as when calibration starts, ends or its
      * progress significantly changes.
      */
-    protected RobustKnownPositionAccelerometerCalibratorListener mListener;
+    protected RobustKnownBiasAndPositionAccelerometerCalibratorListener mListener;
 
     /**
      * Indicates whether calibrator is running.
@@ -203,22 +203,22 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
 
     /**
-     * Initial x-coordinate of accelerometer bias to be used to find a solution.
+     * X-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      */
-    private double mInitialBiasX;
+    private double mBiasX;
 
     /**
-     * Initial y-coordinate of accelerometer bias to be used to find a solution.
+     * Y-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      */
-    private double mInitialBiasY;
+    private double mBiasY;
 
     /**
-     * Initial z-coordinate of accelerometer bias to be used to find a solution.
+     * Z-coordinate of known accelerometer bias.
      * This is expressed in meters per squared second (m/s^2).
      */
-    private double mInitialBiasZ;
+    private double mBiasZ;
 
     /**
      * Initial x scaling factor.
@@ -269,12 +269,6 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * Position where body kinematics measures have been taken.
      */
     private ECEFPosition mPosition;
-
-    /**
-     * Estimated accelerometer biases for each IMU axis expressed in meter per squared
-     * second (m/s^2).
-     */
-    private double[] mEstimatedBiases;
 
     /**
      * Estimated accelerometer scale factors and cross coupling errors.
@@ -333,8 +327,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * Inner calibrator to compute calibration for each subset of data or during
      * final refining.
      */
-    private KnownPositionAccelerometerCalibrator mInnerCalibrator =
-            new KnownPositionAccelerometerCalibrator();
+    private final KnownBiasAndPositionAccelerometerCalibrator mInnerCalibrator =
+            new KnownBiasAndPositionAccelerometerCalibrator();
 
     /**
      * Contains gravity norm for current position to be reused during calibration.
@@ -369,7 +363,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      */
-    public RobustKnownPositionAccelerometerCalibrator() {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator() {
     }
 
     /**
@@ -378,8 +372,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         mListener = listener;
     }
 
@@ -390,11 +384,10 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final List<StandardDeviationBodyKinematics> measurements) {
         mMeasurements = measurements;
     }
-
 
     /**
      * Constructor.
@@ -402,22 +395,21 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(final boolean commonAxisUsed) {
         mCommonAxisUsed = commonAxisUsed;
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
+     * @param bias known accelerometer bias. This must have length 3 and is expressed
+     *             in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
-            final double[] initialBias) {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
+            final double[] bias) {
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -426,12 +418,12 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final Matrix initialBias) {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(final Matrix bias) {
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -440,14 +432,14 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
-            final Matrix initialBias, final Matrix initialMa) {
-        this(initialBias);
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias, final Matrix initialMa) {
+        this(bias);
         try {
             setInitialMa(initialMa);
         } catch (final LockedException ignore) {
@@ -460,7 +452,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final ECEFPosition position) {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(final ECEFPosition position) {
         mPosition = position;
     }
 
@@ -472,7 +464,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     different unknown orientations and containing the standard deviations
      *                     of accelerometer and gyroscope measurements.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements) {
         this(measurements);
@@ -489,10 +481,10 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener     listener to be notified of events such as when estimation
      *                     starts, ends or its progress significantly changes.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         this(measurements);
         mPosition = position;
         mListener = listener;
@@ -508,7 +500,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -529,11 +521,11 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener       listener to be notified of events such as when estimation
      *                       starts, ends or its progress significantly changes.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         this(position, measurements, commonAxisUsed);
         mListener = listener;
     }
@@ -545,16 +537,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        this(initialBias);
+            final double[] bias) {
+        this(bias);
         mPosition = position;
         mMeasurements = measurements;
     }
@@ -566,18 +557,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(position, measurements, initialBias);
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(position, measurements, bias);
         mListener = listener;
     }
 
@@ -590,16 +580,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(position, measurements, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        this(position, measurements, bias);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -612,18 +601,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(position, measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(position, measurements, commonAxisUsed, bias);
         mListener = listener;
     }
 
@@ -634,14 +622,14 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        this(initialBias);
+            final Matrix bias) {
+        this(bias);
         mPosition = position;
         mMeasurements = measurements;
     }
@@ -653,16 +641,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(position, measurements, initialBias);
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(position, measurements, bias);
         mListener = listener;
     }
 
@@ -675,14 +663,14 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(position, measurements, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(position, measurements, bias);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -695,16 +683,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(position, measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(position, measurements, commonAxisUsed, bias);
         mListener = listener;
     }
 
@@ -715,16 +703,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        this(bias, initialMa);
         mPosition = position;
         mMeasurements = measurements;
     }
@@ -736,18 +724,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(position, measurements, initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(position, measurements, bias, initialMa);
         mListener = listener;
     }
 
@@ -760,17 +748,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(position, measurements, initialBias, initialMa);
+        this(position, measurements, bias, initialMa);
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -783,19 +771,19 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(position, measurements, commonAxisUsed, initialBias, initialMa);
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(position, measurements, commonAxisUsed, bias, initialMa);
         mListener = listener;
     }
 
@@ -804,7 +792,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final NEDPosition position) {
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(final NEDPosition position) {
         mPosition = convertPosition(position);
     }
 
@@ -816,7 +804,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     different unknown orientations and containing the standard deviations
      *                     of accelerometer and gyroscope measurements.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements) {
         this(convertPosition(position), measurements);
@@ -832,10 +820,10 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener     listener to be notified of events such as when estimation
      *                     starts, ends or its progress significantly changes.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         this(convertPosition(position), measurements, listener);
     }
 
@@ -849,7 +837,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -868,11 +856,11 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener       listener to be notified of events such as when estimation
      *                       starts, ends or its progress significantly changes.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed, listener);
     }
 
@@ -883,16 +871,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        this(convertPosition(position), measurements, initialBias);
+            final double[] bias) {
+        this(convertPosition(position), measurements, bias);
     }
 
     /**
@@ -902,18 +889,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBias, listener);
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(convertPosition(position), measurements, bias, listener);
     }
 
     /**
@@ -925,16 +911,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        this(convertPosition(position), measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        this(convertPosition(position), measurements, commonAxisUsed, bias);
     }
 
     /**
@@ -946,19 +931,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
-                initialBias, listener);
+                bias, listener);
     }
 
     /**
@@ -968,14 +952,14 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        this(convertPosition(position), measurements, initialBias);
+            final Matrix bias) {
+        this(convertPosition(position), measurements, bias);
     }
 
     /**
@@ -985,16 +969,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBias, listener);
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(convertPosition(position), measurements, bias, listener);
     }
 
     /**
@@ -1006,14 +990,14 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        this(convertPosition(position), measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final Matrix bias) {
+        this(convertPosition(position), measurements, commonAxisUsed, bias);
     }
 
     /**
@@ -1025,16 +1009,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, commonAxisUsed, initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(convertPosition(position), measurements, commonAxisUsed, bias,
                 listener);
     }
 
@@ -1045,16 +1029,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        this(convertPosition(position), measurements, initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        this(convertPosition(position), measurements, bias, initialMa);
     }
 
     /**
@@ -1064,18 +1048,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, initialBias, initialMa,
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(convertPosition(position), measurements, bias, initialMa,
                 listener);
     }
 
@@ -1088,17 +1072,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        this(convertPosition(position), measurements, commonAxisUsed, initialBias,
+        this(convertPosition(position), measurements, commonAxisUsed, bias,
                 initialMa);
     }
 
@@ -1111,254 +1095,236 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public RobustKnownPositionAccelerometerCalibrator(
+    public RobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        this(convertPosition(position), measurements, commonAxisUsed, initialBias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        this(convertPosition(position), measurements, commonAxisUsed, bias,
                 initialMa, listener);
     }
 
     /**
-     * Gets initial x-coordinate of accelerometer bias to be used to find a solutions.
-     * This is expressed in meters per squared second (m/s^2) and only taken into
-     * account if non-linear preliminary solutions are used.
+     * Gets x-coordinate of known accelerometer bias.
+     * This is expressed in meters per squared second (m/s^2).
      *
-     * @return initial x-coordinate of accelerometer bias.
+     * @return x-coordinate of known accelerometer bias.
      */
-    public double getInitialBiasX() {
-        return mInitialBiasX;
+    public double getBiasX() {
+        return mBiasX;
     }
 
     /**
-     * Sets initial x-coordinate of accelerometer bias to be used to find a solution.
-     * This is expressed in meters per squared second (m/s^2) and only taken into
-     * account if non-linear preliminary solutions are used.
+     * Sets x-coordinate of known accelerometer bias.
+     * This is expressed in meters per squared second (m/s^2).
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasX(final double initialBiasX) throws LockedException {
+    public void setBiasX(final double biasX) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = initialBiasX;
+        mBiasX = biasX;
     }
 
     /**
-     * Gets initial y-coordinate of accelerometer bias to be used to find a solution.
-     * This is expressed in meters per squared second (m/s^2) and only taken into
-     * account if non-linear preliminary solutions are used.
+     * Gets y-coordinate of known accelerometer bias.
+     * This is expressed in meters per squared second (m/s^2).
      *
-     * @return initial y-coordinate of accelerometer bias.
+     * @return y-coordinate of known accelerometer bias.
      */
-    public double getInitialBiasY() {
-        return mInitialBiasY;
+    public double getBiasY() {
+        return mBiasY;
     }
 
     /**
-     * Sets initial y-coordinate of accelerometer bias to be used to find a solution.
-     * This is expressed in meters per squared second (m/s^2) and only taken into
-     * account if non-linear preliminary solutions are used.
+     * Sets y-coordinate of known accelerometer bias.
+     * This is expressed in meters per squared second (m/s^2).
      *
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasY(final double initialBiasY) throws LockedException {
+    public void setBiasY(final double biasY) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasY = initialBiasY;
+        mBiasY = biasY;
     }
 
     /**
-     * Gets initial z-coordinate of accelerometer bias to be used to find a solution.
-     * This is expressed in meters per squared second (m/s^2) and only taken into
-     * account if non-linear preliminary solutions are used.
+     * Gets z-coordinate of known accelerometer bias.
+     * This is expressed in meters per squared second (m/s^2).
      *
-     * @return initial z-coordinate of accelerometer bias.
+     * @return z-coordinate of known accelerometer bias.
      */
-    public double getInitialBiasZ() {
-        return mInitialBiasZ;
+    public double getBiasZ() {
+        return mBiasZ;
     }
 
     /**
-     * Sets initial z-coordinate of accelerometer bias to be used to find a solution.
-     * This is expressed in meters per squared second (m/s^2) and only taken into
-     * account if non-linear preliminary solutions are used.
+     * Sets z-coordinate of known accelerometer bias.
+     * This is expressed in meters per squared second (m/s^2).
      *
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasZ(final double initialBiasZ) throws LockedException {
+    public void setBiasZ(final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasZ = initialBiasZ;
+        mBiasZ = biasZ;
     }
 
     /**
-     * Gets initial x-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets x-coordinate of known accelerometer bias.
      *
-     * @return initial x-coordinate of accelerometer bias.
+     * @return x-coordinate of known accelerometer bias.
      */
-    public Acceleration getInitialBiasXAsAcceleration() {
-        return new Acceleration(mInitialBiasX,
+    public Acceleration getBiasXAsAcceleration() {
+        return new Acceleration(mBiasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Gets initial x-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets x-coordinate of known accelerometer bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasXAsAcceleration(final Acceleration result) {
-        result.setValue(mInitialBiasX);
+    public void getBiasXAsAcceleration(final Acceleration result) {
+        result.setValue(mBiasX);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Sets initial x-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Sets x-coordinate of known accelerometer bias.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasX(final Acceleration initialBiasX)
+    public void setBiasX(final Acceleration biasX)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = convertAcceleration(initialBiasX);
+        mBiasX = convertAcceleration(biasX);
     }
 
     /**
-     * Gets initial y-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets y-coordinate of known accelerometer bias.
      *
-     * @return initial y-coordinate of accelerometer bias.
+     * @return y-coordinate of known accelerometer bias.
      */
-    public Acceleration getInitialBiasYAsAcceleration() {
-        return new Acceleration(mInitialBiasY,
+    public Acceleration getBiasYAsAcceleration() {
+        return new Acceleration(mBiasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Gets initial y-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets y-coordinate of known accelerometer bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasYAsAcceleration(final Acceleration result) {
-        result.setValue(mInitialBiasY);
+    public void getBiasYAsAcceleration(final Acceleration result) {
+        result.setValue(mBiasY);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Sets initial y-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Sets y-coordinate of known accelerometer bias.
      *
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasY(final Acceleration initialBiasY)
+    public void setBiasY(final Acceleration biasY)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasY = convertAcceleration(initialBiasY);
+        mBiasY = convertAcceleration(biasY);
     }
 
     /**
-     * Gets initial z-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets z-coordinate of known accelerometer bias.
      *
-     * @return initial z-coordinate of accelerometer bias.
+     * @return z-coordinate of known accelerometer bias.
      */
-    public Acceleration getInitialBiasZAsAcceleration() {
-        return new Acceleration(mInitialBiasZ,
+    public Acceleration getBiasZAsAcceleration() {
+        return new Acceleration(mBiasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Gets initial z-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets z-coordinate of known accelerometer bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasZAsAcceleration(final Acceleration result) {
-        result.setValue(mInitialBiasZ);
+    public void getBiasZAsAcceleration(final Acceleration result) {
+        result.setValue(mBiasZ);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 
     /**
-     * Sets initial z-coordinate of accelerometer bias to be used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Sets z-coordinate of known accelerometer bias to be used to find a solution.
      *
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasZ(final Acceleration initialBiasZ)
+    public void setBiasZ(final Acceleration biasZ)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasZ = convertAcceleration(initialBiasZ);
+        mBiasZ = convertAcceleration(biasZ);
     }
 
     /**
-     * Sets initial bias coordinates of accelerometer used to find a solution
-     * expressed in meters per squared second (m/s^2).
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Sets known bias coordinates of accelerometer expressed in meters
+     * per squared second (m/s^2).
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBias(final double initialBiasX, final double initialBiasY,
-                               final double initialBiasZ) throws LockedException {
+    public void setBias(final double biasX, final double biasY,
+                        final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = initialBiasX;
-        mInitialBiasY = initialBiasY;
-        mInitialBiasZ = initialBiasZ;
+        mBiasX = biasX;
+        mBiasY = biasY;
+        mBiasZ = biasZ;
     }
 
     /**
-     * Sets initial bias coordinates of accelerometer used to find a solution.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Sets known bias coordinates of accelerometer.
      *
-     * @param initialBiasX initial x-coordinate of accelerometer bias.
-     * @param initialBiasY initial y-coordinate of accelerometer bias.
-     * @param initialBiasZ initial z-coordinate of accelerometer bias.
+     * @param biasX x-coordinate of known accelerometer bias.
+     * @param biasY y-coordinate of known accelerometer bias.
+     * @param biasZ z-coordinate of known accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBias(final Acceleration initialBiasX,
-                               final Acceleration initialBiasY,
-                               final Acceleration initialBiasZ) throws LockedException {
+    public void setBias(final Acceleration biasX,
+                        final Acceleration biasY,
+                        final Acceleration biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = convertAcceleration(initialBiasX);
-        mInitialBiasY = convertAcceleration(initialBiasY);
-        mInitialBiasZ = convertAcceleration(initialBiasZ);
+        mBiasX = convertAcceleration(biasX);
+        mBiasY = convertAcceleration(biasY);
+        mBiasZ = convertAcceleration(biasZ);
     }
 
     /**
      * Gets initial x scaling factor.
-     * This is only taken into account if non-linear preliminary solutions are used.
      *
      * @return initial x scaling factor.
      */
@@ -1368,7 +1334,6 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
 
     /**
      * Sets initial x scaling factor.
-     * This is only taken into account if non-linear preliminary solutions are used.
      *
      * @param initialSx initial x scaling factor.
      * @throws LockedException if calibrator is currently running.
@@ -1648,68 +1613,64 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Gets initial bias to be used to find a solution as an array.
+     * Gets known bias as an array.
      * Array values are expressed in meters per squared second (m/s^2).
-     * This is only taken into account if non-linear preliminary solutions are used.
      *
-     * @return array containing coordinates of initial bias.
+     * @return array containing coordinates of known bias.
      */
-    public double[] getInitialBias() {
+    public double[] getBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        getInitialBias(result);
+        getBias(result);
         return result;
     }
 
     /**
-     * Gets initial bias to be used to find a solution as an array.
+     * Gets known bias as an array.
      * Array values are expressed in meters per squared second (m/s^2).
-     * This is only taken into account if non-linear preliminary solutions are used.
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public void getInitialBias(final double[] result) {
+    public void getBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        result[0] = mInitialBiasX;
-        result[1] = mInitialBiasY;
-        result[2] = mInitialBiasZ;
+        result[0] = mBiasX;
+        result[1] = mBiasY;
+        result[2] = mBiasZ;
     }
 
     /**
-     * Sets initial bias to be used to find a solution as an array.
+     * Sets known bias as an array.
      * Array values are expressed in meters per squared second (m/s^2).
-     * This is only taken into account if non-linear preliminary solutions are used.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known bias to be set
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public void setInitialBias(final double[] initialBias) throws LockedException {
+    public void setBias(final double[] bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
 
-        if (initialBias.length != BodyKinematics.COMPONENTS) {
+        if (bias.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        mInitialBiasX = initialBias[0];
-        mInitialBiasY = initialBias[1];
-        mInitialBiasZ = initialBias[2];
+        mBiasX = bias[0];
+        mBiasY = bias[1];
+        mBiasZ = bias[2];
     }
 
     /**
-     * Gets initial bias to be used to find a solution as a column matrix.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets known bias as a column matrix.
      *
-     * @return initial bias to be used to find a solution as a column matrix.
+     * @return known bias as a column matrix.
      */
-    public Matrix getInitialBiasAsMatrix() {
+    public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
             result = new Matrix(BodyKinematics.COMPONENTS, 1);
-            getInitialBiasAsMatrix(result);
+            getBiasAsMatrix(result);
         } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
@@ -1718,42 +1679,40 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Gets initial bias to be used to find a solution as a column matrix.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Gets known bias as a column matrix.
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void getInitialBiasAsMatrix(final Matrix result) {
+    public void getBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
-        result.setElementAtIndex(0, mInitialBiasX);
-        result.setElementAtIndex(1, mInitialBiasY);
-        result.setElementAtIndex(2, mInitialBiasZ);
+        result.setElementAtIndex(0, mBiasX);
+        result.setElementAtIndex(1, mBiasY);
+        result.setElementAtIndex(2, mBiasZ);
     }
 
     /**
-     * Sets initial bias to be used to find a solution as an array.
-     * This is only taken into account if non-linear preliminary solutions are used.
+     * Sets known bias as an array.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias bias to be set.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void setInitialBias(final Matrix initialBias) throws LockedException {
+    public void setBias(final Matrix bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (initialBias.getRows() != BodyKinematics.COMPONENTS
-                || initialBias.getColumns() != 1) {
+        if (bias.getRows() != BodyKinematics.COMPONENTS
+                || bias.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
 
-        mInitialBiasX = initialBias.getElementAtIndex(0);
-        mInitialBiasY = initialBias.getElementAtIndex(1);
-        mInitialBiasZ = initialBias.getElementAtIndex(2);
+        mBiasX = bias.getElementAtIndex(0);
+        mBiasY = bias.getElementAtIndex(1);
+        mBiasZ = bias.getElementAtIndex(2);
     }
 
     /**
@@ -1964,7 +1923,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *
      * @return listener to handle events raised by this estimator.
      */
-    public RobustKnownPositionAccelerometerCalibratorListener getListener() {
+    public RobustKnownBiasAndPositionAccelerometerCalibratorListener getListener() {
         return mListener;
     }
 
@@ -1974,7 +1933,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setListener(final RobustKnownPositionAccelerometerCalibratorListener listener)
+    public void setListener(final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2192,174 +2151,6 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Gets array containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @return array containing x,y,z components of estimated accelerometer biases.
-     */
-    public double[] getEstimatedBiases() {
-        return mEstimatedBiases;
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @param result instance where estimated accelerometer biases will be stored.
-     * @return true if result instance was updated, false otherwise (when estimation
-     * is not yet available).
-     */
-    public boolean getEstimatedBiases(final double[] result) {
-        if (mEstimatedBiases != null) {
-            System.arraycopy(mEstimatedBiases, 0, result,
-                    0, mEstimatedBiases.length);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @return column matrix containing x,y,z components of estimated accelerometer
-     * biases
-     */
-    public Matrix getEstimatedBiasesAsMatrix() {
-        return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated accelerometer biases
-     * expressed in meters per squared second (m/s^2).
-     *
-     * @param result instance where result data will be stored.
-     * @return true if result was updated, false otherwise.
-     * @throws WrongSizeException if provided result instance has invalid size.
-     */
-    public boolean getEstimatedBiasesAsMatrix(final Matrix result)
-            throws WrongSizeException {
-        if (mEstimatedBiases != null) {
-            result.fromArray(mEstimatedBiases);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets x coordinate of estimated accelerometer bias expressed in meters per
-     * squared second (m/s^2).
-     *
-     * @return x coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Double getEstimatedBiasFx() {
-        return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated accelerometer bias expressed in meters per
-     * squared second (m/s^2).
-     *
-     * @return y coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Double getEstimatedBiasFy() {
-        return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated accelerometer bias expressed in meters per
-     * squared second (m/s^2).
-     *
-     * @return z coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Double getEstimatedBiasFz() {
-        return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated accelerometer bias.
-     *
-     * @return x coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Acceleration getEstimatedBiasFxAsAcceleration() {
-        return mEstimatedBiases != null ?
-                new Acceleration(mEstimatedBiases[0],
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated accelerometer bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasFxAsAcceleration(final Acceleration result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[0]);
-            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets y coordinate of estimated accelerometer bias.
-     *
-     * @return y coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Acceleration getEstimatedBiasFyAsAcceleration() {
-        return mEstimatedBiases != null ?
-                new Acceleration(mEstimatedBiases[1],
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated accelerometer bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasFyAsAcceleration(final Acceleration result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[1]);
-            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets z coordinate of estimated accelerometer bias.
-     *
-     * @return z coordinate of estimated accelerometer bias or null if not available.
-     */
-    public Acceleration getEstimatedBiasFzAsAcceleration() {
-        return mEstimatedBiases != null ?
-                new Acceleration(mEstimatedBiases[2],
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND) : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated accelerometer bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasFzAsAcceleration(final Acceleration result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[2]);
-            result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Gets estimated accelerometer scale factors and ross coupling errors.
      * This is the product of matrix Ta containing cross coupling errors and Ka
      * containing scaling factors.
@@ -2536,7 +2327,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
+     * Estimates accelerometer calibration parameters containing scale factors
      * and cross-coupling errors.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -2558,20 +2349,20 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator();
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator();
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator();
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator();
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator();
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator();
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator();
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator();
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator();
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator();
         }
     }
 
@@ -2583,21 +2374,26 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method   robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        listener);
         }
     }
 
@@ -2610,21 +2406,26 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final List<StandardDeviationBodyKinematics> measurements,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(measurements);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        measurements);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(measurements);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        measurements);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(measurements);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        measurements);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(measurements);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        measurements);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(measurements);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        measurements);
         }
     }
 
@@ -2636,106 +2437,120 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(commonAxisUsed);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        commonAxisUsed);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(commonAxisUsed);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        commonAxisUsed);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(commonAxisUsed);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        commonAxisUsed);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(commonAxisUsed);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        commonAxisUsed);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(commonAxisUsed);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        commonAxisUsed);
         }
     }
 
     /**
      * Creates a robust accelerometer calibrator.
      *
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
-     * @param method      robust estimator method.
+     * @param bias   known accelerometer bias. This must have length 3 and is expressed
+     *               in meters per squared second (m/s^2).
+     * @param method robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final double[] initialBias, final RobustEstimatorMethod method) {
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final double[] bias, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
         }
     }
 
     /**
      * Creates a robust accelerometer calibrator.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param method      robust estimator method.
+     * @param bias   known accelerometer bias.
+     * @param method robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final Matrix initialBias, final RobustEstimatorMethod method) {
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final Matrix bias, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias);
         }
     }
 
     /**
      * Creates a robust accelerometer calibrator.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
-     * @param method      robust estimator method.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
+     * @param method    robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final Matrix initialBias, final Matrix initialMa,
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final Matrix bias, final Matrix initialMa,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        initialBias, initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        initialBias, initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        initialBias, initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        initialBias, initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        initialBias, initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        bias, initialMa);
         }
     }
 
@@ -2746,25 +2561,30 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method   robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
         }
     }
 
     /**
-     * Creates a robust accelerometer calibrator.
+     * Creates a robust accelerometer calibrator
      *
      * @param position     position where body kinematics measures have been taken.
      * @param measurements list of body kinematics measurements taken at a given position with
@@ -2773,26 +2593,26 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
         }
     }
@@ -2809,27 +2629,27 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
         }
     }
@@ -2846,27 +2666,27 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
         }
     }
@@ -2885,28 +2705,28 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
         }
     }
@@ -2918,34 +2738,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias, final RobustEstimatorMethod method) {
+            final double[] bias, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
         }
     }
 
@@ -2956,37 +2775,36 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
         }
     }
 
@@ -2999,35 +2817,34 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
+            final boolean commonAxisUsed, final double[] bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -3040,37 +2857,36 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and
+     *                       is expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
         }
     }
 
@@ -3081,33 +2897,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
         }
     }
 
@@ -3118,35 +2934,34 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      * @param method       robust estimator method.
-     * @return a robust accelerometer calibrator.
-     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     * @return if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
         }
     }
 
@@ -3159,33 +2974,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -3198,35 +3013,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
         }
     }
 
@@ -3237,35 +3052,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
+            final Matrix bias, final Matrix initialMa,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
         }
     }
 
@@ -3276,7 +3091,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @param method       robust estimator method.
@@ -3284,34 +3099,29 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
         }
     }
 
@@ -3324,40 +3134,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
         }
     }
 
@@ -3370,7 +3175,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
@@ -3378,35 +3183,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
         }
     }
 
@@ -3417,20 +3222,25 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method   robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position);
         }
     }
 
@@ -3444,26 +3254,26 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
         }
     }
@@ -3480,27 +3290,27 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
         }
     }
@@ -3517,27 +3327,27 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
         }
     }
@@ -3556,28 +3366,28 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
         }
     }
@@ -3589,34 +3399,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias, final RobustEstimatorMethod method) {
+            final double[] bias, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
         }
     }
 
@@ -3627,37 +3436,36 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
         }
     }
 
@@ -3670,35 +3478,34 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
+            final boolean commonAxisUsed, final double[] bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -3711,37 +3518,36 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements, commonAxisUsed, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
         }
     }
 
@@ -3752,33 +3558,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
         }
     }
 
@@ -3789,35 +3595,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
         }
     }
 
@@ -3830,33 +3636,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -3869,35 +3675,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
         }
     }
 
@@ -3908,35 +3714,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param method       robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
+            final Matrix bias, final Matrix initialMa,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
         }
     }
 
@@ -3947,7 +3753,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @param method       robust estimator method.
@@ -3955,34 +3761,29 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa,
-                        listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
         }
     }
 
@@ -3995,40 +3796,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
         }
     }
 
@@ -4041,7 +3837,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
@@ -4049,35 +3845,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
         }
     }
 
@@ -4094,29 +3890,29 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 13 samples.
+     *                                  is smaller than 10 samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(position,
-                        measurements);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements);
         }
     }
@@ -4136,30 +3932,30 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 13 samples.
+     *                                  is smaller than 10 samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, listener);
         }
     }
@@ -4175,15 +3971,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       different unknown orientations and containing the standard deviations
      *                       of accelerometer and gyroscope measurements.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope. If true 10 samples are
-     *                       required, otherwise 13.
+     *                       accelerometer and gyroscope. If true 7 samples are
+     *                       required, otherwise 10.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than the minimum number of
-     *                                  required samples (10 or 13).
+     *                                  required samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
@@ -4191,20 +3987,20 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed);
         }
     }
@@ -4220,39 +4016,39 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       different unknown orientations and containing the standard deviations
      *                       of accelerometer and gyroscope measurements.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope. If true 10 samples are
-     *                       required, otherwise 13.
+     *                       accelerometer and gyroscope. If true 7 samples are
+     *                       required, otherwise 10.
      * @param listener       listener to be notified of events such as when estimation
      *                       starts, ends or its progress significantly changes.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than the minimum number of
-     *                                  required samples (10 or 13).
+     *                                  required samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed, listener);
         }
     }
@@ -4267,38 +4063,37 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial accelerometer bias to be used to find a solution.
-     *                      This must have length 3 and is expressed in meters per
-     *                      squared second (m/s^2).
+     * @param bias          known accelerometer bias. This must have length 3 and is
+     *                      expressed in meters per squared second (m/s^2).
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
-     *                                  or quality scores array is smaller than 13
+     *                                  or quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
         }
     }
 
@@ -4312,42 +4107,39 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial accelerometer bias to be used to find a solution.
-     *                      This must have length 3 and is expressed in meters per
-     *                      squared second (m/s^2).
+     * @param bias          known accelerometer bias. This must have length 3 and is
+     *                      expressed in meters per squared second (m/s^2).
      * @param listener      listener to handle events raised by this calibrator.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
-     *                                  or if quality scores array is smaller than 13
+     *                                  or if quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
         }
     }
 
@@ -4363,41 +4155,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
+            final boolean commonAxisUsed, final double[] bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -4413,46 +4202,42 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                        bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                        bias, listener);
         }
     }
 
@@ -4466,35 +4251,35 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
      *                                  quality scores array is smaller than 13
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final RobustEstimatorMethod method) {
+            final Matrix bias, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
         }
     }
 
@@ -4508,40 +4293,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param listener      listener to handle events raised by this calibrator.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
-     *                                  quality scores array is smaller than 13
+     *                                  quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
         }
     }
 
@@ -4557,39 +4340,37 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -4605,44 +4386,41 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias,
+                        listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias,
+                        listener);
         }
     }
 
@@ -4656,40 +4434,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param initialMa     initial scale factors and cross coupling errors matrix.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
-     *                                  or if quality scores array is smaller than 13
+     *                                  or if quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
+            final Matrix bias, final Matrix initialMa,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, initialMa);
         }
     }
 
@@ -4703,42 +4479,42 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param initialMa     initial scale factors and cross coupling errors matrix.
      * @param listener      listener to handle events raised by this calibrator.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
-     *                                  or if quality scores array is smaller than 13
+     *                                  or if quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        initialMa, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, initialMa,
+                        listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        initialMa, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, initialMa,
+                        listener);
         }
     }
 
@@ -4754,7 +4530,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
@@ -4762,36 +4538,33 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa);
+                        bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa);
+                        bias, initialMa);
         }
     }
 
@@ -4807,7 +4580,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
@@ -4816,38 +4589,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa, listener);
+                        bias, initialMa, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa, listener);
+                        bias, initialMa, listener);
         }
     }
 
@@ -4864,29 +4637,29 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 13 samples.
+     *                                  is smaller than 10 samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements);
         }
     }
@@ -4906,30 +4679,30 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 13 samples.
+     *                                  is smaller than 10 samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, listener);
         }
     }
@@ -4945,15 +4718,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       different unknown orientations and containing the standard deviations
      *                       of accelerometer and gyroscope measurements.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope. If true 10 samples are
-     *                       required, otherwise 13.
+     *                       accelerometer and gyroscope. If true 7 samples are
+     *                       required, otherwise 10.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than the minimum number of
-     *                                  required samples (10 or 13).
+     *                                  required samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
@@ -4961,20 +4734,20 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed);
         }
     }
@@ -4990,40 +4763,42 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       different unknown orientations and containing the standard deviations
      *                       of accelerometer and gyroscope measurements.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope. If true 10 samples are
-     *                       required, otherwise 13.
+     *                       accelerometer and gyroscope. If true 7 samples are
+     *                       required, otherwise 10.
      * @param listener       listener to be notified of events such as when estimation
      *                       starts, ends or its progress significantly changes.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than the minimum number of
-     *                                  required samples (10 or 13).
+     *                                  required samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         position, measurements, commonAxisUsed, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed,
+                        listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed,
+                        listener);
         }
     }
 
@@ -5037,38 +4812,37 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial accelerometer bias to be used to find a solution.
-     *                      This must have length 3 and is expressed in meters per
-     *                      squared second (m/s^2).
+     * @param bias          known accelerometer bias. This must have length 3 and is
+     *                      expressed in meters per squared second (m/s^2).
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
-     *                                  or quality scores array is smaller than 13
+     *                                  or quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
         }
     }
 
@@ -5082,42 +4856,39 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial accelerometer bias to be used to find a solution.
-     *                      This must have length 3 and is expressed in meters per
-     *                      squared second (m/s^2).
+     * @param bias          known accelerometer bias. This must have length 3 and is
+     *                      expressed in meters per squared second (m/s^2).
      * @param listener      listener to handle events raised by this calibrator.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
-     *                                  or if quality scores array is smaller than 13
+     *                                  or if quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
         }
     }
 
@@ -5133,41 +4904,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
+            final boolean commonAxisUsed, final double[] bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -5183,46 +4951,42 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                        bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                        bias, listener);
         }
     }
 
@@ -5236,36 +5000,36 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
-     *                                  quality scores array is smaller than 13
+     *                                  quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias);
         }
     }
 
@@ -5279,40 +5043,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param listener      listener to handle events raised by this calibrator.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
-     *                                  quality scores array is smaller than 13
+     *                                  quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, listener);
         }
     }
 
@@ -5328,39 +5090,37 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias);
         }
     }
 
@@ -5376,44 +5136,41 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                        bias, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, listener);
+                        bias, listener);
         }
     }
 
@@ -5427,40 +5184,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param initialMa     initial scale factors and cross coupling errors matrix.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
-     *                                  or if quality scores array is smaller than 13
+     *                                  or if quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
+            final Matrix bias, final Matrix initialMa,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        initialMa);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
-                        initialMa);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias, initialMa);
         }
     }
 
@@ -5474,41 +5229,41 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements  collection of body kinematics measurements with standard
      *                      deviations taken at the same position with zero velocity
      *                      and unknown different orientations.
-     * @param initialBias   initial bias to find a solution.
+     * @param bias          known accelerometer bias.
      * @param initialMa     initial scale factors and cross coupling errors matrix.
      * @param listener      listener to handle events raised by this calibrator.
      * @param method        robust estimator method.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
-     *                                  or if quality scores array is smaller than 13
+     *                                  or if quality scores array is smaller than 10
      *                                  samples.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, initialBias, initialMa, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, bias, initialMa, listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias,
                         initialMa, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, initialBias,
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, bias,
                         initialMa, listener);
         }
     }
@@ -5525,7 +5280,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param method         robust estimator method.
      * @return a robust accelerometer calibrator.
@@ -5533,37 +5288,34 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa);
+                        bias, initialMa);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
                         qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa);
+                        bias, initialMa);
         }
     }
 
@@ -5579,7 +5331,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @param method         robust estimator method.
@@ -5588,38 +5340,38 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if provided quality scores length is
      *                                  smaller than the minimum number of required
-     *                                  samples (10 or 13).
+     *                                  samples (7 or 10).
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener,
             final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case LMedS:
-                return new LMedSRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new LMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case MSAC:
-                return new MSACRobustKnownPositionAccelerometerCalibrator(
-                        position, measurements, commonAxisUsed, initialBias,
-                        initialMa, listener);
+                return new MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        position, measurements, commonAxisUsed, bias, initialMa,
+                        listener);
             case PROSAC:
-                return new PROSACRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa, listener);
+                return new PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias,
+                        initialMa, listener);
             case PROMedS:
             default:
-                return new PROMedSRobustKnownPositionAccelerometerCalibrator(
-                        qualityScores, position, measurements, commonAxisUsed,
-                        initialBias, initialMa, listener);
+                return new PROMedSRobustKnownBiasAndPositionAccelerometerCalibrator(
+                        qualityScores, position, measurements, commonAxisUsed, bias,
+                        initialMa, listener);
         }
     }
 
@@ -5628,7 +5380,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create() {
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create() {
         return create(DEFAULT_ROBUST_METHOD);
     }
 
@@ -5639,8 +5391,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                 starts, ends or its progress significantly changes.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         return create(listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -5652,7 +5404,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     of accelerometer and gyroscope measurements.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final List<StandardDeviationBodyKinematics> measurements) {
         return create(measurements, DEFAULT_ROBUST_METHOD);
     }
@@ -5664,7 +5416,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final boolean commonAxisUsed) {
         return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);
     }
@@ -5672,41 +5424,40 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
     /**
      * Creates a robust accelerometer calibrator using default robust method.
      *
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
+     * @param bias known accelerometer bias. This must have length 3 and is expressed
+     *             in meters per squared second (m/s^2).
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final double[] initialBias) {
-        return create(initialBias, DEFAULT_ROBUST_METHOD);
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final double[] bias) {
+        return create(bias, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust accelerometer calibrator using default robust method.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known accelerometer bias.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final Matrix initialBias) {
-        return create(initialBias, DEFAULT_ROBUST_METHOD);
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final Matrix bias) {
+        return create(bias, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust accelerometer calibrator using default robust method.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final Matrix initialBias, final Matrix initialMa) {
-        return create(initialBias, initialMa, DEFAULT_ROBUST_METHOD);
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final Matrix bias, final Matrix initialMa) {
+        return create(bias, initialMa, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5715,7 +5466,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param position position where body kinematics measures have been taken.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position) {
         return create(position, DEFAULT_ROBUST_METHOD);
     }
@@ -5729,7 +5480,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     of accelerometer and gyroscope measurements.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements) {
         return create(position, measurements, DEFAULT_ROBUST_METHOD);
@@ -5746,10 +5497,10 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     starts, ends or its progress significantly changes.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         return create(position, measurements, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -5764,7 +5515,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -5784,11 +5535,11 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       starts, ends or its progress significantly changes.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         return create(position, measurements, commonAxisUsed, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -5800,17 +5551,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        return create(position, measurements, initialBias, DEFAULT_ROBUST_METHOD);
+            final double[] bias) {
+        return create(position, measurements, bias, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5820,20 +5570,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, initialBias, listener,
-                DEFAULT_ROBUST_METHOD);
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, bias, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5845,17 +5593,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        return create(position, measurements, commonAxisUsed, initialBias,
+            final boolean commonAxisUsed, final double[] bias) {
+        return create(position, measurements, commonAxisUsed, bias,
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -5868,20 +5615,19 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                listener, DEFAULT_ROBUST_METHOD);
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, commonAxisUsed, bias, listener,
+                DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5891,15 +5637,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        return create(position, measurements, initialBias, DEFAULT_ROBUST_METHOD);
+            final Matrix bias) {
+        return create(position, measurements, bias, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5909,18 +5655,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, initialBias, listener,
-                DEFAULT_ROBUST_METHOD);
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, bias, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5932,15 +5677,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        return create(position, measurements, commonAxisUsed, initialBias,
+            final boolean commonAxisUsed, final Matrix bias) {
+        return create(position, measurements, commonAxisUsed, bias,
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -5953,18 +5698,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                listener, DEFAULT_ROBUST_METHOD);
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, commonAxisUsed, bias, listener,
+                DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -5974,17 +5719,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        return create(position, measurements, initialBias, initialMa,
+            final Matrix bias, final Matrix initialMa) {
+        return create(position, measurements, bias, initialMa,
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -5995,20 +5740,20 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, initialBias, initialMa,
-                listener, DEFAULT_ROBUST_METHOD);
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, bias, initialMa, listener,
+                DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6020,18 +5765,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        return create(position, measurements, commonAxisUsed, initialBias,
+        return create(position, measurements, commonAxisUsed, bias,
                 initialMa, DEFAULT_ROBUST_METHOD);
     }
 
@@ -6044,21 +5789,21 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                initialMa, listener, DEFAULT_ROBUST_METHOD);
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, commonAxisUsed, bias, initialMa,
+                listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6067,7 +5812,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param position position where body kinematics measures have been taken.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position) {
         return create(position, DEFAULT_ROBUST_METHOD);
     }
@@ -6081,7 +5826,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     of accelerometer and gyroscope measurements.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements) {
         return create(position, measurements, DEFAULT_ROBUST_METHOD);
@@ -6098,10 +5843,10 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     starts, ends or its progress significantly changes.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         return create(position, measurements, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -6116,7 +5861,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       accelerometer and gyroscope.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -6136,16 +5881,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       starts, ends or its progress significantly changes.
      * @return a robust accelerometer calibrator.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         return create(position, measurements, commonAxisUsed, listener,
                 DEFAULT_ROBUST_METHOD);
     }
 
-
     /**
      * Creates a robust accelerometer calibrator using default robust method.
      *
@@ -6153,17 +5897,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        return create(position, measurements, initialBias, DEFAULT_ROBUST_METHOD);
+            final double[] bias) {
+        return create(position, measurements, bias, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6173,19 +5916,18 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is
+     *                     expressed in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, initialBias, listener,
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, bias, listener,
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -6198,17 +5940,16 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        return create(position, measurements, commonAxisUsed, initialBias,
+            final boolean commonAxisUsed, final double[] bias) {
+        return create(position, measurements, commonAxisUsed, bias,
                 DEFAULT_ROBUST_METHOD);
     }
 
@@ -6221,19 +5962,99 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is
+     *                       expressed in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, commonAxisUsed, initialBias,
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, commonAxisUsed, bias, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param position     position where body kinematics measures have been taken.
+     * @param measurements collection of body kinematics measurements with standard
+     *                     deviations taken at the same position with zero velocity
+     *                     and unknown different orientations.
+     * @param bias         known accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final NEDPosition position,
+            final List<StandardDeviationBodyKinematics> measurements,
+            final Matrix bias) {
+        return create(position, measurements, bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param position     position where body kinematics measures have been taken.
+     * @param measurements collection of body kinematics measurements with standard
+     *                     deviations taken at the same position with zero velocity
+     *                     and unknown different orientations.
+     * @param bias         known accelerometer bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final NEDPosition position,
+            final List<StandardDeviationBodyKinematics> measurements,
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param position       position where body kinematics measures have been taken.
+     * @param measurements   collection of body kinematics measurements with standard
+     *                       deviations taken at the same position with zero velocity
+     *                       and unknown different orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param bias           known accelerometer bias.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final NEDPosition position,
+            final List<StandardDeviationBodyKinematics> measurements,
+            final boolean commonAxisUsed, final Matrix bias) {
+        return create(position, measurements, commonAxisUsed, bias,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param position       position where body kinematics measures have been taken.
+     * @param measurements   collection of body kinematics measurements with standard
+     *                       deviations taken at the same position with zero velocity
+     *                       and unknown different orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param bias           known accelerometer bias.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
+            final NEDPosition position,
+            final List<StandardDeviationBodyKinematics> measurements,
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, commonAxisUsed, bias,
                 listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -6244,101 +6065,17 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
-     * @return a robust accelerometer calibrator.
-     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
-     */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final NEDPosition position,
-            final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        return create(position, measurements, initialBias, DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust accelerometer calibrator using default robust method.
-     *
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
-     * @param listener     listener to handle events raised by this calibrator.
-     * @return a robust accelerometer calibrator.
-     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
-     */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final NEDPosition position,
-            final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, initialBias, listener,
-                DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust accelerometer calibrator using default robust method.
-     *
-     * @param position       position where body kinematics measures have been taken.
-     * @param measurements   collection of body kinematics measurements with standard
-     *                       deviations taken at the same position with zero velocity
-     *                       and unknown different orientations.
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
-     * @return a robust accelerometer calibrator.
-     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
-     */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final NEDPosition position,
-            final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust accelerometer calibrator using default robust method.
-     *
-     * @param position       position where body kinematics measures have been taken.
-     * @param measurements   collection of body kinematics measurements with standard
-     *                       deviations taken at the same position with zero velocity
-     *                       and unknown different orientations.
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @return a robust accelerometer calibrator.
-     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
-     */
-    public static RobustKnownPositionAccelerometerCalibrator create(
-            final NEDPosition position,
-            final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                listener, DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust accelerometer calibrator using default robust method.
-     *
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        return create(position, measurements, initialBias, initialMa,
-                DEFAULT_ROBUST_METHOD);
+            final Matrix bias, final Matrix initialMa) {
+        return create(position, measurements, bias, initialMa, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6348,20 +6085,20 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, initialBias, initialMa,
-                listener, DEFAULT_ROBUST_METHOD);
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, bias, initialMa, listener,
+                DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6373,19 +6110,19 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                initialMa, DEFAULT_ROBUST_METHOD);
+        return create(position, measurements, commonAxisUsed, bias, initialMa,
+                DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6397,21 +6134,21 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public static RobustKnownPositionAccelerometerCalibrator create(
+    public static RobustKnownBiasAndPositionAccelerometerCalibrator create(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        return create(position, measurements, commonAxisUsed, initialBias,
-                initialMa, listener, DEFAULT_ROBUST_METHOD);
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        return create(position, measurements, commonAxisUsed, bias, initialMa,
+                listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -6436,7 +6173,6 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
             // position
             // ||ftrue|| = g ~ 9.81 m/s^2
 
-            final double[] estimatedBiases = preliminaryResult.mEstimatedBiases;
             final Matrix estimatedMa = preliminaryResult.mEstimatedMa;
 
             if (mIdentity == null) {
@@ -6468,13 +6204,9 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
             final double fmeasY = kinematics.getFy();
             final double fmeasZ = kinematics.getFz();
 
-            final double bx = estimatedBiases[0];
-            final double by = estimatedBiases[1];
-            final double bz = estimatedBiases[2];
-
-            mTmp3.setElementAtIndex(0, fmeasX - bx);
-            mTmp3.setElementAtIndex(1, fmeasY - by);
-            mTmp3.setElementAtIndex(2, fmeasZ - bz);
+            mTmp3.setElementAtIndex(0, fmeasX - mBiasX);
+            mTmp3.setElementAtIndex(1, fmeasY - mBiasY);
+            mTmp3.setElementAtIndex(2, fmeasZ - mBiasZ);
 
             mTmp2.multiply(mTmp3, mTmp4);
 
@@ -6505,17 +6237,15 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
 
         try {
             PreliminaryResult result = new PreliminaryResult();
-            result.mEstimatedBiases = getInitialBias();
             result.mEstimatedMa = getInitialMa();
 
-            mInnerCalibrator.setInitialBias(result.mEstimatedBiases);
+            mInnerCalibrator.setBias(mBiasX, mBiasY, mBiasZ);
             mInnerCalibrator.setInitialMa(result.mEstimatedMa);
             mInnerCalibrator.setCommonAxisUsed(mCommonAxisUsed);
             mInnerCalibrator.setPosition(mPosition);
             mInnerCalibrator.setMeasurements(measurements);
             mInnerCalibrator.calibrate();
 
-            mInnerCalibrator.getEstimatedBiases(result.mEstimatedBiases);
             result.mEstimatedMa = mInnerCalibrator.getEstimatedMa();
 
             solutions.add(result);
@@ -6549,14 +6279,13 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
             }
 
             try {
-                mInnerCalibrator.setInitialBias(preliminaryResult.mEstimatedBiases);
+                mInnerCalibrator.setBias(mBiasX, mBiasY, mBiasZ);
                 mInnerCalibrator.setInitialMa(preliminaryResult.mEstimatedMa);
                 mInnerCalibrator.setCommonAxisUsed(mCommonAxisUsed);
                 mInnerCalibrator.setPosition(mPosition);
                 mInnerCalibrator.setMeasurements(inlierMeasurements);
                 mInnerCalibrator.calibrate();
 
-                mEstimatedBiases = mInnerCalibrator.getEstimatedBiases();
                 mEstimatedMa = mInnerCalibrator.getEstimatedMa();
 
                 if (mKeepCovariance) {
@@ -6566,12 +6295,10 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
                 }
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
-                mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMa = preliminaryResult.mEstimatedMa;
             }
         } else {
             mEstimatedCovariance = null;
-            mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMa = preliminaryResult.mEstimatedMa;
         }
     }
@@ -6618,12 +6345,6 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * Internal class containing estimated preliminary result.
      */
     protected static class PreliminaryResult {
-        /**
-         * Estimated accelerometer biases for each IMU axis expressed in meter per squared
-         * second (m/s^2).
-         */
-        private double[] mEstimatedBiases;
-
         /**
          * Estimated accelerometer scale factors and cross coupling errors.
          * This is the product of matrix Ta containing cross coupling errors and Ka

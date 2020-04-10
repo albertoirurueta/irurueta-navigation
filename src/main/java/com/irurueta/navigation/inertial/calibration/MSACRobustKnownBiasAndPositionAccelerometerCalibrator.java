@@ -20,8 +20,8 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.numerical.robust.LMedSRobustEstimator;
-import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.MSACRobustEstimator;
+import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -29,8 +29,8 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates accelerometer biases, cross couplings and scaling factors
- * using a LMedS algorithm to discard outliers.
+ * Robustly estimates accelerometer cross couplings and scaling factors
+ * using a MSAC algorithm to discard outliers.
  * <p>
  * To use this calibrator at least 10 measurements taken at a single known position must
  * be taken at 10 different unknown orientations and zero velocity when common z-axis
@@ -50,55 +50,31 @@ import java.util.List;
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public class LMedSRobustKnownPositionAccelerometerCalibrator extends
-        RobustKnownPositionAccelerometerCalibrator {
+public class MSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
+        RobustKnownBiasAndPositionAccelerometerCalibrator {
 
     /**
-     * Default value to be used for stop threshold. Stop threshold can be used to
-     * avoid keeping the algorithm unnecessarily iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once a
-     * solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Constant defining default threshold to determine whether samples are
+     * inliers or not.
      */
-    public static final double DEFAULT_STOP_THRESHOLD = 1e-4;
+    public static final double DEFAULT_THRESHOLD = 1e-2;
 
     /**
-     * Minimum allowed stop threshold value.
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
      */
-    public static final double MIN_STOP_THRESHOLD = 0.0;
+    public static final double MIN_THRESHOLD = 0.0;
 
     /**
-     * Threshold to be used to keep the algorithm iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once
-     * a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Threshold to determine whether samples are inliers or not when
+     * testing possible estimation solutions.
      */
-    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
+    private double mThreshold = DEFAULT_THRESHOLD;
 
     /**
      * Constructor.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator() {
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator() {
     }
 
     /**
@@ -107,19 +83,19 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         super(listener);
     }
 
     /**
      * Constructor.
      *
-     * @param measurements list of body kinematics measurements taken at a given position with
-     *                     different unknown orientations and containing the standard deviations
-     *                     of accelerometer and gyroscope measurements.
+     * @param measurements collection of body kinematics measurements with standard
+     *                     deviations taken at the same position with zero velocity
+     *                     and unknown different orientations.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final List<StandardDeviationBodyKinematics> measurements) {
         super(measurements);
     }
@@ -130,45 +106,43 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final boolean commonAxisUsed) {
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial accelerometer bias to be used to find a solution.
-     *                    This must have length 3 and is expressed in meters per
-     *                    squared second (m/s^2).
+     * @param bias known accelerometer bias. This must have length 3 and is expressed
+     *             in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final double[] initialBias) {
-        super(initialBias);
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final double[] bias) {
+        super(bias);
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(final Matrix initialBias) {
-        super(initialBias);
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(final Matrix bias) {
+        super(bias);
     }
 
     /**
      * Constructor.
      *
-     * @param initialBias initial bias to find a solution.
-     * @param initialMa   initial scale factors and cross coupling errors matrix.
+     * @param bias      known accelerometer bias.
+     * @param initialMa initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final Matrix initialBias, final Matrix initialMa) {
-        super(initialBias, initialMa);
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias, final Matrix initialMa) {
+        super(bias, initialMa);
     }
 
     /**
@@ -176,8 +150,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final ECEFPosition position) {
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(final ECEFPosition position) {
         super(position);
     }
 
@@ -189,7 +162,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                     different unknown orientations and containing the standard deviations
      *                     of accelerometer and gyroscope measurements.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements) {
         super(position, measurements);
@@ -205,10 +178,10 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param listener     listener to be notified of events such as when estimation
      *                     starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         super(position, measurements, listener);
     }
 
@@ -222,7 +195,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -241,11 +214,11 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param listener       listener to be notified of events such as when estimation
      *                       starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         super(position, measurements, commonAxisUsed, listener);
     }
 
@@ -256,16 +229,15 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        super(position, measurements, initialBias);
+            final double[] bias) {
+        super(position, measurements, bias);
     }
 
     /**
@@ -275,18 +247,17 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, initialBias, listener);
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, bias, listener);
     }
 
     /**
@@ -298,16 +269,15 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        super(position, measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        super(position, measurements, commonAxisUsed, bias);
     }
 
     /**
@@ -325,11 +295,11 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         super(position, measurements, commonAxisUsed, initialBias, listener);
     }
 
@@ -340,14 +310,14 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        super(position, measurements, initialBias);
+            final Matrix bias) {
+        super(position, measurements, bias);
     }
 
     /**
@@ -357,34 +327,16 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
-     */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final ECEFPosition position,
-            final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, initialBias, listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position       position where body kinematics measures have been taken.
-     * @param measurements   collection of body kinematics measurements with standard
-     *                       deviations taken at the same position with zero velocity
-     *                       and unknown different orientations.
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        super(position, measurements, commonAxisUsed, initialBias);
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, bias, listener);
     }
 
     /**
@@ -396,16 +348,35 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position,
+            final List<StandardDeviationBodyKinematics> measurements,
+            final boolean commonAxisUsed, final Matrix bias) {
+        super(position, measurements, commonAxisUsed, bias);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position       position where body kinematics measures have been taken.
+     * @param measurements   collection of body kinematics measurements with standard
+     *                       deviations taken at the same position with zero velocity
+     *                       and unknown different orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, commonAxisUsed, bias, listener);
     }
 
     /**
@@ -415,16 +386,16 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        super(position, measurements, initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        super(position, measurements, bias, initialMa);
     }
 
     /**
@@ -434,18 +405,18 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, initialBias, initialMa, listener);
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, bias, initialMa, listener);
     }
 
     /**
@@ -457,17 +428,17 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        super(position, measurements, commonAxisUsed, initialBias, initialMa);
+        super(position, measurements, commonAxisUsed, bias, initialMa);
     }
 
     /**
@@ -479,20 +450,19 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, commonAxisUsed, initialBias, initialMa,
-                listener);
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, commonAxisUsed, bias, initialMa, listener);
     }
 
     /**
@@ -500,8 +470,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final NEDPosition position) {
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(final NEDPosition position) {
         super(position);
     }
 
@@ -513,7 +482,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                     different unknown orientations and containing the standard deviations
      *                     of accelerometer and gyroscope measurements.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements) {
         super(position, measurements);
@@ -529,10 +498,10 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param listener     listener to be notified of events such as when estimation
      *                     starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         super(position, measurements, listener);
     }
 
@@ -546,7 +515,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed) {
@@ -565,11 +534,11 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param listener       listener to be notified of events such as when estimation
      *                       starts, ends or its progress significantly changes.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
         super(position, measurements, commonAxisUsed, listener);
     }
 
@@ -580,16 +549,15 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias) {
-        super(position, measurements, initialBias);
+            final double[] bias) {
+        super(position, measurements, bias);
     }
 
     /**
@@ -599,18 +567,17 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial accelerometer bias to be used to find a solution.
-     *                     This must have length 3 and is expressed in meters per
-     *                     squared second (m/s^2).
+     * @param bias         known accelerometer bias. This must have length 3 and is expressed
+     *                     in meters per squared second (m/s^2).
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, initialBias, listener);
+            final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, bias, listener);
     }
 
     /**
@@ -622,16 +589,15 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias) {
-        super(position, measurements, commonAxisUsed, initialBias);
+            final boolean commonAxisUsed, final double[] bias) {
+        super(position, measurements, commonAxisUsed, bias);
     }
 
     /**
@@ -643,18 +609,17 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial accelerometer bias to be used to find a solution.
-     *                       This must have length 3 and is expressed in meters per
-     *                       squared second (m/s^2).
+     * @param bias           known accelerometer bias. This must have length 3 and is expressed
+     *                       in meters per squared second (m/s^2).
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final double[] initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final double[] bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, commonAxisUsed, bias, listener);
     }
 
     /**
@@ -664,14 +629,14 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias) {
-        super(position, measurements, initialBias);
+            final Matrix bias) {
+        super(position, measurements, bias);
     }
 
     /**
@@ -681,34 +646,16 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param listener     listener to handle events raised by this calibrator.
-     */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
-            final NEDPosition position,
-            final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, initialBias, listener);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param position       position where body kinematics measures have been taken.
-     * @param measurements   collection of body kinematics measurements with standard
-     *                       deviations taken at the same position with zero velocity
-     *                       and unknown different orientations.
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
-     *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias) {
-        super(position, measurements, commonAxisUsed, initialBias);
+            final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, bias, listener);
     }
 
     /**
@@ -720,16 +667,35 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
+     */
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position,
+            final List<StandardDeviationBodyKinematics> measurements,
+            final boolean commonAxisUsed, final Matrix bias) {
+        super(position, measurements, commonAxisUsed, bias);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position       position where body kinematics measures have been taken.
+     * @param measurements   collection of body kinematics measurements with standard
+     *                       deviations taken at the same position with zero velocity
+     *                       and unknown different orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param bias           known accelerometer bias.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, commonAxisUsed, initialBias, listener);
+            final boolean commonAxisUsed, final Matrix bias,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, commonAxisUsed, bias, listener);
     }
 
     /**
@@ -739,16 +705,16 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa) {
-        super(position, measurements, initialBias, initialMa);
+            final Matrix bias, final Matrix initialMa) {
+        super(position, measurements, bias, initialMa);
     }
 
     /**
@@ -758,18 +724,18 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param measurements collection of body kinematics measurements with standard
      *                     deviations taken at the same position with zero velocity
      *                     and unknown different orientations.
-     * @param initialBias  initial bias to find a solution.
+     * @param bias         known accelerometer bias.
      * @param initialMa    initial scale factors and cross coupling errors matrix.
      * @param listener     listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias, final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, initialBias, initialMa, listener);
+            final Matrix bias, final Matrix initialMa,
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, bias, initialMa, listener);
     }
 
     /**
@@ -781,17 +747,17 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa) {
-        super(position, measurements, commonAxisUsed, initialBias, initialMa);
+        super(position, measurements, commonAxisUsed, bias, initialMa);
     }
 
     /**
@@ -803,79 +769,50 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      *                       and unknown different orientations.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param initialBias    initial bias to find a solution.
+     * @param bias           known accelerometer bias.
      * @param initialMa      initial scale factors and cross coupling errors matrix.
      * @param listener       listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3.
      */
-    public LMedSRobustKnownPositionAccelerometerCalibrator(
+    public MSACRobustKnownBiasAndPositionAccelerometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyKinematics> measurements,
-            final boolean commonAxisUsed, final Matrix initialBias,
+            final boolean commonAxisUsed, final Matrix bias,
             final Matrix initialMa,
-            final RobustKnownPositionAccelerometerCalibratorListener listener) {
-        super(position, measurements, commonAxisUsed, initialBias, initialMa,
-                listener);
+            final RobustKnownBiasAndPositionAccelerometerCalibratorListener listener) {
+        super(position, measurements, commonAxisUsed, bias, initialMa, listener);
     }
 
     /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algrithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Returns threshold to determine whether samples are inliers or not.
      *
-     * @return stop threshold to stop the algorithm prematurely when a certain
-     * accuracy has been reached.
+     * @return threshold to determine whether samples are inliers or not.
      */
-    public double getStopThreshold() {
-        return mStopThreshold;
+    public double getThreshold() {
+        return mThreshold;
     }
 
     /**
-     * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value,
-     * the algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Sets threshold to determine whether samples are inliers or not.
      *
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
-     *                      when a certain accuracy has been reached.
-     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (stopThreshold <= MIN_STOP_THRESHOLD) {
+        if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-
-        mStopThreshold = stopThreshold;
+        mThreshold = threshold;
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
+     * Estimates accelerometer calibration parameters containing scale factors
      * and cross-coupling errors.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -893,8 +830,13 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
 
         mGravityNorm = computeGravityNorm();
 
-        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
-                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
+        final MSACRobustEstimator<PreliminaryResult> innerEstimator =
+                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+                    @Override
+                    public double getThreshold() {
+                        return mThreshold;
+                    }
+
                     @Override
                     public int getTotalSamples() {
                         return mMeasurements.size();
@@ -918,29 +860,31 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return LMedSRobustKnownPositionAccelerometerCalibrator.super.isReady();
+                        return MSACRobustKnownBiasAndPositionAccelerometerCalibrator.super.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(LMedSRobustKnownPositionAccelerometerCalibrator.this);
+                            mListener.onCalibrateStart(
+                                    MSACRobustKnownBiasAndPositionAccelerometerCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(LMedSRobustKnownPositionAccelerometerCalibrator.this);
+                            mListener.onCalibrateEnd(
+                                    MSACRobustKnownBiasAndPositionAccelerometerCalibrator.this);
                         }
                     }
 
                     @Override
-                    public void onEstimateNextIteration(final RobustEstimator<PreliminaryResult> estimator,
-                                                        final int iteration) {
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    LMedSRobustKnownPositionAccelerometerCalibrator.this, iteration);
+                                    MSACRobustKnownBiasAndPositionAccelerometerCalibrator.this, iteration);
                         }
                     }
 
@@ -949,7 +893,7 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    LMedSRobustKnownPositionAccelerometerCalibrator.this, progress);
+                                    MSACRobustKnownBiasAndPositionAccelerometerCalibrator.this, progress);
                         }
                     }
                 });
@@ -960,7 +904,6 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
             final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
@@ -984,6 +927,6 @@ public class LMedSRobustKnownPositionAccelerometerCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.MSAC;
     }
 }
