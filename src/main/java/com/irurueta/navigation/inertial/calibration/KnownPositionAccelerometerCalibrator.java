@@ -97,7 +97,7 @@ public class KnownPositionAccelerometerCalibrator {
     /**
      * Levenberg-Marquardt fitter to find a non-linear solution.
      */
-    private LevenbergMarquardtMultiDimensionFitter mFitter =
+    private final LevenbergMarquardtMultiDimensionFitter mFitter =
             new LevenbergMarquardtMultiDimensionFitter();
 
     /**
@@ -235,7 +235,7 @@ public class KnownPositionAccelerometerCalibrator {
     private Matrix mEstimatedMa;
 
     /**
-     * Estimated covariance matrix for estimated position.
+     * Estimated covariance matrix for estimated parameters.
      */
     private Matrix mEstimatedCovariance;
 
@@ -7462,7 +7462,7 @@ public class KnownPositionAccelerometerCalibrator {
         // fmeas = M*(ftrue + b)
         // fmeas = M*ftrue + M*b
 
-        //where:
+        // where:
         // M = I + Ma
         // ba = M*b = (I + Ma)*b --> b = M^-1*ba
 

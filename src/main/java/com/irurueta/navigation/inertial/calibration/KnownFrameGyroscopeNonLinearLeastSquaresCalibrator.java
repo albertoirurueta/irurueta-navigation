@@ -93,7 +93,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     /**
      * Levenberg-Marquardt fitter to find a non-linear solution.
      */
-    private LevenbergMarquardtMultiVariateFitter mFitter =
+    private final LevenbergMarquardtMultiVariateFitter mFitter =
             new LevenbergMarquardtMultiVariateFitter();
 
     /**
@@ -248,7 +248,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     private Matrix mEstimatedGg;
 
     /**
-     * Estimated covariance matrix for estimated position.
+     * Estimated covariance matrix for estimated parameters.
      */
     private Matrix mEstimatedCovariance;
 
@@ -3211,8 +3211,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
-     * and cross-coupling errors.
+     * Estimates gyroscope calibration parameters containing bias, scale factors,
+     * cross-coupling errors and G-dependent coupling.
      *
      * @throws LockedException      if calibrator is currently running.
      * @throws NotReadyException    if calibrator is not ready.
@@ -3593,9 +3593,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Gets estimated covariance matrix for estimated position.
+     * Gets estimated covariance matrix for estimated parameters.
      *
-     * @return estimated covariance matrix for estimated position.
+     * @return estimated covariance matrix for estimated parameters.
      */
     @Override
     public Matrix getEstimatedCovariance() {

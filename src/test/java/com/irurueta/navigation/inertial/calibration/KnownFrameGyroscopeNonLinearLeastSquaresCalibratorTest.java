@@ -11238,8 +11238,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
             final Matrix ma = generateMaGeneral();
             final Matrix mg = generateMg();
             final Matrix gg = generateGg();
-            // when using minimum number of measurements we must not add any noise so that
-            // a solution is found. When adding more measurements, certain noise can be added
             final double accelNoiseRootPSD = getAccelNoiseRootPSD();
             final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
             final double accelQuantLevel = 0.0;
@@ -11297,8 +11295,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
                 measurements.add(measurement);
             }
 
-            // When we have the minimum number of measurements, we need to provide
-            // an initial solution close to the true solution
             final KnownFrameGyroscopeNonLinearLeastSquaresCalibrator calibrator =
                     new KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
                             measurements, false, this);
@@ -11590,8 +11586,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
             final Matrix ma = generateMaCommonAxis();
             final Matrix mg = generateMg();
             final Matrix gg = generateGg();
-            // when using minimum number of measurements we must not add any noise so that
-            // a solution is found. When adding more measurements, certain noise can be added
             final double accelNoiseRootPSD = getAccelNoiseRootPSD();
             final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
             final double accelQuantLevel = 0.0;
@@ -11649,8 +11643,6 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
                 measurements.add(measurement);
             }
 
-            // When we have the minimum number of measurements, we need to provide
-            // an initial solution close to the true solution
             final KnownFrameGyroscopeNonLinearLeastSquaresCalibrator calibrator =
                     new KnownFrameGyroscopeNonLinearLeastSquaresCalibrator(
                             measurements, true, this);

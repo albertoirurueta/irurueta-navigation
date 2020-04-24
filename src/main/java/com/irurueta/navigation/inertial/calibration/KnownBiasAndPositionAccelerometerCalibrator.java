@@ -97,7 +97,7 @@ public class KnownBiasAndPositionAccelerometerCalibrator {
     /**
      * Levenberg-Marquardt fitter to find a non-linear solution.
      */
-    private LevenbergMarquardtMultiDimensionFitter mFitter =
+    private final LevenbergMarquardtMultiDimensionFitter mFitter =
             new LevenbergMarquardtMultiDimensionFitter();
 
     /**

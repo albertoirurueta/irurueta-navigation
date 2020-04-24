@@ -366,13 +366,13 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
     /**
      * A linear least squares calibrator.
      */
-    private KnownFrameGyroscopeLinearLeastSquaresCalibrator mLinearCalibrator =
+    private final KnownFrameGyroscopeLinearLeastSquaresCalibrator mLinearCalibrator =
             new KnownFrameGyroscopeLinearLeastSquaresCalibrator();
 
     /**
      * A non-linear least squares calibrator.
      */
-    private KnownFrameGyroscopeNonLinearLeastSquaresCalibrator mNonLinearCalibrator =
+    private final KnownFrameGyroscopeNonLinearLeastSquaresCalibrator mNonLinearCalibrator =
             new KnownFrameGyroscopeNonLinearLeastSquaresCalibrator();
 
     /**
@@ -2822,7 +2822,7 @@ public abstract class RobustKnownFrameGyroscopeCalibrator {
         }
 
         try {
-            PreliminaryResult result = new PreliminaryResult();
+            final PreliminaryResult result = new PreliminaryResult();
             result.mEstimatedBiases = getInitialBias();
             result.mEstimatedMg = getInitialMg();
             result.mEstimatedGg = getInitialGg();
