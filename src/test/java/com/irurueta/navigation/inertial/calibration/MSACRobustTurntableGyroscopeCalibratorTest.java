@@ -55,7 +55,7 @@ import java.util.Random;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
-public class LMedSRobustTurntableGyroscopeCalibratorTest implements
+public class MSACRobustTurntableGyroscopeCalibratorTest implements
         RobustTurntableGyroscopeCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
@@ -101,13 +101,13 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -319,14 +319,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -500,55 +500,55 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -596,15 +596,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -778,21 +778,21 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg,
                     this);
@@ -800,7 +800,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg,
                     this);
@@ -808,7 +808,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg,
                     this);
@@ -816,7 +816,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg,
                     this);
@@ -824,14 +824,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -879,15 +879,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -1061,48 +1061,48 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -1150,15 +1150,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -1332,49 +1332,49 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -1440,15 +1440,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -1622,28 +1622,28 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma);
@@ -1651,7 +1651,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma);
@@ -1659,7 +1659,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma);
@@ -1667,7 +1667,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma);
@@ -1675,21 +1675,21 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -1755,15 +1755,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -1937,28 +1937,28 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma, this);
@@ -1966,7 +1966,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma, this);
@@ -1974,7 +1974,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma, this);
@@ -1982,7 +1982,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma, this);
@@ -1990,21 +1990,21 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2070,15 +2070,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -2252,84 +2252,84 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -2395,15 +2395,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg, ba, ma,
                         this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -2577,84 +2577,84 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2702,14 +2702,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false, false, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -2883,14 +2883,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg);
@@ -2898,7 +2898,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2907,7 +2907,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2916,7 +2916,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -2925,7 +2925,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2934,7 +2934,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2943,7 +2943,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2993,15 +2993,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -3175,7 +3175,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     this);
@@ -3183,7 +3183,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg, this);
@@ -3191,7 +3191,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3200,7 +3200,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3209,7 +3209,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -3218,7 +3218,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3227,7 +3227,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3236,7 +3236,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3286,15 +3286,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -3468,14 +3468,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg);
@@ -3483,7 +3483,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3492,7 +3492,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -3501,7 +3501,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3510,7 +3510,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3519,7 +3519,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3569,15 +3569,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -3751,7 +3751,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     this);
@@ -3759,7 +3759,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg, this);
@@ -3767,7 +3767,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3776,7 +3776,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -3785,7 +3785,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3794,7 +3794,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3803,7 +3803,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3871,16 +3871,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -4054,7 +4054,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma);
@@ -4062,7 +4062,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -4071,7 +4071,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4080,7 +4080,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -4089,7 +4089,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4098,7 +4098,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4107,7 +4107,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4116,7 +4116,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4125,7 +4125,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4135,7 +4135,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4204,16 +4204,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -4387,7 +4387,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -4395,7 +4395,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -4404,7 +4404,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4414,7 +4414,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -4424,7 +4424,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4434,7 +4434,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4444,7 +4444,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4454,7 +4454,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4463,7 +4463,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4473,7 +4473,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4542,16 +4542,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -4725,7 +4725,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -4733,7 +4733,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -4742,7 +4742,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4751,7 +4751,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4760,7 +4760,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -4769,7 +4769,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4778,7 +4778,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4787,7 +4787,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4796,7 +4796,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4805,7 +4805,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4814,7 +4814,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4824,7 +4824,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4893,16 +4893,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -5076,7 +5076,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -5084,7 +5084,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -5093,7 +5093,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5102,7 +5102,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5111,7 +5111,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -5120,7 +5120,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5129,7 +5129,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5138,7 +5138,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5147,7 +5147,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5156,7 +5156,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5165,7 +5165,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5175,7 +5175,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5226,14 +5226,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -5407,55 +5407,55 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -5503,15 +5503,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                         rotationRate, timeInterval, measurements,
                         bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -5685,21 +5685,21 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg,
                     this);
@@ -5707,7 +5707,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg,
                     this);
@@ -5715,7 +5715,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg,
                     this);
@@ -5723,7 +5723,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg,
                     this);
@@ -5731,14 +5731,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -5786,15 +5786,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -5968,48 +5968,48 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -6057,15 +6057,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -6239,49 +6239,49 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -6347,15 +6347,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -6529,28 +6529,28 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma);
@@ -6558,7 +6558,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma);
@@ -6566,7 +6566,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma);
@@ -6574,7 +6574,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma);
@@ -6582,21 +6582,21 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -6662,15 +6662,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -6844,28 +6844,28 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma, this);
@@ -6873,7 +6873,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma, this);
@@ -6881,7 +6881,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma, this);
@@ -6889,7 +6889,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma, this);
@@ -6897,21 +6897,21 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -6977,15 +6977,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -7159,84 +7159,84 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -7302,15 +7302,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg, ba, ma,
                         this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -7484,84 +7484,84 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -7609,15 +7609,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -7791,14 +7791,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg);
@@ -7806,7 +7806,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7815,7 +7815,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7824,7 +7824,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -7833,7 +7833,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7842,7 +7842,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7851,7 +7851,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7901,15 +7901,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -8083,7 +8083,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     this);
@@ -8091,7 +8091,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg, this);
@@ -8099,7 +8099,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8108,7 +8108,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8117,7 +8117,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -8126,7 +8126,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8135,7 +8135,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8144,7 +8144,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8194,15 +8194,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -8376,14 +8376,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg);
@@ -8391,7 +8391,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8400,7 +8400,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -8409,7 +8409,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8418,7 +8418,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8427,7 +8427,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8477,15 +8477,15 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -8659,7 +8659,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     this);
@@ -8667,7 +8667,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg, this);
@@ -8675,7 +8675,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8684,7 +8684,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -8693,7 +8693,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8702,7 +8702,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8711,7 +8711,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8779,16 +8779,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -8962,7 +8962,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma);
@@ -8970,7 +8970,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -8979,7 +8979,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8988,7 +8988,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -8997,7 +8997,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9006,7 +9006,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9015,7 +9015,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9024,7 +9024,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9033,7 +9033,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9043,7 +9043,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9112,16 +9112,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -9295,7 +9295,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -9303,7 +9303,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -9312,7 +9312,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9322,7 +9322,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -9332,7 +9332,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9342,7 +9342,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9352,7 +9352,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9362,7 +9362,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9371,7 +9371,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9381,7 +9381,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9450,16 +9450,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -9633,7 +9633,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -9641,7 +9641,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -9650,7 +9650,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9659,7 +9659,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9668,7 +9668,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -9677,7 +9677,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9686,7 +9686,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9695,7 +9695,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9704,7 +9704,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9713,7 +9713,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9722,7 +9722,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9732,7 +9732,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9801,16 +9801,16 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -9984,7 +9984,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -9992,7 +9992,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -10001,7 +10001,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10010,7 +10010,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10019,7 +10019,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -10028,7 +10028,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10037,7 +10037,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10046,7 +10046,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10055,7 +10055,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10064,7 +10064,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10073,7 +10073,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10083,7 +10083,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10096,23 +10096,23 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetSetStopThreshold() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetThreshold() throws LockedException {
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getStopThreshold(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(calibrator.getThreshold(),
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
 
         // set new value
-        calibrator.setStopThreshold(1.0);
+        calibrator.setThreshold(1.0);
 
         // check
-        assertEquals(calibrator.getStopThreshold(), 1.0, 0.0);
+        assertEquals(calibrator.getThreshold(), 1.0, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.setStopThreshold(0.0);
+            calibrator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10120,12 +10120,12 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getProgressDelta(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
 
         // set new value
         calibrator.setProgressDelta(0.5f);
@@ -10148,12 +10148,12 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getConfidence(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
 
         // set new value
         calibrator.setConfidence(0.8);
@@ -10176,12 +10176,12 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getMaxIterations(),
-                LMedSRobustTurntableGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                MSACRobustTurntableGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
 
         // set new value
         calibrator.setMaxIterations(1);
@@ -10198,8 +10198,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -10213,8 +10213,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -10228,8 +10228,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
@@ -10243,8 +10243,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
@@ -10266,8 +10266,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasX() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
@@ -10284,8 +10284,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasY() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
@@ -10302,8 +10302,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasZ() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -10320,8 +10320,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasXAsAcceleration() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         final Acceleration acceleration1 = calibrator.getAccelerometerBiasXAsAcceleration();
@@ -10344,8 +10344,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasYAsAcceleration() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         final Acceleration acceleration1 = calibrator.getAccelerometerBiasYAsAcceleration();
@@ -10368,8 +10368,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasZAsAcceleration() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         final Acceleration acceleration1 = calibrator.getAccelerometerBiasZAsAcceleration();
@@ -10392,8 +10392,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testSetAccelerometerBias1() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
@@ -10417,8 +10417,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testSetAccelerometerBias2() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
@@ -10449,8 +10449,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasArray() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertArrayEquals(calibrator.getAccelerometerBias(), new double[3], 0.0);
@@ -10485,8 +10485,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerBiasAsMatrix()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
@@ -10534,8 +10534,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSx()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSx(),
@@ -10554,8 +10554,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSy()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSy(),
@@ -10574,8 +10574,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSz()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSz(),
@@ -10594,8 +10594,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMxy()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMxy(),
@@ -10614,8 +10614,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMxz()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMxz(),
@@ -10634,8 +10634,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMyx()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMyx(),
@@ -10654,8 +10654,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMyz()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMyz(),
@@ -10674,8 +10674,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMzx()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMzx(),
@@ -10694,8 +10694,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMzy()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMzy(),
@@ -10714,8 +10714,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerScalingFactors()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0, 0.0);
@@ -10739,8 +10739,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerMxy(), 0.0, 0.0);
@@ -10774,8 +10774,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0, 0.0);
@@ -10817,8 +10817,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerMa() throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0, 0.0);
@@ -10888,8 +10888,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasX() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
@@ -10906,8 +10906,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasY() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
@@ -10924,8 +10924,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasZ() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
@@ -10943,8 +10943,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialBiasAngularSpeedX()
             throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed angularSpeed1 = calibrator
@@ -10975,8 +10975,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialBiasAngularSpeedY()
             throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed angularSpeed1 = calibrator
@@ -11006,8 +11006,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasAngularSpeedZ() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed angularSpeed1 = calibrator
@@ -11037,8 +11037,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testSetInitialBias1() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
@@ -11061,8 +11061,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testSetInitialBias2() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
@@ -11094,8 +11094,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSx()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -11113,8 +11113,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSy()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -11132,8 +11132,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSz()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -11151,8 +11151,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMxy()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -11170,8 +11170,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMxz()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
@@ -11189,8 +11189,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMyx()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
@@ -11208,8 +11208,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMyz()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
@@ -11227,8 +11227,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMzx()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
@@ -11246,8 +11246,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMzy()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
@@ -11265,8 +11265,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialScalingFactors()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -11290,8 +11290,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -11325,8 +11325,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -11368,8 +11368,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetInitialBiasArray() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertArrayEquals(calibrator.getInitialBias(), new double[3], 0.0);
@@ -11404,8 +11404,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialBiasAsMatrix()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialBiasAsMatrix(),
@@ -11457,8 +11457,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMg()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMg(),
@@ -11533,8 +11533,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialGg()
             throws WrongSizeException, LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialGg(),
@@ -11577,8 +11577,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetTurntableRotationRate() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getTurntableRotationRate(),
@@ -11603,8 +11603,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetTurntableRotationRateAsAngularSpeed()
             throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         final AngularSpeed rotationRate1 = calibrator
                 .getTurntableRotationRateAsAngularSpeed();
@@ -11640,8 +11640,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetMeasurements() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -11657,8 +11657,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetEcefPosition() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getEcefPosition());
@@ -11685,8 +11685,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetNedPosition() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getNedPosition());
@@ -11713,8 +11713,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCommonAxisUsed());
@@ -11729,8 +11729,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testIsSetGDependentCrossBiasesEstimated()
             throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
@@ -11744,8 +11744,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -11759,8 +11759,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetMinimumRequiredMeasurements() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
@@ -11798,8 +11798,8 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsReady() throws LockedException {
-        final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new LMedSRobustTurntableGyroscopeCalibrator();
+        final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                new MSACRobustTurntableGyroscopeCalibrator();
 
         // check default value
         assertFalse(calibrator.isReady());
@@ -11932,14 +11932,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -12090,14 +12090,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -12248,14 +12248,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -12404,14 +12404,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -12561,14 +12561,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -12720,14 +12720,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -12885,14 +12885,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -13048,14 +13048,14 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new LMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            final MSACRobustTurntableGyroscopeCalibrator calibrator =
+                    new MSACRobustTurntableGyroscopeCalibrator(nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -13107,25 +13107,25 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Override
     public void onCalibrateStart(RobustTurntableGyroscopeCalibrator calibrator) {
-        checkLocked((LMedSRobustTurntableGyroscopeCalibrator) calibrator);
+        checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
     public void onCalibrateEnd(RobustTurntableGyroscopeCalibrator calibrator) {
-        checkLocked((LMedSRobustTurntableGyroscopeCalibrator) calibrator);
+        checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
     public void onCalibrateNextIteration(RobustTurntableGyroscopeCalibrator calibrator, int iteration) {
-        checkLocked((LMedSRobustTurntableGyroscopeCalibrator) calibrator);
+        checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
     public void onCalibrateProgressChange(RobustTurntableGyroscopeCalibrator calibrator, float progress) {
-        checkLocked((LMedSRobustTurntableGyroscopeCalibrator) calibrator);
+        checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -13136,7 +13136,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
         mCalibrateProgressChange = 0;
     }
 
-    private void checkLocked(final LMedSRobustTurntableGyroscopeCalibrator calibrator) {
+    private void checkLocked(final MSACRobustTurntableGyroscopeCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
             calibrator.setAccelerometerBiasX(0.0);
@@ -13474,7 +13474,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
             fail("LockedException expected but not thrown");
         }
         try {
-            calibrator.setStopThreshold(0.1);
+            calibrator.setThreshold(0.1);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -13482,7 +13482,7 @@ public class LMedSRobustTurntableGyroscopeCalibratorTest implements
 
     private void assertEstimatedResult(
             final Matrix bg, final Matrix mg, final Matrix gg,
-            final LMedSRobustTurntableGyroscopeCalibrator calibrator)
+            final MSACRobustTurntableGyroscopeCalibrator calibrator)
             throws WrongSizeException {
 
         final double[] estimatedBiases = calibrator.getEstimatedBiases();

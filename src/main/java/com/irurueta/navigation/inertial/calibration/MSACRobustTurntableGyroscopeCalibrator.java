@@ -20,8 +20,8 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.numerical.robust.LMedSRobustEstimator;
-import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.MSACRobustEstimator;
+import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Robustly estimates gyroscope biases, cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using LMedS robust estimator.
+ * specific forces sensed by the accelerometer using MSAC robust estimator.
  * <p>
  * This calibrator assumes that the IMU is placed flat on a turntable spinning
  * at constant speed, but absolute orientation or position of IMU is unknown.
@@ -63,54 +63,30 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyroscopeCalibrator {
+public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyroscopeCalibrator {
 
     /**
-     * Default value to be used for stop threshold. Stop threshold can be used to
-     * avoid keeping the algorithm unnecessarily iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once a
-     * solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Constant defining default threshold to determine whether samples are
+     * inliers or not.
      */
-    public static final double DEFAULT_STOP_THRESHOLD = 5e-1;
+    public static final double DEFAULT_THRESHOLD = 5e-1;
 
     /**
-     * Minimum allowed stop threshold value.
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
      */
-    public static final double MIN_STOP_THRESHOLD = 0.0;
+    public static final double MIN_THRESHOLD = 0.0;
 
     /**
-     * Threshold to be used to keep the algorithm iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once
-     * a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Threshold to determine whether samples are inliers or not when
+     * testing possible estimation solutions.
      */
-    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
+    private double mThreshold = DEFAULT_THRESHOLD;
 
     /**
      * Constructor.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator() {
+    public MSACRobustTurntableGyroscopeCalibrator() {
         super();
     }
 
@@ -145,7 +121,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -190,7 +166,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -234,7 +210,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -279,7 +255,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -329,7 +305,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -382,7 +358,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -435,7 +411,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -488,7 +464,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -545,7 +521,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -602,7 +578,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -660,7 +636,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -719,7 +695,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -784,7 +760,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -851,7 +827,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -916,7 +892,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -982,7 +958,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1032,7 +1008,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1077,7 +1053,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1121,7 +1097,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1166,7 +1142,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1216,7 +1192,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1269,7 +1245,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1322,7 +1298,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1375,7 +1351,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1432,7 +1408,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1489,7 +1465,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1547,7 +1523,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1606,7 +1582,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1671,7 +1647,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1738,7 +1714,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1804,7 +1780,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1870,7 +1846,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public LMedSRobustTurntableGyroscopeCalibrator(
+    public MSACRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1890,58 +1866,30 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
     }
 
     /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algrithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Returns threshold to determine whether samples are inliers or not.
      *
-     * @return stop threshold to stop the algorithm prematurely when a certain
-     * accuracy has been reached.
+     * @return threshold to determine whether samples are inliers or not.
      */
-    public double getStopThreshold() {
-        return mStopThreshold;
+    public double getThreshold() {
+        return mThreshold;
     }
 
     /**
-     * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value,
-     * the algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Sets threshold to determine whether samples are inliers or not.
      *
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
-     *                      when a certain accuracy has been reached.
-     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (stopThreshold <= MIN_STOP_THRESHOLD) {
+        if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-
-        mStopThreshold = stopThreshold;
+        mThreshold = threshold;
     }
 
     /**
@@ -1961,8 +1909,13 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
             throw new NotReadyException();
         }
 
-        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
-                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
+        final MSACRobustEstimator<PreliminaryResult> innerEstimator =
+                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+                    @Override
+                    public double getThreshold() {
+                        return mThreshold;
+                    }
+
                     @Override
                     public int getTotalSamples() {
                         return mMeasurements.size();
@@ -1986,20 +1939,20 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
 
                     @Override
                     public boolean isReady() {
-                        return LMedSRobustTurntableGyroscopeCalibrator.super.isReady();
+                        return MSACRobustTurntableGyroscopeCalibrator.super.isReady();
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateStart(RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(LMedSRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateStart(MSACRobustTurntableGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateEnd(RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(LMedSRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateEnd(MSACRobustTurntableGyroscopeCalibrator.this);
                         }
                     }
 
@@ -2008,7 +1961,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
                             final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    LMedSRobustTurntableGyroscopeCalibrator.this, iteration);
+                                    MSACRobustTurntableGyroscopeCalibrator.this, iteration);
                         }
                     }
 
@@ -2017,7 +1970,7 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    LMedSRobustTurntableGyroscopeCalibrator.this, progress);
+                                    MSACRobustTurntableGyroscopeCalibrator.this, progress);
                         }
                     }
                 });
@@ -2028,7 +1981,6 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
             final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
@@ -2052,6 +2004,6 @@ public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyro
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.MSAC;
     }
 }
