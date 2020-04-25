@@ -20,8 +20,8 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.numerical.robust.RANSACRobustEstimator;
-import com.irurueta.numerical.robust.RANSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Robustly estimates gyroscope biases, cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using RANSAC robust estimator.
+ * specific forces sensed by the accelerometer using LMedS robust estimator.
  * <p>
  * This calibrator assumes that the IMU is placed flat on a turntable spinning
  * at constant speed, but absolute orientation or position of IMU is unknown.
@@ -63,50 +63,54 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyroscopeCalibrator {
+public class LMedSRobustTurntableGyroscopeCalibrator extends RobustTurntableGyroscopeCalibrator {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 5e-1;
+    public static final double DEFAULT_STOP_THRESHOLD = 5e-4;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Constructor.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator() {
+    public LMedSRobustTurntableGyroscopeCalibrator() {
         super();
     }
 
@@ -141,7 +145,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -186,7 +190,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -230,7 +234,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -275,7 +279,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -325,7 +329,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -378,7 +382,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -431,7 +435,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -484,7 +488,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -541,7 +545,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -598,7 +602,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -656,7 +660,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -715,7 +719,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -780,7 +784,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -847,7 +851,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -912,7 +916,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -978,7 +982,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1028,7 +1032,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1073,7 +1077,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1117,7 +1121,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1162,7 +1166,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1212,7 +1216,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1265,7 +1269,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1318,7 +1322,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1371,7 +1375,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1428,7 +1432,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1485,7 +1489,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1543,7 +1547,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1602,7 +1606,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1667,7 +1671,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1734,7 +1738,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1800,7 +1804,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1866,7 +1870,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public RANSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
@@ -1886,83 +1890,58 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured angular rates and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @return threshold to determine whether samples are inliers or not.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured angular rates and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
-    }
 
-    /**
-     * Indicates whether inliers must be computed and kept.
-     *
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     *
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     *
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     *
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
+        mStopThreshold = stopThreshold;
     }
 
     /**
@@ -1982,13 +1961,8 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
+        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
+                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public int getTotalSamples() {
                         return mMeasurements.size();
@@ -2000,8 +1974,8 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                            final List<PreliminaryResult> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<PreliminaryResult> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
@@ -2012,30 +1986,29 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
 
                     @Override
                     public boolean isReady() {
-                        return RANSACRobustTurntableGyroscopeCalibrator.super.isReady();
+                        return LMedSRobustTurntableGyroscopeCalibrator.super.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(RANSACRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateStart(LMedSRobustTurntableGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(RANSACRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateEnd(LMedSRobustTurntableGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator,
-                            final int iteration) {
+                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    RANSACRobustTurntableGyroscopeCalibrator.this, iteration);
+                                    LMedSRobustTurntableGyroscopeCalibrator.this, iteration);
                         }
                     }
 
@@ -2044,7 +2017,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    RANSACRobustTurntableGyroscopeCalibrator.this, progress);
+                                    LMedSRobustTurntableGyroscopeCalibrator.this, progress);
                         }
                     }
                 });
@@ -2052,13 +2025,10 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
         try {
             mRunning = true;
             mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
+            innerEstimator.setStopThreshold(mStopThreshold);
             final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
@@ -2082,6 +2052,6 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.RANSAC;
+        return RobustEstimatorMethod.LMedS;
     }
 }
