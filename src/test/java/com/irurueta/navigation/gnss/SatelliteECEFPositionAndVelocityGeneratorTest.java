@@ -202,6 +202,10 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
                     failed = true;
                     break;
                 }
+                if (!result2.equals(result3, ABSOLUTE_ERROR)) {
+                    failed = true;
+                    break;
+                }
                 assertTrue(result1.equals(result3, LARGE_ABSOLUTE_ERROR));
                 assertTrue(result2.equals(result3, ABSOLUTE_ERROR));
             }

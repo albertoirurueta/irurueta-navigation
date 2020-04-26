@@ -2911,7 +2911,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
@@ -2961,7 +2961,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
@@ -3014,7 +3014,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
@@ -3064,7 +3064,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
@@ -3117,7 +3117,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
@@ -3176,7 +3176,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
@@ -3237,7 +3237,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *
      * @param qualityScores         quality scores corresponding to each provided
      *                              measurement. The larger the score value the better
-     *                              the quality of the sample.*
+     *                              the quality of the sample.
      * @param position              position where body kinematics measures
      *                              have been taken.
      * @param turntableRotationRate constant rotation rate at which the
