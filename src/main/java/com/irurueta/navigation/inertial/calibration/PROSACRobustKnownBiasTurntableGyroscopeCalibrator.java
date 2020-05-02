@@ -29,9 +29,10 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates gyroscope biases, cross couplings and scaling factors
+ * Robustly estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using PROSAC robust estimator.
+ * specific forces sensed by the accelerometer using PROSAC robust estimator
+ * when gyroscope biases are known.
  * <p>
  * This calibrator assumes that the IMU is placed flat on a turntable spinning
  * at constant speed, but absolute orientation or position of IMU is unknown.
@@ -63,8 +64,8 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class PROSACRobustTurntableGyroscopeCalibrator extends
-        RobustTurntableGyroscopeCalibrator {
+public class PROSACRobustKnownBiasTurntableGyroscopeCalibrator extends
+        RobustKnownBiasTurntableGyroscopeCalibrator {
 
     /**
      * Constant defining default threshold to determine whether samples are inliers or not.
@@ -113,7 +114,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
     /**
      * Constructor.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator() {
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator() {
         super();
     }
 
@@ -132,8 +133,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -148,16 +148,16 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval,
-                measurements, initialBias, initialMg, initialGg);
+                measurements, bias, initialMg, initialGg);
     }
 
     /**
@@ -175,8 +175,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -193,17 +192,17 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -221,8 +220,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have
+     * @param bias                  known gyroscope bias. This must have
      *                              length 3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -237,16 +235,16 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -264,8 +262,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -282,17 +279,17 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -310,8 +307,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -332,18 +328,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -362,8 +358,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -385,19 +380,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -416,8 +411,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -438,18 +432,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -468,8 +462,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -491,19 +484,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -531,8 +524,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -548,18 +540,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -586,8 +578,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -605,19 +596,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -645,8 +636,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -663,18 +653,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -702,8 +692,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -722,19 +711,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -762,8 +751,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated,
      *                                      false otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -787,20 +775,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -828,8 +816,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must
+     * @param bias                          known gyroscope bias. This must
      *                                      have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -854,21 +841,21 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -895,8 +882,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -919,20 +905,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -959,8 +945,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must be
+     * @param bias                          known gyroscope bias. This must be
      *                                      3x1 and is expressed in radians
      *                                      per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -985,21 +970,21 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
     }
@@ -1019,8 +1004,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1035,16 +1019,16 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -1062,8 +1046,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1080,17 +1063,17 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -1108,8 +1091,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have
+     * @param bias                  known gyroscope bias. This must have
      *                              length 3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1124,16 +1106,16 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -1151,8 +1133,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1169,17 +1150,17 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -1197,8 +1178,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1219,18 +1199,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -1249,8 +1229,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1272,19 +1251,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -1303,8 +1282,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1325,18 +1303,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -1355,8 +1333,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1378,19 +1355,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -1418,8 +1395,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1435,18 +1411,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -1473,8 +1449,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1492,19 +1467,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -1532,8 +1507,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -1550,18 +1524,18 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -1589,8 +1563,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -1609,19 +1582,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -1649,8 +1622,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated,
      *                                      false otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -1674,20 +1646,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1715,8 +1687,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must
+     * @param bias                          known gyroscope bias. This must
      *                                      have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1741,21 +1712,21 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
     }
@@ -1783,8 +1754,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1807,20 +1777,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1847,8 +1817,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must be
+     * @param bias                          known gyroscope bias. This must be
      *                                      3x1 and is expressed in radians
      *                                      per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1873,35 +1842,34 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
     }
 
     /**
      * Constructor.
-     *
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
      * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 10 samples.
+     *                                  is smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
@@ -1925,8 +1893,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1941,19 +1908,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval,
-                measurements, initialBias, initialMg, initialGg);
+                measurements, bias, initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
 
@@ -1975,8 +1942,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1993,20 +1959,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
 
@@ -2028,8 +1994,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have
+     * @param bias                  known gyroscope bias. This must have
      *                              length 3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2044,19 +2009,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
 
@@ -2078,8 +2043,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2096,20 +2060,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
 
@@ -2131,8 +2095,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2153,21 +2116,21 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -2190,8 +2153,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2213,22 +2175,22 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -2251,8 +2213,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2273,21 +2234,21 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -2310,8 +2271,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2333,22 +2293,22 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -2380,8 +2340,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -2397,9 +2356,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2407,11 +2366,11 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
@@ -2442,8 +2401,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -2461,9 +2419,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2471,12 +2429,12 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -2508,8 +2466,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -2526,9 +2483,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2536,11 +2493,11 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
@@ -2572,8 +2529,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -2592,9 +2548,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2602,12 +2558,12 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -2639,8 +2595,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated,
      *                                      false otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -2664,9 +2619,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2674,13 +2629,13 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -2712,8 +2667,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must
+     * @param bias                          known gyroscope bias. This must
      *                                      have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -2738,9 +2692,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2748,14 +2702,14 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -2786,8 +2740,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -2810,9 +2763,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2820,13 +2773,13 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -2857,8 +2810,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must be
+     * @param bias                          known gyroscope bias. This must be
      *                                      3x1 and is expressed in radians
      *                                      per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -2883,9 +2835,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final double turntableRotationRate,
@@ -2893,14 +2845,14 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
         internalSetQualityScores(qualityScores);
@@ -2924,8 +2876,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2940,19 +2891,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
 
@@ -2974,8 +2925,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -2992,20 +2942,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
 
@@ -3027,8 +2977,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have
+     * @param bias                  known gyroscope bias. This must have
      *                              length 3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -3043,19 +2992,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
 
@@ -3077,8 +3026,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -3095,20 +3043,20 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
 
@@ -3130,8 +3078,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -3154,19 +3101,19 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  if provided quality scores length is
      *                                  smaller than 10 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -3189,8 +3136,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -3212,22 +3158,22 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -3250,8 +3196,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -3272,21 +3217,21 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -3309,8 +3254,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -3332,22 +3276,22 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -3379,8 +3323,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -3396,9 +3339,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3406,11 +3349,11 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
@@ -3441,8 +3384,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -3460,9 +3402,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3470,12 +3412,12 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -3507,8 +3449,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -3525,9 +3466,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3535,11 +3476,11 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
         internalSetQualityScores(qualityScores);
     }
@@ -3571,8 +3512,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -3591,9 +3531,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3601,12 +3541,12 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -3638,8 +3578,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated,
      *                                      false otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -3663,9 +3602,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3673,13 +3612,13 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -3711,8 +3650,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must
+     * @param bias                          known gyroscope bias. This must
      *                                      have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -3737,9 +3675,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3747,14 +3685,14 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
         internalSetQualityScores(qualityScores);
@@ -3786,8 +3724,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -3810,9 +3747,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3820,13 +3757,13 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
         internalSetQualityScores(qualityScores);
     }
@@ -3857,8 +3794,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must be
+     * @param bias                          known gyroscope bias. This must be
      *                                      3x1 and is expressed in radians
      *                                      per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -3883,9 +3819,9 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative or
      *                                  if provided quality scores length is
-     *                                  smaller than 10 samples.
+     *                                  smaller than 7 samples.
      */
-    public PROSACRobustTurntableGyroscopeCalibrator(
+    public PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final double turntableRotationRate,
@@ -3893,14 +3829,14 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
         internalSetQualityScores(qualityScores);
@@ -4027,7 +3963,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
     }
 
     /**
-     * Estimates gyroscope calibration parameters containing bias, scale factors
+     * Estimates gyroscope calibration parameters containing scale factors
      * cross-coupling errors and g-dependant cross biases.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -4079,20 +4015,23 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return PROSACRobustTurntableGyroscopeCalibrator.this.isReady();
+                        return PROSACRobustKnownBiasTurntableGyroscopeCalibrator.this.isReady();
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(PROSACRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateStart(
+                                    PROSACRobustKnownBiasTurntableGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(PROSACRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateEnd(
+                                    PROSACRobustKnownBiasTurntableGyroscopeCalibrator.this);
                         }
                     }
 
@@ -4101,8 +4040,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    PROSACRobustTurntableGyroscopeCalibrator.this,
-                                    iteration);
+                                    PROSACRobustKnownBiasTurntableGyroscopeCalibrator.this, iteration);
                         }
                     }
 
@@ -4111,7 +4049,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    PROSACRobustTurntableGyroscopeCalibrator.this, progress);
+                                    PROSACRobustKnownBiasTurntableGyroscopeCalibrator.this, progress);
                         }
                     }
                 });
@@ -4163,7 +4101,7 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
      */
     private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
-                qualityScores.length < TurntableGyroscopeCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS) {
+                qualityScores.length < KnownBiasTurntableGyroscopeCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS) {
             throw new IllegalArgumentException();
         }
 

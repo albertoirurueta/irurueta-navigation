@@ -13106,25 +13106,31 @@ public class MSACRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Override
-    public void onCalibrateStart(RobustTurntableGyroscopeCalibrator calibrator) {
+    public void onCalibrateStart(
+            final RobustTurntableGyroscopeCalibrator calibrator) {
         checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(RobustTurntableGyroscopeCalibrator calibrator) {
+    public void onCalibrateEnd(
+            final RobustTurntableGyroscopeCalibrator calibrator) {
         checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
-    public void onCalibrateNextIteration(RobustTurntableGyroscopeCalibrator calibrator, int iteration) {
+    public void onCalibrateNextIteration(
+            final RobustTurntableGyroscopeCalibrator calibrator,
+            final int iteration) {
         checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
-    public void onCalibrateProgressChange(RobustTurntableGyroscopeCalibrator calibrator, float progress) {
+    public void onCalibrateProgressChange(
+            final RobustTurntableGyroscopeCalibrator calibrator,
+            final float progress) {
         checkLocked((MSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }

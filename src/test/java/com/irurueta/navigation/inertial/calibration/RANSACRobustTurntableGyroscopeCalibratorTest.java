@@ -13201,25 +13201,31 @@ public class RANSACRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Override
-    public void onCalibrateStart(RobustTurntableGyroscopeCalibrator calibrator) {
+    public void onCalibrateStart(
+            final RobustTurntableGyroscopeCalibrator calibrator) {
         checkLocked((RANSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(RobustTurntableGyroscopeCalibrator calibrator) {
+    public void onCalibrateEnd(
+            final RobustTurntableGyroscopeCalibrator calibrator) {
         checkLocked((RANSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
-    public void onCalibrateNextIteration(RobustTurntableGyroscopeCalibrator calibrator, int iteration) {
+    public void onCalibrateNextIteration(
+            final RobustTurntableGyroscopeCalibrator calibrator,
+            final int iteration) {
         checkLocked((RANSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
-    public void onCalibrateProgressChange(RobustTurntableGyroscopeCalibrator calibrator, float progress) {
+    public void onCalibrateProgressChange(
+            final RobustTurntableGyroscopeCalibrator calibrator,
+            final float progress) {
         checkLocked((RANSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }

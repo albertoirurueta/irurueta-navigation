@@ -24042,25 +24042,31 @@ public class PROSACRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Override
-    public void onCalibrateStart(RobustTurntableGyroscopeCalibrator calibrator) {
+    public void onCalibrateStart(
+            final RobustTurntableGyroscopeCalibrator calibrator) {
         checkLocked((PROSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(RobustTurntableGyroscopeCalibrator calibrator) {
+    public void onCalibrateEnd(
+            final RobustTurntableGyroscopeCalibrator calibrator) {
         checkLocked((PROSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
-    public void onCalibrateNextIteration(RobustTurntableGyroscopeCalibrator calibrator, int iteration) {
+    public void onCalibrateNextIteration(
+            final RobustTurntableGyroscopeCalibrator calibrator,
+            final int iteration) {
         checkLocked((PROSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
-    public void onCalibrateProgressChange(RobustTurntableGyroscopeCalibrator calibrator, float progress) {
+    public void onCalibrateProgressChange(
+            final RobustTurntableGyroscopeCalibrator calibrator,
+            final float progress) {
         checkLocked((PROSACRobustTurntableGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }

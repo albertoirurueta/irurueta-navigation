@@ -54,9 +54,10 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
-        RobustTurntableGyroscopeCalibratorListener {
+public class PROSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
+        RobustKnownBiasTurntableGyroscopeCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -101,14 +102,18 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -156,29 +161,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -189,15 +194,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, new double[3], 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, new Matrix(3, 1));
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, new Matrix(3, 3));
@@ -239,7 +244,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -251,19 +256,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -319,14 +311,19 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -374,29 +371,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -407,15 +404,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -456,7 +453,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -468,19 +465,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -499,55 +483,55 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -595,15 +579,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -651,29 +640,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -684,15 +673,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -733,7 +722,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -745,19 +734,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -776,21 +752,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg,
                     this);
@@ -798,7 +774,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg,
                     this);
@@ -806,7 +782,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg,
                     this);
@@ -814,7 +790,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg,
                     this);
@@ -822,14 +798,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -877,15 +853,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -933,29 +914,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -966,15 +947,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -1015,7 +996,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1027,19 +1008,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1058,48 +1026,48 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -1147,15 +1115,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -1203,29 +1176,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -1236,15 +1209,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -1285,7 +1258,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1297,19 +1270,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1328,49 +1288,49 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -1436,15 +1396,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -1492,29 +1457,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -1525,15 +1490,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -1574,7 +1539,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1586,19 +1551,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1617,28 +1569,28 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma);
@@ -1646,7 +1598,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma);
@@ -1654,7 +1606,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma);
@@ -1662,7 +1614,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma);
@@ -1670,21 +1622,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -1750,15 +1702,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -1806,29 +1763,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -1839,15 +1796,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -1888,7 +1845,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -1900,19 +1857,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -1931,28 +1875,28 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma, this);
@@ -1960,7 +1904,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma, this);
@@ -1968,7 +1912,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma, this);
@@ -1976,7 +1920,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma, this);
@@ -1984,21 +1928,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2064,15 +2008,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -2120,29 +2069,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -2153,15 +2102,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -2202,7 +2151,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -2214,19 +2163,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2245,84 +2181,84 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -2388,15 +2324,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg, ba, ma,
                         this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -2444,29 +2385,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -2477,15 +2418,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -2526,7 +2467,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -2538,19 +2479,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2569,84 +2497,84 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2694,14 +2622,19 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false, false, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -2749,29 +2682,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -2782,15 +2715,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -2831,7 +2764,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -2843,19 +2776,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -2874,14 +2794,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg);
@@ -2889,7 +2809,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2898,7 +2818,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2907,7 +2827,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -2916,7 +2836,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2925,7 +2845,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2934,7 +2854,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -2984,15 +2904,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -3040,29 +2965,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3073,15 +2998,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -3122,7 +3047,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3134,19 +3059,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3165,7 +3077,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     this);
@@ -3173,7 +3085,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg, this);
@@ -3181,7 +3093,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3190,7 +3102,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3199,7 +3111,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -3208,7 +3120,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3217,7 +3129,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3226,7 +3138,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3276,15 +3188,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -3332,29 +3249,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3365,15 +3282,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -3414,7 +3331,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3426,19 +3343,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3457,14 +3361,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg);
@@ -3472,7 +3376,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3481,7 +3385,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -3490,7 +3394,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3499,7 +3403,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3508,7 +3412,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3558,15 +3462,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -3614,29 +3523,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3647,15 +3556,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -3696,7 +3605,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -3708,19 +3617,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -3739,7 +3635,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     this);
@@ -3747,7 +3643,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg, this);
@@ -3755,7 +3651,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3764,7 +3660,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -3773,7 +3669,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3782,7 +3678,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3791,7 +3687,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -3859,16 +3755,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -3916,29 +3817,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -3949,15 +3850,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -3998,7 +3899,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -4010,19 +3911,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4041,7 +3929,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma);
@@ -4049,7 +3937,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -4058,7 +3946,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4067,7 +3955,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -4076,7 +3964,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4085,7 +3973,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4094,7 +3982,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4103,7 +3991,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4112,7 +4000,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4122,7 +4010,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4191,16 +4079,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -4248,29 +4141,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -4281,15 +4174,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -4330,7 +4223,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -4342,19 +4235,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4373,7 +4253,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -4381,7 +4261,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -4390,7 +4270,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4400,7 +4280,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -4410,7 +4290,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4420,7 +4300,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4430,7 +4310,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4440,7 +4320,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4449,7 +4329,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4459,7 +4339,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4528,16 +4408,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -4585,29 +4470,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -4618,15 +4503,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -4667,7 +4552,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -4679,19 +4564,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -4710,7 +4582,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -4718,7 +4590,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -4727,7 +4599,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4736,7 +4608,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4745,7 +4617,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -4754,7 +4626,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4763,7 +4635,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4772,7 +4644,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4781,7 +4653,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4790,7 +4662,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4799,7 +4671,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4809,7 +4681,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -4878,16 +4750,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -4935,29 +4812,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -4968,15 +4845,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -5017,7 +4894,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5029,19 +4906,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5060,7 +4924,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -5068,7 +4932,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -5077,7 +4941,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5086,7 +4950,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5095,7 +4959,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -5104,7 +4968,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5113,7 +4977,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5122,7 +4986,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5131,7 +4995,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5140,7 +5004,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5149,7 +5013,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5159,7 +5023,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -5210,14 +5074,19 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -5265,29 +5134,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5298,15 +5167,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -5347,7 +5216,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5359,19 +5228,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5390,55 +5246,55 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -5486,15 +5342,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                         rotationRate, timeInterval, measurements,
                         bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -5542,29 +5403,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5575,15 +5436,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -5624,7 +5485,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5636,19 +5497,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5667,21 +5515,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg,
                     this);
@@ -5689,7 +5537,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg,
                     this);
@@ -5697,7 +5545,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg,
                     this);
@@ -5705,7 +5553,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg,
                     this);
@@ -5713,14 +5561,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -5768,15 +5616,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -5824,29 +5677,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -5857,15 +5710,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -5906,7 +5759,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -5918,19 +5771,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -5949,48 +5789,48 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -6038,15 +5878,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -6094,29 +5939,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -6127,15 +5972,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -6176,7 +6021,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -6188,19 +6033,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6219,49 +6051,49 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -6327,15 +6159,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -6383,29 +6220,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -6416,15 +6253,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -6465,7 +6302,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -6477,19 +6314,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6508,28 +6332,28 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma);
@@ -6537,7 +6361,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma);
@@ -6545,7 +6369,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma);
@@ -6553,7 +6377,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma);
@@ -6561,21 +6385,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -6641,15 +6465,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -6697,29 +6526,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -6730,15 +6559,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -6779,7 +6608,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -6791,19 +6620,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -6822,28 +6638,28 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
                     ma, this);
@@ -6851,7 +6667,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
                     ma, this);
@@ -6859,7 +6675,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
                     ma, this);
@@ -6867,7 +6683,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
                     ma, this);
@@ -6875,21 +6691,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -6955,15 +6771,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -7011,29 +6832,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7044,15 +6865,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -7093,7 +6914,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -7105,19 +6926,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7136,84 +6944,84 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -7279,15 +7087,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg, ba, ma,
                         this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -7335,29 +7148,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7368,15 +7181,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -7417,7 +7230,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -7429,19 +7242,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7460,84 +7260,84 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -7585,15 +7385,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -7641,29 +7446,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7674,15 +7479,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -7723,7 +7528,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -7735,19 +7540,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -7766,14 +7558,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg);
@@ -7781,7 +7573,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7790,7 +7582,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7799,7 +7591,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -7808,7 +7600,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7817,7 +7609,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7826,7 +7618,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -7876,15 +7668,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -7932,29 +7729,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -7965,15 +7762,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -8014,7 +7811,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -8026,19 +7823,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8057,7 +7841,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     this);
@@ -8065,7 +7849,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg, this);
@@ -8073,7 +7857,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8082,7 +7866,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8091,7 +7875,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -8100,7 +7884,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8109,7 +7893,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8118,7 +7902,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8168,15 +7952,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -8224,29 +8013,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -8257,15 +8046,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -8306,7 +8095,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -8318,19 +8107,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8349,14 +8125,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg);
@@ -8364,7 +8140,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8373,7 +8149,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -8382,7 +8158,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8391,7 +8167,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8400,7 +8176,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8450,15 +8226,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -8506,29 +8287,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -8539,15 +8320,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -8588,7 +8369,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -8600,19 +8381,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8631,7 +8399,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     this);
@@ -8639,7 +8407,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg, this);
@@ -8647,7 +8415,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8656,7 +8424,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -8665,7 +8433,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8674,7 +8442,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8683,7 +8451,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8751,16 +8519,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -8808,29 +8581,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -8841,15 +8614,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -8890,7 +8663,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -8902,19 +8675,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -8933,7 +8693,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma);
@@ -8941,7 +8701,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -8950,7 +8710,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8959,7 +8719,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -8968,7 +8728,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8977,7 +8737,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8986,7 +8746,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -8995,7 +8755,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9004,7 +8764,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9014,7 +8774,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9083,16 +8843,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -9140,29 +8905,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -9173,15 +8938,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -9222,7 +8987,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -9234,19 +8999,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9265,7 +9017,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -9273,7 +9025,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -9282,7 +9034,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9292,7 +9044,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -9302,7 +9054,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9312,7 +9064,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9322,7 +9074,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9332,7 +9084,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9341,7 +9093,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9351,7 +9103,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9420,16 +9172,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -9477,29 +9234,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -9510,15 +9267,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -9559,7 +9316,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -9571,19 +9328,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9602,7 +9346,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -9610,7 +9354,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -9619,7 +9363,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9628,7 +9372,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9637,7 +9381,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -9646,7 +9390,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9655,7 +9399,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9664,7 +9408,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9673,7 +9417,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9682,7 +9426,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9691,7 +9435,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9701,7 +9445,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9770,16 +9514,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzx = ma.getElementAt(2, 0);
         final double amzy = ma.getElementAt(2, 1);
 
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition, rotationRate,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertNull(calibrator.getQualityScores());
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -9827,29 +9576,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -9860,15 +9609,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -9909,7 +9658,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -9921,19 +9670,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -9952,7 +9688,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -9960,7 +9696,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -9969,7 +9705,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9978,7 +9714,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -9987,7 +9723,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -9996,7 +9732,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10005,7 +9741,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10014,7 +9750,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10023,7 +9759,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10032,7 +9768,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10041,7 +9777,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10051,7 +9787,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(nedPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -10066,13 +9802,18 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testConstructor34() throws WrongSizeException {
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores);
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -10120,29 +9861,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -10153,15 +9894,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, new double[3], 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, new Matrix(3, 1));
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, new Matrix(3, 3));
@@ -10203,7 +9944,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -10215,19 +9956,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10246,7 +9974,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9]);
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10293,15 +10021,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                         ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -10349,29 +10082,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10382,15 +10115,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -10431,7 +10164,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -10443,19 +10176,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10474,63 +10194,63 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, 0.0, timeInterval, measurements,
                     bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, 0.0, measurements, bg,
                     mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -10579,16 +10299,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -10636,29 +10361,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10669,15 +10394,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -10718,7 +10443,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -10730,19 +10455,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -10761,14 +10473,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, this);
@@ -10776,7 +10488,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     this);
@@ -10784,7 +10496,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg,
@@ -10793,7 +10505,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg,
@@ -10802,7 +10514,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg,
@@ -10811,7 +10523,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg,
@@ -10820,7 +10532,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), this);
@@ -10828,7 +10540,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), this);
@@ -10878,16 +10590,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -10935,29 +10652,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -10968,15 +10685,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -11017,7 +10734,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -11029,19 +10746,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -11060,56 +10764,56 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, 0.0, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, 0.0, measurements, bias,
                     mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements,
                     new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     ecefPosition, rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -11158,16 +10862,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -11215,29 +10924,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -11248,15 +10957,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -11297,7 +11006,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -11309,19 +11018,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -11340,7 +11036,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
@@ -11348,7 +11044,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, this);
@@ -11356,7 +11052,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     this);
@@ -11364,7 +11060,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, this);
@@ -11372,7 +11068,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, this);
@@ -11380,7 +11076,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, this);
@@ -11388,7 +11084,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), this);
@@ -11396,7 +11092,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), this);
@@ -11464,16 +11160,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -11521,29 +11222,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -11554,15 +11255,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -11603,7 +11304,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -11615,19 +11316,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -11646,14 +11334,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
-                    new double[9], ecefPosition, rotationRate, timeInterval,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
+                    new double[6], ecefPosition, rotationRate, timeInterval,
                     measurements, bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
@@ -11661,7 +11349,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma);
@@ -11669,7 +11357,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma);
@@ -11677,7 +11365,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
@@ -11686,7 +11374,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
@@ -11695,7 +11383,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
@@ -11704,7 +11392,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
@@ -11713,7 +11401,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma);
@@ -11721,7 +11409,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3));
@@ -11729,7 +11417,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1));
@@ -11797,16 +11485,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                         ecefPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -11854,29 +11547,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -11887,15 +11580,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -11936,7 +11629,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -11948,19 +11641,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -11979,14 +11659,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
@@ -11994,7 +11674,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -12002,7 +11682,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma, this);
@@ -12010,7 +11690,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
@@ -12019,7 +11699,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
@@ -12028,7 +11708,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
@@ -12037,7 +11717,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
@@ -12046,7 +11726,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma, this);
@@ -12054,7 +11734,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3), this);
@@ -12062,7 +11742,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1), this);
@@ -12130,16 +11810,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                         ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -12187,29 +11872,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -12220,15 +11905,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -12269,7 +11954,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -12281,19 +11966,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -12312,14 +11984,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
-                    new double[9], ecefPosition, rotationRate, timeInterval,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
+                    new double[6], ecefPosition, rotationRate, timeInterval,
                     measurements, bg, mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
@@ -12327,7 +11999,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma);
@@ -12335,7 +12007,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma);
@@ -12343,7 +12015,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma);
@@ -12351,7 +12023,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma);
@@ -12359,7 +12031,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma);
@@ -12367,7 +12039,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma);
@@ -12375,7 +12047,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma);
@@ -12383,7 +12055,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma);
@@ -12391,7 +12063,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma);
@@ -12399,7 +12071,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3));
@@ -12407,7 +12079,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1));
@@ -12475,16 +12147,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                         ecefPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg, ba, ma,
                         this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -12532,29 +12209,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -12565,15 +12242,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -12614,7 +12291,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -12626,19 +12303,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -12657,14 +12321,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
@@ -12672,7 +12336,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma, this);
@@ -12680,7 +12344,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma, this);
@@ -12688,7 +12352,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma, this);
@@ -12696,7 +12360,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma, this);
@@ -12704,7 +12368,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma, this);
@@ -12712,7 +12376,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma, this);
@@ -12720,7 +12384,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma, this);
@@ -12728,7 +12392,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma, this);
@@ -12736,7 +12400,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma, this);
@@ -12744,7 +12408,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3), this);
@@ -12752,7 +12416,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1), this);
@@ -12802,16 +12466,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements,
                         false, false, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -12859,29 +12528,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -12892,15 +12561,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -12941,7 +12610,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -12953,19 +12622,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -12984,14 +12640,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg);
@@ -12999,7 +12655,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -13008,7 +12664,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13018,7 +12674,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13028,7 +12684,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13038,7 +12694,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13048,7 +12704,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13058,7 +12714,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13110,16 +12766,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -13167,29 +12828,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -13200,15 +12861,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -13249,7 +12910,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -13261,19 +12922,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -13292,14 +12940,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
@@ -13308,7 +12956,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -13317,7 +12965,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13327,7 +12975,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13337,7 +12985,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13347,7 +12995,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13357,7 +13005,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13367,7 +13015,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13419,16 +13067,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -13476,29 +13129,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -13509,15 +13162,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -13558,7 +13211,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -13570,19 +13223,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -13601,14 +13241,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg);
@@ -13616,7 +13256,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -13625,7 +13265,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13635,7 +13275,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13645,7 +13285,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13655,7 +13295,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13665,7 +13305,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13717,16 +13357,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -13774,29 +13419,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -13807,15 +13452,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -13856,7 +13501,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -13868,19 +13513,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -13899,14 +13531,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
@@ -13915,7 +13547,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -13924,7 +13556,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13934,7 +13566,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13944,7 +13576,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13954,7 +13586,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -13964,7 +13596,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14034,17 +13666,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -14092,29 +13729,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -14125,15 +13762,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -14174,7 +13811,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -14186,19 +13823,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -14217,14 +13841,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
@@ -14233,7 +13857,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -14243,7 +13867,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14253,7 +13877,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14263,7 +13887,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14273,7 +13897,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14283,7 +13907,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14293,7 +13917,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14303,7 +13927,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14314,7 +13938,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14385,17 +14009,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -14443,29 +14072,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -14476,15 +14105,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -14525,7 +14154,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -14537,19 +14166,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -14568,7 +14184,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -14576,7 +14192,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
@@ -14585,7 +14201,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -14595,7 +14211,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14606,7 +14222,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14617,7 +14233,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14628,7 +14244,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14639,7 +14255,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14650,7 +14266,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14660,7 +14276,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14671,7 +14287,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14742,17 +14358,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -14800,29 +14421,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -14833,15 +14454,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -14882,7 +14503,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -14894,19 +14515,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -14925,7 +14533,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     ecefPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -14933,7 +14541,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
@@ -14942,7 +14550,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -14952,7 +14560,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14962,7 +14570,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14972,7 +14580,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14982,7 +14590,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -14992,7 +14600,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15002,7 +14610,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15012,7 +14620,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15022,7 +14630,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15032,7 +14640,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15043,7 +14651,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15114,17 +14722,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, ecefPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -15172,29 +14785,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -15205,15 +14818,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -15254,7 +14867,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -15266,19 +14879,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -15297,8 +14897,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
-                    new double[9], ecefPosition,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
+                    new double[6], ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -15306,7 +14906,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
@@ -15315,7 +14915,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -15325,7 +14925,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15335,7 +14935,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15345,7 +14945,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15355,7 +14955,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15365,7 +14965,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15375,7 +14975,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15385,7 +14985,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15395,7 +14995,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15405,7 +15005,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15416,7 +15016,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -15469,15 +15069,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -15525,29 +15130,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -15558,15 +15163,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -15607,7 +15212,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -15619,19 +15224,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -15650,14 +15242,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
-                    new double[9], nedPosition, rotationRate, timeInterval,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
+                    new double[6], nedPosition, rotationRate, timeInterval,
                     measurements, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg);
@@ -15665,14 +15257,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg);
@@ -15680,7 +15272,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg);
@@ -15688,7 +15280,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg);
@@ -15696,7 +15288,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg);
@@ -15704,7 +15296,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3));
@@ -15712,7 +15304,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1));
@@ -15762,16 +15354,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition,
                         rotationRate, timeInterval, measurements,
                         bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -15819,29 +15416,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -15852,15 +15449,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -15901,7 +15498,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -15913,19 +15510,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -15944,14 +15528,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, this);
@@ -15959,7 +15543,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     this);
@@ -15967,7 +15551,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg,
@@ -15976,7 +15560,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg,
@@ -15985,7 +15569,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg,
@@ -15994,7 +15578,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg,
@@ -16003,7 +15587,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), this);
@@ -16011,7 +15595,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), this);
@@ -16061,16 +15645,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -16118,29 +15707,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -16151,15 +15740,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -16200,7 +15789,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -16212,19 +15801,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -16243,14 +15819,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[7],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg);
@@ -16258,14 +15834,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg);
@@ -16273,7 +15849,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg);
@@ -16281,7 +15857,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg);
@@ -16289,7 +15865,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3));
@@ -16297,7 +15873,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1));
@@ -16347,16 +15923,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition,
                         rotationRate, timeInterval, measurements,
                         bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -16404,29 +15985,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -16437,15 +16018,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -16486,7 +16067,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -16498,19 +16079,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -16529,14 +16097,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch(final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, this);
@@ -16544,7 +16112,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     this);
@@ -16552,7 +16120,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, this);
@@ -16560,7 +16128,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, this);
@@ -16568,7 +16136,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, this);
@@ -16576,7 +16144,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), this);
@@ -16584,7 +16152,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), this);
@@ -16652,16 +16220,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -16709,29 +16282,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -16742,15 +16315,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -16791,7 +16364,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -16803,19 +16376,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -16834,14 +16394,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma);
@@ -16849,7 +16409,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma);
@@ -16857,7 +16417,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma);
@@ -16865,7 +16425,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
@@ -16874,7 +16434,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
@@ -16883,7 +16443,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
@@ -16892,7 +16452,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
@@ -16901,7 +16461,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, ecefPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma);
@@ -16909,7 +16469,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3));
@@ -16917,7 +16477,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1));
@@ -16985,16 +16545,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -17042,29 +16607,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -17075,15 +16640,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -17124,7 +16689,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -17136,19 +16701,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -17167,14 +16719,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bias, mg, gg, accelerometerBias, ma, this);
@@ -17182,7 +16734,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -17190,7 +16742,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new double[1], mg, gg, accelerometerBias, ma, this);
@@ -17198,7 +16750,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(1, 3), gg, accelerometerBias,
@@ -17207,7 +16759,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     new Matrix(3, 1), gg, accelerometerBias,
@@ -17216,7 +16768,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(1, 3), accelerometerBias,
@@ -17225,7 +16777,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg,
                     new Matrix(3, 1), accelerometerBias,
@@ -17234,7 +16786,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias,
                     mg, gg, new double[1], ma, this);
@@ -17242,7 +16794,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(1, 3), this);
@@ -17250,7 +16802,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bias, mg, gg,
                     accelerometerBias, new Matrix(3, 1), this);
@@ -17318,16 +16870,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -17375,29 +16932,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -17408,15 +16965,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -17457,7 +17014,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -17469,19 +17026,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -17500,14 +17044,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma);
@@ -17515,7 +17059,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma);
@@ -17523,7 +17067,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma);
@@ -17531,7 +17075,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma);
@@ -17539,7 +17083,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma);
@@ -17547,7 +17091,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma);
@@ -17555,7 +17099,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma);
@@ -17563,7 +17107,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma);
@@ -17571,7 +17115,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma);
@@ -17579,7 +17123,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma);
@@ -17587,7 +17131,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3));
@@ -17595,7 +17139,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1));
@@ -17663,16 +17207,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, bg, mg, gg, ba, ma,
                         this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -17720,29 +17269,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -17753,15 +17302,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -17802,7 +17351,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 19);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 16);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -17814,19 +17363,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -17845,14 +17381,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     bg, mg, gg, ba, ma, this);
@@ -17860,7 +17396,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements, bg, mg, gg,
                     ba, ma, this);
@@ -17868,7 +17404,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(1, 1), mg, gg, ba, ma, this);
@@ -17876,7 +17412,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     new Matrix(3, 3), mg, gg, ba, ma, this);
@@ -17884,7 +17420,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(1, 3), gg, ba, ma, this);
@@ -17892,7 +17428,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     new Matrix(3, 1), gg, ba, ma, this);
@@ -17900,7 +17436,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(1, 3), ba, ma, this);
@@ -17908,7 +17444,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg,
                     new Matrix(3, 1), ba, ma, this);
@@ -17916,7 +17452,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(1, 1), ma, this);
@@ -17924,7 +17460,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg,
                     mg, gg, new Matrix(3, 3), ma, this);
@@ -17932,7 +17468,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(1, 3), this);
@@ -17940,7 +17476,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements, bg, mg, gg,
                     ba, new Matrix(3, 1), this);
@@ -17990,16 +17526,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -18047,29 +17588,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -18080,15 +17621,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -18129,7 +17670,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -18141,19 +17682,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -18172,14 +17700,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg);
@@ -18187,7 +17715,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -18196,7 +17724,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18206,7 +17734,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18216,7 +17744,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18226,7 +17754,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18236,7 +17764,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18246,7 +17774,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18298,16 +17826,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -18355,29 +17888,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -18388,15 +17921,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -18437,7 +17970,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -18449,19 +17982,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -18480,15 +18000,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
-                    new double[9], nedPosition, rotationRate, timeInterval, measurements,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
+                    new double[6], nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
@@ -18497,7 +18017,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -18506,7 +18026,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18516,7 +18036,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18526,7 +18046,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18536,7 +18056,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18546,7 +18066,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18556,7 +18076,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18608,16 +18128,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -18665,29 +18190,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -18698,15 +18223,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -18747,7 +18272,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -18759,19 +18284,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -18790,14 +18302,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     0.0, timeInterval, measurements,
                     true, false, bias, mg, gg);
@@ -18805,7 +18317,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, 0.0, measurements,
                     true,
@@ -18814,7 +18326,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18824,7 +18336,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18834,7 +18346,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18844,7 +18356,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18854,7 +18366,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -18906,16 +18418,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double mzy = mg.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -18963,29 +18480,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -18996,15 +18513,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -19045,7 +18562,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -19057,19 +18574,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -19088,7 +18592,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     this);
@@ -19096,7 +18600,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, 0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     this);
@@ -19104,7 +18608,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg, this);
@@ -19112,7 +18616,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19121,7 +18625,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -19130,7 +18634,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19139,7 +18643,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19148,7 +18652,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19217,17 +18721,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -19275,29 +18784,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -19308,15 +18817,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -19357,7 +18866,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -19369,19 +18878,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -19400,7 +18896,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma);
@@ -19408,7 +18904,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, 0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma);
@@ -19416,7 +18912,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -19425,7 +18921,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19434,7 +18930,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -19443,7 +18939,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19452,7 +18948,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19461,7 +18957,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19470,7 +18966,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19479,7 +18975,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19489,7 +18985,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19559,17 +19055,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bias, mg, gg,
                         accelerometerBias, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -19617,29 +19118,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -19650,15 +19151,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -19699,7 +19200,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -19711,19 +19212,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -19742,7 +19230,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -19750,7 +19238,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, 0.0, timeInterval, measurements,
                     true, false, bias, mg, gg,
                     accelerometerBias, ma, this);
@@ -19758,7 +19246,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, 0.0, measurements,
                     true,
                     false, bias, mg, gg,
@@ -19767,7 +19255,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19777,7 +19265,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false, bias,
@@ -19787,7 +19275,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19797,7 +19285,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19807,7 +19295,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19817,7 +19305,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19826,7 +19314,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19836,7 +19324,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -19906,17 +19394,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -19964,29 +19457,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -19997,15 +19490,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -20046,7 +19539,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -20058,19 +19551,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -20089,7 +19569,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -20097,7 +19577,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, 0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma);
@@ -20105,7 +19585,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -20114,7 +19594,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20123,7 +19603,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20132,7 +19612,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -20141,7 +19621,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20150,7 +19630,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20159,7 +19639,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20168,7 +19648,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20177,7 +19657,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20186,7 +19666,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -20197,7 +19677,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                     qualityScores, nedPosition,
                     rotationRate, timeInterval, measurements,
                     true,
@@ -20268,17 +19748,22 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double amzy = ma.getElementAt(2, 1);
 
         final double[] qualityScores = new double[10];
-        PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator(
+        PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                         qualityScores, nedPosition, rotationRate,
                         timeInterval, measurements, false,
                         false, bg, mg, gg,
                         ba, ma, this);
 
         // check default values
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertSame(calibrator.getQualityScores(), qualityScores);
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
         assertEquals(calibrator.getAccelerometerBiasX(), bax, 0.0);
         assertEquals(calibrator.getAccelerometerBiasY(), bay, 0.0);
         assertEquals(calibrator.getAccelerometerBiasZ(), baz, 0.0);
@@ -20326,29 +19811,29 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getAccelerometerMa(ma2);
         assertEquals(ma1, ma2);
-        assertEquals(calibrator.getInitialBiasX(), bgx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), bgy, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bgz, 0.0);
-        final AngularSpeed angularSpeedX1 = calibrator.getInitialBiasAngularSpeedX();
+        assertEquals(calibrator.getBiasX(), bgx, 0.0);
+        assertEquals(calibrator.getBiasY(), bgy, 0.0);
+        assertEquals(calibrator.getBiasZ(), bgz, 0.0);
+        final AngularSpeed angularSpeedX1 = calibrator.getBiasAngularSpeedX();
         assertEquals(angularSpeedX1.getValue().doubleValue(), bgx, 0.0);
         assertEquals(angularSpeedX1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedX2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeedX2);
+        calibrator.getBiasAngularSpeedX(angularSpeedX2);
         assertEquals(angularSpeedX1, angularSpeedX2);
-        final AngularSpeed angularSpeedY1 = calibrator.getInitialBiasAngularSpeedY();
+        final AngularSpeed angularSpeedY1 = calibrator.getBiasAngularSpeedY();
         assertEquals(angularSpeedY1.getValue().doubleValue(), bgy, 0.0);
         assertEquals(angularSpeedY1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedY2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeedY2);
+        calibrator.getBiasAngularSpeedY(angularSpeedY2);
         assertEquals(angularSpeedY1, angularSpeedY2);
-        final AngularSpeed angularSpeedZ1 = calibrator.getInitialBiasAngularSpeedZ();
+        final AngularSpeed angularSpeedZ1 = calibrator.getBiasAngularSpeedZ();
         assertEquals(angularSpeedZ1.getValue().doubleValue(), bgz, 0.0);
         assertEquals(angularSpeedZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ2 = new AngularSpeed(
                 0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeedZ2);
+        calibrator.getBiasAngularSpeedZ(angularSpeedZ2);
         assertEquals(angularSpeedZ1, angularSpeedZ2);
         assertEquals(calibrator.getInitialSx(), sx, 0.0);
         assertEquals(calibrator.getInitialSy(), sy, 0.0);
@@ -20359,15 +19844,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), myz, 0.0);
         assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
         assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         assertArrayEquals(bias1, bias, 0.0);
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         assertEquals(bg1, bg);
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
         assertEquals(bg1, bg2);
         final Matrix mg1 = calibrator.getInitialMg();
         assertEquals(mg1, mg);
@@ -20408,7 +19893,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 13);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertEquals(calibrator.getProgressDelta(),
@@ -20420,19 +19905,6 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
-        assertNull(calibrator.getEstimatedBiases());
-        assertFalse(calibrator.getEstimatedBiases(null));
-        assertNull(calibrator.getEstimatedBiasesAsMatrix());
-        assertFalse(calibrator.getEstimatedBiasesAsMatrix(null));
-        assertNull(calibrator.getEstimatedBiasX());
-        assertNull(calibrator.getEstimatedBiasY());
-        assertNull(calibrator.getEstimatedBiasZ());
-        assertNull(calibrator.getEstimatedBiasAngularSpeedX());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedX(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedY());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedY(null));
-        assertNull(calibrator.getEstimatedBiasAngularSpeedZ());
-        assertFalse(calibrator.getEstimatedBiasAngularSpeedZ(null));
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
         assertNull(calibrator.getEstimatedSy());
@@ -20451,7 +19923,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(new double[9],
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(new double[6],
                     nedPosition, rotationRate, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -20459,7 +19931,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, 0.0, timeInterval, measurements,
                     true, false, bg, mg, gg,
                     ba, ma, this);
@@ -20467,7 +19939,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, 0.0, measurements,
                     true,
                     false, bg, mg, gg,
@@ -20476,7 +19948,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20485,7 +19957,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20494,7 +19966,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false, bg,
@@ -20503,7 +19975,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20512,7 +19984,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20521,7 +19993,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20530,7 +20002,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20539,7 +20011,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20548,7 +20020,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20558,7 +20030,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROMedSRobustTurntableGyroscopeCalibrator(qualityScores,
+            calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(qualityScores,
                     nedPosition, rotationRate, timeInterval, measurements,
                     true,
                     false,
@@ -20571,23 +20043,23 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetSetStopThreshold() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetThreshold() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getStopThreshold(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(calibrator.getThreshold(),
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
 
         // set new value
-        calibrator.setStopThreshold(1.0);
+        calibrator.setThreshold(1.0);
 
         // check
-        assertEquals(calibrator.getStopThreshold(), 1.0, 0.0);
+        assertEquals(calibrator.getThreshold(), 1.0, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.setStopThreshold(0.0);
+            calibrator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -20595,8 +20067,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
@@ -20611,20 +20083,50 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
         // Force IllegalArgumentException
         try {
-            calibrator.setQualityScores(new double[9]);
+            calibrator.setQualityScores(new double[6]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
     }
 
     @Test
+    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
+
+        // set new value
+        calibrator.setComputeAndKeepInliersEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
+    }
+
+    @Test
+    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isComputeAndKeepResiduals());
+
+        // set new value
+        calibrator.setComputeAndKeepResidualsEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepResiduals());
+    }
+
+    @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getProgressDelta(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
 
         // set new value
         calibrator.setProgressDelta(0.5f);
@@ -20647,12 +20149,12 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getConfidence(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
 
         // set new value
         calibrator.setConfidence(0.8);
@@ -20675,12 +20177,12 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getMaxIterations(),
-                PROMedSRobustTurntableGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROSACRobustKnownBiasTurntableGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
 
         // set new value
         calibrator.setMaxIterations(1);
@@ -20697,8 +20199,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -20712,8 +20214,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -20727,8 +20229,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
@@ -20750,8 +20252,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasX() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
@@ -20768,8 +20270,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasY() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0, 0.0);
@@ -20786,8 +20288,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasZ() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0, 0.0);
@@ -20804,8 +20306,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasXAsAcceleration() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         final Acceleration acceleration1 = calibrator.getAccelerometerBiasXAsAcceleration();
@@ -20828,8 +20330,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasYAsAcceleration() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         final Acceleration acceleration1 = calibrator.getAccelerometerBiasYAsAcceleration();
@@ -20852,8 +20354,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasZAsAcceleration() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         final Acceleration acceleration1 = calibrator.getAccelerometerBiasZAsAcceleration();
@@ -20876,8 +20378,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testSetAccelerometerBias1() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
@@ -20901,8 +20403,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testSetAccelerometerBias2() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0, 0.0);
@@ -20933,8 +20435,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasArray() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertArrayEquals(calibrator.getAccelerometerBias(), new double[3], 0.0);
@@ -20969,8 +20471,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerBiasAsMatrix()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
@@ -21018,8 +20520,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSx()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSx(),
@@ -21038,8 +20540,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSy()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSy(),
@@ -21058,8 +20560,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSz()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSz(),
@@ -21078,8 +20580,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMxy()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMxy(),
@@ -21098,8 +20600,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMxz()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMxz(),
@@ -21118,8 +20620,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMyx()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMyx(),
@@ -21138,8 +20640,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMyz()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMyz(),
@@ -21158,8 +20660,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMzx()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMzx(),
@@ -21178,8 +20680,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMzy()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMzy(),
@@ -21198,8 +20700,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerScalingFactors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0, 0.0);
@@ -21223,8 +20725,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerMxy(), 0.0, 0.0);
@@ -21258,8 +20760,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0, 0.0);
@@ -21301,8 +20803,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerMa() throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0, 0.0);
@@ -21371,68 +20873,68 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialBiasX() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetBiasX() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
 
         // set new value
         final Matrix bg = generateBg();
         final double bx = bg.getElementAtIndex(0);
 
-        calibrator.setInitialBiasX(bx);
+        calibrator.setBiasX(bx);
 
         // check
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
     }
 
     @Test
-    public void testGetSetInitialBiasY() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetBiasY() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
 
         // set new value
         final Matrix bg = generateBg();
         final double by = bg.getElementAtIndex(1);
 
-        calibrator.setInitialBiasY(by);
+        calibrator.setBiasY(by);
 
         // check
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
     }
 
     @Test
-    public void testGetSetInitialBiasZ() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetBiasZ() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
         // set new value
         final Matrix bg = generateBg();
         final double bz = bg.getElementAtIndex(2);
 
-        calibrator.setInitialBiasZ(bz);
+        calibrator.setBiasZ(bz);
 
         // check
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
     }
 
     @Test
-    public void testGetSetInitialBiasAngularSpeedX()
+    public void testGetSetBiasAngularSpeedX()
             throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed angularSpeed1 = calibrator
-                .getInitialBiasAngularSpeedX();
+                .getBiasAngularSpeedX();
         assertEquals(angularSpeed1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeed1.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -21443,28 +20945,28 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final AngularSpeed angularSpeed2 = new AngularSpeed(
                 bx, AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setInitialBiasX(angularSpeed2);
+        calibrator.setBiasX(angularSpeed2);
 
         // check
         final AngularSpeed angularSpeed3 = calibrator
-                .getInitialBiasAngularSpeedX();
+                .getBiasAngularSpeedX();
         final AngularSpeed angularSpeed4 = new AngularSpeed(0.0,
                 AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedX(angularSpeed4);
+        calibrator.getBiasAngularSpeedX(angularSpeed4);
 
         assertEquals(angularSpeed2, angularSpeed3);
         assertEquals(angularSpeed2, angularSpeed4);
     }
 
     @Test
-    public void testGetSetInitialBiasAngularSpeedY()
+    public void testGetSetBiasAngularSpeedY()
             throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed angularSpeed1 = calibrator
-                .getInitialBiasAngularSpeedY();
+                .getBiasAngularSpeedY();
         assertEquals(angularSpeed1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeed1.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -21475,27 +20977,27 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final AngularSpeed angularSpeed2 = new AngularSpeed(
                 by, AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setInitialBiasY(angularSpeed2);
+        calibrator.setBiasY(angularSpeed2);
 
         // check
         final AngularSpeed angularSpeed3 = calibrator
-                .getInitialBiasAngularSpeedY();
+                .getBiasAngularSpeedY();
         final AngularSpeed angularSpeed4 = new AngularSpeed(0.0,
                 AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedY(angularSpeed4);
+        calibrator.getBiasAngularSpeedY(angularSpeed4);
 
         assertEquals(angularSpeed2, angularSpeed3);
         assertEquals(angularSpeed2, angularSpeed4);
     }
 
     @Test
-    public void testGetSetInitialBiasAngularSpeedZ() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetBiasAngularSpeedZ() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed angularSpeed1 = calibrator
-                .getInitialBiasAngularSpeedY();
+                .getBiasAngularSpeedY();
         assertEquals(angularSpeed1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(angularSpeed1.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -21506,28 +21008,28 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final AngularSpeed angularSpeed2 = new AngularSpeed(
                 bz, AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setInitialBiasZ(angularSpeed2);
+        calibrator.setBiasZ(angularSpeed2);
 
         // check
         final AngularSpeed angularSpeed3 = calibrator
-                .getInitialBiasAngularSpeedZ();
+                .getBiasAngularSpeedZ();
         final AngularSpeed angularSpeed4 = new AngularSpeed(0.0,
                 AngularSpeedUnit.DEGREES_PER_SECOND);
-        calibrator.getInitialBiasAngularSpeedZ(angularSpeed4);
+        calibrator.getBiasAngularSpeedZ(angularSpeed4);
 
         assertEquals(angularSpeed2, angularSpeed3);
         assertEquals(angularSpeed2, angularSpeed4);
     }
 
     @Test
-    public void testSetInitialBias1() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testSetBias1() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
         // set new values
         final Matrix bg = generateBg();
@@ -21535,23 +21037,23 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double by = bg.getElementAtIndex(1);
         final double bz = bg.getElementAtIndex(2);
 
-        calibrator.setInitialBias(bx, by, bz);
+        calibrator.setBias(bx, by, bz);
 
         // check
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
     }
 
     @Test
-    public void testSetInitialBias2() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testSetBias2() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
-        assertEquals(calibrator.getInitialBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
         // set new values
         final Matrix bg = generateBg();
@@ -21566,20 +21068,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final AngularSpeed angularSpeedZ = new AngularSpeed(bz,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        calibrator.setInitialBias(
+        calibrator.setBias(
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
         // check
-        assertEquals(calibrator.getInitialBiasX(), bx, 0.0);
-        assertEquals(calibrator.getInitialBiasY(), by, 0.0);
-        assertEquals(calibrator.getInitialBiasZ(), bz, 0.0);
+        assertEquals(calibrator.getBiasX(), bx, 0.0);
+        assertEquals(calibrator.getBiasY(), by, 0.0);
+        assertEquals(calibrator.getBiasZ(), bz, 0.0);
     }
 
     @Test
     public void testGetSetInitialSx()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -21597,8 +21099,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSy()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -21616,8 +21118,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSz()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -21635,8 +21137,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMxy()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -21654,8 +21156,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMxz()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
@@ -21673,8 +21175,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMyx()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
@@ -21692,8 +21194,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMyz()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
@@ -21711,8 +21213,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMzx()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
@@ -21730,8 +21232,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMzy()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
@@ -21749,8 +21251,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialScalingFactors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -21774,8 +21276,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -21809,8 +21311,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -21851,48 +21353,48 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialBiasArray() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+    public void testGetSetBiasArray() throws LockedException {
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
-        assertArrayEquals(calibrator.getInitialBias(), new double[3], 0.0);
+        assertArrayEquals(calibrator.getBias(), new double[3], 0.0);
 
         // set new value
         final Matrix bg = generateBg();
         final double[] bias = bg.getBuffer();
 
-        calibrator.setInitialBias(bias);
+        calibrator.setBias(bias);
 
         // check
-        final double[] bias1 = calibrator.getInitialBias();
+        final double[] bias1 = calibrator.getBias();
         final double[] bias2 = new double[3];
-        calibrator.getInitialBias(bias2);
+        calibrator.getBias(bias2);
 
         assertArrayEquals(bias, bias1, 0.0);
         assertArrayEquals(bias, bias2, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getInitialBias(new double[1]);
+            calibrator.getBias(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialBias(new double[1]);
+            calibrator.setBias(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
     }
 
     @Test
-    public void testGetSetInitialBiasAsMatrix()
+    public void testGetSetBiasAsMatrix()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getInitialBiasAsMatrix(),
+        assertEquals(calibrator.getBiasAsMatrix(),
                 new Matrix(3, 1));
 
         // set new value
@@ -21901,38 +21403,38 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         final double by = bg.getElementAtIndex(1);
         final double bz = bg.getElementAtIndex(2);
 
-        calibrator.setInitialBias(bg);
+        calibrator.setBias(bg);
 
         // check
-        final Matrix bg1 = calibrator.getInitialBiasAsMatrix();
+        final Matrix bg1 = calibrator.getBiasAsMatrix();
         final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getInitialBiasAsMatrix(bg2);
+        calibrator.getBiasAsMatrix(bg2);
 
         assertEquals(bg, bg1);
         assertEquals(bg, bg2);
 
-        assertEquals(bx, calibrator.getInitialBiasX(), 0.0);
-        assertEquals(by, calibrator.getInitialBiasY(), 0.0);
-        assertEquals(bz, calibrator.getInitialBiasZ(), 0.0);
+        assertEquals(bx, calibrator.getBiasX(), 0.0);
+        assertEquals(by, calibrator.getBiasY(), 0.0);
+        assertEquals(bz, calibrator.getBiasZ(), 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.getInitialBiasAsMatrix(new Matrix(1, 1));
+            calibrator.getBiasAsMatrix(new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.getInitialBiasAsMatrix(new Matrix(3, 3));
+            calibrator.getBiasAsMatrix(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialBias(new Matrix(1, 1));
+            calibrator.setBias(new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.setInitialBias(new Matrix(3, 3));
+            calibrator.setBias(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -21941,8 +21443,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMg()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMg(),
@@ -22017,8 +21519,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialGg()
             throws WrongSizeException, LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialGg(),
@@ -22061,8 +21563,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetTurntableRotationRate() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getTurntableRotationRate(),
@@ -22087,8 +21589,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testGetSetTurntableRotationRateAsAngularSpeed()
             throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         final AngularSpeed rotationRate1 = calibrator
                 .getTurntableRotationRateAsAngularSpeed();
@@ -22124,8 +21626,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetMeasurements() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -22141,8 +21643,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetEcefPosition() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getEcefPosition());
@@ -22169,8 +21671,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetNedPosition() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getNedPosition());
@@ -22197,8 +21699,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCommonAxisUsed());
@@ -22213,8 +21715,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     @Test
     public void testIsSetGDependentCrossBiasesEstimated()
             throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
@@ -22228,8 +21730,8 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -22243,12 +21745,12 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
     @Test
     public void testGetMinimumRequiredMeasurements() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                19);
+                16);
         assertTrue(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -22257,7 +21759,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
         // check
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                10);
+                7);
         assertTrue(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -22266,7 +21768,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
         // check
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                13);
+                10);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
 
@@ -22275,20 +21777,20 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
         // check
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                22);
+                19);
         assertFalse(calibrator.isCommonAxisUsed());
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
     }
 
     @Test
     public void testIsReady() throws LockedException {
-        final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                new PROMedSRobustTurntableGyroscopeCalibrator();
+        final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                new PROSACRobustKnownBiasTurntableGyroscopeCalibrator();
 
         // check default value
         assertFalse(calibrator.isReady());
         assertEquals(calibrator.getMinimumRequiredMeasurements(),
-                19);
+                16);
 
         // set empty measurements
         final List<StandardDeviationBodyKinematics> measurements =
@@ -22437,15 +21939,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -22469,15 +21971,13 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -22605,15 +22105,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -22637,15 +22137,13 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -22773,15 +22271,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -22805,15 +22303,13 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             numValid++;
             break;
@@ -22939,15 +22435,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(THRESHOLD);
+            calibrator.setThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -22971,15 +22467,16 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             numValid++;
             break;
@@ -23106,15 +22603,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -23138,15 +22635,13 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            assertTrue(bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -23275,15 +22770,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             false,
                             bg, mg, gg, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -23307,21 +22802,16 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            if (!bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
             if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             assertNotNull(calibrator.getEstimatedCovariance());
 
@@ -23450,15 +22940,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             true,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -23482,21 +22972,16 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            if (!bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
             if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, VERY_LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             numValid++;
             break;
@@ -23623,15 +23108,15 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator =
-                    new PROMedSRobustTurntableGyroscopeCalibrator(
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator =
+                    new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
                             qualityScores, nedPosition,
                             rotationRate, timeInterval,
                             measurements,
                             false,
                             true,
                             bg, mg, gg, ba, ma, this);
-            calibrator.setStopThreshold(LARGE_THRESHOLD);
+            calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate
             reset();
@@ -23655,24 +23140,19 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             assertTrue(mCalibrateNextIteration > 0);
             assertTrue(mCalibrateProgressChange >= 0);
 
-            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
-            if (!bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR)) {
-                continue;
-            }
             if (!mg.equals(estimatedMg, VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             if (!gg.equals(estimatedGg, VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            assertTrue(bg.equals(estimatedBg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(mg.equals(estimatedMg, VERY_LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, VERY_LARGE_ABSOLUTE_ERROR));
 
-            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+            assertEstimatedResult(estimatedMg, estimatedGg, calibrator);
 
             numValid++;
             break;
@@ -23680,34 +23160,34 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-
+    
     @Override
     public void onCalibrateStart(
-            final RobustTurntableGyroscopeCalibrator calibrator) {
-        checkLocked((PROMedSRobustTurntableGyroscopeCalibrator) calibrator);
+            final RobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
+        checkLocked((PROSACRobustKnownBiasTurntableGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
     public void onCalibrateEnd(
-            final RobustTurntableGyroscopeCalibrator calibrator) {
-        checkLocked((PROMedSRobustTurntableGyroscopeCalibrator) calibrator);
+            final RobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
+        checkLocked((PROSACRobustKnownBiasTurntableGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
     public void onCalibrateNextIteration(
-            final RobustTurntableGyroscopeCalibrator calibrator,
+            final RobustKnownBiasTurntableGyroscopeCalibrator calibrator,
             final int iteration) {
-        checkLocked((PROMedSRobustTurntableGyroscopeCalibrator) calibrator);
+        checkLocked((PROSACRobustKnownBiasTurntableGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
     public void onCalibrateProgressChange(
-            final RobustTurntableGyroscopeCalibrator calibrator,
+            final RobustKnownBiasTurntableGyroscopeCalibrator calibrator,
             final float progress) {
-        checkLocked((PROMedSRobustTurntableGyroscopeCalibrator) calibrator);
+        checkLocked((PROSACRobustKnownBiasTurntableGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -23718,7 +23198,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         mCalibrateProgressChange = 0;
     }
 
-    private void checkLocked(final PROMedSRobustTurntableGyroscopeCalibrator calibrator) {
+    private void checkLocked(final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
             calibrator.setAccelerometerBiasX(0.0);
@@ -23844,42 +23324,42 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasX(0.0);
+            calibrator.setBiasX(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasY(0.0);
+            calibrator.setBiasY(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasZ(0.0);
+            calibrator.setBiasZ(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasX(null);
+            calibrator.setBiasX(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasY(null);
+            calibrator.setBiasY(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBiasZ(null);
+            calibrator.setBiasZ(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias(0.0, 0.0, 0.0);
+            calibrator.setBias(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias(null, null, null);
+            calibrator.setBias(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -23949,12 +23429,12 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias((double[]) null);
+            calibrator.setBias((double[]) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setInitialBias((Matrix) null);
+            calibrator.setBias((Matrix) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -24056,7 +23536,7 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             fail("LockedException expected but not thrown");
         }
         try {
-            calibrator.setStopThreshold(0.1);
+            calibrator.setThreshold(0.1);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -24065,55 +23545,21 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
+        try {
+            calibrator.setComputeAndKeepInliersEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.setComputeAndKeepResidualsEnabled(true);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
     }
-
+    
     private void assertEstimatedResult(
-            final Matrix bg, final Matrix mg, final Matrix gg,
-            final PROMedSRobustTurntableGyroscopeCalibrator calibrator)
-            throws WrongSizeException {
-
-        final double[] estimatedBiases = calibrator.getEstimatedBiases();
-        assertArrayEquals(bg.getBuffer(), estimatedBiases, 0.0);
-
-        final double[] estimatedBiases2 = new double[3];
-        calibrator.getEstimatedBiases(estimatedBiases2);
-        assertArrayEquals(estimatedBiases, estimatedBiases2, 0.0);
-
-        final Matrix bg2 = new Matrix(3, 1);
-        calibrator.getEstimatedBiasesAsMatrix(bg2);
-
-        assertEquals(bg, bg2);
-
-        assertEquals(bg.getElementAtIndex(0), calibrator.getEstimatedBiasX(), 0.0);
-        assertEquals(bg.getElementAtIndex(1), calibrator.getEstimatedBiasY(), 0.0);
-        assertEquals(bg.getElementAtIndex(2), calibrator.getEstimatedBiasZ(), 0.0);
-
-        final AngularSpeed bgx1 = calibrator.getEstimatedBiasAngularSpeedX();
-        final AngularSpeed bgx2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getEstimatedBiasAngularSpeedX(bgx2);
-        assertEquals(bgx1, bgx2);
-        assertEquals(calibrator.getEstimatedBiasX(),
-                bgx1.getValue().doubleValue(), 0.0);
-        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgx1.getUnit());
-
-        final AngularSpeed bgy1 = calibrator.getEstimatedBiasAngularSpeedY();
-        final AngularSpeed bgy2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getEstimatedBiasAngularSpeedY(bgy2);
-        assertEquals(bgy1, bgy2);
-        assertEquals(calibrator.getEstimatedBiasY(),
-                bgy1.getValue().doubleValue(), 0.0);
-        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgy1.getUnit());
-
-        final AngularSpeed bgz1 = calibrator.getEstimatedBiasAngularSpeedZ();
-        final AngularSpeed bgz2 = new AngularSpeed(0.0,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-        calibrator.getEstimatedBiasAngularSpeedZ(bgz2);
-        assertEquals(bgz1, bgz2);
-        assertEquals(calibrator.getEstimatedBiasZ(),
-                bgz1.getValue().doubleValue(), 0.0);
-        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, bgz1.getUnit());
+            final Matrix mg, final Matrix gg,
+            final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
 
         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);
@@ -24140,14 +23586,14 @@ public class PROMedSRobustTurntableGyroscopeCalibratorTest implements
     private Matrix generateBa() {
         return Matrix.newFromArray(new double[]{
                 900 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
-                -1300 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
+                -1000 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
                 800 * MICRO_G_TO_METERS_PER_SECOND_SQUARED});
     }
 
     private Matrix generateBg() {
         return Matrix.newFromArray(new double[]{
                 -9 * DEG_TO_RAD / 3600.0,
-                13 * DEG_TO_RAD / 3600.0,
+                10 * DEG_TO_RAD / 3600.0,
                 -8 * DEG_TO_RAD / 3600.0});
     }
 

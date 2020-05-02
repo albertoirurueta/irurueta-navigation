@@ -20,8 +20,8 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
-import com.irurueta.numerical.robust.MSACRobustEstimator;
-import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.LMedSRobustEstimator;
+import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -29,9 +29,10 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates gyroscope biases, cross couplings and scaling factors
+ * Robustly estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using MSAC robust estimator.
+ * specific forces sensed by the accelerometer using LMedS robust estimator
+ * when gyroscope biases are known.
  * <p>
  * This calibrator assumes that the IMU is placed flat on a turntable spinning
  * at constant speed, but absolute orientation or position of IMU is unknown.
@@ -63,30 +64,55 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyroscopeCalibrator {
+public class LMedSRobustKnownBiasTurntableGyroscopeCalibrator extends
+        RobustKnownBiasTurntableGyroscopeCalibrator {
 
     /**
-     * Constant defining default threshold to determine whether samples are
-     * inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 5e-1;
+    public static final double DEFAULT_STOP_THRESHOLD = 5e-1;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Threshold to determine whether samples are inliers or not when
-     * testing possible estimation solutions.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    private double mThreshold = DEFAULT_THRESHOLD;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Constructor.
      */
-    public MSACRobustTurntableGyroscopeCalibrator() {
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator() {
         super();
     }
 
@@ -105,8 +131,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -121,16 +146,16 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval,
-                measurements, initialBias, initialMg, initialGg);
+                measurements, bias, initialMg, initialGg);
     }
 
     /**
@@ -148,8 +173,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -166,17 +190,17 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -194,8 +218,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have
+     * @param bias                  known gyroscope bias. This must have
      *                              length 3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -210,16 +233,16 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -237,8 +260,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -255,17 +277,17 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -283,8 +305,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -305,18 +326,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -335,8 +356,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -358,19 +378,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -389,8 +409,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -411,18 +430,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -441,8 +460,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -464,19 +482,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -504,8 +522,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -521,18 +538,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -559,8 +576,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -578,19 +594,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -618,8 +634,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -636,18 +651,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -675,8 +690,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -695,19 +709,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -735,8 +749,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated,
      *                                      false otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -760,20 +773,20 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -801,8 +814,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must
+     * @param bias                          known gyroscope bias. This must
      *                                      have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -827,21 +839,21 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -868,8 +880,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -892,20 +903,20 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -932,8 +943,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must be
+     * @param bias                          known gyroscope bias. This must be
      *                                      3x1 and is expressed in radians
      *                                      per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -958,21 +968,21 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final ECEFPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
     }
@@ -992,8 +1002,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1008,16 +1017,16 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -1035,8 +1044,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1053,17 +1061,17 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -1081,8 +1089,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have
+     * @param bias                  known gyroscope bias. This must have
      *                              length 3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1097,16 +1104,16 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -1124,8 +1131,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians
      *                              per second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1142,17 +1148,17 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -1170,8 +1176,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1192,18 +1197,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -1222,8 +1227,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must have length
+     * @param bias                  known gyroscope bias. This must have length
      *                              3 and is expressed in radians per
      *                              second (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1245,19 +1249,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -1276,8 +1280,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1298,18 +1301,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa);
     }
 
@@ -1328,8 +1331,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                              taken at the same position with zero
      *                              velocity and unknown different
      *                              orientations.
-     * @param initialBias           initial gyroscope bias to be used to
-     *                              find a solution. This must be 3x1 and
+     * @param bias                  known gyroscope bias. This must be 3x1 and
      *                              is expressed in radians per second
      *                              (rad/s).
      * @param initialMg             initial gyroscope scale factors and
@@ -1351,19 +1353,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                initialBias, initialMg, initialGg, accelerometerBias,
+                bias, initialMg, initialGg, accelerometerBias,
                 accelerometerMa, listener);
     }
 
@@ -1391,8 +1393,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1408,18 +1409,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -1446,8 +1447,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1465,19 +1465,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -1505,8 +1505,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -1523,18 +1522,18 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg);
     }
 
@@ -1562,8 +1561,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -1582,19 +1580,19 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, listener);
     }
 
@@ -1622,8 +1620,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross
      *                                      biases will be estimated,
      *                                      false otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must have length 3 and is
      *                                      expressed in radians per second
      *                                      (rad/s).
@@ -1647,20 +1644,20 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1688,8 +1685,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must
+     * @param bias                          known gyroscope bias. This must
      *                                      have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1714,21 +1710,21 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
     }
@@ -1756,8 +1752,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be
-     *                                      used to find a solution. This
+     * @param bias                          known gyroscope bias. This
      *                                      must be 3x1 and is expressed in
      *                                      radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1780,20 +1775,20 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1820,8 +1815,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used
-     *                                      to find a solution. This must be
+     * @param bias                          known gyroscope bias. This must be
      *                                      3x1 and is expressed in radians
      *                                      per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors
@@ -1846,54 +1840,82 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      *                                  turntable rotation rate or
      *                                  time interval is zero or negative.
      */
-    public MSACRobustTurntableGyroscopeCalibrator(
+    public LMedSRobustKnownBiasTurntableGyroscopeCalibrator(
             final NEDPosition position,
             final double turntableRotationRate,
             final double timeInterval,
             final List<StandardDeviationBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustTurntableGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasTurntableGyroscopeCalibratorListener listener) {
         super(position, turntableRotationRate, timeInterval, measurements,
-                commonAxisUsed, estimateGDependentCrossBiases, initialBias,
+                commonAxisUsed, estimateGDependentCrossBiases, bias,
                 initialMg, initialGg, accelerometerBias, accelerometerMa,
                 listener);
     }
 
     /**
-     * Returns threshold to determine whether samples are inliers or not.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @return threshold to determine whether samples are inliers or not.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @param threshold threshold to be set.
-     * @throws IllegalArgumentException if provided value is equal or less than
-     *                                  zero.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+
+        mStopThreshold = stopThreshold;
     }
 
     /**
-     * Estimates gyroscope calibration parameters containing bias, scale factors
+     * Estimates gyroscope calibration parameters containing scale factors
      * cross-coupling errors and g-dependant cross biases.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -1909,13 +1931,8 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
             throw new NotReadyException();
         }
 
-        final MSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
+        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
+                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public int getTotalSamples() {
                         return mMeasurements.size();
@@ -1939,20 +1956,20 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
 
                     @Override
                     public boolean isReady() {
-                        return MSACRobustTurntableGyroscopeCalibrator.super.isReady();
+                        return LMedSRobustKnownBiasTurntableGyroscopeCalibrator.super.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(MSACRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateStart(LMedSRobustKnownBiasTurntableGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(MSACRobustTurntableGyroscopeCalibrator.this);
+                            mListener.onCalibrateEnd(LMedSRobustKnownBiasTurntableGyroscopeCalibrator.this);
                         }
                     }
 
@@ -1961,7 +1978,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
                             final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    MSACRobustTurntableGyroscopeCalibrator.this, iteration);
+                                    LMedSRobustKnownBiasTurntableGyroscopeCalibrator.this, iteration);
                         }
                     }
 
@@ -1970,7 +1987,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
                             final RobustEstimator<PreliminaryResult> estimator, final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    MSACRobustTurntableGyroscopeCalibrator.this, progress);
+                                    LMedSRobustKnownBiasTurntableGyroscopeCalibrator.this, progress);
                         }
                     }
                 });
@@ -1981,6 +1998,7 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
+            innerEstimator.setStopThreshold(mStopThreshold);
             final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
@@ -2004,6 +2022,6 @@ public class MSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyros
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.MSAC;
+        return RobustEstimatorMethod.LMedS;
     }
 }
