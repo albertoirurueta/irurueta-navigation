@@ -12003,6 +12003,12 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
             final Matrix estimatedMg = calibrator.getEstimatedMg();
             final Matrix estimatedGg = calibrator.getEstimatedGg();
 
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
             assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
             assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
 
