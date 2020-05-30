@@ -868,10 +868,9 @@ public class TurntableGyroscopeCalibrator {
      *                              biases introduced on the gyroscope by
      *                              the specific forces sensed by the
      *                              accelerometer. Must be 3x3.
-     * @param accelerometerBias     known accelerometer bias. This must
-     *                              have length 3 and is expressed in
-     *                              meters per squared second
-     *                              (m/s^2).
+     * @param accelerometerBias     known accelerometer bias. This must be 3x1
+     *                              and is expressed in meters per squared
+     *                              second (m/s^2).
      * @param accelerometerMa       known accelerometer scale factors and
      *                              cross coupling matrix. Must be 3x3.
      * @throws IllegalArgumentException if any of the provided values does

@@ -128,7 +128,7 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimator {
     private INSLooselyCoupledKalmanState mState;
 
     /**
-     * Current estimatoin containing user ECEF position, user ECEF velocity, clock offset
+     * Current estimation containing user ECEF position, user ECEF velocity, clock offset
      * and clock drift.
      */
     private GNSSEstimation mEstimation;

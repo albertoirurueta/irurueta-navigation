@@ -422,7 +422,7 @@ public class NEDGravity implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final NEDGravity result = (NEDGravity)super.clone();
+        final NEDGravity result = (NEDGravity) super.clone();
         copyTo(result);
         return result;
     }
