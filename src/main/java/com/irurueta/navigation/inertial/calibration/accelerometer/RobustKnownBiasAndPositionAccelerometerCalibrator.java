@@ -6027,6 +6027,7 @@ public abstract class RobustKnownBiasAndPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @param bias           known accelerometer bias.
+     * @return a robust accelerometer calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
     public static RobustKnownBiasAndPositionAccelerometerCalibrator create(

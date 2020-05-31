@@ -12771,8 +12771,6 @@ public class MSACRobustTurntableGyroscopeCalibratorTest implements
 
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
-            assertNotNull(calibrator.getEstimatedCovariance());
-
             numValid++;
             break;
         }

@@ -2858,6 +2858,26 @@ public class WMMEarthMagneticFluxDensityEstimator {
     }
 
     /**
+     * Converts a time instant contained in a gregorian calendar to a
+     * decimal year.
+     *
+     * @param calendar calendar containing a specific instant to be
+     *                 converted.
+     * @return converted value expressed in decimal years.
+     */
+    public static double convertTime(final GregorianCalendar calendar) {
+        final int year = calendar.get(Calendar.YEAR);
+        final double daysInYear;
+        if (calendar.isLeapYear(year)) {
+            daysInYear = 366.0;
+        } else {
+            daysInYear = 365.0;
+        }
+
+        return year + calendar.get(Calendar.DAY_OF_YEAR) / daysInYear;
+    }
+
+    /**
      * Computes the declination (dec), inclination (dip), total intensity
      * (TI) and grid variation (GV - polar regions only, referenced to grid
      * north of polar stereographic projection) of the Earth's magnetic field
@@ -2870,44 +2890,33 @@ public class WMMEarthMagneticFluxDensityEstimator {
      * survey measurements from aircraft, satellite and geomagnetic
      * observatories.
      *
-     * <p>
-     * <b>Accuracy:</b>
+     * Accuracy:
      * In ocean areas at the Earth's surface over the entire 5 year life of
      * a degree and order 12 spherical harmonic model such as WMM-95, the
      * estimated RMS errors for the various magnetic components are:
-     * </p>
-     * <ul>
-     *     DEC  - 0.5 degrees<br>
-     *     DIP  - 0.5 degrees<br>
-     *     TI   - 200.0 nano Teslas (nT)<br>
-     *     GV   - 0.5 Degrees<br>
-     * </ul>
+     *     DEC  - 0.5 degrees
+     *     DIP  - 0.5 degrees
+     *     TI   - 200.0 nano Teslas (nT)
+     *     GV   - 0.5 Degrees
      *
-     * <p>
      * Other magnetic components that can be derived from these four by
      * simple trigonometric relations will have the following approximate
      * errors over ocean areas:
-     * </p>
-     * <ul>
-     *     X    - 140 nT (North)<br>
-     *     Y    - 140 nT (East)<br>
-     *     Z    - 200 nT (Vertical) Positive is down<br>
-     *     H    - 200 nT (Horizontal)<br>
-     * </ul>
+     *     X    - 140 nT (North)
+     *     Y    - 140 nT (East)
+     *     Z    - 200 nT (Vertical) Positive is down
+     *     H    - 200 nT (Horizontal)
      *
-     * <p>
      * Over land the RMS errors are expected to be somewhat higher, although
      * the RMS errors for DEC, DIP and GV are still estimated to be less than
      * 0.5 degree, for the entire 5-year life of the model at the Earth's
      * surface. The other component errors over land are more difficult to
      * estimate and so are not given.
-     * </p>
-     * <p>
+     *
      * The accuracy at any given time of all four geomagnetic parameters
      * depends on the geomagnetic latitude. The errors are least at the
      * equator and greatest at the magnetic poles.
-     * </p>
-     * <p>
+     *
      * It is very important to note that a degree and order 12 model, such
      * as WMM-2010 describes only the long wavelength spatial magnetic
      * fluctuations due to Earth's core. Not included in the WMM series
@@ -2922,13 +2931,11 @@ public class WMMEarthMagneticFluxDensityEstimator {
      * deviations of the geomagnetic field from model values. In arctic and
      * antarctic regions, as well as in equatorial regions, deviations from
      * model values are both frequent and persistent.
-     * </p>
-     * <p>
+     *
      * If the required declination accuracy is more stringent than the WMM
      * series of models provide, then the user is advised to request special
      * (regional or local) surveys be performed and models prepared by the
      * USGS, which operates the US geomagnetic observatories.
-     * </p>
      *
      * @param latitude  the latitude in decimal degrees.
      * @param longitude the longitude in decimal degrees.
@@ -3077,26 +3084,6 @@ public class WMMEarthMagneticFluxDensityEstimator {
         mOldHeight = height;
         mOldLatitude = latitude;
         mOldLongitude = longitude;
-    }
-
-    /**
-     * Converts a time instant contained in a gregorian calendar to a
-     * decimal year.
-     *
-     * @param calendar calendar containing a specific instant to be
-     *                 converted.
-     * @return converted value expressed in decimal years.
-     */
-    static double convertTime(final GregorianCalendar calendar) {
-        final int year = calendar.get(Calendar.YEAR);
-        final double daysInYear;
-        if (calendar.isLeapYear(year)) {
-            daysInYear = 366.0;
-        } else {
-            daysInYear = 365.0;
-        }
-
-        return year + calendar.get(Calendar.DAY_OF_YEAR) / daysInYear;
     }
 
     /**
