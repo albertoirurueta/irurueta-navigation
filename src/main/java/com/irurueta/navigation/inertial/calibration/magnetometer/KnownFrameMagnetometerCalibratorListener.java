@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration.accelerometer;
+package com.irurueta.navigation.inertial.calibration.magnetometer;
 
 /**
- * Contains listener for accelerometer calibrators when
+ * Contains listener for magnetometer calibrators when
  * frame (position, velocity and orientation) is known for all measurements.
  *
  * @param <T> a calibrator type.
  */
-public interface KnownFrameAccelerometerCalibratorListener<T extends KnownFrameAccelerometerCalibrator<?, ?>> {
+public interface KnownFrameMagnetometerCalibratorListener<T extends KnownFrameMagnetometerCalibrator<?, ?>> {
 
     /**
      * Called when calibration starts.

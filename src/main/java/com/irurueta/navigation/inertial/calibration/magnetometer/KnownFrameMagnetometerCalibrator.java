@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration.accelerometer;
+package com.irurueta.navigation.inertial.calibration.magnetometer;
 
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
+import com.irurueta.navigation.inertial.calibration.FrameBodyMagneticFluxDensity;
 
 import java.util.Collection;
 
 /**
- * Interface defining accelerometer calibrators.
+ * Interface defining magnetometer calibrators to estimate hard-iron biases,
+ * cross coupling and scaling factors.
  *
- * @param <T> a {@link FrameBodyKinematics} containing measures used by the calibrator.
+ * @param <T> a {@link FrameBodyMagneticFluxDensity} containing measures used
+ *           by the calibrator.
  * @param <L> a listener type.
  */
-public interface KnownBiasAndFrameAccelerometerCalibrator<T extends FrameBodyKinematics,
-        L extends KnownBiasAndFrameAccelerometerCalibratorListener<?>>
-        extends KnownBiasAccelerometerCalibrator, AccelerometerCalibrator {
+public interface KnownFrameMagnetometerCalibrator<T extends FrameBodyMagneticFluxDensity,
+        L extends KnownFrameMagnetometerCalibratorListener<?>>
+        extends UnknownHardIronMagnetometerCalibrator, MagnetometerCalibrator {
 
     /**
-     * Gets a collection of body kinematics measurements taken at different
+     * Gets a collection of body magnetic flux density measurements taken at different
      * frames (positions, orientations and velocities).
      * If a single device IMU needs to be calibrated, typically all measurements are
      * taken at the same position, with zero velocity and multiple orientations.
@@ -43,13 +45,13 @@ public interface KnownBiasAndFrameAccelerometerCalibrator<T extends FrameBodyKin
      * typically constant at horizontal orientation while the phone remains on a
      * flat surface.
      *
-     * @return a collection of body kinematics measurements taken at different
+     * @return a collection of body magnetic flux density measurements taken at different
      * frames (positions, orientations and velocities).
      */
     Collection<? extends T> getMeasurements();
 
     /**
-     * Sets a collection of body kinematics measurements taken at different
+     * Sets a collection of body magnetic flux density measurements taken at different
      * frames (positions, orientations and velocities).
      * If a single device IMU needs to be calibrated, typically all measurements are
      * taken at the same position, with zero velocity and multiple orientations.
@@ -61,23 +63,24 @@ public interface KnownBiasAndFrameAccelerometerCalibrator<T extends FrameBodyKin
      * typically constant at horizontal orientation while the phone remains on a
      * flat surface.
      *
-     * @param measurements collection of body kinematics measurements taken at different
-     *                     frames (positions, orientations and velocities).
+     * @param measurements collection of body magnetic flux density measurements
+     *                     taken at different frames (positions, orientations
+     *                     and velocities).
      * @throws LockedException if estimator is currently running.
      */
     void setMeasurements(final Collection<? extends T> measurements) throws LockedException;
 
     /**
-     * Gets listener to handle events raised by this estimator.
+     * Gets listener to handle events raised by this calibrator.
      *
-     * @return listener to handle events raised by this estimator.
+     * @return listener to handle events raised by this calibrator.
      */
     L getListener();
 
     /**
-     * Sets listener to handle events raised by this estimator.
+     * Sets listener to handle events raised by this calibrator.
      *
-     * @param listener listener to handle events raised by this estimator.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws LockedException if estimator is currently running.
      */
     void setListener(final L listener) throws LockedException;

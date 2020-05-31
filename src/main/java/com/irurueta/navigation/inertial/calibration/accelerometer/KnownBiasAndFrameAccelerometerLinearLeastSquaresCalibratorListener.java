@@ -15,9 +15,6 @@
  */
 package com.irurueta.navigation.inertial.calibration.accelerometer;
 
-import com.irurueta.navigation.inertial.calibration.accelerometer.KnownBiasAndFrameAccelerometerCalibratorListener;
-import com.irurueta.navigation.inertial.calibration.accelerometer.KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator;
-
 /**
  * Contains listener for accelerometer least squares calibrators when
  * frame (position, velocity and orientation) and bias is known for all measurements.

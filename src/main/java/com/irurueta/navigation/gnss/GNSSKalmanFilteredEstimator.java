@@ -39,7 +39,7 @@ public class GNSSKalmanFilteredEstimator {
     /**
      * Internal estimator to compute least squares solution for GNSS measurements.
      */
-    private GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator =
+    private final GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator =
             new GNSSLeastSquaresPositionAndVelocityEstimator();
 
     /**
