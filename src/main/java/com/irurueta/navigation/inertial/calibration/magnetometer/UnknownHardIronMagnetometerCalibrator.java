@@ -71,7 +71,7 @@ public interface UnknownHardIronMagnetometerCalibrator {
      * @return x coordinate of estimated magnetometer bias or null if not
      * available.
      */
-    Double getEstimatedHarIronX();
+    Double getEstimatedHardIronX();
 
     /**
      * Gets y coordinate of estimated magnetometer bias expressed in

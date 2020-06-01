@@ -343,7 +343,7 @@ public class BodyKinematicsGenerator {
                     oldQuantizationResiduals, result, quantizationResiduals,
                     trueFibb, ma, ba, trueOmegaIbb, mg, bg, gg, identity, tmp33, tmp31a,
                     tmp31b);
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
         }
     }

@@ -88,11 +88,13 @@ public class WMMEarthMagneticFluxDensityEstimatorTest {
         final WMMEarthMagneticFluxDensityEstimator estimator1 =
                 new WMMEarthMagneticFluxDensityEstimator();
         assertNotNull(estimator1);
+        assertNotNull(estimator1.getModel());
 
         final WorldMagneticModel model = WMMLoader.loadFromFile(FILE_PATH);
         final WMMEarthMagneticFluxDensityEstimator estimator2 =
                 new WMMEarthMagneticFluxDensityEstimator(model);
         assertNotNull(estimator2);
+        assertSame(estimator2.getModel(), model);
 
         // Force NullPointerException
         try {

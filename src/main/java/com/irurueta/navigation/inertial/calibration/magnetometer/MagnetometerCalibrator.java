@@ -18,6 +18,7 @@ package com.irurueta.navigation.inertial.calibration.magnetometer;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
+import com.irurueta.navigation.geodesic.wmm.WorldMagneticModel;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 
 /**
@@ -60,6 +61,22 @@ public interface MagnetometerCalibrator {
      * @return true if calibrator is running, false otherwise.
      */
     boolean isRunning();
+
+    /**
+     * Gets Earth's magnetic model.
+     *
+     * @return Earth's magnetic model or null if not provided.
+     */
+    WorldMagneticModel getMagneticModel();
+
+    /**
+     * Sets Earth's magnetic model.
+     *
+     * @param magneticModel Earth's magnetic model to be set.
+     * @throws LockedException if calibrator is currently running.
+     */
+    void setMagneticModel(final WorldMagneticModel magneticModel)
+            throws LockedException;
 
     /**
      * Estimates accelerometer calibration parameters containing scale factors

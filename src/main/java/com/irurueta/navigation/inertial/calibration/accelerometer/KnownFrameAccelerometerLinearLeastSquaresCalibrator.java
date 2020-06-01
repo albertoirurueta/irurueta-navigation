@@ -871,7 +871,6 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
 
         fillBiases(bx, by, bz);
         fillMa(sx, sy, sz, mxy, mxz, 0.0, myz, 0.0, 0.0);
-
     }
 
     /**

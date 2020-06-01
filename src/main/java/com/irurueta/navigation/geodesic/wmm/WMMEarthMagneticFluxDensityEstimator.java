@@ -271,6 +271,15 @@ public class WMMEarthMagneticFluxDensityEstimator {
     }
 
     /**
+     * Gets World Magnetic Model containing all required coefficients.
+     *
+     * @return World Magnetic Model.
+     */
+    public WorldMagneticModel getModel() {
+        return mModel;
+    }
+
+    /**
      * Returns the declination from the Department of Defense geomagnetic
      * model and data, in radians.
      * The magnetic heading + declination is the true heading of a device
