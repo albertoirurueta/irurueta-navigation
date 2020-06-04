@@ -85,8 +85,8 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibrator implements
     private static final int EQUATIONS_PER_MEASUREMENT = 3;
 
     /**
-     * Number of unknowns when common z-axis is assumed for both the accelerometer
-     * and gyroscope.
+     * Number of unknowns when common z-axis is assumed for the accelerometer,
+     * gyroscope and magnetometer.
      */
     private static final int COMMON_Z_AXIS_UNKNOWNS = 9;
 
@@ -113,9 +113,9 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibrator implements
     private Collection<? extends FrameBodyMagneticFluxDensity> mMeasurements;
 
     /**
-     * This flag indicates whether z-axis is assumed to be common for accelerometer
-     * and gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
+     * This flag indicates whether z-axis is assumed to be common for accelerometer,
+     * gyroscope and magnetometer.
+     * When enabled, this eliminates 3 variables from Mm matrix.
      */
     private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
 

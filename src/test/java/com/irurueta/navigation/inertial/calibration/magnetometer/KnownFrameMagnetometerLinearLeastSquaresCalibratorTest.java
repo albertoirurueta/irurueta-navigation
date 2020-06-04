@@ -1127,7 +1127,6 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
         assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
     }
 
-
     @Test
     public void testCalibrateMultipleOrientationsForCommonAxisCaseWithNoiseLargeNumberOfMeasurements()
             throws IOException, InvalidSourceAndDestinationFrameTypeException,
@@ -1366,6 +1365,13 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
             calibrator.setMagneticModel(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.calibrate();
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
+            fail("LockedException expected but not thrown");
         }
     }
 

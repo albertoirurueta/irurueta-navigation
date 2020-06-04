@@ -878,7 +878,6 @@ public class FrameBodyMagneticFluxDensityTest {
         assertTrue(frameBodyMagneticFluxDensity1.equals(frameBodyMagneticFluxDensity2, THRESHOLD));
         assertFalse(frameBodyMagneticFluxDensity1.equals(frameBodyMagneticFluxDensity3, THRESHOLD));
         assertFalse(frameBodyMagneticFluxDensity1.equals(null, THRESHOLD));
-
     }
 
     @Test
@@ -909,7 +908,6 @@ public class FrameBodyMagneticFluxDensityTest {
         assertEquals(frameBodyMagneticFluxDensity1,
                 frameBodyMagneticFluxDensity2);
     }
-    // TODO: testClone
 
     private static BodyMagneticFluxDensity createMagneticFluxDensity()
             throws IOException {

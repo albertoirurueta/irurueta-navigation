@@ -231,7 +231,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
     private Matrix mEstimatedMa;
 
     /**
-     * Estimated covariance matrix for estimated position.
+     * Estimated covariance matrix for estimated parameters.
      */
     private Matrix mEstimatedCovariance;
 
@@ -241,7 +241,7 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibrator implements
     private double mEstimatedChiSq;
 
     /**
-     * Indicates whether estimator is running.
+     * Indicates whether calibrator is running.
      */
     private boolean mRunning;
 

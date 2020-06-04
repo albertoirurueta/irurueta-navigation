@@ -1469,7 +1469,7 @@ public class StandardDeviationFrameBodyKinematics extends FrameBodyKinematics {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(StandardDeviationFrameBodyKinematics other) {
+    public boolean equals(final StandardDeviationFrameBodyKinematics other) {
         return equals(other, 0.0);
     }
 
@@ -1481,11 +1481,11 @@ public class StandardDeviationFrameBodyKinematics extends FrameBodyKinematics {
      * @return true if both instances are considered to be equal (up to provided
      * threshold), false otherwise.
      */
-    public boolean equals(StandardDeviationFrameBodyKinematics other,
+    public boolean equals(final StandardDeviationFrameBodyKinematics other,
                           final double threshold) {
         return super.equals(other, threshold) &&
-                (mSpecificForceStandardDeviation - other.mSpecificForceStandardDeviation) <= threshold
-                && (mAngularRateStandardDeviation - other.mAngularRateStandardDeviation) <= threshold;
+                Math.abs(mSpecificForceStandardDeviation - other.mSpecificForceStandardDeviation) <= threshold
+                && Math.abs(mAngularRateStandardDeviation - other.mAngularRateStandardDeviation) <= threshold;
     }
 
     /**
