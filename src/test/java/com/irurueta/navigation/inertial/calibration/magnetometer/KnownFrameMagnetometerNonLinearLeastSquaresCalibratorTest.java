@@ -30,7 +30,6 @@ import com.irurueta.navigation.inertial.NEDMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.BodyMagneticFluxDensityGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
-import com.irurueta.navigation.inertial.calibration.FrameBodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.estimators.BodyMagneticFluxDensityEstimator;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -47,7 +46,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implements
         KnownFrameMagnetometerNonLinearLeastSquaresCalibratorListener {
@@ -10339,7 +10337,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                     generateMeasurementsMultipleOrientationswithSamePosition(
                             hardIron.getBuffer(), mm,
-                            LARGE_MEASUREMENT_NUMBER,
+                            SMALL_MEASUREMENT_NUMBER,
                             wmmEstimator, randomizer, noiseRandomizer);
 
             final KnownFrameMagnetometerNonLinearLeastSquaresCalibrator calibrator =
@@ -10631,7 +10629,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                     generateMeasurementsMultipleOrientationswithSamePosition(
                             hardIron.getBuffer(), mm,
-                            LARGE_MEASUREMENT_NUMBER,
+                            SMALL_MEASUREMENT_NUMBER,
                             wmmEstimator, randomizer, noiseRandomizer);
 
             final KnownFrameMagnetometerNonLinearLeastSquaresCalibrator calibrator =
