@@ -315,7 +315,7 @@ public class BeaconIdentifierTest {
     @Test
     public void testEqualsAndCompareTo() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        int value = randomizer.nextInt(1, 65535);
+        int value = randomizer.nextInt(2, 65535);
         BeaconIdentifier id = BeaconIdentifier.fromInt(value);
         BeaconIdentifier id2 = BeaconIdentifier.fromInt(value);
         BeaconIdentifier id3 = BeaconIdentifier.fromLong(value, 4);
