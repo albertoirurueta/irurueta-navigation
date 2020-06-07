@@ -6839,7 +6839,7 @@ public class KnownPositionAccelerometerCalibrator {
     }
 
     /**
-     * Gets position where body kinematics measures have been taken expressed in
+     * Sets position where body kinematics measures have been taken expressed in
      * ECEF coordinates.
      *
      * @param position position where body kinematics measures have been taken.

@@ -6354,7 +6354,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    new Matrix(1, 3));
+                    new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6442,7 +6442,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    new Matrix(1, 3), this);
+                    new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6532,7 +6532,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, new Matrix(1, 3));
+                    measurements, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6622,7 +6622,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, new Matrix(1, 3), this);
+                    measurements, new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6710,7 +6710,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    true, new Matrix(1, 3));
+                    true, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6798,7 +6798,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    true, new Matrix(1, 3), this);
+                    true, new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6888,7 +6888,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, true, new Matrix(1, 3));
+                    measurements, true, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6980,7 +6980,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, true, new Matrix(1, 3),
+                    measurements, true, new Matrix(3, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7070,7 +7070,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    magneticModel, new Matrix(1, 3));
+                    magneticModel, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7160,7 +7160,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    magneticModel, new Matrix(1, 3),
+                    magneticModel, new Matrix(3, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7252,7 +7252,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, magneticModel, new Matrix(1, 3));
+                    measurements, magneticModel, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7346,7 +7346,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, magneticModel,
-                    new Matrix(1, 3),
+                    new Matrix(3, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7436,7 +7436,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    true, magneticModel, new Matrix(1, 3));
+                    true, magneticModel, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7529,7 +7529,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     true, magneticModel,
-                    new Matrix(1, 3),
+                    new Matrix(3, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7624,7 +7624,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, true, magneticModel,
-                    new Matrix(1, 3));
+                    new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7718,7 +7718,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, true, magneticModel,
-                    new Matrix(1, 3), this);
+                    new Matrix(3, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7817,7 +7817,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    new Matrix(1, 3), mm);
+                    new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7928,7 +7928,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    new Matrix(1, 3), mm, this);
+                    new Matrix(3, 3), mm, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8041,7 +8041,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, new Matrix(1, 3), mm);
+                    measurements, new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8155,7 +8155,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    measurements, new Matrix(1, 3), mm,
+                    measurements, new Matrix(3, 3), mm,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -8270,7 +8270,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    true, new Matrix(1, 3),
+                    true, new Matrix(3, 3),
                     mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -8383,7 +8383,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    true, new Matrix(1, 3),
+                    true, new Matrix(3, 3),
                     mm, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -8501,7 +8501,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, true,
-                    new Matrix(1, 3), mm);
+                    new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8619,7 +8619,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, true,
-                    new Matrix(1, 3), mm, this);
+                    new Matrix(3, 3), mm, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8733,7 +8733,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    magneticModel, new Matrix(1, 3), mm);
+                    magneticModel, new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -8846,7 +8846,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         }
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
-                    magneticModel, new Matrix(1, 3), mm,
+                    magneticModel, new Matrix(3, 3), mm,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -8965,7 +8965,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, magneticModel,
-                    new Matrix(1, 3), mm);
+                    new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9083,7 +9083,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, magneticModel,
-                    new Matrix(1, 3), mm, this);
+                    new Matrix(3, 3), mm, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9199,7 +9199,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     true, magneticModel,
-                    new Matrix(1, 3), mm);
+                    new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9316,7 +9316,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     true, magneticModel,
-                    new Matrix(1, 3), mm, this);
+                    new Matrix(3, 3), mm, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9435,7 +9435,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, true, magneticModel,
-                    new Matrix(1, 3), mm);
+                    new Matrix(3, 3), mm);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -9554,7 +9554,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         try {
             calibrator = new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                     measurements, true, magneticModel,
-                    new Matrix(1, 3), mm, this);
+                    new Matrix(3, 3), mm, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -10018,7 +10018,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator.getInitialHardIronAsMatrix(new Matrix(1, 3));
+            calibrator.getInitialHardIronAsMatrix(new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }

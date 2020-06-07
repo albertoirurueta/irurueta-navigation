@@ -713,7 +713,6 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
             final KnownFrameMagnetometerNonLinearLeastSquaresCalibratorListener listener) {
         this(magneticModel, initialHardIronX, initialHardIronY,
                 initialHardIronZ);
-        mMagneticModel = magneticModel;
         mListener = listener;
     }
 
@@ -3642,7 +3641,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
      * Sets listener to handle events raised by this calibrator.
      *
      * @param listener listener to handle events raised by this calibrator.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     @Override
     public void setListener(
@@ -3701,7 +3700,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Estimates accelerometer calibration parameters containing scale factors
+     * Estimates magnetometer calibration parameters containing scale factors
      * and cross-coupling errors.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -4250,10 +4249,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
     private void calibrateGeneral() throws AlgebraException, FittingException,
             com.irurueta.numerical.NotReadyException, IOException {
         // The accelerometer model is:
-        // mBmeas = ba + (I + Ma) * mBtrue + w
+        // mBmeas = ba + (I + Mm) * mBtrue + w
 
         // Ideally a least squares solution tries to minimize noise component, so:
-        // mBmeas = ba + (I + Ma) * mBtrue
+        // mBmeas = ba + (I + Mm) * mBtrue
 
         // Hence:
         //  [mBmeasx] = [bx] + ( [1  0   0] + [sx    mxy mxz])   [mBtruex]

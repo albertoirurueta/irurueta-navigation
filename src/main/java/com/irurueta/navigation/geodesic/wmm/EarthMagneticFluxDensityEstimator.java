@@ -25,7 +25,7 @@ import com.irurueta.units.AngleUnit;
  * given Earth location.
  * Magnetic flux density depends of magnitude of the magnetic field,
  * the declination and the dip angle.
- * Magnitude typically varies from about 30 µT at the equato to about 60 µT
+ * Magnitude typically varies from about 30 µT at the equator to about 60 µT
  * at the poles.
  * The dip (or inclination) angle is essentially the magnetic latitude and
  * it is typically within about 10º of the geodetic latitude.

@@ -448,7 +448,7 @@ public class StandardDeviationBodyKinematicsTest {
     }
 
     @Test
-    public void testCopyFromWhenBodyKinematicsAreavailableAtSourceAndDestination() {
+    public void testCopyFromWhenBodyKinematicsAreAvailableAtSourceAndDestination() {
         final StandardDeviationBodyKinematics stdKinematics1 = createStdKinematics();
         final StandardDeviationBodyKinematics stdKinematics2 = createStdKinematics();
 
@@ -535,7 +535,7 @@ public class StandardDeviationBodyKinematicsTest {
         assertEquals(stdKinematics1, stdKinematics2);
     }
 
-    private BodyKinematics createKinematics() {
+    private static BodyKinematics createKinematics() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
         final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
@@ -552,7 +552,7 @@ public class StandardDeviationBodyKinematicsTest {
                 angularRateX, angularRateY, angularRateZ);
     }
 
-    private StandardDeviationBodyKinematics createStdKinematics() {
+    private static StandardDeviationBodyKinematics createStdKinematics() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         final BodyKinematics kinematics = createKinematics();
