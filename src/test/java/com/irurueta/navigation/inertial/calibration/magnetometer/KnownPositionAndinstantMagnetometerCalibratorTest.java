@@ -70,7 +70,6 @@ public class KnownPositionAndinstantMagnetometerCalibratorTest implements
     private static final double MIN_HEIGHT_METERS = -500.0;
     private static final double MAX_HEIGHT_METERS = 10000.0;
 
-    private static final int SMALL_MEASUREMENT_NUMBER = 16;
     private static final int LARGE_MEASUREMENT_NUMBER = 100000;
 
     private static final double MAGNETOMETER_NOISE_STD = 1e-8;
@@ -5078,9 +5077,213 @@ public class KnownPositionAndinstantMagnetometerCalibratorTest implements
         assertTrue(numValid > 0);
     }
 
-    // TODO: testCalibrateForGeneralCaseWithLargeNumberOfMeasurementsAndNoise()
-    // TODO: testCalibrateForCommonAxisCaseWithMinimumMeasuresAndNoNoise()
-    // TODO: testCalibrateForCommonAxisCaseWithLargeNumberOfMeasurementsAndNoise()
+    @Test
+    public void testCalibrateForGeneralCaseWithLargeNumberOfMeasurementsAndNoise()
+            throws IOException, LockedException, CalibrationException,
+            NotReadyException, WrongSizeException {
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final Matrix hardIron = Matrix.newFromArray(generateHardIron(randomizer));
+            final Matrix mm = generateSoftIronGeneral();
+            assertNotNull(mm);
+
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+
+            final NEDPosition position = createPosition(randomizer);
+            final Date timestamp = new Date(createTimestamp(randomizer));
+            final List<StandardDeviationBodyMagneticFluxDensity> measurements =
+                    generateMeasures(hardIron.getBuffer(), mm,
+                            LARGE_MEASUREMENT_NUMBER,
+                            wmmEstimator, randomizer, noiseRandomizer,
+                            position, timestamp);
+
+            final KnownPositionAndInstantMagnetometerCalibrator calibrator =
+                    new KnownPositionAndInstantMagnetometerCalibrator(
+                            position, measurements, false, hardIron,
+                            mm, this);
+            calibrator.setTime(timestamp);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateForCommonAxisCaseWithMinimumMeasuresAndNoNoise()
+            throws IOException, LockedException, CalibrationException,
+            NotReadyException, WrongSizeException {
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final Matrix hardIron = Matrix.newFromArray(generateHardIron(randomizer));
+            final Matrix mm = generateSoftIronCommonAxis();
+            assertNotNull(mm);
+
+
+            final NEDPosition position = createPosition(randomizer);
+            final Date timestamp = new Date(createTimestamp(randomizer));
+            final List<StandardDeviationBodyMagneticFluxDensity> measurements =
+                    generateMeasures(hardIron.getBuffer(), mm,
+                            KnownPositionAndInstantMagnetometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL,
+                            wmmEstimator, randomizer, null,
+                            position, timestamp);
+
+            final KnownPositionAndInstantMagnetometerCalibrator calibrator =
+                    new KnownPositionAndInstantMagnetometerCalibrator(
+                            position, measurements, true, hardIron,
+                            mm, this);
+            calibrator.setTime(timestamp);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!hardIron.equals(estimatedHardIron, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(hardIron.equals(estimatedHardIron, ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateForCommonAxisCaseWithLargeNumberOfMeasurementsAndNoise()
+            throws IOException, LockedException, CalibrationException,
+            NotReadyException, WrongSizeException {
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final Matrix hardIron = Matrix.newFromArray(generateHardIron(randomizer));
+            final Matrix mm = generateSoftIronCommonAxis();
+            assertNotNull(mm);
+
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+
+            final NEDPosition position = createPosition(randomizer);
+            final Date timestamp = new Date(createTimestamp(randomizer));
+            final List<StandardDeviationBodyMagneticFluxDensity> measurements =
+                    generateMeasures(hardIron.getBuffer(), mm,
+                            LARGE_MEASUREMENT_NUMBER,
+                            wmmEstimator, randomizer, noiseRandomizer,
+                            position, timestamp);
+
+            final KnownPositionAndInstantMagnetometerCalibrator calibrator =
+                    new KnownPositionAndInstantMagnetometerCalibrator(
+                            position, measurements, true, hardIron,
+                            mm, this);
+            calibrator.setTime(timestamp);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
 
     @Override
     public void onCalibrateStart(KnownPositionAndInstantMagnetometerCalibrator calibrator) {
