@@ -15,6 +15,10 @@
  */
 package com.irurueta.navigation.inertial.calibration;
 
+import com.irurueta.navigation.frames.CoordinateTransformation;
+import com.irurueta.navigation.frames.ECEFFrame;
+import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,6 +40,25 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
     private List<T> mItems;
 
     /**
+     * Body attitude at the start of the sequence.
+     * Must be a valid body to ECEF coordinate transformation.
+     * This can be estimated using
+     * {@link com.irurueta.navigation.inertial.estimators.AttitudeEstimator}
+     * for a known Earth position, time instant, accelerometer measure
+     * and magnetometer measure. Notice that both the accelerometer
+     * and magnetometer should be previously calibrated before estimating
+     * body attitude.
+     * Alternatively, if the gyroscope is accurate enough (aviation grade),
+     * a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator}
+     * or a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator2}
+     * can be used.
+     * However, since this class is used mainly for gyroscope calibration,
+     * leveling estimator should be discarded for initial body attitude
+     * estimation.
+     */
+    private CoordinateTransformation mStartBodyAttitude;
+
+    /**
      * Contains sorted list of items.
      * This list is kept for performance reasons to reduce the amount of
      * required sorting.
@@ -45,7 +68,8 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
     /**
      * Constructor.
      */
-    public BodyKinematicsSequence() { }
+    public BodyKinematicsSequence() {
+    }
 
     /**
      * Constructor.
@@ -55,6 +79,36 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
      */
     public BodyKinematicsSequence(final List<T> items) {
         mItems = items;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param startBodyAttitude body attitude at the start of the sequence.
+     * @throws InvalidSourceAndDestinationFrameTypeException if provided transformation is
+     *                                                       not a body to ECEF transformation.
+     */
+    public BodyKinematicsSequence(
+            final CoordinateTransformation startBodyAttitude)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        setStartBodyAttitude(startBodyAttitude);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param items             list of items containing body kinematics to be kept into
+     *                          this sequence.
+     * @param startBodyAttitude body attitude at the start of the sequence.
+     * @throws InvalidSourceAndDestinationFrameTypeException if provided transformation is
+     *                                                       not a body to ECEF transformation.
+     */
+    public BodyKinematicsSequence(
+            final List<T> items,
+            final CoordinateTransformation startBodyAttitude)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(items);
+        setStartBodyAttitude(startBodyAttitude);
     }
 
     /**
@@ -124,5 +178,68 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
      */
     public int getItemsCount() {
         return mItems != null ? mItems.size() : 0;
+    }
+
+    /**
+     * Checks whether provided coordinate transformation matrix is valid or not.
+     * Only body to ECEF transformation matrices are considered to be valid.
+     *
+     * @param c coordinate transformation matrix to be checked.
+     * @return true if provided value is valid, false otherwise.
+     */
+    public static boolean isValidBodyToEcefCoordinateTransformationMatrix(final CoordinateTransformation c) {
+        return ECEFFrame.isValidCoordinateTransformation(c);
+    }
+
+    /**
+     * Gets body attitude at the start of the sequence.
+     * This can be estimated using
+     * {@link com.irurueta.navigation.inertial.estimators.AttitudeEstimator}
+     * for a known Earth position, time instant, accelerometer measure
+     * and magnetometer measure. Notice that both the accelerometer
+     * and magnetometer should be previously calibrated before estimating
+     * body attitude.
+     * Alternatively, if the gyroscope is accurate enough (aviation grade),
+     * a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator}
+     * or a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator2}
+     * can be used.
+     * However, since this class is used mainly for gyroscope calibration,
+     * leveling estimator should be discarded for initial body attitude
+     * estimation.
+     *
+     * @return body attitude at the start of the sequence.
+     */
+    public CoordinateTransformation getStartBodyAttitude() {
+        return mStartBodyAttitude;
+    }
+
+    /**
+     * Sets body attitude at the start of the sequence.
+     * This can be estimated using
+     * {@link com.irurueta.navigation.inertial.estimators.AttitudeEstimator}
+     * for a known Earth position, time instant, accelerometer measure
+     * and magnetometer measure. Notice that both the accelerometer
+     * and magnetometer should be previously calibrated before estimating
+     * body attitude.
+     * Alternatively, if the gyroscope is accurate enough (aviation grade),
+     * a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator}
+     * or a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator2}
+     * can be used.
+     * However, since this class is used mainly for gyroscope calibration,
+     * leveling estimator should be discarded for initial body attitude
+     * estimation.
+     *
+     * @param startBodyAttitude body attitude at the start of the sequence.
+     * @throws InvalidSourceAndDestinationFrameTypeException if provided transformation is
+     *                                                       not a body to ECEF transformation.
+     */
+    public void setStartBodyAttitude(
+            final CoordinateTransformation startBodyAttitude)
+            throws InvalidSourceAndDestinationFrameTypeException {
+
+        if (!isValidBodyToEcefCoordinateTransformationMatrix(startBodyAttitude)) {
+            throw new InvalidSourceAndDestinationFrameTypeException();
+        }
+        mStartBodyAttitude = startBodyAttitude;
     }
 }

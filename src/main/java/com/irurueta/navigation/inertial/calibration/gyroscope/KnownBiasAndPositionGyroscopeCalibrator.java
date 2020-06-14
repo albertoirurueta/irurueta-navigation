@@ -62,7 +62,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Estimates gyroscope biases, cross couplings, scaling factors and
+ * Estimates gyroscope cross couplings, scaling factors and
  * G-dependent cross biases introduced on the gyroscope by the specific
  * forces sensed by the accelerometer.
  * <p>
@@ -71,14 +71,14 @@ import java.util.List;
  * measured body kinematics to perform calibration for unknown orientations
  * on those provided sequences.
  * <p>
- * To use this calibrator at least 10 sequences are needed (each containing
+ * To use this calibrator at least 7 sequences are needed (each containing
  * at least 3 body kinematics measurements) when common z-axis is assumed and
- * G-dependant cross biases are ignored, otherwise at least 13 sequences are
+ * G-dependant cross biases are ignored, otherwise at least 10 sequences are
  * required (each containing at least 3 body kinematics measurements) when
  * common z-axis is not assumed.
- * If G-dependent cross biases are being estimated, then at least 19
+ * If G-dependent cross biases are being estimated, then at least 16
  * measurements are needed when common z-axis is assumed, otherwise at least
- * 22 sequences are required (each containing at least 3 body kinematics
+ * 19 sequences are required (each containing at least 3 body kinematics
  * measurements) when common z-axis is not assumed.
  * <p>
  * Measured gyroscope angular rates is assumed to follow the model shown below:
@@ -103,7 +103,7 @@ import java.util.List;
  * David Tedaldi, Alberto Pretto, Emmanuelle Menegatti. A Robust and Easy to
  * Implement Method for IMU Calibration without External Equipments.
  */
-public class KnownPositionGyroscopeCalibrator {
+public class KnownBiasAndPositionGyroscopeCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -121,50 +121,50 @@ public class KnownPositionGyroscopeCalibrator {
      * Number of unknowns when common z-axis is assumed for both the accelerometer
      * and gyroscope when G-dependent cross biases are being estimated.
      */
-    public static final int COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES = 18;
+    public static final int COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES = 15;
 
     /**
      * Number of unknowns for the general case when G-dependent cross
      * biases are being estimated.
      */
-    public static final int GENERAL_UNKNOWNS_AND_CROSS_BIASES = 21;
+    public static final int GENERAL_UNKNOWNS_AND_CROSS_BIASES = 18;
 
     /**
      * Number of unknowns when common z-axis is assumed for both
      * the accelerometer and gyroscope when G-dependent cross biases
      * are not being estimated.
      */
-    public static final int COMMON_Z_AXIS_UNKNOWNS = 9;
+    public static final int COMMON_Z_AXIS_UNKNOWNS = 6;
 
     /**
      * Number of unknowns for the general case when G-dependent cross
      * biases are not being estimated.
      */
-    public static final int GENERAL_UNKNOWNS = 12;
+    public static final int GENERAL_UNKNOWNS = 9;
 
     /**
-     * Required minimum number of sequences when common z-axis is assumed
+     * Required minimum number of measurements when common z-axis is assumed
      * and G-dependent cross biases are being estimated.
      */
     public static final int MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES =
             COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES + 1;
 
     /**
-     * Required minimum number of sequences for the general case and
+     * Required minimum number of measurements for the general case and
      * G-dependent cross biases are being estimated.
      */
     public static final int MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES =
             GENERAL_UNKNOWNS_AND_CROSS_BIASES + 1;
 
     /**
-     * Required minimum number of sequences when common z-axis is assumed
+     * Required minimum number of measurements when common z-axis is assumed
      * and G-dependent cross biases are being ignored.
      */
     public static final int MINIMUM_SEQUENCES_COMMON_Z_AXIS =
             COMMON_Z_AXIS_UNKNOWNS + 1;
 
     /**
-     * Required minimum number of sequences for the general case and
+     * Required minimum number of measurements for the general case and
      * G-dependent cross biases are being ignored.
      */
     public static final int MINIMUM_SEQUENCES_GENERAL =
@@ -252,22 +252,22 @@ public class KnownPositionGyroscopeCalibrator {
     private double mAccelerometerMzy;
 
     /**
-     * Initial x-coordinate of gyroscope bias to be used to find a solution.
+     * Known x-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      */
-    private double mInitialBiasX;
+    private double mBiasX;
 
     /**
-     * Initial y-coordinate of gyroscope bias to be used to find a solution.
+     * Known y-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      */
-    private double mInitialBiasY;
+    private double mBiasY;
 
     /**
-     * Initial z-coordinate of gyroscope bias to be used to find a solution.
+     * Known z-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      */
-    private double mInitialBiasZ;
+    private double mBiasZ;
 
     /**
      * Initial gyroscope x scaling factor.
@@ -351,13 +351,7 @@ public class KnownPositionGyroscopeCalibrator {
     /**
      * Listener to handle events raised by this calibrator.
      */
-    private KnownPositionGyroscopeCalibratorListener mListener;
-
-    /**
-     * Estimated angular rate biases for each IMU axis expressed in radians per
-     * second (rad/s).
-     */
-    private double[] mEstimatedBiases;
+    private KnownBiasAndPositionGyroscopeCalibratorListener mListener;
 
     /**
      * Estimated gyroscope scale factors and cross coupling errors.
@@ -555,7 +549,7 @@ public class KnownPositionGyroscopeCalibrator {
     /**
      * Constructor.
      */
-    public KnownPositionGyroscopeCalibrator() {
+    public KnownBiasAndPositionGyroscopeCalibrator() {
         try {
             mInitialGg = new Matrix(BodyKinematics.COMPONENTS,
                     BodyKinematics.COMPONENTS);
@@ -571,7 +565,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a solution.
+     * @param bias initial gyroscope bias to be used to find a solution.
      *                    This must be 3x1 and is expressed in radians per
      *                    second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -582,17 +576,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         this();
         mPosition = position;
         mSequences = sequences;
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
             setInitialMg(initialMg);
             setInitialGg(initialGg);
         } catch (final LockedException ignore) {
@@ -607,7 +601,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a solution.
+     * @param bias initial gyroscope bias to be used to find a solution.
      *                    This must be 3x1 and is expressed in radians per
      *                    second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -620,14 +614,14 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(position, sequences, initialBias, initialMg, initialGg);
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(position, sequences, bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -638,7 +632,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a
+     * @param bias initial gyroscope bias to be used to find a
      *                    solution. This must have length 3 and is expressed
      *                    in radians per second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -649,17 +643,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         this();
         mPosition = position;
         mSequences = sequences;
         try {
-            setInitialBias(initialBias);
+            setBias(bias);
             setInitialMg(initialMg);
             setInitialGg(initialGg);
         } catch (final LockedException ignore) {
@@ -674,7 +668,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a
+     * @param bias initial gyroscope bias to be used to find a
      *                    solution. This must have length 3 and is expressed
      *                    in radians per second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -687,14 +681,14 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(position, sequences, initialBias, initialMg, initialGg);
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(position, sequences, bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -705,7 +699,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must have length 3 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -722,15 +716,15 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
-        this(position, sequences, initialBias, initialMg, initialGg);
+        this(position, sequences, bias, initialMg, initialGg);
         try {
             setAccelerometerBias(accelerometerBias);
             setAccelerometerMa(accelerometerMa);
@@ -746,7 +740,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must have length 3 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -765,16 +759,16 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(position, sequences, initialBias, initialMg, initialGg,
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(position, sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
         mListener = listener;
     }
@@ -786,7 +780,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must be 3x1 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -802,15 +796,15 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
-        this(position, sequences, initialBias, initialMg, initialGg);
+        this(position, sequences, bias, initialMg, initialGg);
         try {
             setAccelerometerBias(accelerometerBias);
             setAccelerometerMa(accelerometerMa);
@@ -826,7 +820,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must be 3x1 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -844,16 +838,16 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(position, sequences, initialBias, initialMg, initialGg,
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(position, sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
         mListener = listener;
     }
@@ -871,7 +865,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -882,15 +876,15 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
-        this(position, sequences, initialBias, initialMg, initialGg);
+        this(position, sequences, bias, initialMg, initialGg);
         mCommonAxisUsed = commonAxisUsed;
         mEstimateGDependentCrossBiases = estimateGDependentCrossBiases;
     }
@@ -908,7 +902,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -921,17 +915,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(position, sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -948,7 +942,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -959,15 +953,15 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
-        this(position, sequences, initialBias, initialMg, initialGg);
+        this(position, sequences, bias, initialMg, initialGg);
         mCommonAxisUsed = commonAxisUsed;
         mEstimateGDependentCrossBiases = estimateGDependentCrossBiases;
     }
@@ -985,7 +979,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -998,17 +992,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(position, sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
         mListener = listener;
     }
 
@@ -1025,7 +1019,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1043,17 +1037,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
-        this(position, sequences, initialBias, initialMg, initialGg,
+        this(position, sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
         mCommonAxisUsed = commonAxisUsed;
         mEstimateGDependentCrossBiases = estimateGDependentCrossBiases;
@@ -1072,7 +1066,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1092,19 +1086,19 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(position, sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa);
         mListener = listener;
     }
@@ -1122,7 +1116,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1140,17 +1134,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
-        this(position, sequences, initialBias, initialMg, initialGg,
+        this(position, sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
         mCommonAxisUsed = commonAxisUsed;
         mEstimateGDependentCrossBiases = estimateGDependentCrossBiases;
@@ -1169,7 +1163,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1189,19 +1183,19 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final ECEFPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(position, sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa);
         mListener = listener;
     }
@@ -1213,7 +1207,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a solution.
+     * @param bias initial gyroscope bias to be used to find a solution.
      *                    This must be 3x1 and is expressed in radians per
      *                    second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -1224,13 +1218,13 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg);
     }
 
@@ -1241,7 +1235,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a solution.
+     * @param bias initial gyroscope bias to be used to find a solution.
      *                    This must be 3x1 and is expressed in radians per
      *                    second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -1254,14 +1248,14 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg, listener);
     }
 
@@ -1272,7 +1266,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a
+     * @param bias initial gyroscope bias to be used to find a
      *                    solution. This must have length 3 and is expressed
      *                    in radians per second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -1283,13 +1277,13 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg);
     }
 
@@ -1300,7 +1294,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                    sequences have been taken.
      * @param sequences   collection of sequences containing timestamped body
      *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a
+     * @param bias initial gyroscope bias to be used to find a
      *                    solution. This must have length 3 and is expressed
      *                    in radians per second (rad/s).
      * @param initialMg   initial gyroscope scale factors and cross coupling
@@ -1313,14 +1307,14 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg, listener);
     }
 
@@ -1331,7 +1325,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must have length 3 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -1348,15 +1342,15 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1367,7 +1361,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must have length 3 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -1386,16 +1380,16 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -1406,7 +1400,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must be 3x1 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -1422,15 +1416,15 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1441,7 +1435,7 @@ public class KnownPositionGyroscopeCalibrator {
      *                          sequences have been taken.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
+     * @param bias       initial gyroscope bias to be used to find a
      *                          solution. This must be 3x1 and is expressed
      *                          in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
@@ -1459,16 +1453,16 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
-        this(convertPosition(position), sequences, initialBias, initialMg,
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
+        this(convertPosition(position), sequences, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -1485,7 +1479,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1496,16 +1490,16 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg);
     }
 
@@ -1522,7 +1516,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1535,17 +1529,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, listener);
     }
 
@@ -1562,7 +1556,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1573,16 +1567,16 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg);
     }
 
@@ -1599,7 +1593,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1612,17 +1606,17 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, listener);
     }
 
@@ -1639,7 +1633,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1657,18 +1651,18 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1685,7 +1679,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must have length 3 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1705,19 +1699,19 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -1734,7 +1728,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1752,18 +1746,18 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa);
     }
 
@@ -1780,7 +1774,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
+     * @param bias                   initial gyroscope bias to be used to find a
      *                                      solution. This must be 3x1 and is expressed
      *                                      in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
@@ -1800,19 +1794,19 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public KnownPositionGyroscopeCalibrator(
+    public KnownBiasAndPositionGyroscopeCalibrator(
             final NEDPosition position,
             final Collection<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final KnownPositionGyroscopeCalibratorListener listener) {
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener) {
         this(convertPosition(position), sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -2600,235 +2594,222 @@ public class KnownPositionGyroscopeCalibrator {
     }
 
     /**
-     * Gets initial x-coordinate of gyroscope bias to be used to find
-     * a solution.
+     * Gets known x-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
-     * @return initial x-coordinate of gyroscope bias.
+     * @return known x-coordinate of gyroscope bias.
      */
-    public double getInitialBiasX() {
-        return mInitialBiasX;
+    public double getBiasX() {
+        return mBiasX;
     }
 
     /**
-     * Sets initial x-coordinate of gyroscope bias to be used to find
-     * a solution.
+     * Sets known x-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
+     * @param biasX known x-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasX(final double initialBiasX)
+    public void setBiasX(final double biasX)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = initialBiasX;
+        mBiasX = biasX;
     }
 
     /**
-     * Gets initial y-coordinate of gyroscope bias to be used to find
-     * a solution.
+     * Gets known y-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
-     * @return initial y-coordinate of gyroscope bias.
+     * @return known y-coordinate of gyroscope bias.
      */
-    public double getInitialBiasY() {
-        return mInitialBiasY;
+    public double getBiasY() {
+        return mBiasY;
     }
 
     /**
-     * Sets initial y-coordinate of gyroscope bias to be used to find
-     * a solution.
+     * Sets known y-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
+     * @param biasY known y-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasY(final double initialBiasY)
+    public void setBiasY(final double biasY)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasY = initialBiasY;
+        mBiasY = biasY;
     }
 
     /**
-     * Gets initial z-coordinate of gyroscope bias ot be used to find
-     * a solution.
+     * Gets known z-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
-     * @return initial z-coordinate of gyroscope bias.
+     * @return known z-coordinate of gyroscope bias.
      */
-    public double getInitialBiasZ() {
-        return mInitialBiasZ;
+    public double getBiasZ() {
+        return mBiasZ;
     }
 
     /**
-     * Sets initial z-coordinate of gyroscope bias to be used to find
-     * a solution.
+     * Sets known z-coordinate of gyroscope bias.
      * This is expressed in radians per second (rad/s).
      *
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
+     * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasZ(final double initialBiasZ)
+    public void setBiasZ(final double biasZ)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasZ = initialBiasZ;
+        mBiasZ = biasZ;
     }
 
     /**
-     * Gets initial x-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Gets known x-coordinate of gyroscope bias.
      *
-     * @return initial x-coordinate of gyroscope bias.
+     * @return known x-coordinate of gyroscope bias.
      */
-    public AngularSpeed getInitialBiasAngularSpeedX() {
-        return new AngularSpeed(mInitialBiasX,
+    public AngularSpeed getBiasAngularSpeedX() {
+        return new AngularSpeed(mBiasX,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Gets initial x-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Gets known x-coordinate of gyroscope bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasAngularSpeedX(final AngularSpeed result) {
-        result.setValue(mInitialBiasX);
+    public void getBiasAngularSpeedX(final AngularSpeed result) {
+        result.setValue(mBiasX);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Sets initial x-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Sets known x-coordinate of gyroscope bias.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
+     * @param biasX known x-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasX(final AngularSpeed initialBiasX)
+    public void setBiasX(final AngularSpeed biasX)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = convertAngularSpeed(initialBiasX);
+        mBiasX = convertAngularSpeed(biasX);
     }
 
     /**
-     * Gets initial y-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Gets known y-coordinate of gyroscope bias.
      *
-     * @return initial y-coordinate of gyroscope bias.
+     * @return known y-coordinate of gyroscope bias.
      */
-    public AngularSpeed getInitialBiasAngularSpeedY() {
-        return new AngularSpeed(mInitialBiasY,
+    public AngularSpeed getBiasAngularSpeedY() {
+        return new AngularSpeed(mBiasY,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Gets initial y-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Gets known y-coordinate of gyroscope bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasAngularSpeedY(final AngularSpeed result) {
-        result.setValue(mInitialBiasY);
+    public void getBiasAngularSpeedY(final AngularSpeed result) {
+        result.setValue(mBiasY);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Sets initial y-coordinate of gyroscope bias to be used to find a
+     * Sets known y-coordinate of gyroscope bias to be used to find a
      * solution.
      *
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
+     * @param biasY known y-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasY(final AngularSpeed initialBiasY)
+    public void setBiasY(final AngularSpeed biasY)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasY = convertAngularSpeed(initialBiasY);
+        mBiasY = convertAngularSpeed(biasY);
     }
 
     /**
-     * Gets initial z-coordinate of gyroscope bias to be used to find a
+     * Gets known z-coordinate of gyroscope bias to be used to find a
      * solution.
      *
-     * @return initial z-coordinate of gyroscope bias.
+     * @return known z-coordinate of gyroscope bias.
      */
-    public AngularSpeed getInitialBiasAngularSpeedZ() {
-        return new AngularSpeed(mInitialBiasZ,
+    public AngularSpeed getBiasAngularSpeedZ() {
+        return new AngularSpeed(mBiasZ,
                 AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Gets initial z-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Gets known z-coordinate of gyroscope bias.
      *
      * @param result instance where result data will be stored.
      */
-    public void getInitialBiasAngularSpeedZ(final AngularSpeed result) {
-        result.setValue(mInitialBiasZ);
+    public void getBiasAngularSpeedZ(final AngularSpeed result) {
+        result.setValue(mBiasZ);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**
-     * Sets initial z-coordinate of gyroscope bias to be used to find a
-     * solution.
+     * Sets known z-coordinate of gyroscope bias.
      *
-     * @param inigialBiasZ initial z-coordinate of gyroscope bias.
+     * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBiasZ(final AngularSpeed inigialBiasZ)
+    public void setBiasZ(final AngularSpeed biasZ)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasZ = convertAngularSpeed(inigialBiasZ);
+        mBiasZ = convertAngularSpeed(biasZ);
     }
 
     /**
-     * Sets initial bias coordinates of gyroscope used to find a solution
-     * expressed in radians per second (rad/s).
+     * Sets known bias coordinates of gyroscope expressed in radians
+     * per second (rad/s).
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
+     * @param biasX known x-coordinate of gyroscope bias.
+     * @param biasY known y-coordinate of gyroscope bias.
+     * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBias(
-            final double initialBiasX, final double initialBiasY,
-            final double initialBiasZ) throws LockedException {
+    public void setBias(
+            final double biasX, final double biasY,
+            final double biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = initialBiasX;
-        mInitialBiasY = initialBiasY;
-        mInitialBiasZ = initialBiasZ;
+        mBiasX = biasX;
+        mBiasY = biasY;
+        mBiasZ = biasZ;
     }
 
     /**
-     * Sets initial bias coordinates of gyroscope used to find a solution.
+     * Sets known bias coordinates of gyroscope.
      *
-     * @param initialBiasX initial x-coordinate of gyroscope bias.
-     * @param initialBiasY initial y-coordinate of gyroscope bias.
-     * @param initialBiasZ initial z-coordinate of gyroscope bias.
+     * @param biasX known x-coordinate of gyroscope bias.
+     * @param biasY known y-coordinate of gyroscope bias.
+     * @param biasZ known z-coordinate of gyroscope bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialBias(
-            final AngularSpeed initialBiasX,
-            final AngularSpeed initialBiasY,
-            final AngularSpeed initialBiasZ) throws LockedException {
+    public void setBias(
+            final AngularSpeed biasX,
+            final AngularSpeed biasY,
+            final AngularSpeed biasZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialBiasX = convertAngularSpeed(initialBiasX);
-        mInitialBiasY = convertAngularSpeed(initialBiasY);
-        mInitialBiasZ = convertAngularSpeed(initialBiasZ);
+        mBiasX = convertAngularSpeed(biasX);
+        mBiasY = convertAngularSpeed(biasY);
+        mBiasZ = convertAngularSpeed(biasZ);
     }
 
     /**
@@ -3112,70 +3093,65 @@ public class KnownPositionGyroscopeCalibrator {
     }
 
     /**
-     * Gets initial gyroscope bias to be used to find a solution as
-     * an array.
+     * Gets known gyroscope bias as an array.
      * Array values are expressed in radians per second (rad/s).
      *
-     * @return array containing coordinates of initial gyroscope bias.
+     * @return array containing coordinates of gyroscope bias.
      */
-    public double[] getInitialBias() {
+    public double[] getBias() {
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        getInitialBias(result);
+        getBias(result);
         return result;
     }
 
     /**
-     * Gets initial gyroscope bias to be used to find a solution as
-     * an array.
+     * Gets known gyroscope bias as an array.
      * Array values are expressed in radians per second (rad/s).
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public void getInitialBias(final double[] result) {
+    public void getBias(final double[] result) {
         if (result.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        result[0] = mInitialBiasX;
-        result[1] = mInitialBiasY;
-        result[2] = mInitialBiasZ;
+        result[0] = mBiasX;
+        result[1] = mBiasY;
+        result[2] = mBiasZ;
     }
 
     /**
-     * Sets initial gyroscope bias to be used to find a solution as
-     * an array.
+     * Sets known gyroscope bias  as an array.
      * Array values are expressed in radians per second (rad/s).
      *
-     * @param initialBias initial bias to find a solution.
+     * @param bias known bias.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
-    public void setInitialBias(final double[] initialBias)
+    public void setBias(final double[] bias)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
 
-        if (initialBias.length != BodyKinematics.COMPONENTS) {
+        if (bias.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        mInitialBiasX = initialBias[0];
-        mInitialBiasY = initialBias[1];
-        mInitialBiasZ = initialBias[2];
+        mBiasX = bias[0];
+        mBiasY = bias[1];
+        mBiasZ = bias[2];
     }
 
     /**
-     * Gets initial gyroscope bias to be used to find a solution as a
-     * column matrix.
+     * Gets known gyroscope bias as a column matrix.
      *
-     * @return initial gyroscope bias to be used to find a solution as a
-     * column matrix.
+     * @return known gyroscope bias as a column matrix.
      */
-    public Matrix getInitialBiasAsMatrix() {
+    public Matrix getBiasAsMatrix() {
         Matrix result;
         try {
             result = new Matrix(BodyKinematics.COMPONENTS, 1);
-            getInitialBiasAsMatrix(result);
+            getBiasAsMatrix(result);
         } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
@@ -3184,42 +3160,40 @@ public class KnownPositionGyroscopeCalibrator {
     }
 
     /**
-     * Gets initial gyroscope bias to be used to find a solution as a
-     * column matrix.
+     * Gets known gyroscope bias as a column matrix.
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void getInitialBiasAsMatrix(final Matrix result) {
+    public void getBiasAsMatrix(final Matrix result) {
         if (result.getRows() != BodyKinematics.COMPONENTS
                 || result.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
-        result.setElementAtIndex(0, mInitialBiasX);
-        result.setElementAtIndex(1, mInitialBiasY);
-        result.setElementAtIndex(2, mInitialBiasZ);
+        result.setElementAtIndex(0, mBiasX);
+        result.setElementAtIndex(1, mBiasY);
+        result.setElementAtIndex(2, mBiasZ);
     }
 
     /**
-     * Sets initial gyroscope bias to be used to find a solution as
-     * an array.
+     * Sets known gyroscope bias as an array.
      *
-     * @param initialBias initial gyroscope bias to find a solution.
+     * @param bias known gyroscope bias.
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void setInitialBias(final Matrix initialBias) throws LockedException {
+    public void setBias(final Matrix bias) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (initialBias.getRows() != BodyKinematics.COMPONENTS
-                || initialBias.getColumns() != 1) {
+        if (bias.getRows() != BodyKinematics.COMPONENTS
+                || bias.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
 
-        mInitialBiasX = initialBias.getElementAtIndex(0);
-        mInitialBiasY = initialBias.getElementAtIndex(1);
-        mInitialBiasZ = initialBias.getElementAtIndex(2);
+        mBiasX = bias.getElementAtIndex(0);
+        mBiasY = bias.getElementAtIndex(1);
+        mBiasZ = bias.getElementAtIndex(2);
     }
 
     /**
@@ -3512,7 +3486,7 @@ public class KnownPositionGyroscopeCalibrator {
      *
      * @return listener to handle events raised by this estimator.
      */
-    public KnownPositionGyroscopeCalibratorListener getListener() {
+    public KnownBiasAndPositionGyroscopeCalibratorListener getListener() {
         return mListener;
     }
 
@@ -3523,7 +3497,7 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setListener(
-            final KnownPositionGyroscopeCalibratorListener listener)
+            final KnownBiasAndPositionGyroscopeCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3624,174 +3598,6 @@ public class KnownPositionGyroscopeCalibrator {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;
-        }
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @return array containing x,y,z components of estimated gyroscope biases.
-     */
-    public double[] getEstimatedBiases() {
-        return mEstimatedBiases;
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @param result instance where estimated gyroscope biases will be stored.
-     * @return true if result instance was updated, false otherwise (when estimation
-     * is not yet available).
-     */
-    public boolean getEstimatedBiases(double[] result) {
-        if (mEstimatedBiases != null) {
-            System.arraycopy(mEstimatedBiases, 0, result,
-                    0, mEstimatedBiases.length);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @return column matrix containing x,y,z components of estimated gyroscope
-     * biases.
-     */
-    public Matrix getEstimatedBiasesAsMatrix() {
-        return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated gyroscope biases
-     * expressed in radians per second (rad/s).
-     *
-     * @param result instance where result data will be stored.
-     * @return true if result was updated, false otherwise.
-     * @throws WrongSizeException if provided result instance has invalid size.
-     */
-    public boolean getEstimatedBiasesAsMatrix(Matrix result)
-            throws WrongSizeException {
-        if (mEstimatedBiases != null) {
-            result.fromArray(mEstimatedBiases);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets x coordinate of estimated gyroscope bias expressed in radians per
-     * second (rad/s).
-     *
-     * @return x coordinate of estimated gyroscope bias or null if not available.
-     */
-    public Double getEstimatedBiasX() {
-        return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated gyroscope bias expressed in radians per
-     * second (rad/s).
-     *
-     * @return y coordinate of estimated gyroscope bias or null if not available.
-     */
-    public Double getEstimatedBiasY() {
-        return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated gyroscope bias expressed in radians per
-     * second (rad/s).
-     *
-     * @return z coordinate of estimated gyroscope bias or null if not available.
-     */
-    public Double getEstimatedBiasZ() {
-        return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated gyroscope bias.
-     *
-     * @return x coordinate of estimated gyroscope bias or null if not available.
-     */
-    public AngularSpeed getEstimatedBiasAngularSpeedX() {
-        return mEstimatedBiases != null ?
-                new AngularSpeed(mEstimatedBiases[0],
-                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
-    }
-
-    /**
-     * Gets x coordinate of estimated gyroscope bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasAngularSpeedX(AngularSpeed result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[0]);
-            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets y coordinate of estimated gyroscope bias.
-     *
-     * @return y coordinate of estimated gyroscope bias or null if not available.
-     */
-    public AngularSpeed getEstimatedBiasAngularSpeedY() {
-        return mEstimatedBiases != null ?
-                new AngularSpeed(mEstimatedBiases[1],
-                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated gyroscope bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasAngularSpeedY(AngularSpeed result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[1]);
-            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets z coordinate of estimated gyroscope bias.
-     *
-     * @return z coordinate of estimated gyroscope bias or null if not available.
-     */
-    public AngularSpeed getEstimatedBiasAngularSpeedZ() {
-        return mEstimatedBiases != null ?
-                new AngularSpeed(mEstimatedBiases[2],
-                        AngularSpeedUnit.RADIANS_PER_SECOND) : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated gyroscope bias.
-     *
-     * @param result instance where result will be stored.
-     * @return true if result was updated, false if estimation is not available.
-     */
-    public boolean getEstimatedBiasAngularSpeedZ(AngularSpeed result) {
-        if (mEstimatedBiases != null) {
-            result.setValue(mEstimatedBiases[2]);
-            result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -4041,7 +3847,7 @@ public class KnownPositionGyroscopeCalibrator {
         initialM.setElementAt(2, 1, 0.0);
 
         final Matrix invInitialM = Utils.inverse(initialM);
-        final Matrix initialBg = getInitialBiasAsMatrix();
+        final Matrix initialBg = getBiasAsMatrix();
         final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBg);
         final Matrix initialGg = getInitialGg();
         final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);
@@ -4064,13 +3870,8 @@ public class KnownPositionGyroscopeCalibrator {
                 final double[] initial =
                         new double[COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES];
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
-
                 // upper diagonal cross coupling errors M
-                int k = BodyKinematics.COMPONENTS;
+                int k = 0;
                 for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
                     for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
                         if (i <= j) {
@@ -4115,35 +3916,26 @@ public class KnownPositionGyroscopeCalibrator {
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double m11 = result[0];
 
-        final double m11 = result[3];
+        final double m12 = result[1];
+        final double m22 = result[2];
 
-        final double m12 = result[4];
-        final double m22 = result[5];
+        final double m13 = result[3];
+        final double m23 = result[4];
+        final double m33 = result[5];
 
-        final double m13 = result[6];
-        final double m23 = result[7];
-        final double m33 = result[8];
+        final double g11 = result[6];
+        final double g21 = result[7];
+        final double g31 = result[8];
 
-        final double g11 = result[9];
-        final double g21 = result[10];
-        final double g31 = result[11];
+        final double g12 = result[9];
+        final double g22 = result[10];
+        final double g32 = result[11];
 
-        final double g12 = result[12];
-        final double g22 = result[13];
-        final double g32 = result[14];
-
-        final double g13 = result[15];
-        final double g23 = result[16];
-        final double g33 = result[17];
-
-        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
-        b.setElementAtIndex(0, bx);
-        b.setElementAtIndex(1, by);
-        b.setElementAtIndex(2, bz);
+        final double g13 = result[12];
+        final double g23 = result[13];
+        final double g33 = result[14];
 
         final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
                 BodyKinematics.COMPONENTS);
@@ -4173,7 +3965,7 @@ public class KnownPositionGyroscopeCalibrator {
         g.setElementAtIndex(7, g23);
         g.setElementAtIndex(8, g33);
 
-        setResult(m, b, g);
+        setResult(m, g);
     }
 
     /**
@@ -4236,7 +4028,7 @@ public class KnownPositionGyroscopeCalibrator {
         initialM.add(getInitialMg());
 
         final Matrix invInitialM = Utils.inverse(initialM);
-        final Matrix initialBg = getInitialBiasAsMatrix();
+        final Matrix initialBg = getBiasAsMatrix();
         final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBg);
         final Matrix initialGg = getInitialGg();
         final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);
@@ -4259,19 +4051,14 @@ public class KnownPositionGyroscopeCalibrator {
                 final double[] initial =
                         new double[GENERAL_UNKNOWNS_AND_CROSS_BIASES];
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
-
                 // cross coupling errors M
                 final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = initialM.getElementAtIndex(i);
+                for (int i = 0; i < num; i++) {
+                    initial[i] = initialM.getElementAtIndex(i);
                 }
 
                 // g-dependent cross biases G
-                for (int i = 0, j = BodyKinematics.COMPONENTS + num; i < num; i++, j++) {
+                for (int i = 0, j = num; i < num; i++, j++) {
                     initial[j] = initialG.getElementAtIndex(i);
                 }
 
@@ -4304,38 +4091,29 @@ public class KnownPositionGyroscopeCalibrator {
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double m11 = result[0];
+        final double m21 = result[1];
+        final double m31 = result[2];
 
-        final double m11 = result[3];
-        final double m21 = result[4];
-        final double m31 = result[5];
+        final double m12 = result[3];
+        final double m22 = result[4];
+        final double m32 = result[5];
 
-        final double m12 = result[6];
-        final double m22 = result[7];
-        final double m32 = result[8];
+        final double m13 = result[6];
+        final double m23 = result[7];
+        final double m33 = result[8];
 
-        final double m13 = result[9];
-        final double m23 = result[10];
-        final double m33 = result[11];
+        final double g11 = result[9];
+        final double g21 = result[10];
+        final double g31 = result[11];
 
-        final double g11 = result[12];
-        final double g21 = result[13];
-        final double g31 = result[14];
+        final double g12 = result[12];
+        final double g22 = result[13];
+        final double g32 = result[14];
 
-        final double g12 = result[15];
-        final double g22 = result[16];
-        final double g32 = result[17];
-
-        final double g13 = result[18];
-        final double g23 = result[19];
-        final double g33 = result[20];
-
-        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
-        b.setElementAtIndex(0, bx);
-        b.setElementAtIndex(1, by);
-        b.setElementAtIndex(2, bz);
+        final double g13 = result[15];
+        final double g23 = result[16];
+        final double g33 = result[17];
 
         final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
                 BodyKinematics.COMPONENTS);
@@ -4365,7 +4143,7 @@ public class KnownPositionGyroscopeCalibrator {
         g.setElementAtIndex(7, g23);
         g.setElementAtIndex(8, g33);
 
-        setResult(m, b, g);
+        setResult(m, g);
     }
 
     /**
@@ -4445,7 +4223,7 @@ public class KnownPositionGyroscopeCalibrator {
         initialM.setElementAt(2, 1, 0.0);
 
         final Matrix invInitialM = Utils.inverse(initialM);
-        final Matrix initialBg = getInitialBiasAsMatrix();
+        final Matrix initialBg = getBiasAsMatrix();
         final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBg);
 
         mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
@@ -4465,13 +4243,8 @@ public class KnownPositionGyroscopeCalibrator {
             public double[] createInitialParametersArray() {
                 final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
-
                 // upper diagonal cross coupling errors M
-                int k = BodyKinematics.COMPONENTS;
+                int k = 0;
                 for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
                     for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
                         if (i <= j) {
@@ -4510,23 +4283,14 @@ public class KnownPositionGyroscopeCalibrator {
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double m11 = result[0];
 
-        final double m11 = result[3];
+        final double m12 = result[1];
+        final double m22 = result[2];
 
-        final double m12 = result[4];
-        final double m22 = result[5];
-
-        final double m13 = result[6];
-        final double m23 = result[7];
-        final double m33 = result[8];
-
-        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
-        b.setElementAtIndex(0, bx);
-        b.setElementAtIndex(1, by);
-        b.setElementAtIndex(2, bz);
+        final double m13 = result[3];
+        final double m23 = result[4];
+        final double m33 = result[5];
 
         final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
                 BodyKinematics.COMPONENTS);
@@ -4542,7 +4306,7 @@ public class KnownPositionGyroscopeCalibrator {
         m.setElementAtIndex(7, m23);
         m.setElementAtIndex(8, m33);
 
-        setResult(m, b);
+        setResult(m);
     }
 
     /**
@@ -4611,7 +4375,7 @@ public class KnownPositionGyroscopeCalibrator {
         initialM.add(getInitialMg());
 
         final Matrix invInitialM = Utils.inverse(initialM);
-        final Matrix initialBg = getInitialBiasAsMatrix();
+        final Matrix initialBg = getBiasAsMatrix();
         final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBg);
 
         mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
@@ -4629,20 +4393,7 @@ public class KnownPositionGyroscopeCalibrator {
 
             @Override
             public double[] createInitialParametersArray() {
-                final double[] initial = new double[GENERAL_UNKNOWNS];
-
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
-
-                // cross coupling errors M
-                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = initialM.getElementAtIndex(i);
-                }
-
-                return initial;
+                return initialM.toArray();
             }
 
             @Override
@@ -4671,26 +4422,17 @@ public class KnownPositionGyroscopeCalibrator {
 
         final double[] result = mFitter.getA();
 
-        final double bx = result[0];
-        final double by = result[1];
-        final double bz = result[2];
+        final double m11 = result[0];
+        final double m21 = result[1];
+        final double m31 = result[2];
 
-        final double m11 = result[3];
-        final double m21 = result[4];
-        final double m31 = result[5];
+        final double m12 = result[3];
+        final double m22 = result[4];
+        final double m32 = result[5];
 
-        final double m12 = result[6];
-        final double m22 = result[7];
-        final double m32 = result[8];
-
-        final double m13 = result[9];
-        final double m23 = result[10];
-        final double m33 = result[11];
-
-        final Matrix b = new Matrix(BodyKinematics.COMPONENTS, 1);
-        b.setElementAtIndex(0, bx);
-        b.setElementAtIndex(1, by);
-        b.setElementAtIndex(2, bz);
+        final double m13 = result[6];
+        final double m23 = result[7];
+        final double m33 = result[8];
 
         final Matrix m = new Matrix(BodyKinematics.COMPONENTS,
                 BodyKinematics.COMPONENTS);
@@ -4706,7 +4448,7 @@ public class KnownPositionGyroscopeCalibrator {
         m.setElementAtIndex(7, m23);
         m.setElementAtIndex(8, m33);
 
-        setResult(m, b);
+        setResult(m);
     }
 
     /**
@@ -4742,7 +4484,7 @@ public class KnownPositionGyroscopeCalibrator {
         final double[] fixedAngularRate = new double[BodyKinematics.COMPONENTS];
         final Matrix ba = getAccelerometerBiasAsMatrix();
         final Matrix ma = getAccelerometerMa();
-        final Matrix bg = getInitialBiasAsMatrix();
+        final Matrix bg = getBiasAsMatrix();
         final Matrix mg = getInitialMg();
         final Matrix gg = getInitialGg();
         final Matrix x = new Matrix(numMeasurements,
@@ -4952,13 +4694,12 @@ public class KnownPositionGyroscopeCalibrator {
      * cross bias matrices.
      *
      * @param m internal scaling and cross-coupling matrix.
-     * @param b internal bias matrix.
      * @param g internal g-dependent cross bias matrix.
      * @throws AlgebraException if a numerical instability occurs.
      */
-    private void setResult(final Matrix m, final Matrix b, final Matrix g)
+    private void setResult(final Matrix m, final Matrix g)
             throws AlgebraException {
-        setResult(m, b);
+        setResult(m);
 
         // Gg = M*G
         m.multiply(g, mEstimatedGg);
@@ -4968,10 +4709,9 @@ public class KnownPositionGyroscopeCalibrator {
      * Makes proper conversion of internal cross-coupling and bias matrices.
      *
      * @param m internal scaling and cross-coupling matrix.
-     * @param b internal bias matrix.
      * @throws AlgebraException if a numerical instability occurs.
      */
-    private void setResult(final Matrix m, final Matrix b) throws AlgebraException {
+    private void setResult(final Matrix m) throws AlgebraException {
         // Because:
         // M = I + Mg
         // b = M^-1*bg
@@ -4979,13 +4719,6 @@ public class KnownPositionGyroscopeCalibrator {
         // Then:
         // Mg = M - I
         // bg = M*b
-
-        if (mEstimatedBiases == null) {
-            mEstimatedBiases = new double[BodyKinematics.COMPONENTS];
-        }
-
-        final Matrix bg = m.multiplyAndReturnNew(b);
-        bg.toArray(mEstimatedBiases);
 
         if (mEstimatedMg == null) {
             mEstimatedMg = m;
@@ -5027,35 +4760,31 @@ public class KnownPositionGyroscopeCalibrator {
             final int i, final double[] params, final double[] result)
             throws EvaluationException {
 
-        final double bx = params[0];
-        final double by = params[1];
-        final double bz = params[2];
+        final double m11 = params[0];
+        final double m21 = params[1];
+        final double m31 = params[2];
 
-        final double m11 = params[3];
-        final double m21 = params[4];
-        final double m31 = params[5];
+        final double m12 = params[3];
+        final double m22 = params[4];
+        final double m32 = params[5];
 
-        final double m12 = params[6];
-        final double m22 = params[7];
-        final double m32 = params[8];
+        final double m13 = params[6];
+        final double m23 = params[7];
+        final double m33 = params[8];
 
-        final double m13 = params[9];
-        final double m23 = params[10];
-        final double m33 = params[11];
+        final double g11 = params[9];
+        final double g21 = params[10];
+        final double g31 = params[11];
 
-        final double g11 = params[12];
-        final double g21 = params[13];
-        final double g31 = params[14];
+        final double g12 = params[12];
+        final double g22 = params[13];
+        final double g32 = params[14];
 
-        final double g12 = params[15];
-        final double g22 = params[16];
-        final double g32 = params[17];
+        final double g13 = params[15];
+        final double g23 = params[16];
+        final double g33 = params[17];
 
-        final double g13 = params[18];
-        final double g23 = params[19];
-        final double g33 = params[20];
-
-        evaluate(i, bx, by, bz, m11, m21, m31, m12, m22, m32,
+        evaluate(i, m11, m21, m31, m12, m22, m32,
                 m13, m23, m33, g11, g21, g31, g12, g22, g32,
                 g13, g23, g33, result);
     }
@@ -5079,32 +4808,28 @@ public class KnownPositionGyroscopeCalibrator {
             final int i, final double[] params, final double[] result)
             throws EvaluationException {
 
-        final double bx = params[0];
-        final double by = params[1];
-        final double bz = params[2];
+        final double m11 = params[0];
 
-        final double m11 = params[3];
+        final double m12 = params[1];
+        final double m22 = params[2];
 
-        final double m12 = params[4];
-        final double m22 = params[5];
+        final double m13 = params[3];
+        final double m23 = params[4];
+        final double m33 = params[5];
 
-        final double m13 = params[6];
-        final double m23 = params[7];
-        final double m33 = params[8];
+        final double g11 = params[6];
+        final double g21 = params[7];
+        final double g31 = params[8];
 
-        final double g11 = params[9];
-        final double g21 = params[10];
-        final double g31 = params[11];
+        final double g12 = params[9];
+        final double g22 = params[10];
+        final double g32 = params[11];
 
-        final double g12 = params[12];
-        final double g22 = params[13];
-        final double g32 = params[14];
+        final double g13 = params[12];
+        final double g23 = params[13];
+        final double g33 = params[14];
 
-        final double g13 = params[15];
-        final double g23 = params[16];
-        final double g33 = params[17];
-
-        evaluate(i, bx, by, bz, m11, 0.0, 0.0, m12, m22, 0.0,
+        evaluate(i, m11, 0.0, 0.0, m12, m22, 0.0,
                 m13, m23, m33, g11, g21, g31, g12, g22, g32,
                 g13, g23, g33, result);
     }
@@ -5126,23 +4851,19 @@ public class KnownPositionGyroscopeCalibrator {
             final int i, final double[] params, final double[] result)
             throws EvaluationException {
 
-        final double bx = params[0];
-        final double by = params[1];
-        final double bz = params[2];
+        final double m11 = params[0];
+        final double m21 = params[1];
+        final double m31 = params[2];
 
-        final double m11 = params[3];
-        final double m21 = params[4];
-        final double m31 = params[5];
+        final double m12 = params[3];
+        final double m22 = params[4];
+        final double m32 = params[5];
 
-        final double m12 = params[6];
-        final double m22 = params[7];
-        final double m32 = params[8];
+        final double m13 = params[6];
+        final double m23 = params[7];
+        final double m33 = params[8];
 
-        final double m13 = params[9];
-        final double m23 = params[10];
-        final double m33 = params[11];
-
-        evaluate(i, bx, by, bz, m11, m21, m31, m12, m22, m32,
+        evaluate(i, m11, m21, m31, m12, m22, m32,
                 m13, m23, m33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, result);
     }
@@ -5163,20 +4884,16 @@ public class KnownPositionGyroscopeCalibrator {
     private void evaluateCommonAxis(
             final int i, final double[] params, final double[] result)
             throws EvaluationException {
-        final double bx = params[0];
-        final double by = params[1];
-        final double bz = params[2];
+        final double m11 = params[0];
 
-        final double m11 = params[3];
+        final double m12 = params[1];
+        final double m22 = params[2];
 
-        final double m12 = params[4];
-        final double m22 = params[5];
+        final double m13 = params[3];
+        final double m23 = params[4];
+        final double m33 = params[5];
 
-        final double m13 = params[6];
-        final double m23 = params[7];
-        final double m33 = params[8];
-
-        evaluate(i, bx, by, bz, m11, 0.0, 0.0, m12, m22, 0.0,
+        evaluate(i, m11, 0.0, 0.0, m12, m22, 0.0,
                 m13, m23, m33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, result);
     }
@@ -5193,9 +4910,6 @@ public class KnownPositionGyroscopeCalibrator {
      * velocity).
      *
      * @param i      row position.
-     * @param bx     x-coordinate of gyroscope bias.
-     * @param by     y-coordinate of gyroscope bias.
-     * @param bz     z-coordinate of gyroscope bias.
      * @param m11    element 1,1 of cross-coupling error matrix.
      * @param m21    element 2,1 of cross-coupling error matrix.
      * @param m31    element 3,1 of cross-coupling error matrix.
@@ -5219,7 +4933,6 @@ public class KnownPositionGyroscopeCalibrator {
      * @throws EvaluationException if there are numerical instabilities.
      */
     private void evaluate(final int i,
-                          final double bx, final double by, final double bz,
                           final double m11, final double m21, final double m31,
                           final double m12, final double m22, final double m32,
                           final double m13, final double m23, final double m33,
@@ -5291,9 +5004,9 @@ public class KnownPositionGyroscopeCalibrator {
 
             Utils.inverse(mM, mInvM);
 
-            mB.setElementAtIndex(0, bx);
-            mB.setElementAtIndex(1, by);
-            mB.setElementAtIndex(2, bz);
+            mB.setElementAtIndex(0, mBiasX);
+            mB.setElementAtIndex(1, mBiasY);
+            mB.setElementAtIndex(2, mBiasZ);
 
             mG.setElementAt(0, 0, g11);
             mG.setElementAt(1, 0, g21);
@@ -5321,7 +5034,7 @@ public class KnownPositionGyroscopeCalibrator {
 
             final CoordinateTransformation cnb = LevelingEstimator
                     .getAttitude(mFtrueX, mFtrueY, mFtrueZ,
-                    trueAngularRateX, trueAngularRateY, trueAngularRateZ);
+                            trueAngularRateX, trueAngularRateY, trueAngularRateZ);
             final CoordinateTransformation cbn = cnb.inverseAndReturnNew();
 
             final NEDPosition nedPosition = getNedPosition();

@@ -71,7 +71,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
     private static final int SMALL_MEASUREMENT_NUMBER = 16;
     private static final int LARGE_MEASUREMENT_NUMBER = 100000;
 
-    private static final double MAGNETOMETER_NOISE_STD = 1e-8;
+    private static final double MAGNETOMETER_NOISE_STD = 200e-9;
 
     private static final double ABSOLUTE_ERROR = 1e-9;
     private static final double LARGE_ABSOLUTE_ERROR = 5e-5;
@@ -10300,12 +10300,13 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
             if (!hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!mm.equals(estimatedMm, LARGE_ABSOLUTE_ERROR)) {
+            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(hardIron.equals(estimatedHardIron,
                     LARGE_ABSOLUTE_ERROR));
-            assertTrue(mm.equals(estimatedMm, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm,
+                    VERY_LARGE_ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
 
@@ -10592,12 +10593,13 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
             if (!hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!mm.equals(estimatedMm, LARGE_ABSOLUTE_ERROR)) {
+            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
             assertTrue(hardIron.equals(estimatedHardIron,
                     LARGE_ABSOLUTE_ERROR));
-            assertTrue(mm.equals(estimatedMm, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm,
+                    VERY_LARGE_ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
 

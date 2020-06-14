@@ -24,8 +24,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class AccelerationFixerTest {
 
@@ -44,6 +43,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix1() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -80,7 +81,7 @@ public class AccelerationFixerTest {
                 .asSpecificForceArray();
 
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        AccelerationFixer.fix(measuredF, ba, ma, result);
+        fixer.fix(measuredF, ba, ma, result);
 
         // check
         assertEquals(result[0], fx, ABSOLUTE_ERROR);
@@ -89,36 +90,36 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fix(new double[1], ba, ma, result);
+            fixer.fix(new double[1], ba, ma, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredF, new Matrix(1, 1),
+            fixer.fix(measuredF, new Matrix(1, 1),
                     ma, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredF, new Matrix(3, 3),
+            fixer.fix(measuredF, new Matrix(3, 3),
                     ma, result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredF, ba,
+            fixer.fix(measuredF, ba,
                     new Matrix(1, 3), result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredF, ba,
+            fixer.fix(measuredF, ba,
                     new Matrix(3, 1), result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredF, ba, ma, new double[1]);
+            fixer.fix(measuredF, ba, ma, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -126,6 +127,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix2() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -162,7 +165,7 @@ public class AccelerationFixerTest {
                 .asSpecificForceMatrix();
 
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        AccelerationFixer.fix(measuredF, ba, ma, result);
+        fixer.fix(measuredF, ba, ma, result);
 
         // check
         assertEquals(result[0], fx, ABSOLUTE_ERROR);
@@ -171,13 +174,13 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fix(new Matrix(1, 1), ba, ma,
+            fixer.fix(new Matrix(1, 1), ba, ma,
                     result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(new Matrix(3, 3), ba, ma,
+            fixer.fix(new Matrix(3, 3), ba, ma,
                     result);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -186,6 +189,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix3() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -223,7 +228,7 @@ public class AccelerationFixerTest {
 
         final Matrix result = new Matrix(
                 BodyKinematics.COMPONENTS, 1);
-        AccelerationFixer.fix(measuredF, ba, ma, result);
+        fixer.fix(measuredF, ba, ma, result);
 
         // check
         assertEquals(result.getElementAtIndex(0), fx, ABSOLUTE_ERROR);
@@ -232,13 +237,13 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fix(measuredF, ba, ma,
+            fixer.fix(measuredF, ba, ma,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredF, ba, ma,
+            fixer.fix(measuredF, ba, ma,
                     new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -247,6 +252,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix4() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -288,7 +295,7 @@ public class AccelerationFixerTest {
         final double biasZ = ba.getElementAtIndex(2);
 
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+        fixer.fix(measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, ma, result);
 
         // check
@@ -299,6 +306,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix5() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -341,7 +350,7 @@ public class AccelerationFixerTest {
 
         final Matrix result = new Matrix(
                 BodyKinematics.COMPONENTS, 1);
-        AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+        fixer.fix(measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, ma, result);
 
         // check
@@ -351,14 +360,14 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+            fixer.fix(measuredFx, measuredFy, measuredFz,
                     biasX, biasY, biasZ, ma,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+            fixer.fix(measuredFx, measuredFy, measuredFz,
                     biasX, biasY, biasZ, ma,
                     new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
@@ -368,6 +377,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix6() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -419,7 +430,7 @@ public class AccelerationFixerTest {
         final double mzy = ma.getElementAt(2, 1);
 
         final double[] result = new double[BodyKinematics.COMPONENTS];
-        AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+        fixer.fix(measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx, myz,
                 mzx, mzy, result);
 
@@ -431,6 +442,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFix7() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -483,7 +496,7 @@ public class AccelerationFixerTest {
 
         final Matrix result = new Matrix(
                 BodyKinematics.COMPONENTS, 1);
-        AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+        fixer.fix(measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx, myz,
                 mzx, mzy, result);
 
@@ -494,14 +507,14 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+            fixer.fix(measuredFx, measuredFy, measuredFz,
                     biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx, myz,
                     mzx, mzy, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fix(measuredFx, measuredFy, measuredFz,
+            fixer.fix(measuredFx, measuredFy, measuredFz,
                     biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx, myz,
                     mzx, mzy, new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
@@ -511,6 +524,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNew1() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -546,7 +561,7 @@ public class AccelerationFixerTest {
         final double[] measuredF = measuredKinematics
                 .asSpecificForceArray();
 
-        final double[] result = AccelerationFixer.fixAndReturnNew(
+        final double[] result = fixer.fixAndReturnNew(
                 measuredF, ba, ma);
 
         // check
@@ -556,30 +571,30 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fixAndReturnNew(new double[1], ba, ma);
+            fixer.fixAndReturnNew(new double[1], ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fixAndReturnNew(measuredF,
+            fixer.fixAndReturnNew(measuredF,
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fixAndReturnNew(measuredF,
+            fixer.fixAndReturnNew(measuredF,
                     new Matrix(3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fixAndReturnNew(measuredF, ba,
+            fixer.fixAndReturnNew(measuredF, ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fixAndReturnNew(measuredF, ba,
+            fixer.fixAndReturnNew(measuredF, ba,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -588,6 +603,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNew2() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -623,7 +640,7 @@ public class AccelerationFixerTest {
         final Matrix measuredF = measuredKinematics
                 .asSpecificForceMatrix();
 
-        final double[] result = AccelerationFixer.fixAndReturnNew(
+        final double[] result = fixer.fixAndReturnNew(
                 measuredF, ba, ma);
 
         // check
@@ -633,13 +650,13 @@ public class AccelerationFixerTest {
 
         // Force IllegalArgumentException
         try {
-            AccelerationFixer.fixAndReturnNew(
+            fixer.fixAndReturnNew(
                     new Matrix(1, 1), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            AccelerationFixer.fixAndReturnNew(
+            fixer.fixAndReturnNew(
                     new Matrix(3, 3), ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -648,6 +665,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNewMatrix3() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -683,7 +702,7 @@ public class AccelerationFixerTest {
         final Matrix measuredF = measuredKinematics
                 .asSpecificForceMatrix();
 
-        final Matrix result = AccelerationFixer.fixAndReturnNewMatrix(
+        final Matrix result = fixer.fixAndReturnNewMatrix(
                 measuredF, ba, ma);
 
         // check
@@ -694,6 +713,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNew4() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -734,7 +755,7 @@ public class AccelerationFixerTest {
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final double[] result = AccelerationFixer.fixAndReturnNew(
+        final double[] result = fixer.fixAndReturnNew(
                 measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, ma);
 
@@ -746,6 +767,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNewMatrix5() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -786,7 +809,7 @@ public class AccelerationFixerTest {
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final Matrix result = AccelerationFixer.fixAndReturnNewMatrix(
+        final Matrix result = fixer.fixAndReturnNewMatrix(
                 measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, ma);
 
@@ -798,6 +821,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNew6() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -848,7 +873,7 @@ public class AccelerationFixerTest {
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final double[] result = AccelerationFixer.fixAndReturnNew(
+        final double[] result = fixer.fixAndReturnNew(
                 measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx, myz,
                 mzx, mzy);
@@ -861,6 +886,8 @@ public class AccelerationFixerTest {
 
     @Test
     public void testFixAndReturnNew7() throws AlgebraException {
+        final AccelerationFixer fixer = new AccelerationFixer();
+
         final Matrix ba = generateBa();
         final Matrix bg = generateBg();
         final Matrix ma = generateMa();
@@ -911,7 +938,7 @@ public class AccelerationFixerTest {
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final Matrix result = AccelerationFixer.fixAndReturnNewMatrix(
+        final Matrix result = fixer.fixAndReturnNewMatrix(
                 measuredFx, measuredFy, measuredFz,
                 biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx, myz,
                 mzx, mzy);

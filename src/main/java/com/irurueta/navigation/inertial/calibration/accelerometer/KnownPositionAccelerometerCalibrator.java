@@ -7615,7 +7615,7 @@ public class KnownPositionAccelerometerCalibrator {
         // fmeas = M*(ftrue + b)
         // fmeas = M*ftrue + M*b
 
-        //where:
+        // where:
         // M = I + Ma
         // ba = M*b = (I + Ma)*b --> b = M^-1*ba
 
@@ -7652,7 +7652,8 @@ public class KnownPositionAccelerometerCalibrator {
                     }
                 });
 
-        final Matrix initialM = Matrix.identity(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
+        final Matrix initialM = Matrix.identity(BodyKinematics.COMPONENTS,
+                BodyKinematics.COMPONENTS);
         initialM.add(getInitialMa());
 
         // Force initial M to be upper diagonal

@@ -18,17 +18,74 @@ package com.irurueta.navigation.inertial.calibration;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 
 /**
  * Fixes acceleration values taking into account provided bias and cross coupling errors.
  */
 public class AccelerationFixer {
+    /**
+     * Identity matrix to be reused.
+     */
+    private Matrix mIdentity;
 
     /**
-     * Prevents instantiation.
+     * Temporary matrix to be reused.
      */
-    private AccelerationFixer() {
+    private Matrix mTmp1;
+
+    /**
+     * Temporary matrix to be reused.
+     */
+    private Matrix mTmp2;
+
+    /**
+     * Temporary matrix to be reused.
+     */
+    private Matrix mDiff;
+
+    /**
+     * Temporary matrix to be reused.
+     */
+    private Matrix mTmp3;
+
+    /**
+     * Measured specific force array to be reused.
+     */
+    private final double[] mMeasuredF =
+            new double[BodyKinematics.COMPONENTS];
+
+    /**
+     * Bias matrix to be reused.
+     */
+    private Matrix mBias;
+
+    /**
+     * Cross coupling errors matrix to be reused.
+     */
+    private Matrix mCrossCouplingErrors;
+
+    /**
+     * Constructor.
+     */
+    public AccelerationFixer() {
+        try {
+            mIdentity = Matrix.identity(BodyKinematics.COMPONENTS,
+                    BodyKinematics.COMPONENTS);
+            mTmp1 = new Matrix(BodyKinematics.COMPONENTS,
+                    BodyKinematics.COMPONENTS);
+            mTmp2 = new Matrix(BodyKinematics.COMPONENTS,
+                    BodyKinematics.COMPONENTS);
+            mDiff = new Matrix(BodyKinematics.COMPONENTS, 1);
+            mTmp3 = new Matrix(BodyKinematics.COMPONENTS, 1);
+
+            mBias = new Matrix(BodyKinematics.COMPONENTS, 1);
+            mCrossCouplingErrors = new Matrix(BodyKinematics.COMPONENTS,
+                    BodyKinematics.COMPONENTS);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+        }
     }
 
     /**
@@ -48,11 +105,10 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final double[] measuredF, final Matrix bias,
             final Matrix crossCouplingErrors, final double[] result)
             throws AlgebraException {
-
         if (measuredF.length != BodyKinematics.COMPONENTS) {
             throw new IllegalArgumentException();
         }
@@ -78,19 +134,18 @@ public class AccelerationFixer {
 
         // Hecen:
         // ftrue = (I + Ma)^-1 * (fmeas - ba)
-        final Matrix tmp1 = Matrix.identity(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-        tmp1.add(crossCouplingErrors);
+        mIdentity.add(crossCouplingErrors, mTmp1);
 
-        final Matrix tmp2 = Utils.inverse(tmp1);
+        Utils.inverse(mTmp1, mTmp2);
 
-        final Matrix diff = new Matrix(BodyKinematics.COMPONENTS, 1);
         for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-            diff.setElementAtIndex(i, measuredF[i] - bias.getElementAtIndex(i));
+            mDiff.setElementAtIndex(i,
+                    measuredF[i] - bias.getElementAtIndex(i));
         }
 
-        tmp2.multiply(diff);
+        mTmp2.multiply(mDiff, mTmp3);
 
-        tmp2.toArray(result);
+        mTmp3.toArray(result);
     }
 
     /**
@@ -109,7 +164,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final Matrix measuredF, final Matrix bias,
             final Matrix crossCouplingErrors, final double[] result)
             throws AlgebraException {
@@ -121,6 +176,7 @@ public class AccelerationFixer {
 
         fix(measuredF.getBuffer(), bias, crossCouplingErrors, result);
     }
+
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -139,7 +195,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final Matrix measuredF, final Matrix bias,
             final Matrix crossCouplingErrors, final Matrix result)
             throws AlgebraException {
@@ -151,6 +207,7 @@ public class AccelerationFixer {
 
         fix(measuredF, bias, crossCouplingErrors, result.getBuffer());
     }
+
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -179,19 +236,21 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final Matrix crossCouplingErrors,
             final double[] result) throws AlgebraException {
 
-        final double[] measuredF = new double[]{measuredFx, measuredFy, measuredFz};
-        final Matrix bias = new Matrix(BodyKinematics.COMPONENTS, 1);
-        bias.setElementAtIndex(0, biasX);
-        bias.setElementAtIndex(1, biasY);
-        bias.setElementAtIndex(2, biasZ);
+        mMeasuredF[0] = measuredFx;
+        mMeasuredF[1] = measuredFy;
+        mMeasuredF[2] = measuredFz;
 
-        fix(measuredF, bias, crossCouplingErrors, result);
+        mBias.setElementAtIndex(0, biasX);
+        mBias.setElementAtIndex(1, biasY);
+        mBias.setElementAtIndex(2, biasZ);
+
+        fix(mMeasuredF, mBias, crossCouplingErrors, result);
     }
 
     /**
@@ -221,7 +280,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final Matrix crossCouplingErrors, final Matrix result)
@@ -235,6 +294,7 @@ public class AccelerationFixer {
         fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ, crossCouplingErrors,
                 result.getBuffer());
     }
+
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -271,7 +331,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final double sx, final double sy, final double sz,
@@ -280,20 +340,20 @@ public class AccelerationFixer {
             final double mzx, final double mzy,
             final double[] result) throws AlgebraException {
 
-        final Matrix crossCouplingErrors = new Matrix(
-                BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
-        crossCouplingErrors.setElementAt(0, 0, sx);
-        crossCouplingErrors.setElementAt(1, 1, sy);
-        crossCouplingErrors.setElementAt(2, 2, sz);
-        crossCouplingErrors.setElementAt(0, 1, mxy);
-        crossCouplingErrors.setElementAt(0, 2, mxz);
-        crossCouplingErrors.setElementAt(1, 0, myx);
-        crossCouplingErrors.setElementAt(1, 2, myz);
-        crossCouplingErrors.setElementAt(2, 0, mzx);
-        crossCouplingErrors.setElementAt(2, 1, mzy);
+        mCrossCouplingErrors.setElementAt(0, 0, sx);
+        mCrossCouplingErrors.setElementAt(1, 1, sy);
+        mCrossCouplingErrors.setElementAt(2, 2, sz);
+        mCrossCouplingErrors.setElementAt(0, 1, mxy);
+        mCrossCouplingErrors.setElementAt(0, 2, mxz);
+        mCrossCouplingErrors.setElementAt(1, 0, myx);
+        mCrossCouplingErrors.setElementAt(1, 2, myz);
+        mCrossCouplingErrors.setElementAt(2, 0, mzx);
+        mCrossCouplingErrors.setElementAt(2, 1, mzy);
 
-        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ, crossCouplingErrors, result);
+        fix(measuredFx, measuredFy, measuredFz, biasX, biasY, biasZ,
+                mCrossCouplingErrors, result);
     }
+
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -330,7 +390,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static void fix(
+    public void fix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final double sx, final double sy, final double sz,
@@ -348,6 +408,7 @@ public class AccelerationFixer {
                 sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy, result.getBuffer());
     }
 
+
     /**
      * Fixes provided measured specific force values by undoing the errors
      * introduced by the accelerometer model to restore the true specific
@@ -365,7 +426,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static double[] fixAndReturnNew(
+    public double[] fixAndReturnNew(
             final double[] measuredF, final Matrix bias,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
@@ -374,6 +435,7 @@ public class AccelerationFixer {
         return result;
     }
 
+
     /**
      * Fixes provided measured specific force values by undoing the errors
      * introduced by the accelerometer model to restore the true specific
@@ -391,7 +453,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static double[] fixAndReturnNew(
+    public double[] fixAndReturnNew(
             final Matrix measuredF, final Matrix bias,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
@@ -400,6 +462,7 @@ public class AccelerationFixer {
         return result;
     }
 
+
     /**
      * Fixes provided measured specific force values by undoing the errors
      * introduced by the accelerometer model to restore the true specific
@@ -417,7 +480,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static Matrix fixAndReturnNewMatrix(
+    public Matrix fixAndReturnNewMatrix(
             final Matrix measuredF, final Matrix bias,
             final Matrix crossCouplingErrors) throws AlgebraException {
 
@@ -454,7 +517,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static double[] fixAndReturnNew(
+    public double[] fixAndReturnNew(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final Matrix crossCouplingErrors) throws AlgebraException {
@@ -464,6 +527,7 @@ public class AccelerationFixer {
                 biasX, biasY, biasZ, crossCouplingErrors, result);
         return result;
     }
+
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -492,7 +556,7 @@ public class AccelerationFixer {
      * @throws IllegalArgumentException if any of the provided parameters does
      *                                  not have proper size.
      */
-    public static Matrix fixAndReturnNewMatrix(
+    public Matrix fixAndReturnNewMatrix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final Matrix crossCouplingErrors) throws AlgebraException {
@@ -504,6 +568,7 @@ public class AccelerationFixer {
                 crossCouplingErrors, result);
         return result;
     }
+
 
     /**
      * Fixes provided measured specific force values by undoing the errors
@@ -537,10 +602,8 @@ public class AccelerationFixer {
      * @return restored true specific force expressed in meters per squared
      * second (m/s^2).
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
      */
-    public static double[] fixAndReturnNew(
+    public double[] fixAndReturnNew(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final double sx, final double sy, final double sz,
@@ -590,10 +653,8 @@ public class AccelerationFixer {
      * @return restored true specific force expressed in meters per squared
      * second (m/s^2).
      * @throws AlgebraException         if there are numerical instabilities.
-     * @throws IllegalArgumentException if any of the provided parameters does
-     *                                  not have proper size.
      */
-    public static Matrix fixAndReturnNewMatrix(
+    public Matrix fixAndReturnNewMatrix(
             final double measuredFx, final double measuredFy, final double measuredFz,
             final double biasX, final double biasY, final double biasZ,
             final double sx, final double sy, final double sz,

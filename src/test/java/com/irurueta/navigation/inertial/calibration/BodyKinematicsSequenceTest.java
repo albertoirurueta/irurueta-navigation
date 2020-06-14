@@ -15,6 +15,9 @@
  */
 package com.irurueta.navigation.inertial.calibration;
 
+import com.irurueta.navigation.frames.CoordinateTransformation;
+import com.irurueta.navigation.frames.FrameType;
+import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
@@ -69,6 +72,63 @@ public class BodyKinematicsSequenceTest {
     }
 
     @Test
+    public void testConstructor3() throws InvalidSourceAndDestinationFrameTypeException {
+        final CoordinateTransformation cbn = new CoordinateTransformation(
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                new BodyKinematicsSequence<>(cbn);
+
+        // check
+        assertSame(sequence.getStartBodyAttitude(), cbn);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        sequence = null;
+        try {
+            sequence = new BodyKinematicsSequence<>(
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
+        assertNull(sequence);
+    }
+
+    @Test
+    public void testConstructor4() throws InvalidSourceAndDestinationFrameTypeException {
+        final List<StandardDeviationTimedBodyKinematics> items = createItems();
+        final CoordinateTransformation cbn = new CoordinateTransformation(
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                new BodyKinematicsSequence<>(items, cbn);
+
+        final List<StandardDeviationTimedBodyKinematics> sorted1 = new ArrayList<>();
+        assertTrue(sequence.getSortedItems(sorted1));
+        final List<StandardDeviationTimedBodyKinematics> sorted2 = sequence
+                .getSortedItems();
+
+        // check
+        assertEquals(sorted1, sorted2);
+
+        assertEquals(sorted1.size(), 2);
+        assertTrue(sorted1.get(0).getTimestampSeconds()
+                < sorted1.get(1).getTimestampSeconds());
+        assertEquals(sequence.getItemsCount(), 2);
+        assertSame(sequence.getStartBodyAttitude(), cbn);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        sequence = null;
+        try {
+            sequence = new BodyKinematicsSequence<>(items,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
+        assertNull(sequence);
+    }
+
+    @Test
     public void testSetItems() {
         final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
                 new BodyKinematicsSequence<>();
@@ -88,6 +148,43 @@ public class BodyKinematicsSequenceTest {
         assertTrue(sorted.get(0).getTimestampSeconds()
                 < sorted.get(1).getTimestampSeconds());
         assertEquals(sequence.getItemsCount(), 2);
+    }
+
+    @Test
+    public void testIsValidBodyToEcefCoordinateTransformationMatrix() {
+        final CoordinateTransformation cbn1 = new CoordinateTransformation(
+                FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        final CoordinateTransformation cbn2 = new CoordinateTransformation(
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        assertFalse(BodyKinematicsSequence.isValidBodyToEcefCoordinateTransformationMatrix(cbn1));
+        assertTrue(BodyKinematicsSequence.isValidBodyToEcefCoordinateTransformationMatrix(cbn2));
+    }
+
+    @Test
+    public void testGetSetStartBodyAttitude() throws InvalidSourceAndDestinationFrameTypeException {
+        final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                new BodyKinematicsSequence<>();
+
+        // check initial value
+        assertNull(sequence.getStartBodyAttitude());
+
+        // set new value
+        final CoordinateTransformation cbn = new CoordinateTransformation(
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        sequence.setStartBodyAttitude(cbn);
+
+        // check
+        assertSame(sequence.getStartBodyAttitude(), cbn);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        try {
+            sequence.setStartBodyAttitude(
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
     }
 
     private List<StandardDeviationTimedBodyKinematics> createItems() {

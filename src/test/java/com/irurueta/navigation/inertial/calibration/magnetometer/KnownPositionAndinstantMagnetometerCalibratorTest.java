@@ -72,7 +72,7 @@ public class KnownPositionAndinstantMagnetometerCalibratorTest implements
 
     private static final int LARGE_MEASUREMENT_NUMBER = 100000;
 
-    private static final double MAGNETOMETER_NOISE_STD = 1e-8;
+    private static final double MAGNETOMETER_NOISE_STD = 200e-9;
 
     private static final double ABSOLUTE_ERROR = 1e-9;
     private static final double LARGE_ABSOLUTE_ERROR = 5e-5;
@@ -5130,12 +5130,12 @@ public class KnownPositionAndinstantMagnetometerCalibratorTest implements
             if (!hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
+            if (!mm.equals(estimatedMm, 5.0 * VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
 
             assertTrue(hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR));
-            assertTrue(mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, 5.0 * VERY_LARGE_ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
 
@@ -5268,12 +5268,12 @@ public class KnownPositionAndinstantMagnetometerCalibratorTest implements
             if (!hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
-            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
+            if (!mm.equals(estimatedMm, 5.0 * VERY_LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
 
             assertTrue(hardIron.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR));
-            assertTrue(mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, 5.0 * VERY_LARGE_ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
 
@@ -5454,6 +5454,13 @@ public class KnownPositionAndinstantMagnetometerCalibratorTest implements
             calibrator.setMagneticModel(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.calibrate();
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
+            fail("LockedException expected but not thrown");
         }
     }
 

@@ -522,6 +522,12 @@ public class TurntableGyroscopeCalibrator {
     private Matrix mTmp;
 
     /**
+     * Acceleration fixer.
+     */
+    private final AccelerationFixer mAccelerationFixer =
+            new AccelerationFixer();
+
+    /**
      * Constructor.
      */
     public TurntableGyroscopeCalibrator() {
@@ -4666,7 +4672,7 @@ public class TurntableGyroscopeCalibrator {
         // bg = M*b --> b = M^-1*bg
         // Gg = M*G --> G = M^-1*Gg
 
-        // We know that the norm of the true angular rate when the device is in a pixed
+        // We know that the norm of the true angular rate when the device is in a fixed
         // and unknown position and orientation is equal to the Earth rotation rate.
         // ||Ωtrue|| = 7.292115E-5 rad/s
 
@@ -4701,7 +4707,7 @@ public class TurntableGyroscopeCalibrator {
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
                     public double evaluate(double[] point) throws EvaluationException {
-                        return evaluateCommonAxisWitGDependentCrossBiases(point);
+                        return evaluateCommonAxisWithGDependentCrossBiases(point);
                     }
                 });
 
@@ -4774,7 +4780,7 @@ public class TurntableGyroscopeCalibrator {
 
                         gradientEstimator.gradient(params, derivatives);
 
-                        return evaluateCommonAxisWitGDependentCrossBiases(params);
+                        return evaluateCommonAxisWithGDependentCrossBiases(params);
                     }
                 });
 
@@ -4911,7 +4917,7 @@ public class TurntableGyroscopeCalibrator {
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
                     public double evaluate(double[] point) throws EvaluationException {
-                        return evaluateGeneralWitGDependentCrossBiases(point);
+                        return evaluateGeneralWithGDependentCrossBiases(point);
                     }
                 });
 
@@ -4973,7 +4979,7 @@ public class TurntableGyroscopeCalibrator {
 
                         gradientEstimator.gradient(params, derivatives);
 
-                        return evaluateGeneralWitGDependentCrossBiases(params);
+                        return evaluateGeneralWithGDependentCrossBiases(params);
                     }
                 });
 
@@ -5067,7 +5073,7 @@ public class TurntableGyroscopeCalibrator {
         // Ideally a least squares solution tries to minimize noise component, so:
         // Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue
 
-        // Since G-dependent cross giases are ignored, we can assume that Gg = 0
+        // Since G-dependent cross biases are ignored, we can assume that Gg = 0
 
         // Hence:
         // Ωmeas = bg + (I + Mg) * Ωtrue
@@ -5607,7 +5613,7 @@ public class TurntableGyroscopeCalibrator {
      * Computes estimated true angular rate squared norm using current measured
      * angular rate and specific force along with provided parameters for the
      * general case when G-dependent cross biases are taken into account.
-     * This methos is internally executed during gradient estimation and
+     * This method is internally executed during gradient estimation and
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
      * @param params array containing parameters for the general purpose case
@@ -5616,7 +5622,7 @@ public class TurntableGyroscopeCalibrator {
      * @return estimated true angular rate squared norm.
      * @throws EvaluationException if there are numerical instabilities.
      */
-    private double evaluateGeneralWitGDependentCrossBiases(
+    private double evaluateGeneralWithGDependentCrossBiases(
             final double[] params) throws EvaluationException {
         final double bx = params[0];
         final double by = params[1];
@@ -5656,7 +5662,7 @@ public class TurntableGyroscopeCalibrator {
      * angular rate and specific force along with provided parameters when
      * common z-axis is assumed and G-dependent cross biases are taken into
      * account.
-     * This methos is internally executed during gradient estimation and
+     * This method is internally executed during gradient estimation and
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
      * @param params array containing parameters for the general purpose case
@@ -5665,7 +5671,7 @@ public class TurntableGyroscopeCalibrator {
      * @return estimated true angular rate squared norm.
      * @throws EvaluationException if there are numerical instabilities.
      */
-    private double evaluateCommonAxisWitGDependentCrossBiases(
+    private double evaluateCommonAxisWithGDependentCrossBiases(
             final double[] params) throws EvaluationException {
         final double bx = params[0];
         final double by = params[1];
@@ -5893,7 +5899,7 @@ public class TurntableGyroscopeCalibrator {
 
             // fix measured accelerometer value to obtain true
             // specific force
-            AccelerationFixer.fix(mFmeas, mBa, mMa, mFtrue);
+            mAccelerationFixer.fix(mFmeas, mBa, mMa, mFtrue);
             mG.multiply(mFtrue, mTmp);
 
             mInvM.multiply(mMeasAngularRate, mTrueAngularRate);

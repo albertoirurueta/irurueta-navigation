@@ -516,6 +516,12 @@ public class KnownBiasTurntableGyroscopeCalibrator {
     private Matrix mTmp;
 
     /**
+     * Acceleration fixer.
+     */
+    private final AccelerationFixer mAccelerationFixer =
+            new AccelerationFixer();
+
+    /**
      * Constructor.
      */
     public KnownBiasTurntableGyroscopeCalibrator() {
@@ -5555,7 +5561,7 @@ public class KnownBiasTurntableGyroscopeCalibrator {
 
             // fix measured accelerometer value to obtain true
             // specific force
-            AccelerationFixer.fix(mFmeas, mBa, mMa, mFtrue);
+            mAccelerationFixer.fix(mFmeas, mBa, mMa, mFtrue);
             mG.multiply(mFtrue, mTmp);
 
             mInvM.multiply(mMeasAngularRate, mTrueAngularRate);
