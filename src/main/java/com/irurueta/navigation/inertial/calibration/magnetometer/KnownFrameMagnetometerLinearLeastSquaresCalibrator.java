@@ -38,8 +38,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Estimates magnetometer hard-iron biases, cross couplings and scaling
- * factors.
+ * Estimates magnetometer hard-iron biases, soft-iron cross couplings and
+ * scaling factors.
  * <p>
  * This calibrator uses a linear approach to find a minimum least squared error
  * solution.
@@ -998,8 +998,7 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Internal method to perform calibration when common z-axis is assumed
-     * for the accelerometer, gyroscope and magnetometer.
+     * Internal method to perform general calibration.
      *
      * @throws AlgebraException if there are numerical errors.
      * @throws IOException      if world magnetic model cannot be loaded.

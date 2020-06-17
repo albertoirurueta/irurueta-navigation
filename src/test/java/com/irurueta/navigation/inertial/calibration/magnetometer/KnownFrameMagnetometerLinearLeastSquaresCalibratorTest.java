@@ -1327,15 +1327,16 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibratorTest implements
         assertTrue(numValid > 0);
     }
 
-
     @Override
-    public void onCalibrateStart(KnownFrameMagnetometerLinearLeastSquaresCalibrator calibrator) {
+    public void onCalibrateStart(
+            final KnownFrameMagnetometerLinearLeastSquaresCalibrator calibrator) {
         checkLocked(calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(KnownFrameMagnetometerLinearLeastSquaresCalibrator calibrator) {
+    public void onCalibrateEnd(
+            final KnownFrameMagnetometerLinearLeastSquaresCalibrator calibrator) {
         checkLocked(calibrator);
         mCalibrateEnd++;
     }

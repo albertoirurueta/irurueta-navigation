@@ -4904,7 +4904,7 @@ public class KnownBiasAndPositionGyroscopeCalibrator {
      * Since we are calibrating, we can obtain fixed angular rates using
      * provided parameters and a {@link LevelingEstimator2} to obtain
      * a body attitude (that must be converted from
-     * Local Navigation -> Body frame transformation to a Body frame -> ECEF
+     * Local Navigation - Body frame transformation to a Body frame - ECEF
      * by taking the inverse of estimated attitude of the leveling estimator
      * and converting it to ECEF frame using current position and zero
      * velocity).

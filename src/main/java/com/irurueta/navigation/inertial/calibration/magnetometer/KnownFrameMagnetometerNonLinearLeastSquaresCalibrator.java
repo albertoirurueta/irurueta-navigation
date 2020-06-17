@@ -3368,7 +3368,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Gets initial hard-iron  bias to be used to find a solution as an array.
+     * Gets initial hard-iron bias to be used to find a solution as an array.
      * Array values are expressed in Teslas (T).
      *
      * @param result instance where result data will be copied to.
@@ -3448,7 +3448,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Sets initial hard-iron bias to be used to find a solution as an array.
+     * Sets initial hard-iron bias to be used to find a solution.
      *
      * @param initialHardIron initial hard-iron bias to find a solution.
      * @throws LockedException          if calibrator is currently running.
