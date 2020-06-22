@@ -6890,6 +6890,10 @@ public class SecondOrderNonLinearFingerprintPositionEstimator3DTest
             }
         }
 
+        if (bestPos != 0 && bestPos != 3 && bestPos != 4) {
+            LOGGER.log(Level.SEVERE,
+                    "bestNum: " + bestNum + ", bestPos: " + bestPos);
+        }
         assertTrue(bestNum == numBestIsNoMeanRssiPosition ||
                 bestNum == numBestIsNoMeanFinderEstimatedPosition ||
                 bestNum == numBestIsNoMeanReadingsEstimatedPosition);
