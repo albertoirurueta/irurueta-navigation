@@ -4072,6 +4072,9 @@ public class ThirdOrderNonLinearFingerprintPositionEstimator3DTest
             }
         }
 
+        if (bestPos != 0 && bestPos != 2) {
+            LOGGER.log(Level.SEVERE, "bestNum: " + bestNum + ", bestPos: " + bestPos);
+        }
         assertTrue(bestNum == numBestIsNoMeanRssiPosition ||
                 bestNum == numBestIsNoMeansEstimatedPosition);
         assertTrue(bestPos == 0 || bestPos == 2);
