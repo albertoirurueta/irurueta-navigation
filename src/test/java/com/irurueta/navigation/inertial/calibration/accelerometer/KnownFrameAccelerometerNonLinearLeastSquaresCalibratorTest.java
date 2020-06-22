@@ -9316,7 +9316,6 @@ public class KnownFrameAccelerometerNonLinearLeastSquaresCalibratorTest implemen
         assertEstimatedResult(estimatedBa, estimatedMa, calibrator);
 
         assertNotNull(calibrator.getEstimatedCovariance());
-        assertTrue(calibrator.getEstimatedChiSq() < 0.0);
     }
 
     @Test
