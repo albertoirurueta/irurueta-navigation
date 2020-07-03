@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class QuaternionIntegratorTest {
 
@@ -65,7 +64,7 @@ public class QuaternionIntegratorTest {
     private static final int TIMES = 100;
 
     @Test
-    public void testIntegrateGyroSequence1WithInitialAttitudeAndNoSequenceStartBodyAttitude()
+    public void testIntegrateGyroSequence1WithInitialAttitude()
             throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException,
             RotationException, InertialNavigatorException {
@@ -158,7 +157,187 @@ public class QuaternionIntegratorTest {
     }
 
     @Test
-    public void testIntegrateGyroSequence1WithNoInitialAttitudeAndSequenceStartBodyAttitude()
+    public void testIntegrateGyroSequence1WithNoInitialAttitude()
+            throws InvalidSourceAndDestinationFrameTypeException,
+            InvalidRotationMatrixException,
+            RotationException, InertialNavigatorException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double latitude = Math.toRadians(randomizer.nextDouble(
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(randomizer.nextDouble(
+                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double roll1 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch1 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw1 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final CoordinateTransformation cbn1 = new CoordinateTransformation(
+                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+
+            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
+            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
+
+            // compute new orientation after 1 second
+            final double roll2 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch2 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw2 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final CoordinateTransformation cbn2 = new CoordinateTransformation(
+                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+
+            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
+            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
+
+            // assume that body kinematics are constant during the time interval of 1 second
+            final BodyKinematics kinematics = ECEFKinematicsEstimator
+                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
+
+
+            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
+            // set the identity ad initial attitude
+            previousFrame.setCoordinateTransformation(
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
+
+            final ECEFFrame currentFrame = new ECEFFrame();
+
+            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
+            for (int i = 0; i < NUM_SAMPLES; i++) {
+                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
+                        currentFrame);
+
+                previousFrame.copyFrom(currentFrame);
+
+                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
+                final StandardDeviationTimedBodyKinematics item =
+                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
+                items.add(item);
+            }
+
+            final Quaternion expected = currentFrame.getCoordinateTransformation()
+                    .asRotation().toQuaternion();
+            expected.normalize();
+
+            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                    new BodyKinematicsSequence<>(items);
+            final Quaternion result = new Quaternion();
+
+            QuaternionIntegrator.integrateGyroSequence(sequence, null, result);
+            result.normalize();
+
+            if (!result.equals(expected, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testIntegrateGyroSequence2()
+            throws InvalidSourceAndDestinationFrameTypeException,
+            InvalidRotationMatrixException,
+            RotationException, InertialNavigatorException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double latitude = Math.toRadians(randomizer.nextDouble(
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(randomizer.nextDouble(
+                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double roll1 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch1 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw1 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final CoordinateTransformation cbn1 = new CoordinateTransformation(
+                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+
+            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
+            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
+
+            // compute new orientation after 1 second
+            final double roll2 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch2 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw2 = Math.toRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final CoordinateTransformation cbn2 = new CoordinateTransformation(
+                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+
+            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
+            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
+
+            // assume that body kinematics are constant during the time interval of 1 second
+            final BodyKinematics kinematics = ECEFKinematicsEstimator
+                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
+
+
+            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
+            // set the identity ad initial attitude
+            previousFrame.setCoordinateTransformation(
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
+
+            final ECEFFrame currentFrame = new ECEFFrame();
+
+            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
+            for (int i = 0; i < NUM_SAMPLES; i++) {
+                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
+                        currentFrame);
+
+                previousFrame.copyFrom(currentFrame);
+
+                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
+                final StandardDeviationTimedBodyKinematics item =
+                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
+                items.add(item);
+            }
+
+            final Quaternion expected = currentFrame.getCoordinateTransformation()
+                    .asRotation().toQuaternion();
+            expected.normalize();
+
+            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                    new BodyKinematicsSequence<>(items);
+            final Quaternion result = new Quaternion();
+
+            QuaternionIntegrator.integrateGyroSequence(sequence, result);
+            result.normalize();
+
+            if (!result.equals(expected, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testIntegrateGyroSequenceAndReturnNew1()
             throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException,
             RotationException, InertialNavigatorException {
@@ -230,10 +409,12 @@ public class QuaternionIntegratorTest {
             assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
 
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final Quaternion result = new Quaternion();
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, null, result);
+                    new BodyKinematicsSequence<>(items);
+            final Quaternion initialAttitude = ecefFrame1.getCoordinateTransformation()
+                    .asRotation().toQuaternion();
+            final Quaternion result = QuaternionIntegrator
+                    .integrateGyroSequenceAndReturnNew(sequence,
+                            initialAttitude);
             result.normalize();
 
             if (!result.equals(expected, ABSOLUTE_ERROR)) {
@@ -249,11 +430,10 @@ public class QuaternionIntegratorTest {
     }
 
     @Test
-    public void testIntegrateGyroSequence1WithNoInitialAttitude()
+    public void testIntegrateGyroSequenceAndReturnNew2()
             throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException,
             RotationException, InertialNavigatorException {
-
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -321,997 +501,9 @@ public class QuaternionIntegratorTest {
 
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
                     new BodyKinematicsSequence<>(items);
-            final Quaternion result = new Quaternion();
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, null, result);
-            result.normalize();
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence2WithSequenceStartBodyAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException,
-            RotationException, InertialNavigatorException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final Quaternion expected = currentFrame.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected.normalize();
-
-            final Quaternion expected2 = ecefFrame2.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected2.normalize();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final Quaternion result = new Quaternion();
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, result);
-            result.normalize();
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence2WithNoInitialAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException,
-            RotationException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            // set the identity ad initial attitude
-            previousFrame.setCoordinateTransformation(
-                    new CoordinateTransformation(FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
-
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final Quaternion expected = currentFrame.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected.normalize();
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items);
-            final Quaternion result = new Quaternion();
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, result);
-            result.normalize();
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence3WithInitialAttitudeAndNoSequenceStartBodyAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final CoordinateTransformation expected2 = ecefFrame2.getCoordinateTransformation();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items);
-            final CoordinateTransformation initialAttitude =
-                    ecefFrame1.getCoordinateTransformation();
-            final CoordinateTransformation result =
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, initialAttitude, result);
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence3WithNoInitialAttitudeAndSequenceStartBodyAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final CoordinateTransformation expected2 = ecefFrame2.getCoordinateTransformation();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final CoordinateTransformation result =
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, null, result);
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence3WithNoInitialAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            // set the identity ad initial attitude
-            previousFrame.setCoordinateTransformation(
-                    new CoordinateTransformation(FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
-
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items);
-            final CoordinateTransformation result =
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, null, result);
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence4WithSequenceStartBodyAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final CoordinateTransformation expected2 = ecefFrame2.getCoordinateTransformation();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final CoordinateTransformation result =
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, result);
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequence4WithNoInitialAttitude()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            // set the identity ad initial attitude
-            previousFrame.setCoordinateTransformation(
-                    new CoordinateTransformation(FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
-
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items);
-            final CoordinateTransformation result =
-                    new CoordinateTransformation(
-                            FrameType.BODY_FRAME,
-                            FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-            QuaternionIntegrator.integrateGyroSequence(sequence, result);
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequenceAndReturnNewQuaternion1()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException,
-            RotationException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final Quaternion expected = currentFrame.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected.normalize();
-
-            final Quaternion expected2 = ecefFrame2.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected2.normalize();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items);
-            final Quaternion initialAttitude = ecefFrame1.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
             final Quaternion result = QuaternionIntegrator
-                    .integrateGyroSequenceAndReturnNewQuaternion(sequence,
-                            initialAttitude);
+                    .integrateGyroSequenceAndReturnNew(sequence);
             result.normalize();
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testIntegrateGyroSequenceAndReturnNewQuaternion2()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException,
-            RotationException, InertialNavigatorException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final Quaternion expected = currentFrame.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected.normalize();
-
-            final Quaternion expected2 = ecefFrame2.getCoordinateTransformation()
-                    .asRotation().toQuaternion();
-            expected2.normalize();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final Quaternion result = QuaternionIntegrator
-                    .integrateGyroSequenceAndReturnNewQuaternion(sequence);
-            result.normalize();
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void integrateGyroSequenceAndReturnNewCoordinateTransformation1()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final CoordinateTransformation expected2 = ecefFrame2.getCoordinateTransformation();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final CoordinateTransformation initialAttitude =
-                    ecefFrame1.getCoordinateTransformation();
-            final CoordinateTransformation result = QuaternionIntegrator
-                    .integrateGyroSequenceAndReturnNewCoordinateTransformation(
-                            sequence, initialAttitude);
-
-            if (!result.equals(expected, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(result.equals(expected, ABSOLUTE_ERROR));
-
-            // Force IllegalArgumentException
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence2 =
-                    new BodyKinematicsSequence<>(items);
-            try {
-                QuaternionIntegrator
-                        .integrateGyroSequenceAndReturnNewCoordinateTransformation(
-                                sequence2, initialAttitude);
-                fail("IllegalArgumentException expected but not thrown");
-            } catch (final IllegalArgumentException ignore) {
-            }
-
-            numValid++;
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void integrateGyroSequenceAndReturnNewCoordinateTransformation2()
-            throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException, InertialNavigatorException {
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            final double latitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
-            final double longitude = Math.toRadians(randomizer.nextDouble(
-                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-
-            final double roll1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw1 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn1 = new CoordinateTransformation(
-                    roll1, pitch1, yaw1, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame1 = new NEDFrame(nedPosition, cbn1);
-            final ECEFFrame ecefFrame1 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
-
-            // compute new orientation after 1 second
-            final double roll2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw2 = Math.toRadians(randomizer.nextDouble(
-                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final CoordinateTransformation cbn2 = new CoordinateTransformation(
-                    roll2, pitch2, yaw2, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame nedFrame2 = new NEDFrame(nedPosition, cbn2);
-            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame2);
-
-            // assume that body kinematics are constant during the time interval of 1 second
-            final BodyKinematics kinematics = ECEFKinematicsEstimator
-                    .estimateKinematicsAndReturnNew(TIME_INTERVAL, ecefFrame2, ecefFrame1);
-
-
-            final ECEFFrame previousFrame = new ECEFFrame(ecefFrame1);
-            final ECEFFrame currentFrame = new ECEFFrame();
-
-            final List<StandardDeviationTimedBodyKinematics> items = new ArrayList<>();
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                ECEFInertialNavigator.navigateECEF(TIME_INTERVAL_BETWEEN_SAMPLES, previousFrame, kinematics,
-                        currentFrame);
-
-                previousFrame.copyFrom(currentFrame);
-
-                final double timestamp = i * TIME_INTERVAL_BETWEEN_SAMPLES;
-                final StandardDeviationTimedBodyKinematics item =
-                        new StandardDeviationTimedBodyKinematics(kinematics, timestamp);
-                items.add(item);
-            }
-
-            final CoordinateTransformation expected = currentFrame.getCoordinateTransformation();
-
-            final CoordinateTransformation expected2 = ecefFrame2.getCoordinateTransformation();
-
-            assertTrue(expected.equals(expected2, ABSOLUTE_ERROR));
-
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
-                    new BodyKinematicsSequence<>(items, ecefFrame1.getCoordinateTransformation());
-            final CoordinateTransformation result = QuaternionIntegrator
-                    .integrateGyroSequenceAndReturnNewCoordinateTransformation(
-                            sequence);
 
             if (!result.equals(expected, ABSOLUTE_ERROR)) {
                 continue;

@@ -30,7 +30,7 @@ import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
-import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence2;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
@@ -243,7 +243,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor2() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences =
                 Collections.emptyList();
 
         final Matrix bg = generateBg();
@@ -473,7 +473,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor3() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -702,7 +702,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor4() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -921,7 +921,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor5() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1144,7 +1144,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor6() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1406,7 +1406,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor7() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1670,7 +1670,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor8() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1948,7 +1948,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor9() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2225,7 +2225,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor10() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2462,7 +2462,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor11() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2701,7 +2701,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor12() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2931,7 +2931,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor13() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3162,7 +3162,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor14() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3440,7 +3440,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor15() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3720,7 +3720,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor16() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -4018,7 +4018,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor17() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -5650,7 +5650,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getSequences());
 
         // set new value
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences =
                 Collections.emptyList();
         calibrator.setSequences(sequences);
 
@@ -5747,7 +5747,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isReady());
 
         // set not enough sequences
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences1 =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences1 =
                 Collections.emptyList();
         calibrator.setSequences(sequences1);
 
@@ -5755,10 +5755,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isReady());
 
         // set enough sequences
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences2 =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences2 =
                 new ArrayList<>();
         for (int i = 0; i < calibrator.getMinimumRequiredSequences(); i++) {
-            sequences2.add(new BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>());
+            sequences2.add(new BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>());
         }
         calibrator.setSequences(sequences2);
 
@@ -5805,7 +5805,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -5856,10 +5856,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -5922,7 +5922,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -6035,7 +6035,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -6086,10 +6086,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -6152,7 +6152,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -6270,7 +6270,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
             final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
 
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -6321,10 +6321,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -6387,7 +6387,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -6504,7 +6504,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -6555,10 +6555,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -6621,7 +6621,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -6734,7 +6734,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -6785,10 +6785,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -6851,7 +6851,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -6970,7 +6970,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -7021,10 +7021,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -7087,7 +7087,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -7200,7 +7200,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -7251,10 +7251,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -7317,7 +7317,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -7439,7 +7439,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -7490,10 +7490,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -7556,7 +7556,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -7669,7 +7669,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
             final int n = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
             final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -7720,10 +7720,10 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -7786,7 +7786,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =

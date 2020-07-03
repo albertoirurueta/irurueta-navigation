@@ -15,48 +15,39 @@
  */
 package com.irurueta.navigation.inertial.calibration;
 
-import com.irurueta.navigation.frames.CoordinateTransformation;
-import com.irurueta.navigation.frames.ECEFFrame;
-import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
+import com.irurueta.units.Acceleration;
+import com.irurueta.units.AccelerationConverter;
+import com.irurueta.units.AccelerationUnit;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Contains a collection of items containing body kinematics
- * measurements ordered by the timestamp when the measurment was made.
+ * measurements ordered by the timestamp when the measurement was made.
+ * Measurements within a sequence will be made while the device is
+ * being moved.
+ * Samples between sequences will be ignored because it will be assumed
+ * that the device will be static.
+ * Hence, during static periods, only the mean accelerations will be measured.
+ * The mean accelerations during static periods will approximately match the
+ * gravity versor expressed in body coordinates.
  *
  * @param <T> a type of {@link TimedBodyKinematics}.
  */
-public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
+public class BodyKinematicsSequence<T extends TimedBodyKinematics>
+        implements Serializable, Cloneable {
 
     /**
      * List of items.
-     * If items are provided unsorted, they are reordered by timestamp
-     * on getter method.
+     * If items are provided unsorted, they are reordered by timestamp on
+     * getter method.
      */
     private List<T> mItems;
-
-    /**
-     * Body attitude at the start of the sequence.
-     * Must be a valid body to ECEF coordinate transformation.
-     * This can be estimated using
-     * {@link com.irurueta.navigation.inertial.estimators.AttitudeEstimator}
-     * for a known Earth position, time instant, accelerometer measure
-     * and magnetometer measure. Notice that both the accelerometer
-     * and magnetometer should be previously calibrated before estimating
-     * body attitude.
-     * Alternatively, if the gyroscope is accurate enough (aviation grade),
-     * a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator}
-     * or a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator2}
-     * can be used.
-     * However, since this class is used mainly for gyroscope calibration,
-     * leveling estimator should be discarded for initial body attitude
-     * estimation.
-     */
-    private CoordinateTransformation mStartBodyAttitude;
 
     /**
      * Contains sorted list of items.
@@ -64,6 +55,48 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
      * required sorting.
      */
     private List<T> mSortedItems;
+
+    /**
+     * X-coordinate of mean specific force during the static period happening
+     * right before this sequence was measured. Expressed in meters per
+     * squared second (m/s^2).
+     */
+    private double mBeforeMeanFx;
+
+    /**
+     * Y-coordinate of mean specific force during the static period happening
+     * right before this sequence was measured. Expressed in meters per
+     * squared second (m/s^2).
+     */
+    private double mBeforeMeanFy;
+
+    /**
+     * Z-coordinate of mean specific force during the static period happening
+     * right before this sequence was measured. Expressed in meters per
+     * squared second (m/s^2).
+     */
+    private double mBeforeMeanFz;
+
+    /**
+     * X-coordinate of mean specific force during the static period happening
+     * right after this sequence was measured. Expressed in meters per squared
+     * second (m/s^2).
+     */
+    private double mAfterMeanFx;
+
+    /**
+     * Y-coordinate of mean specific force during the static period happening
+     * right after this sequence was measured. Expressed in meters per squared
+     * second (m/s^2).
+     */
+    private double mAfterMeanFy;
+
+    /**
+     * Z-coordinate of mean specific force during the static period happening
+     * right after this sequence was measured. Expressed in meters per squared
+     * second (m/s^2).
+     */
+    private double mAfterMeanFz;
 
     /**
      * Constructor.
@@ -84,31 +117,165 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
     /**
      * Constructor.
      *
-     * @param startBodyAttitude body attitude at the start of the sequence.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided transformation is
-     *                                                       not a body to ECEF transformation.
+     * @param beforeMeanFx x-coordinate of mean specific force during the static
+     *                     period happening right before this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param beforeMeanFy y-coordinate of mean specific force during the static
+     *                     period happening right before this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param beforeMeanFz z-coordinate of mean specific force during the static
+     *                     period happening right before this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param afterMeanFx  x-coordinate of mean specific force during the static
+     *                     period happening right after this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param afterMeanFy  y-coordinate of mean specific force during the static
+     *                     period happening right after this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param afterMeanFz  z-coordinate of mean specific force during the static
+     *                     period happening right after this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
      */
     public BodyKinematicsSequence(
-            final CoordinateTransformation startBodyAttitude)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        setStartBodyAttitude(startBodyAttitude);
+            final double beforeMeanFx,
+            final double beforeMeanFy,
+            final double beforeMeanFz,
+            final double afterMeanFx,
+            final double afterMeanFy,
+            final double afterMeanFz) {
+        setBeforeMeanSpecificForceCoordinates(
+                beforeMeanFx, beforeMeanFy, beforeMeanFz);
+        setAfterMeanSpecificForceCoordinates(
+                afterMeanFx, afterMeanFy, afterMeanFz);
     }
 
     /**
      * Constructor.
      *
-     * @param items             list of items containing body kinematics to be kept into
-     *                          this sequence.
-     * @param startBodyAttitude body attitude at the start of the sequence.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided transformation is
-     *                                                       not a body to ECEF transformation.
+     * @param beforeMeanSpecificForceX x-coordinate of mean specific force during
+     *                           the static period happening right before this
+     *                           sequence was measured.
+     * @param beforeMeanSpecificForceY y-coordinate of mean specific force during
+     *                           the static period happening right before this
+     *                           sequence was measured.
+     * @param beforeMeanSpecificForceZ z-coordinate of mean specific force during
+     *                           the static period happening right before this
+     *                           sequence was measured.
+     * @param afterMeanSpecificForceX x-coordinate of mean specific force during
+     *                           the static period happening right after this
+     *                           sequence was measured.
+     * @param afterMeanSpecificForceY y-coordinate of mean specific force during
+     *                           the static period happening right after this
+     *                           sequence was measured.
+     * @param afterMeanSpecificForceZ z-coordinate of mean specific force during
+     *                           the static period happening right after this
+     *                           sequence was measured.
+     */
+    public BodyKinematicsSequence(
+            final Acceleration beforeMeanSpecificForceX,
+            final Acceleration beforeMeanSpecificForceY,
+            final Acceleration beforeMeanSpecificForceZ,
+            final Acceleration afterMeanSpecificForceX,
+            final Acceleration afterMeanSpecificForceY,
+            final Acceleration afterMeanSpecificForceZ) {
+        setBeforeMeanSpecificForceCoordinates(
+                beforeMeanSpecificForceX,
+                beforeMeanSpecificForceY,
+                beforeMeanSpecificForceZ);
+        setAfterMeanSpecificForceCoordinates(
+                afterMeanSpecificForceX,
+                afterMeanSpecificForceY,
+                afterMeanSpecificForceZ);
+    }
+
+    /**
+     * @param items  list of items containing body kinematics to be kept into
+     *               this sequence.
+     * @param beforeMeanFx x-coordinate of mean specific force during the static
+     *                     period happening right before this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param beforeMeanFy y-coordinate of mean specific force during the static
+     *                     period happening right before this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param beforeMeanFz z-coordinate of mean specific force during the static
+     *                     period happening right before this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param afterMeanFx  x-coordinate of mean specific force during the static
+     *                     period happening right after this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param afterMeanFy  y-coordinate of mean specific force during the static
+     *                     period happening right after this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
+     * @param afterMeanFz  z-coordinate of mean specific force during the static
+     *                     period happening right after this sequence was measured.
+     *                     Expressed in meters per squared second (m/s^2).
      */
     public BodyKinematicsSequence(
             final List<T> items,
-            final CoordinateTransformation startBodyAttitude)
-            throws InvalidSourceAndDestinationFrameTypeException {
+            final double beforeMeanFx,
+            final double beforeMeanFy,
+            final double beforeMeanFz,
+            final double afterMeanFx,
+            final double afterMeanFy,
+            final double afterMeanFz) {
         this(items);
-        setStartBodyAttitude(startBodyAttitude);
+        setBeforeMeanSpecificForceCoordinates(
+                beforeMeanFx, beforeMeanFy, beforeMeanFz);
+        setAfterMeanSpecificForceCoordinates(
+                afterMeanFx, afterMeanFy, afterMeanFz);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param items              list of items containing body kinematics to be kept into
+     *                           this sequence.
+     * @param beforeMeanSpecificForceX x-coordinate of mean specific force during
+     *                           the static period happening right before this
+     *                           sequence was measured.
+     * @param beforeMeanSpecificForceY y-coordinate of mean specific force during
+     *                           the static period happening right before this
+     *                           sequence was measured.
+     * @param beforeMeanSpecificForceZ z-coordinate of mean specific force during
+     *                           the static period happening right before this
+     *                           sequence was measured.
+     * @param afterMeanSpecificForceX x-coordinate of mean specific force during
+     *                           the static period happening right after this
+     *                           sequence was measured.
+     * @param afterMeanSpecificForceY y-coordinate of mean specific force during
+     *                           the static period happening right after this
+     *                           sequence was measured.
+     * @param afterMeanSpecificForceZ z-coordinate of mean specific force during
+     *                           the static period happening right after this
+     *                           sequence was measured.
+     */
+    public BodyKinematicsSequence(
+            final List<T> items,
+            final Acceleration beforeMeanSpecificForceX,
+            final Acceleration beforeMeanSpecificForceY,
+            final Acceleration beforeMeanSpecificForceZ,
+            final Acceleration afterMeanSpecificForceX,
+            final Acceleration afterMeanSpecificForceY,
+            final Acceleration afterMeanSpecificForceZ) {
+        this(items);
+        setBeforeMeanSpecificForceCoordinates(
+                beforeMeanSpecificForceX,
+                beforeMeanSpecificForceY,
+                beforeMeanSpecificForceZ);
+        setAfterMeanSpecificForceCoordinates(
+                afterMeanSpecificForceX,
+                afterMeanSpecificForceY,
+                afterMeanSpecificForceZ);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param input instance to copy data from.
+     */
+    public BodyKinematicsSequence(
+            final BodyKinematicsSequence<T> input) {
+        copyFrom(input);
     }
 
     /**
@@ -181,65 +348,530 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics> {
     }
 
     /**
-     * Checks whether provided coordinate transformation matrix is valid or not.
-     * Only body to ECEF transformation matrices are considered to be valid.
+     * Gets x-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
      *
-     * @param c coordinate transformation matrix to be checked.
-     * @return true if provided value is valid, false otherwise.
+     * @return x-coordinate of mean specific force.
      */
-    public static boolean isValidBodyToEcefCoordinateTransformationMatrix(final CoordinateTransformation c) {
-        return ECEFFrame.isValidCoordinateTransformation(c);
+    public double getBeforeMeanFx() {
+        return mBeforeMeanFx;
     }
 
     /**
-     * Gets body attitude at the start of the sequence.
-     * This can be estimated using
-     * {@link com.irurueta.navigation.inertial.estimators.AttitudeEstimator}
-     * for a known Earth position, time instant, accelerometer measure
-     * and magnetometer measure. Notice that both the accelerometer
-     * and magnetometer should be previously calibrated before estimating
-     * body attitude.
-     * Alternatively, if the gyroscope is accurate enough (aviation grade),
-     * a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator}
-     * or a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator2}
-     * can be used.
-     * However, since this class is used mainly for gyroscope calibration,
-     * leveling estimator should be discarded for initial body attitude
-     * estimation.
+     * Sets x-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
      *
-     * @return body attitude at the start of the sequence.
+     * @param beforeMeanFx x-coordinate of mean specific force.
      */
-    public CoordinateTransformation getStartBodyAttitude() {
-        return mStartBodyAttitude;
+    public void setBeforeMeanFx(final double beforeMeanFx) {
+        mBeforeMeanFx = beforeMeanFx;
     }
 
     /**
-     * Sets body attitude at the start of the sequence.
-     * This can be estimated using
-     * {@link com.irurueta.navigation.inertial.estimators.AttitudeEstimator}
-     * for a known Earth position, time instant, accelerometer measure
-     * and magnetometer measure. Notice that both the accelerometer
-     * and magnetometer should be previously calibrated before estimating
-     * body attitude.
-     * Alternatively, if the gyroscope is accurate enough (aviation grade),
-     * a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator}
-     * or a {@link com.irurueta.navigation.inertial.estimators.LevelingEstimator2}
-     * can be used.
-     * However, since this class is used mainly for gyroscope calibration,
-     * leveling estimator should be discarded for initial body attitude
-     * estimation.
+     * Gets y-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
      *
-     * @param startBodyAttitude body attitude at the start of the sequence.
-     * @throws InvalidSourceAndDestinationFrameTypeException if provided transformation is
-     *                                                       not a body to ECEF transformation.
+     * @return y-coordinate of mean specific force.
      */
-    public void setStartBodyAttitude(
-            final CoordinateTransformation startBodyAttitude)
-            throws InvalidSourceAndDestinationFrameTypeException {
+    public double getBeforeMeanFy() {
+        return mBeforeMeanFy;
+    }
 
-        if (!isValidBodyToEcefCoordinateTransformationMatrix(startBodyAttitude)) {
-            throw new InvalidSourceAndDestinationFrameTypeException();
+    /**
+     * Sets y-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param beforeMeanFy y-coordinate of mean specific force.
+     */
+    public void setBeforeMeanFy(final double beforeMeanFy) {
+        mBeforeMeanFy = beforeMeanFy;
+    }
+
+    /**
+     * Gets z-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return z-coordinate of mean specific force.
+     */
+    public double getBeforeMeanFz() {
+        return mBeforeMeanFz;
+    }
+
+    /**
+     * Sets z-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param beforeMeanFz z-coordinate of mean specific force.
+     */
+    public void setBeforeMeanFz(final double beforeMeanFz) {
+        mBeforeMeanFz = beforeMeanFz;
+    }
+
+    /**
+     * Sets coordinates of mean specific force during the static period
+     * happening right before this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param beforeMeanFx x-coordinate of mean specific force.
+     * @param beforeMeanFy y-coordinate of mean specific force.
+     * @param beforeMeanFz z-coordinate of mean specific force.
+     */
+    public void setBeforeMeanSpecificForceCoordinates(
+            final double beforeMeanFx,
+            final double beforeMeanFy,
+            final double beforeMeanFz) {
+        mBeforeMeanFx = beforeMeanFx;
+        mBeforeMeanFy = beforeMeanFy;
+        mBeforeMeanFz = beforeMeanFz;
+    }
+
+    /**
+     * Gets x-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param result x-coordinate of mean specific force.
+     */
+    public void getBeforeMeanSpecificForceX(final Acceleration result) {
+        result.setValue(mBeforeMeanFx);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets x-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @return x-coordinate of mean specific force.
+     */
+    public Acceleration getBeforeMeanSpecificForceX() {
+        return new Acceleration(mBeforeMeanFx,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets x-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param beforeMeanSpecificForceX x-coordinate of mean specific force.
+     */
+    public void setBeforeMeanSpecificForceX(
+            final Acceleration beforeMeanSpecificForceX) {
+        mBeforeMeanFx = convertAcceleration(beforeMeanSpecificForceX);
+    }
+
+    /**
+     * Gets y-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param result y-coordinate of mean specific force.
+     */
+    public void getBeforeMeanSpecificForceY(final Acceleration result) {
+        result.setValue(mBeforeMeanFy);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets y-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @return y-coordinate of mean specific force.
+     */
+    public Acceleration getBeforeMeanSpecificForceY() {
+        return new Acceleration(mBeforeMeanFy,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets y-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param beforeMeanSpecificForceY y-coordinate of mean specific force.
+     */
+    public void setBeforeMeanSpecificForceY(
+            final Acceleration beforeMeanSpecificForceY) {
+        mBeforeMeanFy = convertAcceleration(beforeMeanSpecificForceY);
+    }
+
+    /**
+     * Gets z-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param result z-coordinate of mean specific force.
+     */
+    public void getBeforeMeanSpecificForceZ(final Acceleration result) {
+        result.setValue(mBeforeMeanFz);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets z-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @return z-coordinate of mean specific force.
+     */
+    public Acceleration getBeforeMeanSpecificForceZ() {
+        return new Acceleration(mBeforeMeanFz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets z-coordinate of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param beforeMeanSpecificForceZ z-coordinate of mean specific force.
+     */
+    public void setBeforeMeanSpecificForceZ(
+            final Acceleration beforeMeanSpecificForceZ) {
+        mBeforeMeanFz = convertAcceleration(beforeMeanSpecificForceZ);
+    }
+
+    /**
+     * Sets coordinates of mean specific force during the static period
+     * happening right before this sequence was measured.
+     *
+     * @param beforeMeanSpecificForceX x-coordinate of mean specific force.
+     * @param beforeMeanSpecificForceY y-coordinate of mean specific force.
+     * @param beforeMeanSpecificForceZ z-coordinate of mean specific force.
+     */
+    public void setBeforeMeanSpecificForceCoordinates(
+            final Acceleration beforeMeanSpecificForceX,
+            final Acceleration beforeMeanSpecificForceY,
+            final Acceleration beforeMeanSpecificForceZ) {
+        setBeforeMeanSpecificForceX(beforeMeanSpecificForceX);
+        setBeforeMeanSpecificForceY(beforeMeanSpecificForceY);
+        setBeforeMeanSpecificForceZ(beforeMeanSpecificForceZ);
+    }
+
+    /**
+     * Gets x-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return x-coordinate of mean specific force.
+     */
+    public double getAfterMeanFx() {
+        return mAfterMeanFx;
+    }
+
+    /**
+     * Sets x-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param afterMeanFx x-coordinate of mean specific force.
+     */
+    public void setAfterMeanFx(final double afterMeanFx) {
+        mAfterMeanFx = afterMeanFx;
+    }
+
+    /**
+     * Gets y-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return y-coordinate of mean specific force.
+     */
+    public double getAfterMeanFy() {
+        return mAfterMeanFy;
+    }
+
+    /**
+     * Sets y-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param afterMeanFy y-coordinate of mean specific force.
+     */
+    public void setAfterMeanFy(final double afterMeanFy) {
+        mAfterMeanFy = afterMeanFy;
+    }
+
+    /**
+     * Gets z-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @return z-coordinate of mean specific force.
+     */
+    public double getAfterMeanFz() {
+        return mAfterMeanFz;
+    }
+
+    /**
+     * Sets z-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param afterMeanFz z-coordinate of mean specific force.
+     */
+    public void setAfterMeanFz(final double afterMeanFz) {
+        mAfterMeanFz = afterMeanFz;
+    }
+
+    /**
+     * Sets coordinates of mean specific force during the static period
+     * happening right after this sequence was measured. Expressed in
+     * meters per squared second (m/s^2).
+     *
+     * @param afterMeanFx x-coordinate of mean specific force.
+     * @param afterMeanFy y-coordinate of mean specific force.
+     * @param afterMeanFz z-coordinate of mean specific force.
+     */
+    public void setAfterMeanSpecificForceCoordinates(
+            final double afterMeanFx,
+            final double afterMeanFy,
+            final double afterMeanFz) {
+        mAfterMeanFx = afterMeanFx;
+        mAfterMeanFy = afterMeanFy;
+        mAfterMeanFz = afterMeanFz;
+    }
+
+    /**
+     * Gets x-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param result x-coordinate of mean specific force.
+     */
+    public void getAfterMeanSpecificForceX(final Acceleration result) {
+        result.setValue(mAfterMeanFx);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets x-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @return x-coordinate of mean specific force.
+     */
+    public Acceleration getAfterMeanSpecificForceX() {
+        return new Acceleration(mAfterMeanFx,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets x-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param afterMeanSpecificForceX x-coordinate of mean specific force.
+     */
+    public void setAfterMeanSpecificForceX(
+            final Acceleration afterMeanSpecificForceX) {
+        mAfterMeanFx = convertAcceleration(afterMeanSpecificForceX);
+    }
+
+    /**
+     * Gets y-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param result y-coordinate of mean specific force.
+     */
+    public void getAfterMeanSpecificForceY(final Acceleration result) {
+        result.setValue(mAfterMeanFy);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets y-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @return y-coordinate of mean specific force.
+     */
+    public Acceleration getAfterMeanSpecificForceY() {
+        return new Acceleration(mAfterMeanFy,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets y-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param afterMeanSpecificForceY y-coordinate of mean specific force.
+     */
+    public void setAfterMeanSpecificForceY(
+            final Acceleration afterMeanSpecificForceY) {
+        mAfterMeanFy = convertAcceleration(afterMeanSpecificForceY);
+    }
+
+    /**
+     * Gets z-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param result z-coordinate of mean specific force.
+     */
+    public void getAfterMeanSpecificForceZ(final Acceleration result) {
+        result.setValue(mAfterMeanFz);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets z-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @return z-coordinate of mean specific force.
+     */
+    public Acceleration getAfterMeanSpecificForceZ() {
+        return new Acceleration(mAfterMeanFz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets z-coordinate of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param afterMeanSpecificForceZ z-coordinate of mean specific force.
+     */
+    public void setAfterMeanSpecificForceZ(
+            final Acceleration afterMeanSpecificForceZ) {
+        mAfterMeanFz = convertAcceleration(afterMeanSpecificForceZ);
+    }
+
+    /**
+     * Sets coordinates of mean specific force during the static period
+     * happening right after this sequence was measured.
+     *
+     * @param afterMeanSpecificForceX x-coordinate of mean specific force.
+     * @param afterMeanSpecificForceY y-coordinate of mean specific force.
+     * @param afterMeanSpecificForceZ z-coordinate of mean specific force.
+     */
+    public void setAfterMeanSpecificForceCoordinates(
+            final Acceleration afterMeanSpecificForceX,
+            final Acceleration afterMeanSpecificForceY,
+            final Acceleration afterMeanSpecificForceZ) {
+        setAfterMeanSpecificForceX(afterMeanSpecificForceX);
+        setAfterMeanSpecificForceY(afterMeanSpecificForceY);
+        setAfterMeanSpecificForceZ(afterMeanSpecificForceZ);
+    }
+
+    /**
+     * Copies data of provided instance into this instance.
+     *
+     * @param input instance to copy data from.
+     */
+    public void copyFrom(BodyKinematicsSequence<T> input) {
+        if (input.mItems != null) {
+            mItems = cloneList(input.mItems);
+        } else {
+            mItems = null;
         }
-        mStartBodyAttitude = startBodyAttitude;
+        if (input.mSortedItems != null) {
+            mSortedItems = cloneList(input.mSortedItems);
+        } else {
+            mSortedItems = null;
+        }
+
+        mBeforeMeanFx = input.mBeforeMeanFx;
+        mBeforeMeanFy = input.mBeforeMeanFy;
+        mBeforeMeanFz = input.mBeforeMeanFz;
+
+        mAfterMeanFx = input.mAfterMeanFx;
+        mAfterMeanFy = input.mAfterMeanFy;
+        mAfterMeanFz = input.mAfterMeanFz;
+    }
+
+    /**
+     * Copies this instance data into provided instance.
+     *
+     * @param output destination instance where data will be copied to.
+     */
+    public void copyTo(final BodyKinematicsSequence<T> output) {
+        output.copyFrom(this);
+    }
+
+    /***
+     * Checks if provided instance is a BodyKinematicsSequence2 having exactly
+     * the same contents as this instance.
+     *
+     * @param o object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BodyKinematicsSequence<?> that = (BodyKinematicsSequence<?>) o;
+        return Double.compare(that.mBeforeMeanFx, mBeforeMeanFx) == 0 &&
+                Double.compare(that.mBeforeMeanFy, mBeforeMeanFy) == 0 &&
+                Double.compare(that.mBeforeMeanFz, mBeforeMeanFz) == 0 &&
+                Double.compare(that.mAfterMeanFx, mAfterMeanFx) == 0 &&
+                Double.compare(that.mAfterMeanFy, mAfterMeanFy) == 0 &&
+                Double.compare(that.mAfterMeanFz, mAfterMeanFz) == 0 &&
+                Objects.equals(mItems, that.mItems) &&
+                Objects.equals(mSortedItems, that.mSortedItems);
+    }
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(mItems, mSortedItems,
+                mBeforeMeanFx, mBeforeMeanFy, mBeforeMeanFz,
+                mAfterMeanFx, mAfterMeanFy, mAfterMeanFz);
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        //noinspection unchecked
+        final BodyKinematicsSequence<T> result =
+                (BodyKinematicsSequence<T>) super.clone();
+        copyTo(result);
+        return result;
+    }
+
+    /**
+     * Clones a list of {@link TimedBodyKinematics}.
+     *
+     * @param list list to be cloned.
+     * @return cloned list.
+     */
+    @SuppressWarnings("unchecked")
+    private List<T> cloneList(final List<T> list) {
+        // constructor with list only creates a new list containing the
+        // same instances as the original list.
+        // ArrayList is publicly Cloneable, so we clone it to get copies
+        // of the elements contained within.
+
+        final ArrayList<T> result = new ArrayList<>();
+        for (T item : list) {
+            if (item instanceof StandardDeviationTimedBodyKinematics) {
+                final StandardDeviationTimedBodyKinematics newItem =
+                        new StandardDeviationTimedBodyKinematics();
+                newItem.copyFrom(item);
+                result.add((T) newItem);
+            } else {
+                final TimedBodyKinematics newItem =
+                        new TimedBodyKinematics(item);
+                result.add((T) newItem);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Converts an acceleration instance into its corresponding value
+     * expressed in meters per squared second.
+     *
+     * @param acceleration an acceleration to be converted.
+     * @return converted value.
+     */
+    private static double convertAcceleration(final Acceleration acceleration) {
+        return AccelerationConverter.convert(acceleration.getValue().doubleValue(),
+                acceleration.getUnit(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
 }

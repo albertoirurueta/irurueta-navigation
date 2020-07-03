@@ -30,7 +30,7 @@ import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
-import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence2;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
@@ -40,7 +40,6 @@ import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
 import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedUnit;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -75,7 +74,6 @@ public class EasyGyroscopeCalibratorTest implements
 
     private static final double ABSOLUTE_ERROR = 1e-9;
     private static final double LARGE_ABSOLUTE_ERROR = 5e-5;
-    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-2;
 
     private static final int TIMES = 100;
 
@@ -257,7 +255,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor2() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences =
                 Collections.emptyList();
 
         final Matrix bg = generateBg();
@@ -499,7 +497,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor3() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -740,7 +738,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor4() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -972,7 +970,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor5() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1208,7 +1206,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor6() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1483,7 +1481,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor7() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -1760,7 +1758,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor8() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2051,7 +2049,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor9() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2341,7 +2339,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor10() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2591,7 +2589,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor11() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -2843,7 +2841,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor12() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3086,7 +3084,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor13() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3330,7 +3328,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor14() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3621,7 +3619,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor15() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -3915,7 +3913,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor16() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -4226,7 +4224,7 @@ public class EasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor17() throws WrongSizeException {
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = Collections.emptyList();
 
         final Matrix bg = generateBg();
         final Matrix mg = generateGeneralMg();
@@ -5871,7 +5869,7 @@ public class EasyGyroscopeCalibratorTest implements
         assertNull(calibrator.getSequences());
 
         // set new value
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences =
                 Collections.emptyList();
         calibrator.setSequences(sequences);
 
@@ -5968,7 +5966,7 @@ public class EasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isReady());
 
         // set not enough sequences
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences1 =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences1 =
                 Collections.emptyList();
         calibrator.setSequences(sequences1);
 
@@ -5976,10 +5974,10 @@ public class EasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isReady());
 
         // set enough sequences
-        final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences2 =
+        final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences2 =
                 new ArrayList<>();
         for (int i = 0; i < calibrator.getMinimumRequiredSequences(); i++) {
-            sequences2.add(new BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>());
+            sequences2.add(new BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>());
         }
         calibrator.setSequences(sequences2);
 
@@ -6026,7 +6024,7 @@ public class EasyGyroscopeCalibratorTest implements
 
             final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
             final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 // initial attitude of sequence
                 final double roll = Math.toRadians(
@@ -6077,10 +6075,10 @@ public class EasyGyroscopeCalibratorTest implements
                 double oldPitch = pitch - deltaPitch;
                 double oldYaw = yaw - deltaYaw;
 
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> trueSequence =
-                        new BodyKinematicsSequence2<>();
-                final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence =
-                        new BodyKinematicsSequence2<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
                 sequence.setBeforeMeanSpecificForceCoordinates(
                         beforeMeanFx, beforeMeanFy, beforeMeanFz);
 
@@ -6143,7 +6141,7 @@ public class EasyGyroscopeCalibratorTest implements
                 sequence.setItems(measuredTimedKinematicsList);
 
                 final Quaternion afterQ = new Quaternion();
-                QuaternionIntegrator2.integrateGyroSequence(
+                QuaternionIntegrator.integrateGyroSequence(
                         trueSequence, beforeQ, afterQ);
 
                 final CoordinateTransformation newNedC =
@@ -6218,8 +6216,1915 @@ public class EasyGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
-    
+
+    @Test
+    public void testCalibrateCommonAxisAndGDependentCrossBiasesDisabledWithZeroInitialValues()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateCommonAxisMg();
+            final Matrix gg = new Matrix(3, 3);
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final Matrix bg2 = new Matrix(3, 1);
+            final Matrix mg2 = new Matrix(3, 3);
+            final Matrix gg2 = new Matrix(3, 3);
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            true,
+                            false,
+                            bg2, mg2, gg2, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisAndGDependentCrossBiasesDisabledWithNoiseLargeNumberOfMeasurements()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateCommonAxisMg();
+            final Matrix gg = new Matrix(3, 3);
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = getAccelNoiseRootPSD();
+            final double gyroNoiseRootPSD = getGyroNoiseRootPSD();
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int m = KnownBiasEasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < LARGE_MEASUREMENT_NUMBER; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            true,
+                            false,
+                            bg, mg, gg, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralCaseAndGDependentCrossBiasesDisabledAndNoNoise()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateGeneralMg();
+            final Matrix gg = new Matrix(3, 3);
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            false,
+                            false,
+                            bg, mg, gg, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            assertTrue(bg.equals(estimatedBg, ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralCaseAndGDependentCrossBiasesDisabledWithZeroInitialValues()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateGeneralMg();
+            final Matrix gg = new Matrix(3, 3);
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final Matrix bg2 = new Matrix(3, 1);
+            final Matrix mg2 = new Matrix(3, 3);
+            final Matrix gg2 = new Matrix(3, 3);
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            false,
+                            false,
+                            bg2, mg2, gg2, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisAndGDependentCrossBiasesEnabledAndNoNoise()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateCommonAxisMg();
+            final Matrix gg = generateGg();
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            true,
+                            true,
+                            bg, mg, gg, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            assertTrue(bg.equals(estimatedBg, ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisAndGDependentCrossBiasesEnabledWithZeroInitialValues()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateCommonAxisMg();
+            final Matrix gg = generateGg();
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS_AND_CROSS_BIASES;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final Matrix bg2 = new Matrix(3, 1);
+            final Matrix mg2 = new Matrix(3, 3);
+            final Matrix gg2 = new Matrix(3, 3);
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            true,
+                            true,
+                            bg2, mg2, gg2, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralCaseAndGDependentCrossBiasesEnabledAndNoNoise()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateGeneralMg();
+            final Matrix gg = generateGg();
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            false,
+                            true,
+                            bg, mg, gg, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            assertTrue(bg.equals(estimatedBg, ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralCaseAndGDependentCrossBiasesEnabledWithZeroInitialValues()
+            throws WrongSizeException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException,
+            NotReadyException, InvalidRotationMatrixException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final Matrix ba = generateBa();
+            final Matrix bg = generateBg();
+            final Matrix ma = generateMa();
+            final Matrix mg = generateGeneralMg();
+            final Matrix gg = generateGg();
+            // when using minimum number of measurements we must not add any noise so that
+            // a solution is found. When adding more measurements, certain noise can be added
+            final double accelNoiseRootPSD = 0.0;
+            final double gyroNoiseRootPSD = 0.0;
+            final double accelQuantLevel = 0.0;
+            final double gyroQuantLevel = 0.0;
+
+            final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
+                    gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
+
+            final Random random = new Random();
+            final UniformRandomizer randomizer = new UniformRandomizer(random);
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+
+            final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
+            final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
+            final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
+
+            final int n = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
+            final int m = EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES;
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // initial attitude of sequence
+                final double roll = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double pitch = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final double yaw = Math.toRadians(
+                        randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+                final CoordinateTransformation nedC = new CoordinateTransformation(
+                        roll, pitch, yaw, FrameType.BODY_FRAME,
+                        FrameType.LOCAL_NAVIGATION_FRAME);
+
+                final Quaternion beforeQ = new Quaternion();
+                nedC.asRotation(beforeQ);
+
+                final NEDFrame nedFrame = new NEDFrame(nedPosition, nedC);
+                final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(nedFrame);
+
+                final BodyKinematics trueBeforeGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                ecefFrame, ecefFrame);
+                final BodyKinematics measuredBeforeGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueBeforeGravityKinematics, errors, random);
+                final double beforeMeanFx = measuredBeforeGravityKinematics.getFx();
+                final double beforeMeanFy = measuredBeforeGravityKinematics.getFy();
+                final double beforeMeanFz = measuredBeforeGravityKinematics.getFz();
+
+                final double deltaRoll = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaPitch = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+                final double deltaYaw = Math.toRadians(
+                        randomizer.nextDouble(
+                                MIN_ANGLE_VARIATION_DEGREES,
+                                MAX_ANGLE_VARIATION_DEGREES));
+
+                NEDFrame oldNedFrame = new NEDFrame(nedFrame);
+                NEDFrame newNedFrame = new NEDFrame();
+                ECEFFrame oldEcefFrame = new ECEFFrame();
+                ECEFFrame newEcefFrame = new ECEFFrame();
+                double oldRoll = roll - deltaRoll;
+                double oldPitch = pitch - deltaPitch;
+                double oldYaw = yaw - deltaYaw;
+
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> trueSequence =
+                        new BodyKinematicsSequence<>();
+                final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence =
+                        new BodyKinematicsSequence<>();
+                sequence.setBeforeMeanSpecificForceCoordinates(
+                        beforeMeanFx, beforeMeanFy, beforeMeanFz);
+
+                final List<StandardDeviationTimedBodyKinematics> trueTimedKinematicsList =
+                        new ArrayList<>();
+                final List<StandardDeviationTimedBodyKinematics> measuredTimedKinematicsList =
+                        new ArrayList<>();
+                for (int j = 0; j < m; j++) {
+                    final double newRoll = oldRoll + deltaRoll;
+                    final double newPitch = oldPitch + deltaPitch;
+                    final double newYaw = oldYaw + deltaYaw;
+                    final CoordinateTransformation newNedC =
+                            new CoordinateTransformation(
+                                    newRoll, newPitch, newYaw,
+                                    FrameType.BODY_FRAME,
+                                    FrameType.LOCAL_NAVIGATION_FRAME);
+                    final NEDPosition newNedPosition = oldNedFrame.getPosition();
+
+                    newNedFrame.setPosition(newNedPosition);
+                    newNedFrame.setCoordinateTransformation(newNedC);
+
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+                    NEDtoECEFFrameConverter.convertNEDtoECEF(oldNedFrame, oldEcefFrame);
+
+                    final double timestampSeconds = j * TIME_INTERVAL_SECONDS;
+
+                    // compute ground-truth kinematics that should be generated at provided
+                    // position, velocity and orientation
+                    final BodyKinematics trueKinematics = ECEFKinematicsEstimator
+                            .estimateKinematicsAndReturnNew(
+                                    TIME_INTERVAL_SECONDS, newEcefFrame,
+                                    oldEcefFrame);
+
+                    // apply known calibration parameters to distort ground-truth and generate a
+                    // measured kinematics sample
+                    final BodyKinematics measuredKinematics = BodyKinematicsGenerator
+                            .generate(TIME_INTERVAL_SECONDS, trueKinematics, errors, random);
+
+                    final StandardDeviationTimedBodyKinematics trueTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    trueKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    final StandardDeviationTimedBodyKinematics measuredTimedKinematics =
+                            new StandardDeviationTimedBodyKinematics(
+                                    measuredKinematics, timestampSeconds,
+                                    specificForceStandardDeviation,
+                                    angularRateStandardDeviation);
+
+                    trueTimedKinematicsList.add(trueTimedKinematics);
+                    measuredTimedKinematicsList.add(measuredTimedKinematics);
+
+                    oldNedFrame.copyFrom(newNedFrame);
+                    oldRoll = newRoll;
+                    oldPitch = newPitch;
+                    oldYaw = newYaw;
+                }
+                trueSequence.setItems(trueTimedKinematicsList);
+                sequence.setItems(measuredTimedKinematicsList);
+
+                final Quaternion afterQ = new Quaternion();
+                QuaternionIntegrator.integrateGyroSequence(
+                        trueSequence, beforeQ, afterQ);
+
+                final CoordinateTransformation newNedC =
+                        new CoordinateTransformation(
+                                afterQ.asInhomogeneousMatrix(),
+                                FrameType.BODY_FRAME,
+                                FrameType.LOCAL_NAVIGATION_FRAME);
+
+                newNedFrame.setPosition(nedPosition);
+                newNedFrame.setCoordinateTransformation(newNedC);
+
+                NEDtoECEFFrameConverter.convertNEDtoECEF(newNedFrame, newEcefFrame);
+
+                final BodyKinematics trueAfterGravityKinematics = ECEFKinematicsEstimator
+                        .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS,
+                                newEcefFrame, newEcefFrame);
+                final BodyKinematics measuredAfterGravityKinematics = BodyKinematicsGenerator
+                        .generate(TIME_INTERVAL_SECONDS,
+                                trueAfterGravityKinematics, errors, random);
+                final double afterMeanFx = measuredAfterGravityKinematics.getFx();
+                final double afterMeanFy = measuredAfterGravityKinematics.getFy();
+                final double afterMeanFz = measuredAfterGravityKinematics.getFz();
+
+                sequence.setAfterMeanSpecificForceCoordinates(
+                        afterMeanFx, afterMeanFy, afterMeanFz);
+
+                sequences.add(sequence);
+            }
+
+            // When we have the minimum number of measurements, we need to provide
+            // an initial solution close to the true solution
+            final Matrix bg2 = new Matrix(3, 1);
+            final Matrix mg2 = new Matrix(3, 3);
+            final Matrix gg2 = new Matrix(3, 3);
+            final EasyGyroscopeCalibrator calibrator =
+                    new EasyGyroscopeCalibrator(sequences,
+                            false,
+                            true,
+                            bg2, mg2, gg2, ba, ma, this);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+
+            final Matrix estimatedBg = calibrator.getEstimatedBiasesAsMatrix();
+            final Matrix estimatedMg = calibrator.getEstimatedMg();
+            final Matrix estimatedGg = calibrator.getEstimatedGg();
+
+            if (!bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+
+            assertTrue(bg.equals(estimatedBg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mg.equals(estimatedMg, LARGE_ABSOLUTE_ERROR));
+            assertTrue(gg.equals(estimatedGg, LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
     @Override
     public void onCalibrateStart(EasyGyroscopeCalibrator calibrator) {
         checkLocked(calibrator);

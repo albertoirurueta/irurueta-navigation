@@ -26,7 +26,7 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.AccelerationFixer;
-import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence2;
+import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
 import com.irurueta.numerical.EvaluationException;
@@ -311,7 +311,7 @@ public class EasyGyroscopeCalibrator {
      * measurements taken at a given position where the device moves freely
      * with different orientations.
      */
-    private List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> mSequences;
+    private List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> mSequences;
 
     /**
      * This flag indicates whether z-axis is assumed to be common for accelerometer
@@ -433,7 +433,7 @@ public class EasyGyroscopeCalibrator {
     /**
      * Contains a copy of input sequences where fixed body kinematics will be updated.
      */
-    private List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> mFixedSequences;
+    private List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> mFixedSequences;
 
     /**
      * Contains measured specific force on a sample within a sequence
@@ -542,7 +542,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix initialBias,
             final Matrix initialMg,
             final Matrix initialGg) {
@@ -576,7 +576,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix initialBias,
             final Matrix initialMg,
             final Matrix initialGg,
@@ -602,7 +602,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] initialBias,
             final Matrix initialMg,
             final Matrix initialGg) {
@@ -636,7 +636,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] initialBias,
             final Matrix initialMg,
             final Matrix initialGg,
@@ -668,7 +668,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] initialBias,
             final Matrix initialMg,
             final Matrix initialGg,
@@ -708,7 +708,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] initialBias,
             final Matrix initialMg,
             final Matrix initialGg,
@@ -742,7 +742,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix initialBias,
             final Matrix initialMg,
             final Matrix initialGg,
@@ -781,7 +781,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix initialBias,
             final Matrix initialMg,
             final Matrix initialGg,
@@ -816,7 +816,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final Matrix initialBias,
@@ -852,7 +852,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final Matrix initialBias,
@@ -887,7 +887,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final double[] initialBias,
@@ -923,7 +923,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final double[] initialBias,
@@ -965,7 +965,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final double[] initialBias,
@@ -1011,7 +1011,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final double[] initialBias,
@@ -1056,7 +1056,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final Matrix initialBias,
@@ -1102,7 +1102,7 @@ public class EasyGyroscopeCalibrator {
      *                                  not have proper size.
      */
     public EasyGyroscopeCalibrator(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
             final Matrix initialBias,
@@ -2653,7 +2653,7 @@ public class EasyGyroscopeCalibrator {
      * @return collection of sequences of timestamped body kinematics
      * measurements.
      */
-    public List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> getSequences() {
+    public List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> getSequences() {
         return mSequences;
     }
 
@@ -2667,7 +2667,7 @@ public class EasyGyroscopeCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setSequences(
-            final List<BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics>> sequences)
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3868,12 +3868,12 @@ public class EasyGyroscopeCalibrator {
         // kinematics measurements with fixed values for memory efficiency
 
         mFixedSequences = new ArrayList<>();
-        for (BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
-            mFixedSequences.add(new BodyKinematicsSequence2<>(sequence));
+        for (BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
+            mFixedSequences.add(new BodyKinematicsSequence<>(sequence));
         }
 
         int i = 0;
-        for (BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
+        for (BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
             // sequence mean accelerometer samples of previous static
             // period will need to be fixed using accelerometer calibration
             // parameters
@@ -3917,7 +3917,7 @@ public class EasyGyroscopeCalibrator {
      * per second (rad/s).
      */
     private static double computeAverageAngularRateStandardDeviation(
-            final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> sequence) {
+            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence) {
         List<StandardDeviationTimedBodyKinematics> items = sequence.getSortedItems();
         final double size = items.size();
 
@@ -4220,9 +4220,9 @@ public class EasyGyroscopeCalibrator {
             throws EvaluationException {
 
         try {
-            final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> measuredSequence =
+            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> measuredSequence =
                     mSequences.get(i);
-            final BodyKinematicsSequence2<StandardDeviationTimedBodyKinematics> fixedSequence =
+            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> fixedSequence =
                     mFixedSequences.get(i);
 
             // generate new sequence using current parameters to fix angular rate measurements
@@ -4306,7 +4306,7 @@ public class EasyGyroscopeCalibrator {
 
 
             // integrate fixed sequence to obtain attitude change
-            QuaternionIntegrator2.integrateGyroSequence(fixedSequence, mQ);
+            QuaternionIntegrator.integrateGyroSequence(fixedSequence, mQ);
 
             mStartPoint.setInhomogeneousCoordinates(
                     mPoint[0], mPoint[1], mPoint[2]);

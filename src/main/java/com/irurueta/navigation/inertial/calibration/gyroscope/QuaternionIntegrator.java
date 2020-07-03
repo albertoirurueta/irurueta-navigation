@@ -18,10 +18,7 @@ package com.irurueta.navigation.inertial.calibration.gyroscope;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.algebra.WrongSizeException;
-import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
-import com.irurueta.navigation.frames.CoordinateTransformation;
-import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
@@ -31,7 +28,7 @@ import java.util.List;
 /**
  * Class in charge of performing integration steps of rotations.
  * This implementation uses a Runge-Kutta integration algorithm to obtain
- * accurate results on {@link KnownPositionGyroscopeCalibrator}
+ * accurate results on {@link EasyGyroscopeCalibrator}
  */
 public class QuaternionIntegrator {
 
@@ -40,34 +37,24 @@ public class QuaternionIntegrator {
      * starting at an initial attitude to obtain a final attitude.
      *
      * @param sequence        sequence of gyroscope measurements to be integrated.
-     * @param initialAttitude (optional) initial attitude to be used. If null, the initial attitude available
-     *                        on provided sequence will be used. If that one is neither available, then the
+     * @param initialAttitude (optional) initial attitude to be used. If null, then the
      *                        identity attitude will be used.
      * @param result          resulting rotation after integration.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
      */
     public static void integrateGyroSequence(
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence,
             final Quaternion initialAttitude,
-            final Quaternion result) throws InvalidRotationMatrixException {
+            final Quaternion result) {
 
         if (initialAttitude != null) {
-            // us provided initial attitude
+            // if provided initial attitude
             result.fromRotation(initialAttitude);
         } else {
-            // if no initial attitude is provided, the one contained in sequence is used
-            // instead
-            if (sequence.getStartBodyAttitude() != null) {
-                // use initial attitude in sequence
-                sequence.getStartBodyAttitude().asRotation(result);
-            } else {
-                // if no initial attitude is available in sequence, we use the identity
-                result.setA(1.0);
-                result.setB(0.0);
-                result.setC(0.0);
-                result.setD(0.0);
-            }
+            // if no initial attitude is provided, we use the identity
+            result.setA(1.0);
+            result.setB(0.0);
+            result.setC(0.0);
+            result.setD(0.0);
         }
 
 
@@ -114,18 +101,14 @@ public class QuaternionIntegrator {
 
     /**
      * Integrates a sequence of gyroscope measurements contained within timed body kinematics,
-     * starting at the initial attitude of the sequence (if available) to obtain a final attitude.
-     * Notice that if provided sequence does not contain an initial attitude, the identity rotation will be
-     * used as the starting attitude.
+     * starting at the identity attitude to obtain a final attitude.
      *
      * @param sequence sequence of gyroscope measurements to be integrated.
      * @param result   resulting rotation after integration.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
      */
     public static void integrateGyroSequence(
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence,
-            final Quaternion result) throws InvalidRotationMatrixException {
+            final Quaternion result) {
         integrateGyroSequence(sequence, null, result);
     }
 
@@ -134,78 +117,13 @@ public class QuaternionIntegrator {
      * starting at an initial attitude to obtain a final attitude.
      *
      * @param sequence        sequence of gyroscope measurements to be integrated.
-     * @param initialAttitude (optional) initial attitude to be used. If null, the initial attitude available
-     *                        on provided sequence will be used. If that one is neither available, then the
-     *                        identity attitude will be used.
-     * @param result          resulting rotation after integration. Source and destination types will match those
-     *                        provided on initial attitude, or if not available, those provided on sequence start body
-     *                        attitude. If no initial attitude is available, the identity will be used and start and
-     *                        destination types will be left unchanged.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
-     */
-    public static void integrateGyroSequence(
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence,
-            final CoordinateTransformation initialAttitude,
-            final CoordinateTransformation result) throws InvalidRotationMatrixException {
-        final Quaternion initialQ;
-        if (initialAttitude != null) {
-            initialQ = new Quaternion();
-            initialAttitude.asRotation(initialQ);
-
-            result.setSourceType(initialAttitude.getSourceType());
-            result.setDestinationType(initialAttitude.getDestinationType());
-        } else {
-            initialQ = null;
-        }
-
-        final Quaternion resultQ = new Quaternion();
-
-        integrateGyroSequence(sequence, initialQ, resultQ);
-
-        if (sequence.getStartBodyAttitude() != null) {
-            final CoordinateTransformation startBodyAttitude = sequence.getStartBodyAttitude();
-            result.setSourceType(startBodyAttitude.getSourceType());
-            result.setDestinationType(startBodyAttitude.getDestinationType());
-        }
-        result.setMatrix(resultQ.asInhomogeneousMatrix());
-    }
-
-    /**
-     * Integrates a sequence of gyroscope measurements contained within timed body kinematics,
-     * starting at the initial attitude of the sequence (if available) to obtain a final attitude.
-     * Notice that if provided sequence does not contain an initial attitude, the identity rotation will be
-     * used as the starting attitude and start and destination frame types will be left unchanged on provided
-     * result instance.
-     *
-     * @param sequence sequence of gyroscope measurements to be integrated.
-     * @param result   resulting rotation after integration. Source and destination types will match those
-     *                 provided on  sequence start body attitude, otherwise source and destination types will
-     *                 be left unchanged.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
-     */
-    public static void integrateGyroSequence(
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence,
-            final CoordinateTransformation result) throws InvalidRotationMatrixException {
-        integrateGyroSequence(sequence, null, result);
-    }
-
-    /**
-     * Integrates a sequence of gyroscope measurements contained within timed body kinematics,
-     * starting at an initial attitude to obtain a final attitude.
-     *
-     * @param sequence        sequence of gyroscope measurements to be integrated.
-     * @param initialAttitude (optional) initial attitude to be used. If null, the initial attitude available
-     *                        on provided sequence will be used. If that one is neither available, then the
+     * @param initialAttitude (optional) initial attitude to be used. If null, then the
      *                        identity attitude will be used.
      * @return resulting rotation after integration.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
      */
-    public static Quaternion integrateGyroSequenceAndReturnNewQuaternion(
+    public static Quaternion integrateGyroSequenceAndReturnNew(
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence,
-            final Quaternion initialAttitude) throws InvalidRotationMatrixException {
+            final Quaternion initialAttitude) {
         final Quaternion result = new Quaternion();
         integrateGyroSequence(sequence, initialAttitude, result);
         return result;
@@ -213,74 +131,14 @@ public class QuaternionIntegrator {
 
     /**
      * Integrates a sequence of gyroscope measurements contained within timed body kinematics,
-     * starting at the initial attitude of the sequence (if available) to obtain a final attitude.
-     * Notice that if provided sequence does not contain an initial attitude, the identity rotation will be
-     * used as the starting attitude.
+     * starting at the identity attitude to obtain a final attitude.
      *
      * @param sequence sequence of gyroscope measurements to be integrated.
      * @return resulting rotation after integration.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
      */
-    public static Quaternion integrateGyroSequenceAndReturnNewQuaternion(
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence)
-            throws InvalidRotationMatrixException {
+    public static Quaternion integrateGyroSequenceAndReturnNew(
+            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence) {
         final Quaternion result = new Quaternion();
-        integrateGyroSequence(sequence, result);
-        return result;
-    }
-
-    /**
-     * Integrates a sequence of gyroscope measurements contained within timed body kinematics,
-     * starting at an initial attitude to obtain a final attitude.
-     *
-     * @param sequence        sequence of gyroscope measurements to be integrated.
-     * @param initialAttitude (optional) initial attitude to be used. If null, the initial attitude available
-     *                        on provided sequence will be used. If that one is neither available, then the
-     *                        identity attitude will be used.
-     * @return resulting rotation after integration.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
-     */
-    public static CoordinateTransformation integrateGyroSequenceAndReturnNewCoordinateTransformation(
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence,
-            final CoordinateTransformation initialAttitude)
-            throws InvalidRotationMatrixException {
-
-        // start body attitude is required to determine start and destination frame types of result
-        if (sequence.getStartBodyAttitude() == null) {
-            throw new IllegalArgumentException();
-        }
-        final CoordinateTransformation result = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-        integrateGyroSequence(sequence, initialAttitude, result);
-        return result;
-    }
-
-    /**
-     * Integrates a sequence of gyroscope measurements contained within timed body kinematics,
-     * starting at the initial attitude of the sequence (if available) to obtain a final attitude.
-     * Notice that if provided sequence does not contain an initial attitude, the identity rotation will be
-     * used as the starting attitude and start and destination frame types will be left unchanged on provided
-     * result instance.
-     *
-     * @param sequence sequence of gyroscope measurements to be integrated.
-     * @return resulting rotation after integration. Source and destination types will match those
-     * provided on  sequence start body attitude, otherwise source and destination types will
-     * be left unchanged.
-     * @throws InvalidRotationMatrixException if an invalid rotation is generated. This will happen if numerical
-     *                                        instabilities occur.
-     */
-    public static CoordinateTransformation integrateGyroSequenceAndReturnNewCoordinateTransformation(
-            final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence)
-            throws InvalidRotationMatrixException {
-
-        // start body attitude is required to determine start and destination frame types of result
-        if (sequence.getStartBodyAttitude() == null) {
-            throw new IllegalArgumentException();
-        }
-        final CoordinateTransformation result = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         integrateGyroSequence(sequence, result);
         return result;
     }
