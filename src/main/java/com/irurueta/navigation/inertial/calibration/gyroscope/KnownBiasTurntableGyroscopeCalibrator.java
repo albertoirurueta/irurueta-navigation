@@ -4414,9 +4414,9 @@ public class KnownBiasTurntableGyroscopeCalibrator {
      * for both the accelerometer and gyroscope and when G-dependent cross
      * biases are being estimated.
      *
-     * @throws AlgebraException                         if there are numerical errors.
-     * @throws FittingException                         if no convergence to solution is found.
-     * @throws com.irurueta.numerical.NotReadyException if fitter is not ready.
+     * @throws AlgebraException                              if there are numerical errors.
+     * @throws FittingException                              if no convergence to solution is found.
+     * @throws com.irurueta.numerical.NotReadyException      if fitter is not ready.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens
      */
     private void calibrateCommonAxisAndGDependentCrossBiases()
@@ -4608,9 +4608,9 @@ public class KnownBiasTurntableGyroscopeCalibrator {
      * Internal method to perform general calibration when G-dependent cross
      * biases are being estimated.
      *
-     * @throws AlgebraException                         if there are numerical errors.
-     * @throws FittingException                         if no convergence to solution is found.
-     * @throws com.irurueta.numerical.NotReadyException if fitter is not ready.
+     * @throws AlgebraException                              if there are numerical errors.
+     * @throws FittingException                              if no convergence to solution is found.
+     * @throws com.irurueta.numerical.NotReadyException      if fitter is not ready.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens
      */
     private void calibrateGeneralAndGDependentCrossBiases()
@@ -5077,11 +5077,13 @@ public class KnownBiasTurntableGyroscopeCalibrator {
      * Sets input data into Levenberg-Marquardt fitter when G-dependent cross biases
      * are taken into account.
      *
-     * @throws WrongSizeException never happens.
+     * @throws AlgebraException                              if provided accelerometer cross coupling
+     *                                                       errors are not valid.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens
      */
     private void setInputDataWithGDependentCrossBiases()
-            throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException {
+            throws AlgebraException,
+            InvalidSourceAndDestinationFrameTypeException {
         // compute reference frame at current position
         final NEDPosition nedPosition = getNedPosition();
         final CoordinateTransformation nedC = new CoordinateTransformation(
@@ -5132,16 +5134,22 @@ public class KnownBiasTurntableGyroscopeCalibrator {
         }
 
         mFitter.setInputData(x, y, angularRateStandardDeviations);
+
+        mBa = getAccelerometerBiasAsMatrix();
+        mMa = getAccelerometerMa();
+        mAccelerationFixer.setBias(mBa);
+        mAccelerationFixer.setCrossCouplingErrors(mMa);
     }
 
     /**
      * Sets input data into Levenberg-Marquardt fitter when G-dependent cross biases
      * are ignored.
      *
-     * @throws WrongSizeException                            never happens.
+     * @throws AlgebraException                              if provided accelerometer cross coupling
+     *                                                       errors are not valid.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens.
      */
-    private void setInputData() throws WrongSizeException,
+    private void setInputData() throws AlgebraException,
             InvalidSourceAndDestinationFrameTypeException {
 
         // compute reference frame at current position
@@ -5189,6 +5197,11 @@ public class KnownBiasTurntableGyroscopeCalibrator {
         }
 
         mFitter.setInputData(x, y, angularRateStandardDeviations);
+
+        mBa = getAccelerometerBiasAsMatrix();
+        mMa = getAccelerometerMa();
+        mAccelerationFixer.setBias(mBa);
+        mAccelerationFixer.setCrossCouplingErrors(mMa);
     }
 
     /**
@@ -5507,13 +5520,6 @@ public class KnownBiasTurntableGyroscopeCalibrator {
             if (mFtrue == null) {
                 mFtrue = new Matrix(BodyKinematics.COMPONENTS, 1);
             }
-            if (mBa == null) {
-                mBa = new Matrix(BodyKinematics.COMPONENTS, 1);
-            }
-            if (mMa == null) {
-                mMa = new Matrix(BodyKinematics.COMPONENTS,
-                        BodyKinematics.COMPONENTS);
-            }
             if (mTmp == null) {
                 mTmp = new Matrix(BodyKinematics.COMPONENTS, 1);
             }
@@ -5561,7 +5567,7 @@ public class KnownBiasTurntableGyroscopeCalibrator {
 
             // fix measured accelerometer value to obtain true
             // specific force
-            mAccelerationFixer.fix(mFmeas, mBa, mMa, mFtrue);
+            mAccelerationFixer.fix(mFmeas, mFtrue);
             mG.multiply(mFtrue, mTmp);
 
             mInvM.multiply(mMeasAngularRate, mTrueAngularRate);

@@ -419,18 +419,6 @@ public class EasyGyroscopeCalibrator {
     private final Quaternion mQ = new Quaternion();
 
     /**
-     * Contains accelerometer bias expressed in matrix form to be used
-     * internally during calibration.
-     */
-    private Matrix mBa;
-
-    /**
-     * Contains accelerometer cross-coupling errors to be used internally
-     * during calibration.
-     */
-    private Matrix mMa;
-
-    /**
      * Contains a copy of input sequences where fixed body kinematics will be updated.
      */
     private List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> mFixedSequences;
@@ -3849,8 +3837,8 @@ public class EasyGyroscopeCalibrator {
      */
     private void setInputData() throws AlgebraException {
 
-        mBa = getAccelerometerBiasAsMatrix();
-        mMa = getAccelerometerMa();
+        final Matrix ba = getAccelerometerBiasAsMatrix();
+        final Matrix ma = getAccelerometerMa();
 
         final double[] measuredBeforeF = new double[BodyKinematics.COMPONENTS];
         final double[] fixedBeforeF = new double[BodyKinematics.COMPONENTS];
@@ -3872,6 +3860,9 @@ public class EasyGyroscopeCalibrator {
             mFixedSequences.add(new BodyKinematicsSequence<>(sequence));
         }
 
+        mAccelerationFixer.setBias(ba);
+        mAccelerationFixer.setCrossCouplingErrors(ma);
+
         int i = 0;
         for (BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
             // sequence mean accelerometer samples of previous static
@@ -3880,12 +3871,12 @@ public class EasyGyroscopeCalibrator {
             measuredBeforeF[0] = sequence.getBeforeMeanFx();
             measuredBeforeF[1] = sequence.getBeforeMeanFy();
             measuredBeforeF[2] = sequence.getBeforeMeanFz();
-            mAccelerationFixer.fix(measuredBeforeF, mBa, mMa, fixedBeforeF);
+            mAccelerationFixer.fix(measuredBeforeF, fixedBeforeF);
 
             measuredAfterF[0] = sequence.getAfterMeanFx();
             measuredAfterF[1] = sequence.getAfterMeanFy();
             measuredAfterF[2] = sequence.getAfterMeanFz();
-            mAccelerationFixer.fix(measuredAfterF, mBa, mMa, fixedAfterF);
+            mAccelerationFixer.fix(measuredAfterF, fixedAfterF);
 
             // because we are only interested in gravity direction, we
             // normalize these vectors, so that gravity becomes independent
@@ -4348,7 +4339,7 @@ public class EasyGyroscopeCalibrator {
         mMeasuredSpecificForce.setElementAtIndex(1, kinematics.getFy());
         mMeasuredSpecificForce.setElementAtIndex(2, kinematics.getFz());
 
-        mAccelerationFixer.fix(mMeasuredSpecificForce, mBa, mMa, mTrueSpecificForce);
+        mAccelerationFixer.fix(mMeasuredSpecificForce, mTrueSpecificForce);
 
         // fix angular rate
         mMeasuredAngularRate.setElementAtIndex(0, kinematics.getAngularRateX());

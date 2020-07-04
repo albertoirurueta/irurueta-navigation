@@ -94,9 +94,9 @@ public class AngularRateFixer {
         try {
             mIdentity = Matrix.identity(BodyKinematics.COMPONENTS,
                     BodyKinematics.COMPONENTS);
-            mTmp1 = new Matrix(BodyKinematics.COMPONENTS,
+            mTmp1 = Matrix.identity(BodyKinematics.COMPONENTS,
                     BodyKinematics.COMPONENTS);
-            mTmp2 = new Matrix(BodyKinematics.COMPONENTS,
+            mTmp2 = Matrix.identity(BodyKinematics.COMPONENTS,
                     BodyKinematics.COMPONENTS);
             mTmp3 = new Matrix(BodyKinematics.COMPONENTS, 1);
             mTmp4 = new Matrix(BodyKinematics.COMPONENTS, 1);
@@ -111,6 +111,654 @@ public class AngularRateFixer {
         } catch (final WrongSizeException ignore) {
             // never happens
         }
+    }
+
+    /**
+     * Gets bias values expressed in radians per second (rad/s).
+     *
+     * @return bias values expressed in radians per second.
+     */
+    public Matrix getBias() {
+        return new Matrix(mBias);
+    }
+
+    /**
+     * Gets bias values expressed in radians per second (rad/s).
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBias(final Matrix result) {
+        mBias.copyTo(result);
+    }
+
+    /**
+     * Sets bias values expressed in radians per second (rad/s).
+     *
+     * @param bias bias values expressed in radians per second. Must be 3x1.
+     */
+    public void setBias(final Matrix bias) {
+        if (bias.getRows() != BodyKinematics.COMPONENTS || bias.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+        mBias = bias;
+    }
+
+    /**
+     * Gets bias values expressed in radians per second (rad/s).
+     *
+     * @return bias values expressed in radians per second.
+     */
+    public double[] getBiasArray() {
+        final double[] result = new double[BodyKinematics.COMPONENTS];
+        getBiasArray(result);
+        return result;
+    }
+
+    /**
+     * Gets bias values expressed in radians per second (rad/s).
+     *
+     * @param result instance where result data will be stored.
+     * @throws IllegalArgumentException if provided array does not have
+     *                                  length 3.
+     */
+    public void getBiasArray(final double[] result) {
+        if (result.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        try {
+            mBias.toArray(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+        }
+    }
+
+    /**
+     * Sets bias values expressed in radians per second (rad/s).
+     *
+     * @param bias bias values expressed in radians per second (rad/s). Must
+     *             have length 3.
+     * @throws IllegalArgumentException if provided array does not have
+     *                                  length 3.
+     */
+    public void setBias(final double[] bias) {
+        if (bias.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        try {
+            mBias.fromArray(bias);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+        }
+    }
+
+    /**
+     * Gets x-coordinate of bias expressed in radians per second (rad/s).
+     *
+     * @return x-coordinate of bias expressed in radians per second (rad/s).
+     */
+    public double getBiasX() {
+        return mBias.getElementAtIndex(0);
+    }
+
+    /**
+     * Sets x-coordinate of bias expressed in radians per second (rad/s).
+     *
+     * @param biasX x-coordinate of bias expressed in radians per second
+     *              (rad/s).
+     */
+    public void setBiasX(final double biasX) {
+        mBias.setElementAtIndex(0, biasX);
+    }
+
+    /**
+     * Gets y-coordinate of bias expressed in radians per second (rad/s).
+     *
+     * @return y-coordinate of bias expressed in radians per second (rad/s).
+     */
+    public double getBiasY() {
+        return mBias.getElementAtIndex(1);
+    }
+
+    /**
+     * Sets y-coordinate of bias expressed in radians per second (rad/s).
+     *
+     * @param biasY y-coordinate of bias expressed in radians per second
+     *              (rad/s).
+     */
+    public void setBiasY(final double biasY) {
+        mBias.setElementAtIndex(1, biasY);
+    }
+
+    /**
+     * Gets z-coordinate of bias expressed in radians per second (rad/s).
+     *
+     * @return z-coordinate of bias expressed in radians per second (rad/s).
+     */
+    public double getBiasZ() {
+        return mBias.getElementAtIndex(2);
+    }
+
+    /**
+     * Sets z-coordinate of bias expressed in radians per second (rad/s).
+     *
+     * @param biasZ z-coordinate of bias expressed in radians per second
+     *              (rad/s).
+     */
+    public void setBiasZ(final double biasZ) {
+        mBias.setElementAtIndex(2, biasZ);
+    }
+
+    /**
+     * Sets coordinates of bias expressed in radians per second (rad/s).
+     *
+     * @param biasX x-coordinate of bias.
+     * @param biasY y-coordinate of bias.
+     * @param biasZ z-coordinate of bias.
+     */
+    public void setBias(
+            final double biasX, final double biasY, final double biasZ) {
+        setBiasX(biasX);
+        setBiasY(biasY);
+        setBiasZ(biasZ);
+    }
+
+    /**
+     * Gets cross coupling errors matrix.
+     *
+     * @return cross coupling errors matrix.
+     */
+    public Matrix getCrossCouplingErrors() {
+        return new Matrix(mCrossCouplingErrors);
+    }
+
+    /**
+     * Gets cross coupling errors matrix.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getCrossCouplingErrors(final Matrix result) {
+        mCrossCouplingErrors.copyTo(result);
+    }
+
+    /**
+     * Sets cross coupling errors matrix.
+     *
+     * @param crossCouplingErrors cross coupling errors matrix. Must be 3x3.
+     * @throws AlgebraException         if provided matrix cannot be inverted.
+     * @throws IllegalArgumentException if provided matrix is not 3x3.
+     */
+    public void setCrossCouplingErrors(final Matrix crossCouplingErrors)
+            throws AlgebraException {
+        if (crossCouplingErrors.getRows() != BodyKinematics.COMPONENTS
+                || crossCouplingErrors.getColumns() != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        mCrossCouplingErrors = crossCouplingErrors;
+
+        mIdentity.add(crossCouplingErrors, mTmp1);
+
+        Utils.inverse(mTmp1, mTmp2);
+    }
+
+    /**
+     * Gets x scaling factor.
+     *
+     * @return x scaling factor.
+     */
+    public double getSx() {
+        return mCrossCouplingErrors.getElementAt(0, 0);
+    }
+
+    /**
+     * Sets x scaling factor
+     *
+     * @param sx x scaling factor.
+     */
+    public void setSx(final double sx) {
+        mCrossCouplingErrors.setElementAt(0, 0, sx);
+    }
+
+    /**
+     * Gets y scaling factor.
+     *
+     * @return y scaling factor.
+     */
+    public double getSy() {
+        return mCrossCouplingErrors.getElementAt(1, 1);
+    }
+
+    /**
+     * Sets y scaling factor.
+     *
+     * @param sy y scaling factor.
+     */
+    public void setSy(final double sy) {
+        mCrossCouplingErrors.setElementAt(1, 1, sy);
+    }
+
+    /**
+     * Gets z scaling factor.
+     *
+     * @return z scaling factor.
+     */
+    public double getSz() {
+        return mCrossCouplingErrors.getElementAt(2, 2);
+    }
+
+    /**
+     * Sets z scaling factor.
+     *
+     * @param sz z scaling factor.
+     */
+    public void setSz(final double sz) {
+        mCrossCouplingErrors.setElementAt(2, 2, sz);
+    }
+
+    /**
+     * Gets x-y cross coupling error.
+     *
+     * @return x-y cross coupling error.
+     */
+    public double getMxy() {
+        return mCrossCouplingErrors.getElementAt(0, 1);
+    }
+
+    /**
+     * Sets x-y cross coupling error.
+     *
+     * @param mxy x-y cross coupling error.
+     */
+    public void setMxy(final double mxy) {
+        mCrossCouplingErrors.setElementAt(0, 1, mxy);
+    }
+
+    /**
+     * Gets x-z cross coupling error.
+     *
+     * @return x-z cross coupling error.
+     */
+    public double getMxz() {
+        return mCrossCouplingErrors.getElementAt(0, 2);
+    }
+
+    /**
+     * Sets x-z cross coupling error.
+     *
+     * @param mxz x-z cross coupling error.
+     */
+    public void setMxz(final double mxz) {
+        mCrossCouplingErrors.setElementAt(0, 2, mxz);
+    }
+
+    /**
+     * Gets y-x cross coupling error.
+     *
+     * @return y-x cross coupling error.
+     */
+    public double getMyx() {
+        return mCrossCouplingErrors.getElementAt(1, 0);
+    }
+
+    /**
+     * Sets y-x cross coupling error.
+     *
+     * @param myx y-x cross coupling error.
+     */
+    public void setMyx(final double myx) {
+        mCrossCouplingErrors.setElementAt(1, 0, myx);
+    }
+
+    /**
+     * Gets y-z cross coupling error.
+     *
+     * @return y-z cross coupling error.
+     */
+    public double getMyz() {
+        return mCrossCouplingErrors.getElementAt(1, 2);
+    }
+
+    /**
+     * Sets y-z cross coupling error.
+     *
+     * @param myz y-z cross coupling error.
+     */
+    public void setMyz(final double myz) {
+        mCrossCouplingErrors.setElementAt(1, 2, myz);
+    }
+
+    /**
+     * Gets z-x cross coupling error.
+     *
+     * @return z-x cross coupling error.
+     */
+    public double getMzx() {
+        return mCrossCouplingErrors.getElementAt(2, 0);
+    }
+
+    /**
+     * Sets z-x cross coupling error.
+     *
+     * @param mzx z-x cross coupling error.
+     */
+    public void setMzx(final double mzx) {
+        mCrossCouplingErrors.setElementAt(2, 0, mzx);
+    }
+
+    /**
+     * Gets z-y cross coupling error.
+     *
+     * @return z-y cross coupling error.
+     */
+    public double getMzy() {
+        return mCrossCouplingErrors.getElementAt(2, 1);
+    }
+
+    /**
+     * Sets z-y cross coupling error.
+     *
+     * @param mzy z-y cross coupling error.
+     */
+    public void setMzy(final double mzy) {
+        mCrossCouplingErrors.setElementAt(2, 1, mzy);
+    }
+
+    /**
+     * Sets scaling factors.
+     *
+     * @param sx x scaling factor.
+     * @param sy y scaling factor.
+     * @param sz z scaling factor.
+     */
+    public void setScalingFactors(
+            final double sx, final double sy, final double sz) {
+        setSx(sx);
+        setSy(sy);
+        setSz(sz);
+    }
+
+    /**
+     * Sets cross coupling errors.
+     *
+     * @param mxy x-y cross coupling error.
+     * @param mxz x-z cross coupling error.
+     * @param myx y-x cross coupling error.
+     * @param myz y-z cross coupling error.
+     * @param mzx z-x cross coupling error.
+     * @param mzy z-y cross coupling error.
+     */
+    public void setCrossCouplingErrors(
+            final double mxy, final double mxz,
+            final double myx, final double myz,
+            final double mzx, final double mzy) {
+        setMxy(mxy);
+        setMxz(mxz);
+        setMyx(myx);
+        setMyz(myz);
+        setMzx(mzx);
+        setMzy(mzy);
+    }
+
+    /**
+     * Sets scaling factors and cross coupling errors.
+     *
+     * @param sx  x scaling factor.
+     * @param sy  y scaling factor.
+     * @param sz  z scaling factor.
+     * @param mxy x-y cross coupling error.
+     * @param mxz x-z cross coupling error.
+     * @param myx y-x cross coupling error.
+     * @param myz y-z cross coupling error.
+     * @param mzx z-x cross coupling error.
+     * @param mzy z-y cross coupling error.
+     */
+    public void setScalingFactorsAndCrossCouplingErrors(
+            final double sx, final double sy, final double sz,
+            final double mxy, final double mxz,
+            final double myx, final double myz,
+            final double mzx, final double mzy) {
+        setScalingFactors(sx, sy, sz);
+        setCrossCouplingErrors(mxy, mxz, myx, myz, mzx, mzy);
+    }
+
+    /**
+     * Gets g-dependant cross biases matrix.
+     *
+     * @return g-dependant cross biases matrix.
+     */
+    public Matrix getGDependantCrossBias() {
+        return new Matrix(mGDependantCrossBias);
+    }
+
+    /**
+     * Gets g-dependant cross biases matrix.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getGDependantCrossBias(final Matrix result) {
+        mGDependantCrossBias.copyTo(result);
+    }
+
+    /**
+     * Sets g-dependant cross biases matrix.
+     *
+     * @param gDependantCrossBias g-dependant cross biases matrix.
+     * @throws IllegalArgumentException if provided matrix is not 3x3.
+     */
+    public void setGDependantCrossBias(final Matrix gDependantCrossBias) {
+        if (gDependantCrossBias.getRows() != BodyKinematics.COMPONENTS
+                || gDependantCrossBias.getColumns() != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        mGDependantCrossBias = gDependantCrossBias;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate expressed in radians
+     *                            per second (rad/s). Must have length 3.
+     * @param trueF               true (i.e. fixed) specific force expressed
+     *                            in meters per squared second (m/s^2). Must
+     *                            have length 3.
+     * @param result              instance where restored true angular rate
+     *                            will be stored. Must have length 3.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public void fix(
+            final double[] measuredAngularRate,
+            final double[] trueF,
+            final double[] result) throws AlgebraException {
+        if (measuredAngularRate.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+        if (trueF.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+        if (result.length != BodyKinematics.COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        // The gyroscope model is
+        // Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue
+
+        // Ωtrue = (I + Mg)^-1 * (Ωmeas - bg - Gg * ftrue)
+
+        mTmp3.fromArray(trueF);
+        mGDependantCrossBias.multiply(mTmp3, mTmp4);
+
+        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+            mDiff.setElementAtIndex(i,
+                    measuredAngularRate[i] - mBias.getElementAtIndex(i)
+                            - mTmp4.getElementAtIndex(i));
+        }
+
+        mTmp2.multiply(mDiff, mTmp5);
+
+        mTmp5.toArray(result);
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate expressed in radians
+     *                            per second (rad/s). Must be 3x1.
+     * @param trueF               true (i.e. fixed) specific force expressed
+     *                            in meters per squared second (m/s^2). Must
+     *                            be 3x1.
+     * @param result              instance where restored true angular rate
+     *                            will be stored. Must have length 3.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public void fix(
+            final Matrix measuredAngularRate,
+            final Matrix trueF,
+            final double[] result) throws AlgebraException {
+        if (measuredAngularRate.getRows() != BodyKinematics.COMPONENTS
+                || measuredAngularRate.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+        if (trueF.getRows() != BodyKinematics.COMPONENTS
+                || trueF.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        fix(measuredAngularRate.getBuffer(), trueF.getBuffer(), result);
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate expressed in radians
+     *                            per second (rad/s). Must be 3x1.
+     * @param trueF               true (i.e. fixed) specific force expressed
+     *                            in meters per squared second (m/s^2). Must
+     *                            be 3x1.
+     * @param result              instance where restored true angular rate
+     *                            will be stored. Must be 3x1.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public void fix(
+            final Matrix measuredAngularRate,
+            final Matrix trueF,
+            final Matrix result) throws AlgebraException {
+
+        if (result.getRows() != BodyKinematics.COMPONENTS
+                || result.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        fix(measuredAngularRate, trueF, result.getBuffer());
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRateX x-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateY y-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateZ z-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param trueFx               x-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFy               y-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFz               z-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param result               instance where restored true angular rate
+     *                             will be stored. Must have length 3.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public void fix(
+            final double measuredAngularRateX,
+            final double measuredAngularRateY,
+            final double measuredAngularRateZ,
+            final double trueFx,
+            final double trueFy,
+            final double trueFz,
+            final double[] result) throws AlgebraException {
+
+        mMeasuredAngularRate[0] = measuredAngularRateX;
+        mMeasuredAngularRate[1] = measuredAngularRateY;
+        mMeasuredAngularRate[2] = measuredAngularRateZ;
+
+        mTrueF[0] = trueFx;
+        mTrueF[1] = trueFy;
+        mTrueF[2] = trueFz;
+
+        fix(mMeasuredAngularRate, mTrueF, result);
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRateX x-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateY y-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateZ z-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param trueFx               x-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFy               y-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFz               z-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param result               instance where restored true angular rate
+     *                             will be stored. Must be 3x1.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public void fix(
+            final double measuredAngularRateX,
+            final double measuredAngularRateY,
+            final double measuredAngularRateZ,
+            final double trueFx,
+            final double trueFy,
+            final double trueFz,
+            final Matrix result) throws AlgebraException {
+
+        if (result.getRows() != BodyKinematics.COMPONENTS
+                || result.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+
+        fix(measuredAngularRateX, measuredAngularRateY, measuredAngularRateZ,
+                trueFx, trueFy, trueFz, result.getBuffer());
     }
 
     /**
@@ -560,6 +1208,159 @@ public class AngularRateFixer {
      * Fixes provided measured angular rate values by undoing the errors
      * introduced by the gyroscope model to restore the true angular
      * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate expressed in radians
+     *                            per second (rad/s). Must have length 3.
+     * @param trueF               true (i.e. fixed) specific force expressed
+     *                            in meters per squared second (m/s^2). Must
+     *                            have length 3.
+     * @return restored true angular rate.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public double[] fixAndReturnNew(
+            final double[] measuredAngularRate,
+            final double[] trueF) throws AlgebraException {
+        final double[] result = new double[BodyKinematics.COMPONENTS];
+        fix(measuredAngularRate, trueF, result);
+        return result;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate expressed in radians
+     *                            per second (rad/s). Must be 3x1.
+     * @param trueF               true (i.e. fixed) specific force expressed
+     *                            in meters per squared second (m/s^2). Must
+     *                            be 3x1.
+     * @return restored true angular rate.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public double[] fixAndReturnNew(
+            final Matrix measuredAngularRate,
+            final Matrix trueF) throws AlgebraException {
+
+        final double[] result = new double[BodyKinematics.COMPONENTS];
+        fix(measuredAngularRate, trueF, result);
+        return result;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRate measured angular rate expressed in radians
+     *                            per second (rad/s). Must be 3x1.
+     * @param trueF               true (i.e. fixed) specific force expressed
+     *                            in meters per squared second (m/s^2). Must
+     *                            be 3x1.
+     * @return restored true angular rate.
+     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws IllegalArgumentException if any of the provided parameters
+     *                                  does not have proper size.
+     */
+    public Matrix fixAndReturnNewMatrix(
+            final Matrix measuredAngularRate,
+            final Matrix trueF) throws AlgebraException {
+
+        final Matrix result = new Matrix(
+                BodyKinematics.COMPONENTS, 1);
+        fix(measuredAngularRate, trueF, result);
+        return result;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRateX x-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateY y-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateZ z-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param trueFx               x-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFy               y-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFz               z-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @return restored true angular rate.
+     * @throws AlgebraException         if there are numerical instabilities.
+     */
+    public double[] fixAndReturnNew(
+            final double measuredAngularRateX,
+            final double measuredAngularRateY,
+            final double measuredAngularRateZ,
+            final double trueFx,
+            final double trueFy,
+            final double trueFz) throws AlgebraException {
+
+        final double[] result = new double[BodyKinematics.COMPONENTS];
+        fix(measuredAngularRateX, measuredAngularRateY, measuredAngularRateZ,
+                trueFx, trueFy, trueFz, result);
+        return result;
+    }
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
+     * This method uses last provided bias and cross coupling errors.
+     *
+     * @param measuredAngularRateX x-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateY y-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param measuredAngularRateZ z-coordinate of measured angular rate
+     *                             expressed in radians per second (rad/s).
+     * @param trueFx               x-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFy               y-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @param trueFz               z-coordinate of true (i.e. fixed)
+     *                             specific force expressed in meters per
+     *                             squared second (m/s^2).
+     * @return restored true angular rate.
+     * @throws AlgebraException         if there are numerical instabilities.
+     */
+    public Matrix fixAndReturnNewMatrix(
+            final double measuredAngularRateX,
+            final double measuredAngularRateY,
+            final double measuredAngularRateZ,
+            final double trueFx,
+            final double trueFy,
+            final double trueFz) throws AlgebraException {
+
+        final Matrix result = new Matrix(
+                BodyKinematics.COMPONENTS, 1);
+        fix(measuredAngularRateX, measuredAngularRateY, measuredAngularRateZ,
+                trueFx, trueFy, trueFz, result);
+        return result;
+    }
+
+
+    /**
+     * Fixes provided measured angular rate values by undoing the errors
+     * introduced by the gyroscope model to restore the true angular
+     * rate.
      *
      * @param measuredAngularRate measured angular rate expressed in radians
      *                            per second (rad/s). Must have length 3.
@@ -806,7 +1607,7 @@ public class AngularRateFixer {
      * @param g23                  element 2,3 of g-dependant cross biases.
      * @param g33                  element 3,3 of g-dependant cross biases.
      * @return restored true angular rate.
-     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws AlgebraException if there are numerical instabilities.
      */
     public double[] fixAndReturnNew(
             final double measuredAngularRateX,
@@ -879,7 +1680,7 @@ public class AngularRateFixer {
      * @param g23                  element 2,3 of g-dependant cross biases.
      * @param g33                  element 3,3 of g-dependant cross biases.
      * @return restored true angular rate.
-     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws AlgebraException if there are numerical instabilities.
      */
     public Matrix fixAndReturnNewMatrix(
             final double measuredAngularRateX,

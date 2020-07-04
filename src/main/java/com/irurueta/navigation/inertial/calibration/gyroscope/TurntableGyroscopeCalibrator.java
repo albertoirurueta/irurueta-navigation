@@ -5384,11 +5384,13 @@ public class TurntableGyroscopeCalibrator {
      * Sets input data into Levenberg-Marquardt fitter when G-dependent cross biases
      * are taken into account.
      *
-     * @throws WrongSizeException never happens.
+     * @throws AlgebraException                              if provided accelerometer cross coupling
+     *                                                       errors are not valid.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens
      */
     private void setInputDataWithGDependentCrossBiases()
-            throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException {
+            throws AlgebraException,
+            InvalidSourceAndDestinationFrameTypeException {
         // compute reference frame at current position
         final NEDPosition nedPosition = getNedPosition();
         final CoordinateTransformation nedC = new CoordinateTransformation(
@@ -5439,16 +5441,22 @@ public class TurntableGyroscopeCalibrator {
         }
 
         mFitter.setInputData(x, y, angularRateStandardDeviations);
+
+        mBa = getAccelerometerBiasAsMatrix();
+        mMa = getAccelerometerMa();
+        mAccelerationFixer.setBias(mBa);
+        mAccelerationFixer.setCrossCouplingErrors(mMa);
     }
 
     /**
      * Sets input data into Levenberg-Marquardt fitter when G-dependent cross biases
      * are ignored.
      *
-     * @throws WrongSizeException                            never happens.
+     * @throws AlgebraException                              if provided accelerometer cross coupling
+     *                                                       errors are not valid.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens.
      */
-    private void setInputData() throws WrongSizeException,
+    private void setInputData() throws AlgebraException,
             InvalidSourceAndDestinationFrameTypeException {
 
         // compute reference frame at current position
@@ -5496,6 +5504,11 @@ public class TurntableGyroscopeCalibrator {
         }
 
         mFitter.setInputData(x, y, angularRateStandardDeviations);
+
+        mBa = getAccelerometerBiasAsMatrix();
+        mMa = getAccelerometerMa();
+        mAccelerationFixer.setBias(mBa);
+        mAccelerationFixer.setCrossCouplingErrors(mMa);
     }
 
     /**
@@ -5899,7 +5912,7 @@ public class TurntableGyroscopeCalibrator {
 
             // fix measured accelerometer value to obtain true
             // specific force
-            mAccelerationFixer.fix(mFmeas, mBa, mMa, mFtrue);
+            mAccelerationFixer.fix(mFmeas, mFtrue);
             mG.multiply(mFtrue, mTmp);
 
             mInvM.multiply(mMeasAngularRate, mTrueAngularRate);
