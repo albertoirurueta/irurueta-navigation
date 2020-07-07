@@ -4373,8 +4373,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * This implementation makes no action.
      * Subclasses using quality scores must implement proper behaviour.
      *
-     * @param qualityScores quality scores corresponding to each pair of
-     *                      matched points.
+     * @param qualityScores quality scores corresponding to each sample.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
@@ -4745,7 +4744,8 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided value is less than
      *                                  {@link #getMinimumRequiredMeasurements}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -12624,8 +12624,8 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationBodyKinematics> inlierMeasurements =
                     new ArrayList<>();

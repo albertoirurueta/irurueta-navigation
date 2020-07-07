@@ -1907,7 +1907,7 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1934,7 +1934,8 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(
+            final boolean computeAndKeepInliers)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1959,7 +1960,8 @@ public class RANSACRobustTurntableGyroscopeCalibrator extends RobustTurntableGyr
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(
+            final boolean computeAndKeepResiduals)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
