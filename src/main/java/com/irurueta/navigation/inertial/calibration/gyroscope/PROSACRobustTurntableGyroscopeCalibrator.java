@@ -91,8 +91,8 @@ public class PROSACRobustTurntableGyroscopeCalibrator extends
 
     /**
      * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
+     * The threshold refers to the amount of error on residuals between
+     * angular rate norms.
      */
     private double mThreshold = DEFAULT_THRESHOLD;
 
