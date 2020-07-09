@@ -2266,7 +2266,7 @@ public class AttitudeEstimatorTest {
         final double declination = wmmEstimator.getDeclination(
                 position, date);
 
-        final double yaw2 = AttitudeEstimator.getYaw(bx, by, bz,
+        double yaw2 = AttitudeEstimator.getYaw(bx, by, bz,
                 declination, roll, pitch);
         final double yaw3 = AttitudeEstimator.getYaw(b, declination,
                 roll, pitch);
@@ -2280,10 +2280,13 @@ public class AttitudeEstimatorTest {
         final double yaw5 = AttitudeEstimator.getYaw(b, declinationAngle,
                 rollAngle, pitchAngle);
 
+        if (Math.abs(yaw2) > Math.PI) {
+            yaw2 = 2.0 * Math.PI + yaw2;
+        }
         assertEquals(yaw1, yaw2, ABSOLUTE_ERROR);
-        assertEquals(yaw1, yaw3, ABSOLUTE_ERROR);
-        assertEquals(yaw1, yaw4, ABSOLUTE_ERROR);
-        assertEquals(yaw1, yaw5, ABSOLUTE_ERROR);
+        assertEquals(yaw2, yaw3, ABSOLUTE_ERROR);
+        assertEquals(yaw2, yaw4, ABSOLUTE_ERROR);
+        assertEquals(yaw2, yaw5, ABSOLUTE_ERROR);
     }
 
     @Test
