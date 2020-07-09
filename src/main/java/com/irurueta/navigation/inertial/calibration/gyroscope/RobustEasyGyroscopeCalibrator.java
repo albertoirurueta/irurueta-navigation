@@ -3471,6 +3471,12 @@ public abstract class RobustEasyGyroscopeCalibrator {
             result.mEstimatedMg = mInnerCalibrator.getEstimatedMg();
             result.mEstimatedGg = mInnerCalibrator.getEstimatedGg();
 
+            if (mKeepCovariance) {
+                result.mCovariance = mInnerCalibrator.getEstimatedCovariance();
+            } else {
+                result.mCovariance = null;
+            }
+
             solutions.add(result);
         } catch (LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
@@ -3518,21 +3524,16 @@ public abstract class RobustEasyGyroscopeCalibrator {
                 mEstimatedBiases = mInnerCalibrator.getEstimatedBiases();
                 mEstimatedMg = mInnerCalibrator.getEstimatedMg();
                 mEstimatedGg = mInnerCalibrator.getEstimatedGg();
-
-                if (mKeepCovariance) {
-                    mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
-                } else {
-                    mEstimatedCovariance = null;
-                }
+                mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
 
             } catch (LockedException | CalibrationException | NotReadyException e) {
-                mEstimatedCovariance = null;
+                mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;
             }
         } else {
-            mEstimatedCovariance = null;
+            mEstimatedCovariance = preliminaryResult.mCovariance;
             mEstimatedBiases = preliminaryResult.mEstimatedBiases;
             mEstimatedMg = preliminaryResult.mEstimatedMg;
             mEstimatedGg = preliminaryResult.mEstimatedGg;
@@ -3652,5 +3653,10 @@ public abstract class RobustEasyGyroscopeCalibrator {
          * This instance allows any 3x3 matrix.
          */
         private Matrix mEstimatedGg;
+
+        /**
+         * Covariance matrix for estimated result.
+         */
+        private Matrix mCovariance;
     }
 }
