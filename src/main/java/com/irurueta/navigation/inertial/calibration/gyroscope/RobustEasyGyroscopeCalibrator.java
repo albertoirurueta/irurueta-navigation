@@ -88,6 +88,12 @@ public abstract class RobustEasyGyroscopeCalibrator {
     public static final boolean DEFAULT_ESTIMATE_G_DEPENDENT_CROSS_BIASES = true;
 
     /**
+     * Default robust estimator method when none is provided.
+     */
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
+            RobustEstimatorMethod.LMedS;
+
+    /**
      * Indicates that result is refined by default using a non-linear calibrator
      * (which uses a Levenberg-Marquardt fitter).
      */
@@ -3350,6 +3356,2708 @@ public abstract class RobustEasyGyroscopeCalibrator {
      * @return method being used for robust estimation.
      */
     public abstract RobustEstimatorMethod getMethod();
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param method robust estimator method.
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator();
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator();
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator();
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator();
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator();
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a solution.
+     *                    This must be 3x1 and is expressed in radians per
+     *                    second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @param method      robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a solution.
+     *                    This must be 3x1 and is expressed in radians per
+     *                    second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @param listener    listener to handle events raised by this
+     *                    calibrator.
+     * @param method      robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a
+     *                    solution. This must have length 3 and is expressed
+     *                    in radians per second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @param method      robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a
+     *                    solution. This must have length 3 and is expressed
+     *                    in radians per second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @param listener    listener to handle events raised by this
+     *                    calibrator.
+     * @param method      robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must have length 3 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must
+     *                          have length 3 and is expressed in
+     *                          meters per squared second
+     *                          (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must have length 3 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must
+     *                          have length 3 and is expressed in
+     *                          meters per squared second
+     *                          (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param listener          listener to handle events raised by this
+     *                          calibrator.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must be 3x1 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must be 3x1
+     *                          and is expressed in meters per squared
+     *                          second (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must be 3x1 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must be 3x1
+     *                          and is expressed in meters per squared
+     *                          second (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param listener          listener to handle events raised by this
+     *                          calibrator.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sequence. The larger the score value the better
+     *                      the quality of the sequence.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator();
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator();
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator();
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sequence. The larger the score value the better
+     *                      the quality of the sequence.
+     * @param sequences     collection of sequences containing timestamped body
+     *                      kinematics measurements.
+     * @param initialBias   initial gyroscope bias to be used to find a solution.
+     *                      This must be 3x1 and is expressed in radians per
+     *                      second (rad/s).
+     * @param initialMg     initial gyroscope scale factors and cross coupling
+     *                      errors matrix. Must be 3x3.
+     * @param initialGg     initial gyroscope G-dependent cross biases
+     *                      introduced on the gyroscope by the specific forces
+     *                      sensed by the accelerometer. Must be 3x3.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias, initialMg,
+                        initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias, initialMg,
+                        initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sequence. The larger the score value the better
+     *                      the quality of the sequence.
+     * @param sequences     collection of sequences containing timestamped body
+     *                      kinematics measurements.
+     * @param initialBias   initial gyroscope bias to be used to find a solution.
+     *                      This must be 3x1 and is expressed in radians per
+     *                      second (rad/s).
+     * @param initialMg     initial gyroscope scale factors and cross coupling
+     *                      errors matrix. Must be 3x3.
+     * @param initialGg     initial gyroscope G-dependent cross biases
+     *                      introduced on the gyroscope by the specific forces
+     *                      sensed by the accelerometer. Must be 3x3.
+     * @param listener      listener to handle events raised by this
+     *                      calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sequence. The larger the score value the better
+     *                      the quality of the sequence.
+     * @param sequences     collection of sequences containing timestamped body
+     *                      kinematics measurements.
+     * @param initialBias   initial gyroscope bias to be used to find a
+     *                      solution. This must have length 3 and is expressed
+     *                      in radians per second (rad/s).
+     * @param initialMg     initial gyroscope scale factors and cross coupling
+     *                      errors matrix. Must be 3x3.
+     * @param initialGg     initial gyroscope G-dependent cross biases
+     *                      introduced on the gyroscope by the specific forces
+     *                      sensed by the accelerometer. Must be 3x3.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sequence. The larger the score value the better
+     *                      the quality of the sequence.
+     * @param sequences     collection of sequences containing timestamped body
+     *                      kinematics measurements.
+     * @param initialBias   initial gyroscope bias to be used to find a
+     *                      solution. This must have length 3 and is expressed
+     *                      in radians per second (rad/s).
+     * @param initialMg     initial gyroscope scale factors and cross coupling
+     *                      errors matrix. Must be 3x3.
+     * @param initialGg     initial gyroscope G-dependent cross biases
+     *                      introduced on the gyroscope by the specific forces
+     *                      sensed by the accelerometer. Must be 3x3.
+     * @param listener      listener to handle events raised by this
+     *                      calibrator.
+     * @param method        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sequence. The larger the score value the better
+     *                          the quality of the sequence.
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must have length 3 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must
+     *                          have length 3 and is expressed in
+     *                          meters per squared second
+     *                          (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sequence. The larger the score value the better
+     *                          the quality of the sequence.
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must have length 3 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must
+     *                          have length 3 and is expressed in
+     *                          meters per squared second
+     *                          (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param listener          listener to handle events raised by this
+     *                          calibrator.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sequence. The larger the score value the better
+     *                          the quality of the sequence.
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must be 3x1 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must be 3x1
+     *                          and is expressed in meters per squared
+     *                          second (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sequence. The larger the score value the better
+     *                          the quality of the sequence.
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must be 3x1 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must be 3x1
+     *                          and is expressed in meters per squared
+     *                          second (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param listener          listener to handle events raised by this
+     *                          calibrator.
+     * @param method            robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, initialBias, initialMg, initialGg,
+                        accelerometerBias, accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, initialBias, initialMg,
+                        initialGg, accelerometerBias, accelerometerMa,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed, estimateGDependentCrossBiases,
+                        initialBias, initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sequence. The larger the score value the better
+     *                                      the quality of the sequence.
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @param method                        robust estimator method.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size or if provided
+     *                                  quality scores length is smaller
+     *                                  than 10.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final double[] qualityScores,
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case LMedS:
+                return new LMedSRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case MSAC:
+                return new MSACRobustEasyGyroscopeCalibrator(
+                        sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROSAC:
+                return new PROSACRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustEasyGyroscopeCalibrator(
+                        qualityScores, sequences, commonAxisUsed,
+                        estimateGDependentCrossBiases, initialBias,
+                        initialMg, initialGg, accelerometerBias,
+                        accelerometerMa, listener);
+        }
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @return a robust gyroscope calibrator.
+     */
+    public static RobustEasyGyroscopeCalibrator create() {
+        return create(DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a solution.
+     *                    This must be 3x1 and is expressed in radians per
+     *                    second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg) {
+        return create(sequences, initialBias, initialMg, initialGg,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a solution.
+     *                    This must be 3x1 and is expressed in radians per
+     *                    second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @param listener    listener to handle events raised by this
+     *                    calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, initialBias, initialMg, initialGg,
+                listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a
+     *                    solution. This must have length 3 and is expressed
+     *                    in radians per second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg) {
+        return create(sequences, initialBias, initialMg, initialGg,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences   collection of sequences containing timestamped body
+     *                    kinematics measurements.
+     * @param initialBias initial gyroscope bias to be used to find a
+     *                    solution. This must have length 3 and is expressed
+     *                    in radians per second (rad/s).
+     * @param initialMg   initial gyroscope scale factors and cross coupling
+     *                    errors matrix. Must be 3x3.
+     * @param initialGg   initial gyroscope G-dependent cross biases
+     *                    introduced on the gyroscope by the specific forces
+     *                    sensed by the accelerometer. Must be 3x3.
+     * @param listener    listener to handle events raised by this
+     *                    calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, initialBias, initialMg, initialGg,
+                listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must have length 3 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must
+     *                          have length 3 and is expressed in
+     *                          meters per squared second
+     *                          (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa) {
+        return create(sequences, initialBias, initialMg,
+                initialGg, accelerometerBias,
+                accelerometerMa, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must have length 3 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must
+     *                          have length 3 and is expressed in
+     *                          meters per squared second
+     *                          (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param listener          listener to handle events raised by this
+     *                          calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, initialBias, initialMg,
+                initialGg, accelerometerBias, accelerometerMa, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must be 3x1 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must be 3x1
+     *                          and is expressed in meters per squared
+     *                          second (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa) {
+        return create(sequences, initialBias, initialMg, initialGg,
+                accelerometerBias, accelerometerMa, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences         collection of sequences containing timestamped body
+     *                          kinematics measurements.
+     * @param initialBias       initial gyroscope bias to be used to find a
+     *                          solution. This must be 3x1 and is expressed
+     *                          in radians per second (rad/s).
+     * @param initialMg         initial gyroscope scale factors and cross coupling
+     *                          errors matrix. Must be 3x3.
+     * @param initialGg         initial gyroscope G-dependent cross biases
+     *                          introduced on the gyroscope by the specific forces
+     *                          sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias known accelerometer bias. This must be 3x1
+     *                          and is expressed in meters per squared
+     *                          second (m/s^2).
+     * @param accelerometerMa   known accelerometer scale factors and
+     *                          cross coupling matrix. Must be 3x3.
+     * @param listener          listener to handle events raised by this
+     *                          calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, initialBias, initialMg, initialGg,
+                accelerometerBias, accelerometerMa, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, accelerometerBias, accelerometerMa,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must have length 3 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final double[] initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final double[] accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, accelerometerBias, accelerometerMa, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, accelerometerBias, accelerometerMa,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust gyroscope calibrator using default robust method.
+     *
+     * @param sequences                     collection of sequences containing timestamped body
+     *                                      kinematics measurements.
+     * @param commonAxisUsed                indicates whether z-axis is
+     *                                      assumed to be common for
+     *                                      accelerometer and gyroscope.
+     * @param estimateGDependentCrossBiases true if G-dependent cross biases
+     *                                      will be estimated, false
+     *                                      otherwise.
+     * @param initialBias                   initial gyroscope bias to be used to find a
+     *                                      solution. This must be 3x1 and is expressed
+     *                                      in radians per second (rad/s).
+     * @param initialMg                     initial gyroscope scale factors and cross coupling
+     *                                      errors matrix. Must be 3x3.
+     * @param initialGg                     initial gyroscope G-dependent cross biases
+     *                                      introduced on the gyroscope by the specific forces
+     *                                      sensed by the accelerometer. Must be 3x3.
+     * @param accelerometerBias             known accelerometer bias. This
+     *                                      must have length 3 and is
+     *                                      expressed in meters per squared
+     *                                      second (m/s^2).
+     * @param accelerometerMa               known accelerometer scale factors
+     *                                      and cross coupling matrix. Must
+     *                                      be 3x3.
+     * @param listener                      listener to handle events raised by this
+     *                                      calibrator.
+     * @return a robust gyroscope calibrator.
+     * @throws IllegalArgumentException if any of the provided values does
+     *                                  not have proper size.
+     */
+    public static RobustEasyGyroscopeCalibrator create(
+            final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
+            final boolean commonAxisUsed,
+            final boolean estimateGDependentCrossBiases,
+            final Matrix initialBias,
+            final Matrix initialMg,
+            final Matrix initialGg,
+            final Matrix accelerometerBias,
+            final Matrix accelerometerMa,
+            final RobustEasyGyroscopeCalibratorListener listener) {
+        return create(sequences, commonAxisUsed,
+                estimateGDependentCrossBiases, initialBias, initialMg,
+                initialGg, accelerometerBias, accelerometerMa, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
 
     /**
      * Computes error of a preliminary result respect a given sequence.
