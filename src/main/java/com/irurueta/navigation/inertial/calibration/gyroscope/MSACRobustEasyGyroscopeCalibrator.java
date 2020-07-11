@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.gyroscope;
 
+import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
@@ -761,6 +762,9 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
 
         try {
             mRunning = true;
+
+            setupAccelerationFixer();
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
@@ -774,7 +778,7 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
             throw new LockedException(e);
         } catch (com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (RobustEstimatorException | AlgebraException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

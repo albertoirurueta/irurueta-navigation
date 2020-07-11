@@ -22,8 +22,8 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
-import com.irurueta.numerical.robust.LMedSRobustEstimator;
-import com.irurueta.numerical.robust.LMedSRobustEstimatorListener;
+import com.irurueta.numerical.robust.RANSACRobustEstimator;
+import com.irurueta.numerical.robust.RANSACRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -31,9 +31,9 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates gyroscope biases, cross couplings and scaling factors
+ * Robustly estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using LMedS robust estimator.
+ * specific forces sensed by the accelerometer using RANSAC robust estimator.
  * <p>
  * This calibrator assumes that the IMU is at a more or less fixed location on
  * Earth, and evaluates sequences of measured body kinematics to perform
@@ -60,157 +60,150 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibrator {
+public class RANSACRobustKnownBiasEasyGyroscopeCalibrator extends
+        RobustKnownBiasEasyGyroscopeCalibrator {
 
     /**
-     * Default value to be used for stop threshold. Stop threshold can be used to
-     * avoid keeping the algorithm unnecessarily iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once a
-     * solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Constant defining default threshold to determine whether samples are inliers or not.
      */
-    public static final double DEFAULT_STOP_THRESHOLD = 1e-3;
+    public static final double DEFAULT_THRESHOLD = 1e-3;
 
     /**
-     * Minimum allowed stop threshold value.
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
      */
-    public static final double MIN_STOP_THRESHOLD = 0.0;
+    public static final double MIN_THRESHOLD = 0.0;
 
     /**
-     * Threshold to be used to keep the algorithm iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once
-     * a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Indicates that by default inliers will only be computed but not kept.
      */
-    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
+    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
+
+    /**
+     * Indicates that by default residuals will only be computed but not kept.
+     */
+    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
+
+    /**
+     * Threshold to determine whether samples are inliers or not when testing possible solutions.
+     * The threshold refers to the amount of error on distance between estimated position and
+     * distances provided for each sample.
+     */
+    private double mThreshold = DEFAULT_THRESHOLD;
+
+    /**
+     * Indicates whether inliers must be computed and kept.
+     */
+    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
+
+    /**
+     * Indicates whether residuals must be computed and kept.
+     */
+    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
      * Constructor.
      */
-    public LMedSRobustEasyGyroscopeCalibrator() {
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator() {
         super();
     }
 
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a solution.
-     *                    This must be 3x1 and is expressed in radians per
-     *                    second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
+     * @param bias      gyroscope known bias. This must be 3x1 and is
+     *                  expressed in radians per second (rad/s).
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
-        super(sequences, initialBias, initialMg, initialGg);
+        super(sequences, bias, initialMg, initialGg);
     }
 
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a solution.
-     *                    This must be 3x1 and is expressed in radians per
-     *                    second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
-     * @param listener    listener to handle events raised by this
-     *                    calibrator.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
+     * @param bias      gyroscope known bias. This must be 3x1 and is
+     *                  expressed in radians per second (rad/s).
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
+     * @param listener  listener to handle events raised by this
+     *                  calibrator.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustEasyGyroscopeCalibratorListener listener) {
-        super(sequences, initialBias, initialMg, initialGg, listener);
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
+        super(sequences, bias, initialMg, initialGg, listener);
     }
 
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a
-     *                    solution. This must have length 3 and is expressed
-     *                    in radians per second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
+     * @param bias      gyroscope known bias. This must have length 3 and is
+     *                  expressed in radians per second (rad/s).
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
-        super(sequences, initialBias, initialMg, initialGg);
+        super(sequences, bias, initialMg, initialGg);
     }
 
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
-     * @param initialBias initial gyroscope bias to be used to find a
-     *                    solution. This must have length 3 and is expressed
-     *                    in radians per second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
-     * @param listener    listener to handle events raised by this
-     *                    calibrator.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
+     * @param bias      gyroscope known bias. This must have length 3 and is
+     *                  expressed in radians per second (rad/s).
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
+     * @param listener  listener to handle events raised by this
+     *                  calibrator.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustEasyGyroscopeCalibratorListener listener) {
-        super(sequences, initialBias, initialMg, initialGg, listener);
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
+        super(sequences, bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -218,9 +211,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
-     *                          solution. This must have length 3 and is expressed
-     *                          in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must have length 3 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -235,14 +227,14 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
-        super(sequences, initialBias, initialMg, initialGg,
+        super(sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
     }
 
@@ -251,9 +243,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
-     *                          solution. This must have length 3 and is expressed
-     *                          in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must have length 3 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -270,15 +261,15 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustEasyGyroscopeCalibratorListener listener) {
-        super(sequences, initialBias, initialMg, initialGg,
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
+        super(sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa, listener);
     }
 
@@ -287,9 +278,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
-     *                          solution. This must be 3x1 and is expressed
-     *                          in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must be 3x1 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -303,14 +293,14 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
-        super(sequences, initialBias, initialMg, initialGg,
+        super(sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
     }
 
@@ -319,9 +309,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param initialBias       initial gyroscope bias to be used to find a
-     *                          solution. This must be 3x1 and is expressed
-     *                          in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must be 3x1 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -337,15 +326,15 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustEasyGyroscopeCalibratorListener listener) {
-        super(sequences, initialBias, initialMg, initialGg,
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
+        super(sequences, bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa, listener);
     }
 
@@ -360,9 +349,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must be 3x1 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -371,15 +359,15 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -393,9 +381,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must be 3x1 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -406,16 +393,16 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustEasyGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
         super(sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -429,9 +416,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must have length 3 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -440,15 +426,15 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg) {
         super(sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg);
+                bias, initialMg, initialGg);
     }
 
     /**
@@ -462,9 +448,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must have length 3 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -475,16 +460,16 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
-            final RobustEasyGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
         super(sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg, listener);
+                bias, initialMg, initialGg, listener);
     }
 
     /**
@@ -498,9 +483,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must have length 3 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -516,17 +500,17 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa) {
         super(sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg,
+                bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
     }
 
@@ -541,9 +525,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must have length 3 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -561,18 +544,18 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final double[] initialBias,
+            final double[] bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final double[] accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustEasyGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
         super(sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
@@ -587,9 +570,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must be 3x1 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -605,17 +587,17 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa) {
         super(sequences, commonAxisUsed, estimateGDependentCrossBiases,
-                initialBias, initialMg, initialGg,
+                bias, initialMg, initialGg,
                 accelerometerBias, accelerometerMa);
     }
 
@@ -630,9 +612,8 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param initialBias                   initial gyroscope bias to be used to find a
-     *                                      solution. This must be 3x1 and is expressed
-     *                                      in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -650,78 +631,105 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public LMedSRobustEasyGyroscopeCalibrator(
+    public RANSACRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
-            final Matrix initialBias,
+            final Matrix bias,
             final Matrix initialMg,
             final Matrix initialGg,
             final Matrix accelerometerBias,
             final Matrix accelerometerMa,
-            final RobustEasyGyroscopeCalibratorListener listener) {
+            final RobustKnownBiasEasyGyroscopeCalibratorListener listener) {
         super(sequences, commonAxisUsed,
-                estimateGDependentCrossBiases, initialBias, initialMg,
+                estimateGDependentCrossBiases, bias, initialMg,
                 initialGg, accelerometerBias, accelerometerMa, listener);
     }
 
     /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algrithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
+     * The threshold refers to the amount of error on norm between measured angular rates and the
+     * ones generated with estimated calibration parameters provided for each sample.
      *
-     * @return stop threshold to stop the algorithm prematurely when a certain
-     * accuracy has been reached.
+     * @return threshold to determine whether samples are inliers or not.
      */
-    public double getStopThreshold() {
-        return mStopThreshold;
+    public double getThreshold() {
+        return mThreshold;
     }
 
     /**
-     * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value,
-     * the algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
+     * The threshold refers to the amount of error on norm between measured angular rates and the
+     * ones generated with estimated calibration parameters provided for each sample.
      *
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
-     *                      when a certain accuracy has been reached.
-     * @throws IllegalArgumentException if provided value is zero or negative.
+     * @param threshold threshold to determine whether samples are inliers or not.
+     * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (stopThreshold <= MIN_STOP_THRESHOLD) {
+        if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-
-        mStopThreshold = stopThreshold;
+        mThreshold = threshold;
     }
 
     /**
-     * Estimates gyroscope calibration parameters containing bias, scale factors,
+     * Indicates whether inliers must be computed and kept.
+     *
+     * @return true if inliers must be computed and kept, false if inliers
+     * only need to be computed but not kept.
+     */
+    public boolean isComputeAndKeepInliersEnabled() {
+        return mComputeAndKeepInliers;
+    }
+
+    /**
+     * Specifies whether inliers must be computed and kept.
+     *
+     * @param computeAndKeepInliers true if inliers must be computed and kept,
+     *                              false if inliers only need to be computed but not kept.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setComputeAndKeepInliersEnabled(
+            final boolean computeAndKeepInliers)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mComputeAndKeepInliers = computeAndKeepInliers;
+    }
+
+    /**
+     * Indicates whether residuals must be computed and kept.
+     *
+     * @return true if residuals must be computed and kept, false if residuals
+     * only need to be computed but not kept.
+     */
+    public boolean isComputeAndKeepResiduals() {
+        return mComputeAndKeepResiduals;
+    }
+
+    /**
+     * Specifies whether residuals must be computed and kept.
+     *
+     * @param computeAndKeepResiduals true if residuals must be computed and kept,
+     *                                false if residuals only need to be computed but not kept.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setComputeAndKeepResidualsEnabled(
+            final boolean computeAndKeepResiduals)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mComputeAndKeepResiduals = computeAndKeepResiduals;
+    }
+
+    /**
+     * Estimates gyroscope calibration parameters containing scale factors,
      * cross-coupling errors and G-dependent coupling.
      *
      * @throws LockedException      if calibrator is currently running.
@@ -737,8 +745,13 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
             throw new NotReadyException();
         }
 
-        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
-                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
+        final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
+                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
+                    @Override
+                    public double getThreshold() {
+                        return mThreshold;
+                    }
+
                     @Override
                     public int getTotalSamples() {
                         return mSequences.size();
@@ -753,27 +766,28 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
                     public void estimatePreliminarSolutions(
                             final int[] samplesIndices,
                             final List<PreliminaryResult> solutions) {
-                        computePreliminarySolutions(samplesIndices, solutions);
+                        computePreliminarySolutions(samplesIndices,
+                                solutions);
                     }
 
                     @Override
                     public double computeResidual(
                             final PreliminaryResult currentEstimation,
                             final int i) {
-                        return computeError(mSequences.get(i), currentEstimation);
+                        return computeError(mSequences.get(i),
+                                currentEstimation);
                     }
 
                     @Override
                     public boolean isReady() {
-                        return LMedSRobustEasyGyroscopeCalibrator.super.isReady();
+                        return RANSACRobustKnownBiasEasyGyroscopeCalibrator.super.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    LMedSRobustEasyGyroscopeCalibrator.this);
+                            mListener.onCalibrateStart(RANSACRobustKnownBiasEasyGyroscopeCalibrator.this);
                         }
                     }
 
@@ -781,8 +795,7 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    LMedSRobustEasyGyroscopeCalibrator.this);
+                            mListener.onCalibrateEnd(RANSACRobustKnownBiasEasyGyroscopeCalibrator.this);
                         }
                     }
 
@@ -791,17 +804,18 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
                             final RobustEstimator<PreliminaryResult> estimator,
                             final int iteration) {
                         if (mListener != null) {
-                            mListener.onCalibrateNextIteration(
-                                    LMedSRobustEasyGyroscopeCalibrator.this, iteration);
+                            mListener.onCalibrateNextIteration(RANSACRobustKnownBiasEasyGyroscopeCalibrator.this,
+                                    iteration);
                         }
                     }
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, float progress) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final float progress) {
                         if (mListener != null) {
-                            mListener.onCalibrateProgressChange(
-                                    LMedSRobustEasyGyroscopeCalibrator.this, progress);
+                            mListener.onCalibrateProgressChange(RANSACRobustKnownBiasEasyGyroscopeCalibrator.this,
+                                    progress);
                         }
                     }
                 });
@@ -812,10 +826,13 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
             setupAccelerationFixer();
 
             mInliersData = null;
+            innerEstimator.setComputeAndKeepInliersEnabled(
+                    mComputeAndKeepInliers || mRefineResult);
+            innerEstimator.setComputeAndKeepResidualsEnabled(
+                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            innerEstimator.setStopThreshold(mStopThreshold);
             final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
@@ -839,6 +856,6 @@ public class LMedSRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalib
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.LMedS;
+        return RobustEstimatorMethod.RANSAC;
     }
 }

@@ -6060,6 +6060,17 @@ public abstract class RobustEasyGyroscopeCalibrator {
     }
 
     /**
+     * Configures acceleration fixer
+     *
+     * @throws AlgebraException if provided accelerometer parameters
+     *                          are numerically unstable.
+     */
+    protected void setupAccelerationFixer() throws AlgebraException {
+        mAccelerationFixer.setBias(getAccelerometerBias());
+        mAccelerationFixer.setCrossCouplingErrors(getAccelerometerMa());
+    }
+
+    /**
      * Computes error of a preliminary result respect a given sequence.
      *
      * @param sequence          a sequence.
@@ -6071,10 +6082,6 @@ public abstract class RobustEasyGyroscopeCalibrator {
             final PreliminaryResult preliminaryResult) {
 
         try {
-            // TODO: for efficiency, accelerometer fixer parameters should be set at start
-            mAccelerationFixer.setBias(getAccelerometerBias());
-            mAccelerationFixer.setCrossCouplingErrors(getAccelerometerMa());
-
             mAngularRateFixer.setBias(preliminaryResult.mEstimatedBiases);
             mAngularRateFixer.setCrossCouplingErrors(
                     preliminaryResult.mEstimatedMg);

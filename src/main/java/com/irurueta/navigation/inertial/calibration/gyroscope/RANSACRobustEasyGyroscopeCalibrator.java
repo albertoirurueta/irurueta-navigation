@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.gyroscope;
 
+import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
@@ -742,7 +743,6 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
         mComputeAndKeepResiduals = computeAndKeepResiduals;
     }
 
-
     /**
      * Estimates gyroscope calibration parameters containing bias, scale factors,
      * cross-coupling errors and G-dependent coupling.
@@ -837,6 +837,9 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
 
         try {
             mRunning = true;
+
+            setupAccelerationFixer();
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -854,7 +857,7 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
             throw new LockedException(e);
         } catch (com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (RobustEstimatorException | AlgebraException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;
@@ -870,5 +873,4 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
     public RobustEstimatorMethod getMethod() {
         return RobustEstimatorMethod.RANSAC;
     }
-
 }

@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.inertial.calibration.gyroscope;
 
+import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
@@ -1548,6 +1549,9 @@ public class PROMedSRobustEasyGyroscopeCalibrator extends
 
         try {
             mRunning = true;
+
+            setupAccelerationFixer();
+
             mInliersData = null;
             innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
@@ -1562,7 +1566,7 @@ public class PROMedSRobustEasyGyroscopeCalibrator extends
             throw new LockedException(e);
         } catch (com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (RobustEstimatorException | AlgebraException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;
