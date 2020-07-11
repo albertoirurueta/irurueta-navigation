@@ -22,8 +22,8 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsSequence;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationTimedBodyKinematics;
-import com.irurueta.numerical.robust.PROSACRobustEstimator;
-import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.PROMedSRobustEstimator;
+import com.irurueta.numerical.robust.PROMedSRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * Robustly estimates gyroscope cross couplings and scaling factors
  * along with G-dependent cross biases introduced on the gyroscope by the
- * specific forces sensed by the accelerometer using PROSAC robust estimator.
+ * specific forces sensed by the accelerometer using PROMedS robust estimator.
  * <p>
  * This calibrator assumes that the IMU is at a more or less fixed location on
  * Earth, and evaluates sequences of measured body kinematics to perform
@@ -60,46 +60,50 @@ import java.util.List;
  * - ftrue is ground-truth specific force. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
+public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
         RobustKnownBiasEasyGyroscopeCalibrator {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 1e-3;
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-3;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error between integrated rotations
-     * of sequences.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Quality scores corresponding to each provided sample.
@@ -110,7 +114,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
     /**
      * Constructor.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator() {
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator() {
         super();
     }
 
@@ -129,7 +133,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
             final Matrix initialMg,
@@ -154,7 +158,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
             final Matrix initialMg,
@@ -178,7 +182,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
             final Matrix initialMg,
@@ -203,7 +207,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
             final Matrix initialMg,
@@ -233,7 +237,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
             final Matrix initialMg,
@@ -267,7 +271,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
             final Matrix initialMg,
@@ -299,7 +303,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
             final Matrix initialMg,
@@ -332,7 +336,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
             final Matrix initialMg,
@@ -365,7 +369,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -399,7 +403,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -432,7 +436,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -466,7 +470,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -506,7 +510,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -550,7 +554,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -593,7 +597,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -637,7 +641,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
             final boolean estimateGDependentCrossBiases,
@@ -661,7 +665,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
@@ -687,7 +691,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
@@ -719,7 +723,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
@@ -750,7 +754,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
@@ -782,7 +786,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
@@ -819,7 +823,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
@@ -860,7 +864,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final double[] bias,
@@ -899,7 +903,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
@@ -939,7 +943,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final Matrix bias,
@@ -979,7 +983,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1020,7 +1024,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1060,7 +1064,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1101,7 +1105,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1148,7 +1152,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1199,7 +1203,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1249,7 +1253,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1300,7 +1304,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10.
      */
-    public PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+    public PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
             final double[] qualityScores,
             final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences,
             final boolean commonAxisUsed,
@@ -1318,38 +1322,63 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @return threshold to determine whether samples are inliers or not.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+
+        mStopThreshold = stopThreshold;
     }
 
     /**
-     * Returns quality scores corresponding to each provided sequence.
-     * The larger the score value the better the quality of the sequence.
+     * Returns quality scores corresponding to each provided sample.
+     * The larger the score value the better the quality of the sample.
      *
      * @return quality scores corresponding to each sample.
      */
@@ -1359,10 +1388,10 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
     }
 
     /**
-     * Sets quality scores corresponding to each provided sequence.
-     * The larger the score value the better the quality of the sequence.
+     * Sets quality scores corresponding to each provided sample.
+     * The larger the score value the better the quality of the sample.
      *
-     * @param qualityScores quality scores corresponding to each sequence.
+     * @param qualityScores quality scores corresponding to each sample.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
@@ -1377,64 +1406,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
     }
 
     /**
-     * Indicates whether calibrator is ready to find a solution.
+     * Indicates whether solver is ready to find a solution.
      *
-     * @return true if calibrator is ready, false otherwise.
+     * @return true if solver is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
         return super.isReady() && mQualityScores != null &&
                 mQualityScores.length == mSequences.size();
-    }
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     *
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     *
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     *
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     *
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
     }
 
     /**
@@ -1454,8 +1433,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<PreliminaryResult>() {
+        final PROMedSRobustEstimator<PreliminaryResult> innerEstimator =
+                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -1463,7 +1442,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
 
                     @Override
                     public double getThreshold() {
-                        return mThreshold;
+                        return mStopThreshold;
                     }
 
                     @Override
@@ -1478,53 +1457,60 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
 
                     @Override
                     public void estimatePreliminarSolutions(
-                            final int[] samplesIndices, final List<PreliminaryResult> solutions) {
+                            final int[] samplesIndices,
+                            final List<PreliminaryResult> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override
                     public double computeResidual(
-                            final PreliminaryResult currentEstimation, final int i) {
+                            final PreliminaryResult currentEstimation,
+                            final int i) {
                         return computeError(mSequences.get(i), currentEstimation);
                     }
 
                     @Override
                     public boolean isReady() {
-                        return PROSACRobustKnownBiasEasyGyroscopeCalibrator.this.isReady();
+                        return PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this.isReady();
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateStart(
-                                    PROSACRobustKnownBiasEasyGyroscopeCalibrator.this);
+                                    PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
+                    public void onEstimateEnd(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateEnd(
-                                    PROSACRobustKnownBiasEasyGyroscopeCalibrator.this);
+                                    PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    PROSACRobustKnownBiasEasyGyroscopeCalibrator.this,
+                                    PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this,
                                     iteration);
                         }
                     }
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    PROSACRobustKnownBiasEasyGyroscopeCalibrator.this, progress);
+                                    PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this,
+                                    progress);
                         }
                     }
                 });
@@ -1535,10 +1521,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
             setupAccelerationFixer();
 
             mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
+            innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -1565,7 +1548,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROSAC;
+        return RobustEstimatorMethod.PROMedS;
     }
 
     /**
@@ -1579,7 +1562,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibrator extends
      */
     private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
-                qualityScores.length < EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_COMMON_Z_AXIS) {
+                qualityScores.length < TurntableGyroscopeCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS) {
             throw new IllegalArgumentException();
         }
 

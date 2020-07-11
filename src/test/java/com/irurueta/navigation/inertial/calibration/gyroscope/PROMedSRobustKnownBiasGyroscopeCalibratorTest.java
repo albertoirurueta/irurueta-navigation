@@ -50,8 +50,9 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
+public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
         RobustKnownBiasEasyGyroscopeCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
@@ -93,8 +94,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerBiasX(),
@@ -238,25 +239,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -295,8 +294,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bg, mg, gg);
 
         // check default values
@@ -441,25 +440,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -477,37 +474,37 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -538,8 +535,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bg, mg, gg, this);
 
         // check default values
@@ -684,25 +681,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -719,42 +714,42 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(1, 1), mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(3, 3), mg, gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(1, 3), gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(3, 1), gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(3, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -788,8 +783,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bias, mg, gg);
 
         // check default values
@@ -934,25 +929,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -970,31 +963,31 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1027,8 +1020,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bias, mg, gg, this);
 
         // check default values
@@ -1173,25 +1166,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -1209,34 +1200,34 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new double[1], mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(1, 3), gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(3, 1), gg,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(3, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -1288,8 +1279,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bias, mg, gg, baArray, ma);
 
         // check default values
@@ -1434,25 +1425,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -1470,54 +1459,54 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new double[1], mg, gg, baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(1, 3), gg,
                     baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(3, 1), gg,
                     baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(1, 3),
                     baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(3, 1),
                     baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, gg, new double[1], ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, gg, baArray,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, gg, baArray,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -1569,8 +1558,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bias, mg, gg, baArray, ma, this);
 
         // check default values
@@ -1715,25 +1704,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -1752,55 +1739,55 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new double[1], mg, gg, baArray, ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(1, 3), gg,
                     baArray, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, new Matrix(3, 1), gg,
                     baArray, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(1, 3),
                     baArray, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, new Matrix(3, 1),
                     baArray, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, gg, new double[1], ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, gg, baArray,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bias, mg, gg, baArray,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -1852,8 +1839,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bg, mg, gg, ba, ma);
 
         // check default values
@@ -1998,25 +1985,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -2035,70 +2020,70 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(1, 1), mg,
                     gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(3, 3), mg,
                     gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(1, 3),
                     gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(3, 1),
                     gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(1, 3),
                     ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(3, 1),
                     ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, new Matrix(1, 1),
                     ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, new Matrix(3, 3),
                     ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, ba,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -2150,8 +2135,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, bg, mg, gg, ba, ma, this);
 
         // check default values
@@ -2296,25 +2281,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -2333,70 +2316,70 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(1, 1), mg,
                     gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, new Matrix(3, 3), mg,
                     gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(1, 3),
                     gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, new Matrix(3, 1),
                     gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(1, 3),
                     ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, new Matrix(3, 1),
                     ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, new Matrix(1, 1),
                     ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, new Matrix(3, 3),
                     ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, ba,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, bg, mg, gg, ba,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2428,8 +2411,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false, bg, mg, gg);
 
@@ -2575,25 +2558,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -2611,7 +2592,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(1, 1), mg, gg);
@@ -2619,7 +2600,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(3, 3), mg, gg);
@@ -2627,7 +2608,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(1, 3), gg);
@@ -2635,7 +2616,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(3, 1), gg);
@@ -2643,7 +2624,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3));
@@ -2651,7 +2632,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1));
@@ -2684,8 +2665,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false, bg, mg, gg,
                         this);
@@ -2832,25 +2813,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -2868,7 +2847,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(1, 1), mg, gg, this);
@@ -2876,7 +2855,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(3, 3), mg, gg, this);
@@ -2884,7 +2863,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(1, 3), gg, this);
@@ -2892,7 +2871,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(3, 1), gg, this);
@@ -2900,7 +2879,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3), this);
@@ -2908,7 +2887,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1), this);
@@ -2943,8 +2922,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false, bias, mg, gg);
 
@@ -3090,25 +3069,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -3126,7 +3103,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new double[1], mg, gg);
@@ -3134,7 +3111,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg);
@@ -3142,7 +3119,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg);
@@ -3150,7 +3127,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias, mg,
                     new Matrix(1, 3));
@@ -3158,7 +3135,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias, mg,
                     new Matrix(3, 1));
@@ -3193,8 +3170,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false, bias, mg, gg,
                         this);
@@ -3341,25 +3318,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -3377,7 +3352,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new double[1], mg, gg, this);
@@ -3385,7 +3360,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg, this);
@@ -3393,7 +3368,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg, this);
@@ -3401,7 +3376,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias, mg,
                     new Matrix(1, 3), this);
@@ -3409,7 +3384,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias, mg,
                     new Matrix(3, 1), this);
@@ -3462,8 +3437,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false, bias, mg, gg, baArray, ma);
 
@@ -3609,25 +3584,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -3645,7 +3618,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new double[1], mg, gg, baArray, ma);
@@ -3653,7 +3626,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg,
@@ -3662,7 +3635,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg,
@@ -3671,7 +3644,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, new Matrix(1, 3),
@@ -3680,7 +3653,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, new Matrix(3, 1),
@@ -3689,7 +3662,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, gg, new double[1], ma);
@@ -3697,7 +3670,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -3706,7 +3679,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -3760,8 +3733,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false,
                         bias, mg, gg, baArray, ma, this);
@@ -3908,25 +3881,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -3944,7 +3915,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new double[1], mg, gg, baArray, ma, this);
@@ -3952,7 +3923,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg,
@@ -3961,7 +3932,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg,
@@ -3970,7 +3941,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, new Matrix(1, 3),
@@ -3979,7 +3950,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, new Matrix(3, 1),
@@ -3988,7 +3959,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, gg, new double[1], ma, this);
@@ -3996,7 +3967,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -4005,7 +3976,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -4059,8 +4030,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false,
                         bg, mg, gg, ba, ma);
@@ -4207,25 +4178,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -4244,7 +4213,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(1, 1), mg,
@@ -4253,7 +4222,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(3, 3), mg,
@@ -4262,7 +4231,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(1, 3),
@@ -4271,7 +4240,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(3, 1),
@@ -4280,7 +4249,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3),
@@ -4289,7 +4258,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1),
@@ -4298,7 +4267,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, gg, new Matrix(1, 1),
@@ -4307,7 +4276,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, gg, new Matrix(3, 3),
@@ -4316,7 +4285,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(1, 3));
@@ -4324,7 +4293,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(3, 1));
@@ -4377,8 +4346,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                         sequences, false,
                         false,
                         bg, mg, gg, ba, ma, this);
@@ -4525,25 +4494,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertNull(calibrator.getQualityScores());
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -4562,7 +4529,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(1, 1), mg,
@@ -4571,7 +4538,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false,
                     new Matrix(3, 3), mg,
@@ -4580,7 +4547,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(1, 3),
@@ -4589,7 +4556,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     new Matrix(3, 1),
@@ -4598,7 +4565,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3),
@@ -4607,7 +4574,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1),
@@ -4616,7 +4583,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, gg, new Matrix(1, 1),
@@ -4625,7 +4592,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg,
                     mg, gg, new Matrix(3, 3),
@@ -4634,7 +4601,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(1, 3), this);
@@ -4642,7 +4609,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(3, 1), this);
@@ -4655,8 +4622,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testConstructor18() throws WrongSizeException {
         final double[] qualityScores = new double[10];
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores);
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores);
 
         // check default values
         assertEquals(calibrator.getAccelerometerBiasX(),
@@ -4800,25 +4767,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -4836,7 +4801,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -4868,8 +4833,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bg, mg, gg);
 
         // check default values
@@ -5014,25 +4979,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -5050,48 +5013,48 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bg, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(1, 1), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(3, 3), mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -5124,8 +5087,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bg, mg, gg, this);
 
         // check default values
@@ -5270,25 +5233,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -5305,13 +5266,13 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bg, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(1, 1), mg, gg,
                     this);
@@ -5319,7 +5280,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(3, 3), mg, gg,
                     this);
@@ -5327,7 +5288,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(1, 3), gg,
                     this);
@@ -5335,7 +5296,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(3, 1), gg,
                     this);
@@ -5343,7 +5304,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(1, 3),
                     this);
@@ -5351,7 +5312,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(3, 1),
                     this);
@@ -5387,8 +5348,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bias, mg, gg);
 
         // check default values
@@ -5533,25 +5494,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -5569,40 +5528,40 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bias, mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, new double[1], mg, gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(1, 3), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(3, 1), gg);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -5637,8 +5596,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bias, mg, gg, this);
 
         // check default values
@@ -5783,25 +5742,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -5819,20 +5776,20 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new double[1], mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(1, 3), gg,
                     this);
@@ -5840,7 +5797,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(3, 1), gg,
                     this);
@@ -5848,7 +5805,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(1, 3),
                     this);
@@ -5856,7 +5813,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(3, 1),
                     this);
@@ -5910,8 +5867,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bias, mg, gg, baArray, ma);
 
         // check default values
@@ -6056,25 +6013,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -6092,20 +6047,20 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bias, mg, gg, baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, new double[1],
                     mg, gg, baArray, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(1, 3), gg,
                     baArray, ma);
@@ -6113,7 +6068,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(3, 1), gg,
                     baArray, ma);
@@ -6121,7 +6076,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(1, 3),
                     baArray, ma);
@@ -6129,7 +6084,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(3, 1),
                     baArray, ma);
@@ -6137,21 +6092,21 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg, gg,
                     new double[1], ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg, gg, baArray,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg, gg, baArray,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -6204,8 +6159,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bias, mg, gg, baArray, ma, this);
 
         // check default values
@@ -6350,25 +6305,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -6387,21 +6340,21 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bias, mg, gg, baArray,
                     ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, new double[1],
                     mg, gg, baArray, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(1, 3), gg,
                     baArray, ma, this);
@@ -6409,7 +6362,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias,
                     new Matrix(3, 1), gg,
                     baArray, ma, this);
@@ -6417,7 +6370,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(1, 3),
                     baArray, ma, this);
@@ -6425,7 +6378,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg,
                     new Matrix(3, 1),
                     baArray, ma, this);
@@ -6433,21 +6386,21 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg, gg,
                     new double[1], ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg, gg, baArray,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bias, mg, gg, baArray,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -6500,8 +6453,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bg, mg, gg, ba, ma);
 
         // check default values
@@ -6646,25 +6599,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -6683,14 +6634,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bg, mg,
                     gg, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(1, 1), mg,
                     gg, ba, ma);
@@ -6698,7 +6649,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(3, 3), mg,
                     gg, ba, ma);
@@ -6706,7 +6657,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(1, 3),
                     gg, ba, ma);
@@ -6714,7 +6665,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(3, 1),
                     gg, ba, ma);
@@ -6722,7 +6673,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(1, 3),
                     ba, ma);
@@ -6730,7 +6681,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(3, 1),
                     ba, ma);
@@ -6738,7 +6689,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg,
                     new Matrix(1, 1),
                     ma);
@@ -6746,7 +6697,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg,
                     new Matrix(3, 3),
                     ma);
@@ -6754,14 +6705,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg, ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg, ba,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
@@ -6814,8 +6765,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, bg, mg, gg, ba, ma, this);
 
         // check default values
@@ -6960,25 +6911,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -6997,14 +6946,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, bg, mg,
                     gg, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(1, 1), mg,
                     gg, ba, ma, this);
@@ -7012,7 +6961,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences,
                     new Matrix(3, 3), mg,
                     gg, ba, ma, this);
@@ -7020,7 +6969,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(1, 3),
                     gg, ba, ma, this);
@@ -7028,7 +6977,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg,
                     new Matrix(3, 1),
                     gg, ba, ma, this);
@@ -7036,7 +6985,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(1, 3),
                     ba, ma, this);
@@ -7044,7 +6993,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg,
                     new Matrix(3, 1),
                     ba, ma, this);
@@ -7052,7 +7001,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg,
                     new Matrix(1, 1),
                     ma, this);
@@ -7060,7 +7009,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg,
                     new Matrix(3, 3),
                     ma, this);
@@ -7068,14 +7017,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg, ba,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, bg, mg, gg, ba,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
@@ -7108,8 +7057,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false, bg, mg, gg);
 
@@ -7255,25 +7204,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -7291,7 +7238,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false,
                     bg, mg, gg);
@@ -7299,7 +7246,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(1, 1), mg, gg);
@@ -7307,7 +7254,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(3, 3), mg, gg);
@@ -7315,7 +7262,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(1, 3), gg);
@@ -7323,7 +7270,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(3, 1), gg);
@@ -7331,7 +7278,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3));
@@ -7339,7 +7286,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1));
@@ -7373,8 +7320,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false, bg, mg, gg,
                         this);
@@ -7521,25 +7468,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -7557,7 +7502,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false,
                     bg, mg, gg, this);
@@ -7565,7 +7510,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(1, 1), mg, gg, this);
@@ -7573,7 +7518,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(3, 3), mg, gg, this);
@@ -7581,7 +7526,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(1, 3), gg, this);
@@ -7589,7 +7534,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(3, 1), gg, this);
@@ -7597,7 +7542,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3), this);
@@ -7605,7 +7550,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1), this);
@@ -7641,8 +7586,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false, bias, mg, gg);
 
@@ -7788,25 +7733,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -7824,7 +7767,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false,
                     bias, mg, gg);
@@ -7832,7 +7775,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new double[1], mg, gg);
@@ -7840,7 +7783,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg);
@@ -7848,7 +7791,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg);
@@ -7856,7 +7799,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias, mg,
                     new Matrix(1, 3));
@@ -7864,7 +7807,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias, mg,
                     new Matrix(3, 1));
@@ -7900,8 +7843,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzx = mg.getElementAt(2, 0);
         final double mzy = mg.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false, bias, mg, gg,
                         this);
@@ -8048,25 +7991,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -8084,7 +8025,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false,
                     bias, mg, gg, this);
@@ -8092,7 +8033,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new double[1], mg, gg, this);
@@ -8100,7 +8041,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg, this);
@@ -8108,7 +8049,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg, this);
@@ -8116,7 +8057,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias, mg,
                     new Matrix(1, 3), this);
@@ -8124,7 +8065,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias, mg,
                     new Matrix(3, 1), this);
@@ -8178,8 +8119,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false, bias, mg, gg, baArray, ma);
 
@@ -8325,25 +8266,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -8361,7 +8300,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false,
                     bias, mg, gg, baArray, ma);
@@ -8369,7 +8308,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new double[1], mg, gg, baArray, ma);
@@ -8377,7 +8316,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg,
@@ -8386,7 +8325,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg,
@@ -8395,7 +8334,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, new Matrix(1, 3),
@@ -8404,7 +8343,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, new Matrix(3, 1),
@@ -8413,7 +8352,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, gg, new double[1], ma);
@@ -8421,7 +8360,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -8430,7 +8369,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -8485,8 +8424,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false,
                         bias, mg, gg, baArray, ma, this);
@@ -8633,25 +8572,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -8669,7 +8606,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false,
                     bias, mg, gg, baArray, ma, this);
@@ -8677,7 +8614,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new double[1], mg, gg, baArray, ma, this);
@@ -8685,7 +8622,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(1, 3), gg,
@@ -8694,7 +8631,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     new Matrix(3, 1), gg,
@@ -8703,7 +8640,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, new Matrix(1, 3),
@@ -8712,7 +8649,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, new Matrix(3, 1),
@@ -8721,7 +8658,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, gg, new double[1], ma, this);
@@ -8729,7 +8666,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -8738,7 +8675,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bias,
                     mg, gg, baArray,
@@ -8793,8 +8730,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false,
                         bg, mg, gg, ba, ma);
@@ -8941,25 +8878,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -8978,7 +8913,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false, bg, mg,
                     gg, ba, ma);
@@ -8986,7 +8921,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(1, 1), mg,
@@ -8995,7 +8930,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(3, 3), mg,
@@ -9004,7 +8939,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(1, 3),
@@ -9013,7 +8948,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(3, 1),
@@ -9022,7 +8957,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3),
@@ -9031,7 +8966,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1),
@@ -9040,7 +8975,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, gg, new Matrix(1, 1),
@@ -9049,7 +8984,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, gg, new Matrix(3, 3),
@@ -9058,7 +8993,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(1, 3));
@@ -9066,7 +9001,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(3, 1));
@@ -9120,8 +9055,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         final double mzxa = ma.getElementAt(2, 0);
         final double mzya = ma.getElementAt(2, 1);
 
-        PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+        PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                         sequences, false,
                         false,
                         bg, mg, gg, ba, ma, this);
@@ -9268,25 +9203,23 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         assertFalse(calibrator.isRunning());
 
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA,
                 0.0);
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE,
                 0.0);
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
         assertNull(calibrator.getInliersData());
         assertTrue(calibrator.isResultRefined());
         assertTrue(calibrator.isCovarianceKept());
         assertSame(calibrator.getQualityScores(), qualityScores);
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD,
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD,
                 0.0);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-        assertFalse(calibrator.isComputeAndKeepResiduals());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 EasyGyroscopeCalibrator.MINIMUM_SEQUENCES_GENERAL_AND_CROSS_BIASES);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.PROMedS);
 
         assertNull(calibrator.getEstimatedMg());
         assertNull(calibrator.getEstimatedSx());
@@ -9304,7 +9237,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     new double[1], sequences, false,
                     false, bg, mg,
                     gg, ba, ma, this);
@@ -9312,7 +9245,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(1, 1), mg,
@@ -9321,7 +9254,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false,
                     new Matrix(3, 3), mg,
@@ -9330,7 +9263,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(1, 3),
@@ -9339,7 +9272,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     new Matrix(3, 1),
@@ -9348,7 +9281,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(1, 3),
@@ -9357,7 +9290,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, new Matrix(3, 1),
@@ -9366,7 +9299,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, gg, new Matrix(1, 1),
@@ -9375,7 +9308,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg,
                     mg, gg, new Matrix(3, 3),
@@ -9384,7 +9317,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(1, 3), this);
@@ -9392,7 +9325,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new PROSACRobustKnownBiasEasyGyroscopeCalibrator(
+            calibrator = new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(
                     qualityScores, sequences, false,
                     false, bg, mg, gg, ba,
                     new Matrix(3, 1), this);
@@ -9403,62 +9336,32 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+    public void testGetSetStopThreshold() throws LockedException {
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
-        assertEquals(calibrator.getThreshold(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(calibrator.getStopThreshold(),
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_STOP_THRESHOLD, 0.0);
 
         // set new value
-        calibrator.setThreshold(1.0);
+        calibrator.setStopThreshold(1.0);
 
         // check
-        assertEquals(calibrator.getThreshold(), 1.0, 0.0);
+        assertEquals(calibrator.getStopThreshold(), 1.0, 0.0);
 
         // Force IllegalArgumentException
         try {
-            calibrator.setThreshold(0.0);
+            calibrator.setStopThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
-
-        // check default value
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-
-        // set new value
-        calibrator.setComputeAndKeepInliersEnabled(true);
-
-        // check
-        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
-    }
-
-    @Test
-    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
-
-        // check default value
-        assertFalse(calibrator.isComputeAndKeepResiduals());
-
-        // set new value
-        calibrator.setComputeAndKeepResidualsEnabled(true);
-
-        // check
-        assertTrue(calibrator.isComputeAndKeepResiduals());
-    }
-
-    @Test
     public void testGetSetAccelerometerBiasX() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0,
@@ -9476,8 +9379,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasY() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasY(), 0.0,
@@ -9495,8 +9398,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBiasZ() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasZ(), 0.0,
@@ -9515,8 +9418,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerBiasXAsAcceleration()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final Acceleration bax1 = calibrator
@@ -9549,8 +9452,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerBiasYAsAcceleration()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final Acceleration bay1 = calibrator
@@ -9583,8 +9486,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerBiasZAsAcceleration()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final Acceleration baz1 = calibrator
@@ -9616,8 +9519,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testSetAccelerometerBias1() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0,
@@ -9643,8 +9546,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testSetAccelerometerBias2() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerBiasX(), 0.0,
@@ -9677,8 +9580,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetAccelerometerBias() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final double[] ba1 = calibrator.getAccelerometerBias();
@@ -9716,8 +9619,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerBiasAsMatrix()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final Matrix ba1 = calibrator.getAccelerometerBiasAsMatrix();
@@ -9743,8 +9646,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSx() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSx(), 0.0,
@@ -9763,8 +9666,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSy() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSx(), 0.0,
@@ -9783,8 +9686,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerSz() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerSz(), 0.0,
@@ -9803,8 +9706,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMxy() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMxy(), 0.0,
@@ -9823,8 +9726,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMxz() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMxz(), 0.0,
@@ -9843,8 +9746,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMyx() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMyx(), 0.0,
@@ -9863,8 +9766,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMyz() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMyz(), 0.0,
@@ -9883,8 +9786,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMzx() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMzx(), 0.0,
@@ -9903,8 +9806,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMzy() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getAccelerometerMzy(), 0.0,
@@ -9923,8 +9826,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testSetAccelerometerScalingFactors()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0,
@@ -9954,8 +9857,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testSetAccelerometerCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerMxy(), 0.0,
@@ -10001,8 +9904,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testSetAccelerometerScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getAccelerometerSx(), 0.0,
@@ -10064,8 +9967,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetAccelerometerMa() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         assertEquals(calibrator.getAccelerometerMa(),
@@ -10109,8 +10012,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetBiasX() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -10127,8 +10030,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetBiasY() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
@@ -10145,8 +10048,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetBiasZ() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
@@ -10164,8 +10067,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetBiasAngularSpeedX()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed bgx1 = calibrator.getBiasAngularSpeedX();
@@ -10197,8 +10100,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetBiasAngularSpeedY()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed bgy1 = calibrator.getBiasAngularSpeedY();
@@ -10230,8 +10133,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetBiasAngularSpeedZ()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         final AngularSpeed bgz1 = calibrator.getBiasAngularSpeedZ();
@@ -10262,8 +10165,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testSetBias1() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -10286,8 +10189,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testSetBias2() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -10318,8 +10221,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSx() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -10337,8 +10240,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSy() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -10356,8 +10259,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialSz() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -10375,8 +10278,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMxy() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -10394,8 +10297,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMxz() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
@@ -10414,8 +10317,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     public void testGetSetInitialMyx() throws WrongSizeException,
             LockedException {
 
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
@@ -10434,8 +10337,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     public void testGetSetInitialMyz() throws WrongSizeException,
             LockedException {
 
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
@@ -10454,8 +10357,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     public void testGetSetInitialMzx() throws WrongSizeException,
             LockedException {
 
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
@@ -10474,8 +10377,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     public void testGetSetInitialMzy() throws WrongSizeException,
             LockedException {
 
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
@@ -10493,8 +10396,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialScalingFactors() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -10518,8 +10421,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -10553,8 +10456,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testSetInitialScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -10596,8 +10499,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetBias() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         final double[] bg1 = calibrator.getBias();
@@ -10636,8 +10539,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetBiasAsMatrix()
             throws WrongSizeException, LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial values
         final Matrix bg1 = calibrator.getBiasAsMatrix();
@@ -10685,8 +10588,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialMg() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         final Matrix mg1 = calibrator.getInitialMg();
@@ -10735,8 +10638,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testGetSetInitialGg() throws WrongSizeException,
             LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         final Matrix gg1 = calibrator.getInitialGg();
@@ -10784,8 +10687,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetSequences() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         assertNull(calibrator.getSequences());
@@ -10801,8 +10704,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         assertTrue(calibrator.isCommonAxisUsed());
@@ -10817,8 +10720,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Test
     public void testIsSetGDependentCrossBiasesEstimated()
             throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         assertTrue(calibrator.isGDependentCrossBiasesEstimated());
@@ -10832,8 +10735,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void tetGetSetListener() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         assertNull(calibrator.getListener());
@@ -10847,8 +10750,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetMinimumRequiredSequences() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check initial value
         assertEquals(calibrator.getMinimumRequiredSequences(), 19);
@@ -10882,8 +10785,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testIsReady() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         assertFalse(calibrator.isReady());
         assertEquals(calibrator.getMinimumRequiredSequences(),
@@ -10923,12 +10826,12 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getProgressDelta(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_PROGRESS_DELTA, 0.0);
 
         // set new value
         calibrator.setProgressDelta(0.5f);
@@ -10951,12 +10854,12 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getConfidence(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_CONFIDENCE, 0.0);
 
         // set new value
         calibrator.setConfidence(0.8);
@@ -10979,12 +10882,12 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getMaxIterations(),
-                PROSACRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
+                PROMedSRobustKnownBiasEasyGyroscopeCalibrator.DEFAULT_MAX_ITERATIONS);
 
         // set new value
         calibrator.setMaxIterations(1);
@@ -11001,8 +10904,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -11016,8 +10919,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -11031,8 +10934,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
@@ -11055,8 +10958,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                new PROSACRobustKnownBiasEasyGyroscopeCalibrator();
+        final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                new PROMedSRobustKnownBiasEasyGyroscopeCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
@@ -11295,8 +11198,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, true,
                             false,
                             bg, mg, gg, ba, ma, this);
@@ -11559,8 +11462,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, false,
                             false,
                             bg, mg, gg, ba, ma, this);
@@ -11823,8 +11726,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, true,
                             true,
                             bg, mg, gg, ba, ma, this);
@@ -12094,8 +11997,8 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, false,
                             true,
                             bg, mg, gg, ba, ma, this);
@@ -12370,14 +12273,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, true,
                             false,
                             bg, mg, gg, ba, ma, this);
             final int subsetSize = calibrator.getMinimumRequiredSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -12642,13 +12545,13 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, false,
                             false, bg, mg, gg, ba, ma, this);
             final int subsetSize = calibrator.getMinimumRequiredSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -12916,14 +12819,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, true,
                             true,
                             bg, mg, gg, ba, ma, this);
             final int subsetSize = calibrator.getMinimumRequiredSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -13192,13 +13095,13 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
                 sequences.add(sequence);
             }
 
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator =
-                    new PROSACRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator =
+                    new PROMedSRobustKnownBiasEasyGyroscopeCalibrator(qualityScores,
                             sequences, false, true,
                             bg, mg, gg, ba, ma, this);
             final int subsetSize = calibrator.getMinimumRequiredSequences();
             calibrator.setPreliminarySubsetSize(subsetSize);
-            calibrator.setThreshold(THRESHOLD);
+            calibrator.setStopThreshold(THRESHOLD);
 
             // estimate
             reset();
@@ -13248,14 +13151,14 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasEasyGyroscopeCalibrator calibrator) {
-        checkLocked((PROSACRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
+        checkLocked((PROMedSRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
     public void onCalibrateEnd(
             final RobustKnownBiasEasyGyroscopeCalibrator calibrator) {
-        checkLocked((PROSACRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
+        checkLocked((PROMedSRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
@@ -13263,7 +13166,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     public void onCalibrateNextIteration(
             final RobustKnownBiasEasyGyroscopeCalibrator calibrator,
             final int iteration) {
-        checkLocked((PROSACRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
+        checkLocked((PROMedSRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
@@ -13271,7 +13174,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     public void onCalibrateProgressChange(
             final RobustKnownBiasEasyGyroscopeCalibrator calibrator,
             final float progress) {
-        checkLocked((PROSACRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
+        checkLocked((PROMedSRobustKnownBiasEasyGyroscopeCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -13283,7 +13186,7 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
     }
 
     private void checkLocked(
-            final PROSACRobustKnownBiasEasyGyroscopeCalibrator calibrator) {
+            final PROMedSRobustKnownBiasEasyGyroscopeCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
             calibrator.setAccelerometerBiasX(0.0);
@@ -13593,22 +13496,12 @@ public class PROSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setThreshold(0.5);
+            calibrator.setStopThreshold(0.5);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
             calibrator.setQualityScores(null);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            calibrator.setComputeAndKeepInliersEnabled(true);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            calibrator.setComputeAndKeepResidualsEnabled(true);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
