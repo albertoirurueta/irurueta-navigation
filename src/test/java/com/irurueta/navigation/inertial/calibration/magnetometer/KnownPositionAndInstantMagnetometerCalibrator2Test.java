@@ -49,7 +49,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class KnownPositionAndInstantMagnetometerCalibratorTest2 implements
+public class KnownPositionAndInstantMagnetometerCalibrator2Test implements
         KnownPositionAndInstantMagnetometerCalibratorListener {
 
     private static final double MIN_HARD_IRON = -1e-5;
@@ -5069,7 +5069,11 @@ public class KnownPositionAndInstantMagnetometerCalibratorTest2 implements
             assertEquals(mCalibrateStart, 0);
             assertEquals(mCalibrateEnd, 0);
 
-            calibrator.calibrate();
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException ignore) {
+                continue;
+            }
 
             // check
             assertTrue(calibrator.isReady());
