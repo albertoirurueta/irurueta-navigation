@@ -18,16 +18,18 @@ package com.irurueta.navigation.inertial.calibration.magnetometer;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.geodesic.wmm.WMMEarthMagneticFluxDensityEstimator;
+import com.irurueta.navigation.geodesic.wmm.WorldMagneticModel;
 import com.irurueta.navigation.inertial.BodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDMagneticFluxDensity;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.BodyMagneticFluxDensityGenerator;
-import com.irurueta.navigation.inertial.calibration.FrameBodyMagneticFluxDensity;
+import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyMagneticFluxDensity;
 import com.irurueta.navigation.inertial.estimators.BodyMagneticFluxDensityEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -35,11 +37,13 @@ import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -71,12 +75,11 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-2;
 
     private static final int MEASUREMENT_NUMBER = 1000;
-    private static final int LARGE_MEASUREMENT_NUMBER = 100000;
 
     private static final int OUTLIER_PERCENTAGE = 20;
 
-    private static final double THRESHOLD = 1e-4;
-    private static final double LARGE_THRESHOLD = 5e-2;
+    private static final double THRESHOLD = 10e-9;
+    private static final double LARGE_THRESHOLD = 500e-9;
 
     private static final double OUTLIER_ERROR_FACTOR = 100.0;
 
@@ -788,9 +791,1305 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled() {
+    public void testIsSetComputeAndKeepInliersEnabled()
+            throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
 
+        // check default value
+        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
+                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
+
+        // set new value
+        calibrator.setComputeAndKeepInliersEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
     }
+
+    @Test
+    public void testIsSetComputeAndKeepResiduals() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.isComputeAndKeepResiduals(),
+                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertFalse(calibrator.isComputeAndKeepResiduals());
+
+        // set new value
+        calibrator.setComputeAndKeepResidualsEnabled(true);
+
+        // check
+        assertTrue(calibrator.isComputeAndKeepResiduals());
+    }
+
+    @Test
+    public void testGetSetInitialHardIronX() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialHardIronX(), 0.0,
+                0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronX = mb[0];
+
+        calibrator.setInitialHardIronX(hardIronX);
+
+        // check
+        assertEquals(calibrator.getInitialHardIronX(), hardIronX, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialHardIronY() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialHardIronY(), 0.0,
+                0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronY = mb[1];
+
+        calibrator.setInitialHardIronY(hardIronY);
+
+        // check
+        assertEquals(calibrator.getInitialHardIronY(), hardIronY, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialHardIronZ() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialHardIronZ(), 0.0,
+                0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronZ = mb[2];
+
+        calibrator.setInitialHardIronZ(hardIronZ);
+
+        // check
+        assertEquals(calibrator.getInitialHardIronZ(), hardIronZ, 0.0);
+    }
+
+    @Test
+    public void testSetInitialHardIron() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default values
+        assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] mb = generateHardIron(randomizer);
+        final double hardIronX = mb[0];
+        final double hardIronY = mb[1];
+        final double hardIronZ = mb[2];
+
+        calibrator.setInitialHardIron(hardIronX, hardIronY, hardIronZ);
+
+        // check
+        assertEquals(calibrator.getInitialHardIronX(), hardIronX, 0.0);
+        assertEquals(calibrator.getInitialHardIronY(), hardIronY, 0.0);
+        assertEquals(calibrator.getInitialHardIronZ(), hardIronZ, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialSx() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double sx = mm.getElementAt(0, 0);
+
+        calibrator.setInitialSx(sx);
+
+        // check
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialSy() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double sy = mm.getElementAt(1, 1);
+
+        calibrator.setInitialSy(sy);
+
+        // check
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialSz() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double sz = mm.getElementAt(2, 2);
+
+        calibrator.setInitialSz(sz);
+
+        // check
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialMxy() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double mxy = mm.getElementAt(0, 1);
+
+        calibrator.setInitialMxy(mxy);
+
+        // check
+        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialMxz() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double mxz = mm.getElementAt(0, 2);
+
+        calibrator.setInitialMxz(mxz);
+
+        // check
+        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialMyx() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double myx = mm.getElementAt(1, 0);
+
+        calibrator.setInitialMyx(myx);
+
+        // check
+        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialMyz() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double myz = mm.getElementAt(1, 2);
+
+        calibrator.setInitialMyz(myz);
+
+        // check
+        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialMzx() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double mzx = mm.getElementAt(2, 0);
+
+        calibrator.setInitialMzx(mzx);
+
+        // check
+        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
+    }
+
+    @Test
+    public void testGetSetInitialMzy() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double mzy = mm.getElementAt(2, 1);
+
+        calibrator.setInitialMzy(mzy);
+
+        // check
+        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
+    }
+
+    @Test
+    public void testSetInitialScalingFactors() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default values
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+
+        // set new values
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double sx = mm.getElementAt(0, 0);
+        final double sy = mm.getElementAt(1, 1);
+        final double sz = mm.getElementAt(2, 2);
+
+        calibrator.setInitialScalingFactors(sx, sy, sz);
+
+        // check
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+    }
+
+    @Test
+    public void testSetInitialCrossCouplingErrors() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default values
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double mxy = mm.getElementAt(0, 1);
+        final double mxz = mm.getElementAt(0, 2);
+        final double myx = mm.getElementAt(1, 0);
+        final double myz = mm.getElementAt(1, 2);
+        final double mzx = mm.getElementAt(2, 0);
+        final double mzy = mm.getElementAt(2, 1);
+
+        calibrator.setInitialCrossCouplingErrors(mxy, mxz, myx,
+                myz, mzx, mzy);
+
+        // check
+        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
+        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
+        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
+        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
+        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
+        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
+    }
+
+    @Test
+    public void testSetInitialScalingFactorsAndCrossCouplingErrors()
+            throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default values
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final double sx = mm.getElementAt(0, 0);
+        final double sy = mm.getElementAt(1, 1);
+        final double sz = mm.getElementAt(2, 2);
+        final double mxy = mm.getElementAt(0, 1);
+        final double mxz = mm.getElementAt(0, 2);
+        final double myx = mm.getElementAt(1, 0);
+        final double myz = mm.getElementAt(1, 2);
+        final double mzx = mm.getElementAt(2, 0);
+        final double mzy = mm.getElementAt(2, 1);
+
+        calibrator.setInitialScalingFactorsAndCrossCouplingErrors(
+                sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+
+        // check
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
+        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
+        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
+        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
+        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
+        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
+    }
+
+    @Test
+    public void testGetInitialHardIronAsArray() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertArrayEquals(calibrator.getInitialHardIron(),
+                new double[3], 0.0);
+        final double[] result1 = new double[3];
+        calibrator.getInitialHardIron(result1);
+        assertArrayEquals(result1, new double[3], 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] bm = generateHardIron(randomizer);
+        calibrator.setInitialHardIron(bm);
+
+        // check
+        assertArrayEquals(calibrator.getInitialHardIron(), bm, 0.0);
+        final double[] result2 = new double[3];
+        calibrator.getInitialHardIron(result2);
+        assertArrayEquals(result2, bm, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.getInitialHardIron(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setInitialHardIron(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetInitialHardIronAsMatrix() throws LockedException,
+            WrongSizeException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialHardIronAsMatrix(),
+                new Matrix(3, 1));
+        final Matrix result1 = new Matrix(3, 1);
+        calibrator.getInitialHardIronAsMatrix(result1);
+        assertEquals(result1, new Matrix(3, 1));
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] bm = generateHardIron(randomizer);
+        final Matrix b = Matrix.newFromArray(bm);
+        calibrator.setInitialHardIron(b);
+
+        // check
+        assertEquals(calibrator.getInitialHardIronAsMatrix(), b);
+        final Matrix result2 = new Matrix(3, 1);
+        calibrator.getInitialHardIronAsMatrix(result2);
+        assertEquals(result2, b);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.getInitialHardIronAsMatrix(new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.getInitialHardIronAsMatrix(new Matrix(3, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setInitialHardIron(new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setInitialHardIron(new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetSetInitialMm() throws WrongSizeException,
+            LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getInitialMm(), new Matrix(3, 3));
+        final Matrix result1 = new Matrix(3, 3);
+        calibrator.getInitialMm(result1);
+
+        // set new value
+        final Matrix mm = generateSoftIronGeneral();
+        calibrator.setInitialMm(mm);
+
+        // check
+        assertEquals(calibrator.getInitialMm(), mm);
+        final Matrix result2 = new Matrix(3, 3);
+        calibrator.getInitialMm(result2);
+        assertEquals(mm, result2);
+    }
+
+    @Test
+    public void testGetSetMeasurements() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertNull(calibrator.getMeasurements());
+
+        // set new value
+        final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                Collections.emptyList();
+        calibrator.setMeasurements(measurements);
+
+        // check
+        assertSame(calibrator.getMeasurements(), measurements);
+    }
+
+    @Test
+    public void testIsSetCommonAxisUsed() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isCommonAxisUsed());
+
+        // set new value
+        calibrator.setCommonAxisUsed(true);
+
+        // check
+        assertTrue(calibrator.isCommonAxisUsed());
+    }
+
+    @Test
+    public void testGetListener() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertNull(calibrator.getListener());
+
+        // set new value
+        calibrator.setListener(this);
+
+        // check
+        assertSame(calibrator.getListener(), this);
+    }
+
+    @Test
+    public void testIsReady() throws LockedException, IOException, InvalidSourceAndDestinationFrameTypeException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check initial value
+        assertFalse(calibrator.isReady());
+
+        // set not enough measurements
+        calibrator.setMeasurements(Collections
+                .<StandardDeviationFrameBodyMagneticFluxDensity>emptyList());
+
+        // check
+        assertFalse(calibrator.isReady());
+
+        // set enough measurements
+        final UniformRandomizer randomizer = new UniformRandomizer(
+                new Random());
+        final double[] hardIron = generateHardIron(randomizer);
+        final Matrix softIron = generateSoftIronGeneral();
+        final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                new WMMEarthMagneticFluxDensityEstimator();
+        final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                generateMeasurementsMultipleOrientationswithSamePosition(
+                        hardIron, softIron,
+                        wmmEstimator, randomizer);
+
+        calibrator.setMeasurements(measurements);
+
+        // check
+        assertTrue(calibrator.isReady());
+    }
+
+    @Test
+    public void testGetSetMagneticModel() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertNull(calibrator.getMagneticModel());
+
+        // set new value
+        final WorldMagneticModel magneticModel = new WorldMagneticModel();
+        calibrator.setMagneticModel(magneticModel);
+
+        // check
+        assertSame(calibrator.getMagneticModel(), magneticModel);
+    }
+
+    @Test
+    public void testIsSetLinearCalibratorUsed() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertTrue(calibrator.isLinearCalibratorUsed());
+
+        // set new value
+        calibrator.setLinearCalibratorUsed(false);
+
+        // check
+        assertFalse(calibrator.isLinearCalibratorUsed());
+    }
+
+    @Test
+    public void testIsSetPreliminarySolutionRefined() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertFalse(calibrator.isPreliminarySolutionRefined());
+
+        // set new value
+        calibrator.setPreliminarySolutionRefined(true);
+
+        // check
+        assertTrue(calibrator.isPreliminarySolutionRefined());
+    }
+
+    @Test
+    public void testGetSetProgressDelta() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getProgressDelta(), 0.05f, 0.0);
+
+        // set new value
+        calibrator.setProgressDelta(0.01f);
+
+        // check
+        assertEquals(calibrator.getProgressDelta(), 0.01f, 0.0);
+
+        // force IllegalArgumentException
+        try {
+            calibrator.setProgressDelta(-1.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setProgressDelta(2.0f);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetSetConfidence() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getConfidence(), 0.99, 0.0);
+
+        // set new value
+        calibrator.setConfidence(0.5);
+
+        // check
+        assertEquals(calibrator.getConfidence(), 0.5, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setConfidence(-1.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator.setConfidence(2.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testGetSetMaxIterations() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getMaxIterations(), 5000);
+
+        // set new value
+        calibrator.setMaxIterations(100);
+
+        assertEquals(calibrator.getMaxIterations(), 100);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setMaxIterations(0);
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testIsSetResultRefined() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertTrue(calibrator.isResultRefined());
+
+        // set new value
+        calibrator.setResultRefined(false);
+
+        // check
+        assertFalse(calibrator.isResultRefined());
+    }
+
+    @Test
+    public void testIsSetCovarianceKept() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertTrue(calibrator.isCovarianceKept());
+
+        // set new value
+        calibrator.setCovarianceKept(false);
+
+        // check
+        assertFalse(calibrator.isCovarianceKept());
+    }
+
+    @Test
+    public void testGetSetQualityScores() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertNull(calibrator.getQualityScores());
+
+        // set new value
+        calibrator.setQualityScores(new double[3]);
+
+        // check
+        assertNull(calibrator.getQualityScores());
+    }
+
+    @Test
+    public void testGetSetPreliminarySubsetSize() throws LockedException {
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator();
+
+        // check default value
+        assertEquals(calibrator.getPreliminarySubsetSize(),
+                RANSACRobustKnownFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+
+        // set new value
+        calibrator.setPreliminarySubsetSize(5);
+
+        // check
+        assertEquals(calibrator.getPreliminarySubsetSize(), 5);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setPreliminarySubsetSize(3);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testCalibrateGeneralNoNoiseInlier()
+            throws IOException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException, CalibrationException, NotReadyException,
+            WrongSizeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                new WMMEarthMagneticFluxDensityEstimator();
+
+        final double[] hardIron = generateHardIron(randomizer);
+        final Matrix bm = Matrix.newFromArray(hardIron);
+        final Matrix mm = generateSoftIronGeneral();
+        assertNotNull(mm);
+
+        final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+
+
+        final NEDPosition position = createPosition(randomizer);
+        final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                new ArrayList<>();
+        for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+
+            final StandardDeviationFrameBodyMagneticFluxDensity b;
+            if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                // outlier
+                b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                        randomizer, noiseRandomizer, position);
+            } else {
+                // inlier
+                b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                        randomizer, null, position);
+            }
+            measurements.add(b);
+        }
+
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator(
+                        measurements, false, this);
+        calibrator.setThreshold(THRESHOLD);
+
+        // estimate
+        reset();
+        assertTrue(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertEquals(mCalibrateStart, 0);
+        assertEquals(mCalibrateEnd, 0);
+        assertEquals(mCalibrateNextIteration, 0);
+        assertEquals(mCalibrateProgressChange, 0);
+
+        calibrator.calibrate();
+
+        // check
+        assertTrue(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertEquals(mCalibrateStart, 1);
+        assertEquals(mCalibrateEnd, 1);
+        assertTrue(mCalibrateNextIteration > 0);
+        assertTrue(mCalibrateProgressChange >= 0);
+
+        final Matrix estimatedHardIron = calibrator
+                .getEstimatedHardIronAsMatrix();
+        final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+        assertTrue(bm.equals(estimatedHardIron, ABSOLUTE_ERROR));
+        assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
+
+        assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+        assertNotNull(calibrator.getEstimatedCovariance());
+    }
+
+    @Test
+    public void testCalibrateCommonAxisNoNoiseInlier()
+            throws IOException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException, CalibrationException, NotReadyException,
+            WrongSizeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                new WMMEarthMagneticFluxDensityEstimator();
+
+        final double[] hardIron = generateHardIron(randomizer);
+        final Matrix bm = Matrix.newFromArray(hardIron);
+        final Matrix mm = generateSoftIronCommonAxis();
+        assertNotNull(mm);
+
+        final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+
+
+        final NEDPosition position = createPosition(randomizer);
+        final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                new ArrayList<>();
+        for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+
+            final StandardDeviationFrameBodyMagneticFluxDensity b;
+            if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                // outlier
+                b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                        randomizer, noiseRandomizer, position);
+            } else {
+                // inlier
+                b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                        randomizer, null, position);
+            }
+            measurements.add(b);
+        }
+
+        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new RANSACRobustKnownFrameMagnetometerCalibrator(
+                        measurements, true, this);
+        calibrator.setThreshold(THRESHOLD);
+
+        // estimate
+        reset();
+        assertTrue(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertEquals(mCalibrateStart, 0);
+        assertEquals(mCalibrateEnd, 0);
+        assertEquals(mCalibrateNextIteration, 0);
+        assertEquals(mCalibrateProgressChange, 0);
+
+        calibrator.calibrate();
+
+        // check
+        assertTrue(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertEquals(mCalibrateStart, 1);
+        assertEquals(mCalibrateEnd, 1);
+        assertTrue(mCalibrateNextIteration > 0);
+        assertTrue(mCalibrateProgressChange >= 0);
+
+        final Matrix estimatedHardIron = calibrator
+                .getEstimatedHardIronAsMatrix();
+        final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+        assertTrue(bm.equals(estimatedHardIron, ABSOLUTE_ERROR));
+        assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
+
+        assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+        assertNotNull(calibrator.getEstimatedCovariance());
+    }
+
+    @Test
+    public void testCalibrateGeneralWithInlierNoise()
+            throws IOException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException, CalibrationException, NotReadyException,
+            WrongSizeException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final double[] hardIron = generateHardIron(randomizer);
+            final Matrix bm = Matrix.newFromArray(hardIron);
+            final Matrix mm = generateSoftIronGeneral();
+            assertNotNull(mm);
+
+            final GaussianRandomizer inlierNoiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+            final GaussianRandomizer outlierNoiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0,
+                    OUTLIER_ERROR_FACTOR * MAGNETOMETER_NOISE_STD);
+
+
+            final NEDPosition position = createPosition(randomizer);
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+
+                final StandardDeviationFrameBodyMagneticFluxDensity b;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, outlierNoiseRandomizer, position);
+                } else {
+                    // inlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, inlierNoiseRandomizer, position);
+                }
+                measurements.add(b);
+            }
+
+            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+                            measurements, false, this);
+            calibrator.setThreshold(LARGE_THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!bm.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bm.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateCommonAxisWithInlierNoise()
+            throws IOException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException, CalibrationException, NotReadyException,
+            WrongSizeException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final double[] hardIron = generateHardIron(randomizer);
+            final Matrix bm = Matrix.newFromArray(hardIron);
+            final Matrix mm = generateSoftIronCommonAxis();
+            assertNotNull(mm);
+
+            final GaussianRandomizer inlierNoiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+            final GaussianRandomizer outlierNoiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0,
+                    OUTLIER_ERROR_FACTOR * MAGNETOMETER_NOISE_STD);
+
+
+            final NEDPosition position = createPosition(randomizer);
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+
+                final StandardDeviationFrameBodyMagneticFluxDensity b;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, outlierNoiseRandomizer, position);
+                } else {
+                    // inlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, inlierNoiseRandomizer, position);
+                }
+                measurements.add(b);
+            }
+
+            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+                            measurements, true, this);
+            calibrator.setThreshold(LARGE_THRESHOLD);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!bm.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bm.equals(estimatedHardIron, LARGE_ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, VERY_LARGE_ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralNoRefinement()
+            throws IOException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException, CalibrationException, NotReadyException,
+            WrongSizeException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final double[] hardIron = generateHardIron(randomizer);
+            final Matrix bm = Matrix.newFromArray(hardIron);
+            final Matrix mm = generateSoftIronGeneral();
+            assertNotNull(mm);
+
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+
+
+            final NEDPosition position = createPosition(randomizer);
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+
+                final StandardDeviationFrameBodyMagneticFluxDensity b;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, noiseRandomizer, position);
+                } else {
+                    // inlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, null, position);
+                }
+                measurements.add(b);
+            }
+
+            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+                            measurements, false, this);
+            calibrator.setThreshold(THRESHOLD);
+            calibrator.setResultRefined(false);
+            calibrator.setPreliminarySolutionRefined(false);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!bm.equals(estimatedHardIron, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bm.equals(estimatedHardIron, ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            assertNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testCalibrateGeneralNonLinearWithInitialValue()
+            throws IOException,
+            InvalidSourceAndDestinationFrameTypeException,
+            LockedException, CalibrationException, NotReadyException,
+            WrongSizeException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
+                    new WMMEarthMagneticFluxDensityEstimator();
+
+            final double[] hardIron = generateHardIron(randomizer);
+            final Matrix bm = Matrix.newFromArray(hardIron);
+            final Matrix mm = generateSoftIronGeneral();
+            assertNotNull(mm);
+
+            final GaussianRandomizer noiseRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, MAGNETOMETER_NOISE_STD);
+
+
+            final NEDPosition position = createPosition(randomizer);
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
+                    new ArrayList<>();
+            for (int i = 0; i < MEASUREMENT_NUMBER; i++) {
+
+                final StandardDeviationFrameBodyMagneticFluxDensity b;
+                if (randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE) {
+                    // outlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, noiseRandomizer, position);
+                } else {
+                    // inlier
+                    b = generateMeasureAtPosition(hardIron, mm, wmmEstimator,
+                            randomizer, null, position);
+                }
+                measurements.add(b);
+            }
+
+            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+                            measurements, false, this);
+            calibrator.setThreshold(THRESHOLD);
+            calibrator.setInitialHardIron(hardIron);
+            calibrator.setInitialMm(mm);
+            calibrator.setLinearCalibratorUsed(false);
+            calibrator.setPreliminarySolutionRefined(true);
+
+            // estimate
+            reset();
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 0);
+            assertEquals(mCalibrateEnd, 0);
+            assertEquals(mCalibrateNextIteration, 0);
+            assertEquals(mCalibrateProgressChange, 0);
+
+            calibrator.calibrate();
+
+            // check
+            assertTrue(calibrator.isReady());
+            assertFalse(calibrator.isRunning());
+            assertEquals(mCalibrateStart, 1);
+            assertEquals(mCalibrateEnd, 1);
+            assertTrue(mCalibrateNextIteration > 0);
+            assertTrue(mCalibrateProgressChange >= 0);
+
+            final Matrix estimatedHardIron = calibrator
+                    .getEstimatedHardIronAsMatrix();
+            final Matrix estimatedMm = calibrator.getEstimatedMm();
+
+            if (!bm.equals(estimatedHardIron, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            if (!mm.equals(estimatedMm, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(bm.equals(estimatedHardIron, ABSOLUTE_ERROR));
+            assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
+
+            assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
+
+            assertNotNull(calibrator.getEstimatedCovariance());
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
 
     @Override
     public void onCalibrateStart(
@@ -825,6 +2124,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     private void reset() {
         mCalibrateStart = 0;
         mCalibrateEnd = 0;
+        mCalibrateNextIteration = 0;
+        mCalibrateProgressChange = 0;
     }
 
     private void checkLocked(
@@ -1008,7 +2309,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     private void assertEstimatedResult(
             final Matrix hardIron, final Matrix mm,
-            final KnownFrameMagnetometerLinearLeastSquaresCalibrator calibrator)
+            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator)
             throws WrongSizeException {
 
         final double[] estimatedHardIron = calibrator.getEstimatedHardIron();
@@ -1050,54 +2351,23 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
                 0.0);
     }
 
-    private static List<FrameBodyMagneticFluxDensity>
+    private static List<StandardDeviationFrameBodyMagneticFluxDensity>
     generateMeasurementsMultipleOrientationswithSamePosition(
-            final double[] hardIron, final Matrix softIron,
-            final int numberOfMeasurements,
-            final WMMEarthMagneticFluxDensityEstimator wmmEstimator,
-            final UniformRandomizer randomizer,
-            final GaussianRandomizer noiseRandomizer)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        final NEDPosition position = createPosition(randomizer);
-        final List<FrameBodyMagneticFluxDensity> result =
-                new ArrayList<>();
-        for (int i = 0; i < numberOfMeasurements; i++) {
-            result.add(generateMeasureAtPosition(hardIron, softIron,
-                    wmmEstimator, randomizer, noiseRandomizer, position));
-        }
-        return result;
-    }
-
-    private static List<FrameBodyMagneticFluxDensity>
-    generateMeasurementsMultiplePositionsWithSameOrientation(
             final double[] hardIron, final Matrix softIron,
             final WMMEarthMagneticFluxDensityEstimator wmmEstimator,
             final UniformRandomizer randomizer)
             throws InvalidSourceAndDestinationFrameTypeException {
-        final CoordinateTransformation cnb = new CoordinateTransformation(
-                FrameType.LOCAL_NAVIGATION_FRAME,
-                FrameType.BODY_FRAME);
-        final List<FrameBodyMagneticFluxDensity> result =
+        final NEDPosition position = createPosition(randomizer);
+        final List<StandardDeviationFrameBodyMagneticFluxDensity> result =
                 new ArrayList<>();
-        for (int i = 0; i < KnownFrameMagnetometerLinearLeastSquaresCalibrator.MINIMUM_MEASUREMENTS; i++) {
-            result.add(generateMeasureAtOrientation(hardIron, softIron,
-                    wmmEstimator, randomizer, cnb));
+        for (int i = 0; i < RobustKnownFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS; i++) {
+            result.add(generateMeasureAtPosition(hardIron, softIron,
+                    wmmEstimator, randomizer, null, position));
         }
         return result;
     }
 
-    private static FrameBodyMagneticFluxDensity generateMeasureAtOrientation(
-            final double[] hardIron, final Matrix softIron,
-            final WMMEarthMagneticFluxDensityEstimator wmmEstimator,
-            final UniformRandomizer randomizer,
-            final CoordinateTransformation cnb)
-            throws InvalidSourceAndDestinationFrameTypeException {
-        final NEDPosition position = createPosition(randomizer);
-        return generateMeasure(hardIron, softIron, wmmEstimator,
-                randomizer, null, position, cnb);
-    }
-
-    private static FrameBodyMagneticFluxDensity generateMeasureAtPosition(
+    private static StandardDeviationFrameBodyMagneticFluxDensity generateMeasureAtPosition(
             final double[] hardIron, final Matrix softIron,
             final WMMEarthMagneticFluxDensityEstimator wmmEstimator,
             final UniformRandomizer randomizer,
@@ -1109,7 +2379,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
                 randomizer, noiseRandomizer, position, cnb);
     }
 
-    private static FrameBodyMagneticFluxDensity generateMeasure(
+    private static StandardDeviationFrameBodyMagneticFluxDensity generateMeasure(
             final double[] hardIron, final Matrix softIron,
             final WMMEarthMagneticFluxDensityEstimator wmmEstimator,
             final UniformRandomizer randomizer,
@@ -1140,8 +2410,11 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
         final CoordinateTransformation cbn = cnb.inverseAndReturnNew();
         final NEDFrame frame = new NEDFrame(position, cbn);
 
-        return new FrameBodyMagneticFluxDensity(measuredMagnetic, frame,
-                timestamp);
+        final double std = noiseRandomizer != null ?
+                noiseRandomizer.getStandardDeviation() :
+                MAGNETOMETER_NOISE_STD;
+        return new StandardDeviationFrameBodyMagneticFluxDensity(
+                measuredMagnetic, frame, timestamp, std);
     }
 
     private static CoordinateTransformation generateBodyC(

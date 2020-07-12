@@ -58,7 +58,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
     /**
      * Constant defining default threshold to determine whether samples are inliers or not.
      */
-    public static final double DEFAULT_THRESHOLD = 5e-6;
+    public static final double DEFAULT_THRESHOLD = 500e-9;
 
     /**
      * Minimum value that can be set as threshold.
