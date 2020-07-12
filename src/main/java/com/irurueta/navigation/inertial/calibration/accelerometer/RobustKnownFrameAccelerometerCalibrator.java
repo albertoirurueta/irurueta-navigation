@@ -1930,7 +1930,6 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
         }
     }
 
-
     /**
      * Creates a robust accelerometer calibrator.
      *
@@ -1993,7 +1992,6 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
         }
     }
 
-
     /**
      * Creates a robust accelerometer calibrator.
      *
@@ -2054,7 +2052,6 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
                         commonAxisUsed, listener);
         }
     }
-
 
     /**
      * Creates a robust accelerometer calibrator.

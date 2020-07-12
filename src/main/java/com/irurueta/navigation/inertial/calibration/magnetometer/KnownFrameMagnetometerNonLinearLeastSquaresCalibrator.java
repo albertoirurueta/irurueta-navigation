@@ -4248,7 +4248,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibrator implements
      */
     private void calibrateGeneral() throws AlgebraException, FittingException,
             com.irurueta.numerical.NotReadyException, IOException {
-        // The accelerometer model is:
+        // The magnetometer model is:
         // mBmeas = ba + (I + Mm) * mBtrue + w
 
         // Ideally a least squares solution tries to minimize noise component, so:
