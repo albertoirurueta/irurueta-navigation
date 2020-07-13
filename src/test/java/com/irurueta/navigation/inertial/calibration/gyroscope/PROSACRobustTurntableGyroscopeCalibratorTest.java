@@ -23512,8 +23512,6 @@ public class PROSACRobustTurntableGyroscopeCalibratorTest implements
 
             assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
 
-            assertNotNull(calibrator.getEstimatedCovariance());
-
             numValid++;
             break;
         }
