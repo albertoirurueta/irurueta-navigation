@@ -1,26 +1,11 @@
-/*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.irurueta.navigation.inertial.calibration.magnetometer;
 
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyMagneticFluxDensity;
-import com.irurueta.numerical.robust.RANSACRobustEstimator;
-import com.irurueta.numerical.robust.RANSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.MSACRobustEstimator;
+import com.irurueta.numerical.robust.MSACRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -30,7 +15,7 @@ import java.util.List;
 
 /**
  * Robustly estimates magnetometer hard-iron biases, soft-iron cross
- * couplings and scaling factors using RANSAC algorithm.
+ * couplings and scaling factors using MSAC algorithm.
  * <p>
  * To use this calibrator at least 4 measurements at different known
  * frames must be provided. In other words, magnetometer samples must
@@ -52,13 +37,14 @@ import java.util.List;
  * - mBtrue is ground-truth magnetic flux density. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class RANSACRobustKnownFrameMagnetometerCalibrator extends
+public class MSACRobustKnownFrameMagnetometerCalibrator extends
         RobustKnownFrameMagnetometerCalibrator {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Constant defining default threshold to determine whether samples are
+     * inliers or not.
      */
-    public static final double DEFAULT_THRESHOLD = 500e-9;
+    public static final double DEFAULT_THRESHOLD = 1e-2;
 
     /**
      * Minimum value that can be set as threshold.
@@ -67,36 +53,15 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
     public static final double MIN_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
+     * Threshold to determine whether samples are inliers or not when
+     * testing possible estimation solutions.
      */
     private double mThreshold = DEFAULT_THRESHOLD;
 
     /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
-
-    /**
      * Constructor.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator() {
+    public MSACRobustKnownFrameMagnetometerCalibrator() {
         super();
     }
 
@@ -106,7 +71,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownFrameMagnetometerCalibrator(
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(listener);
     }
@@ -118,7 +83,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                     deviations taken at different frames (positions and
      *                     orientations).
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
         super(measurements);
     }
@@ -131,7 +96,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                     orientations).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(measurements, listener);
@@ -143,7 +108,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
+    public MSACRobustKnownFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -154,7 +119,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownFrameMagnetometerCalibrator(
             final boolean commonAxisUsed,
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(commonAxisUsed, listener);
@@ -169,7 +134,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -185,7 +150,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
@@ -193,9 +158,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Returns threshold to determine whether samples are inliers or not.
      *
      * @return threshold to determine whether samples are inliers or not.
      */
@@ -204,12 +167,11 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Sets threshold to determine whether samples are inliers or not.
      *
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * @param threshold threshold to be set.
+     * @throws IllegalArgumentException if provided value is equal or less than
+     *                                  zero.
      * @throws LockedException          if calibrator is currently running.
      */
     public void setThreshold(double threshold) throws LockedException {
@@ -220,56 +182,6 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
             throw new IllegalArgumentException();
         }
         mThreshold = threshold;
-    }
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     *
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     *
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     *
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     *
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
     }
 
     /**
@@ -289,8 +201,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
+        final MSACRobustEstimator<PreliminaryResult> innerEstimator =
+                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -317,12 +229,13 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                     public double computeResidual(
                             final PreliminaryResult currentEstimation,
                             final int i) {
-                        return computeError(mMeasurements.get(i), currentEstimation);
+                        return computeError(mMeasurements.get(i),
+                                currentEstimation);
                     }
 
                     @Override
                     public boolean isReady() {
-                        return RANSACRobustKnownFrameMagnetometerCalibrator.super.isReady();
+                        return MSACRobustKnownFrameMagnetometerCalibrator.super.isReady();
                     }
 
                     @Override
@@ -330,7 +243,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateStart(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this);
+                                    MSACRobustKnownFrameMagnetometerCalibrator.this);
                         }
                     }
 
@@ -339,7 +252,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateEnd(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this);
+                                    MSACRobustKnownFrameMagnetometerCalibrator.this);
                         }
                     }
 
@@ -349,7 +262,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this,
+                                    MSACRobustKnownFrameMagnetometerCalibrator.this,
                                     iteration);
                         }
                     }
@@ -360,7 +273,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this,
+                                    MSACRobustKnownFrameMagnetometerCalibrator.this,
                                     progress);
                         }
                     }
@@ -372,10 +285,6 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
 
             setupWmmEstimator();
 
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -393,6 +302,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
         } finally {
             mRunning = false;
         }
+
     }
 
     /**
@@ -402,6 +312,6 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.RANSAC;
+        return RobustEstimatorMethod.MSAC;
     }
 }

@@ -1,26 +1,11 @@
-/*
- * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.irurueta.navigation.inertial.calibration.magnetometer;
 
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationFrameBodyMagneticFluxDensity;
-import com.irurueta.numerical.robust.RANSACRobustEstimator;
-import com.irurueta.numerical.robust.RANSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.PROSACRobustEstimator;
+import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -30,7 +15,7 @@ import java.util.List;
 
 /**
  * Robustly estimates magnetometer hard-iron biases, soft-iron cross
- * couplings and scaling factors using RANSAC algorithm.
+ * couplings and scaling factors using PROSAC algorithm.
  * <p>
  * To use this calibrator at least 4 measurements at different known
  * frames must be provided. In other words, magnetometer samples must
@@ -52,13 +37,13 @@ import java.util.List;
  * - mBtrue is ground-truth magnetic flux density. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class RANSACRobustKnownFrameMagnetometerCalibrator extends
+public class PROSACRobustKnownFrameMagnetometerCalibrator extends
         RobustKnownFrameMagnetometerCalibrator {
 
     /**
      * Constant defining default threshold to determine whether samples are inliers or not.
      */
-    public static final double DEFAULT_THRESHOLD = 500e-9;
+    public static final double DEFAULT_THRESHOLD = 1e-2;
 
     /**
      * Minimum value that can be set as threshold.
@@ -94,9 +79,15 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
     private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
+     * Quality scores corresponding to each provided sample.
+     * The larger the score value the better the quality of the sample.
+     */
+    private double[] mQualityScores;
+
+    /**
      * Constructor.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator() {
+    public PROSACRobustKnownFrameMagnetometerCalibrator() {
         super();
     }
 
@@ -106,7 +97,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(listener);
     }
@@ -118,7 +109,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                     deviations taken at different frames (positions and
      *                     orientations).
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
         super(measurements);
     }
@@ -131,7 +122,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                     orientations).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(measurements, listener);
@@ -143,7 +134,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
+    public PROSACRobustKnownFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -154,7 +145,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
             final boolean commonAxisUsed,
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(commonAxisUsed, listener);
@@ -169,7 +160,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -185,11 +176,168 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RANSACRobustKnownFrameMagnetometerCalibrator(
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
             final RobustKnownFrameMagnetometerCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores) {
+        super();
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+        super(listener);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body magnetic flux density measurements with standard
+     *                      deviations taken at different frames (positions and
+     *                      orientations).
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
+        super(measurements);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body magnetic flux density measurements with standard
+     *                      deviations taken at different frames (positions and
+     *                      orientations).
+     * @param listener      listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+        super(measurements, listener);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final boolean commonAxisUsed) {
+        super(commonAxisUsed);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final boolean commonAxisUsed,
+            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+        super(commonAxisUsed, listener);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed) {
+        super(measurements, commonAxisUsed);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public PROSACRobustKnownFrameMagnetometerCalibrator(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+        super(measurements, commonAxisUsed, listener);
+        internalSetQualityScores(qualityScores);
     }
 
     /**
@@ -220,6 +368,46 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
             throw new IllegalArgumentException();
         }
         mThreshold = threshold;
+    }
+
+    /**
+     * Returns quality scores corresponding to each provided sample.
+     * The larger the score value the better the quality of the sample.
+     *
+     * @return quality scores corresponding to each sample.
+     */
+    @Override
+    public double[] getQualityScores() {
+        return mQualityScores;
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided sample.
+     * The larger the score value the better the quality of the sample.
+     *
+     * @param qualityScores quality scores corresponding to each sample.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if calibrator is currently running.
+     */
+    @Override
+    public void setQualityScores(double[] qualityScores)
+            throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Indicates whether calibrator is ready to find a solution.
+     *
+     * @return true if calibrator is ready, false otherwise.
+     */
+    @Override
+    public boolean isReady() {
+        return super.isReady() && mQualityScores != null &&
+                mQualityScores.length == mMeasurements.size();
     }
 
     /**
@@ -281,7 +469,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -289,8 +478,13 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
             throw new NotReadyException();
         }
 
-        final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
+        final PROSACRobustEstimator<PreliminaryResult> innerEstimator =
+                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<PreliminaryResult>() {
+                    @Override
+                    public double[] getQualityScores() {
+                        return mQualityScores;
+                    }
+
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -322,7 +516,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return RANSACRobustKnownFrameMagnetometerCalibrator.super.isReady();
+                        return PROSACRobustKnownFrameMagnetometerCalibrator.this.isReady();
                     }
 
                     @Override
@@ -330,7 +524,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateStart(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this);
+                                    PROSACRobustKnownFrameMagnetometerCalibrator.this);
                         }
                     }
 
@@ -339,7 +533,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateEnd(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this);
+                                    PROSACRobustKnownFrameMagnetometerCalibrator.this);
                         }
                     }
 
@@ -349,18 +543,16 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
                             final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this,
+                                    PROSACRobustKnownFrameMagnetometerCalibrator.this,
                                     iteration);
                         }
                     }
 
                     @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator,
-                            final float progress) {
+                    public void onEstimateProgressChange(RobustEstimator<PreliminaryResult> estimator, float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    RANSACRobustKnownFrameMagnetometerCalibrator.this,
+                                    PROSACRobustKnownFrameMagnetometerCalibrator.this,
                                     progress);
                         }
                     }
@@ -402,6 +594,24 @@ public class RANSACRobustKnownFrameMagnetometerCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.RANSAC;
+        return RobustEstimatorMethod.PROSAC;
+    }
+
+    /**
+     * Sets quality scores corresponding to each provided sample.
+     * This method is used internally and does not check whether instance is
+     * locked or not.
+     *
+     * @param qualityScores quality scores to be set.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    private void internalSetQualityScores(final double[] qualityScores) {
+        if (qualityScores == null ||
+                qualityScores.length < MINIMUM_MEASUREMENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        mQualityScores = qualityScores;
     }
 }

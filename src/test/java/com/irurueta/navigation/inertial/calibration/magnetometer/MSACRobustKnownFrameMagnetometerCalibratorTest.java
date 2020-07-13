@@ -47,8 +47,8 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
-        RobustKnownFrameMagnetometerCalibratorListener {
+public class MSACRobustKnownFrameMagnetometerCalibratorTest implements
+        RobustKnownFrameMagnetometerCalibratorListener{
 
     private static final double MIN_HARD_IRON = -1e-5;
     private static final double MAX_HARD_IRON = 1e-5;
@@ -108,17 +108,13 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -189,18 +185,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testConstructor2() throws WrongSizeException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         this);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -274,18 +266,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         measurements);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -359,18 +347,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         measurements, this);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -441,18 +425,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testConstructor5() throws WrongSizeException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         true);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -523,18 +503,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testConstructor6() throws WrongSizeException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         true, this);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -608,18 +584,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         measurements, true);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -693,18 +665,14 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 Collections.emptyList();
 
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         measurements, true, this);
 
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(calibrator.getMethod(), RobustEstimatorMethod.MSAC);
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronY(), 0.0, 0.0);
         assertEquals(calibrator.getInitialHardIronZ(), 0.0, 0.0);
@@ -775,12 +743,12 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getThreshold(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
+                MSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_THRESHOLD,
                 0.0);
 
         // set new value
@@ -791,44 +759,9 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled()
-            throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
-
-        // check default value
-        assertEquals(calibrator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertFalse(calibrator.isComputeAndKeepInliersEnabled());
-
-        // set new value
-        calibrator.setComputeAndKeepInliersEnabled(true);
-
-        // check
-        assertTrue(calibrator.isComputeAndKeepInliersEnabled());
-    }
-
-    @Test
-    public void testIsSetComputeAndKeepResiduals() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
-
-        // check default value
-        assertEquals(calibrator.isComputeAndKeepResiduals(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertFalse(calibrator.isComputeAndKeepResiduals());
-
-        // set new value
-        calibrator.setComputeAndKeepResidualsEnabled(true);
-
-        // check
-        assertTrue(calibrator.isComputeAndKeepResiduals());
-    }
-
-    @Test
     public void testGetSetInitialHardIronX() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialHardIronX(), 0.0,
@@ -848,8 +781,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialHardIronY() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialHardIronY(), 0.0,
@@ -869,8 +802,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialHardIronZ() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialHardIronZ(), 0.0,
@@ -890,8 +823,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testSetInitialHardIron() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialHardIronX(), 0.0, 0.0);
@@ -916,8 +849,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSx() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -936,8 +869,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSy() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
@@ -956,8 +889,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSz() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
@@ -976,8 +909,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMxy() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -996,8 +929,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMxz() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
@@ -1016,8 +949,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMyx() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
@@ -1036,8 +969,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMyz() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
@@ -1056,8 +989,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMzx() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
@@ -1076,8 +1009,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMzy() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
@@ -1096,8 +1029,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testSetInitialScalingFactors() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -1122,8 +1055,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testSetInitialCrossCouplingErrors() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -1159,8 +1092,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     @Test
     public void testSetInitialScalingFactorsAndCrossCouplingErrors()
             throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -1204,8 +1137,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetInitialHardIronAsArray() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertArrayEquals(calibrator.getInitialHardIron(),
@@ -1242,8 +1175,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     @Test
     public void testGetInitialHardIronAsMatrix() throws LockedException,
             WrongSizeException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialHardIronAsMatrix(),
@@ -1291,8 +1224,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     @Test
     public void testGetSetInitialMm() throws WrongSizeException,
             LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getInitialMm(), new Matrix(3, 3));
@@ -1312,8 +1245,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetMeasurements() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -1329,8 +1262,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertFalse(calibrator.isCommonAxisUsed());
@@ -1344,8 +1277,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetListener() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -1359,8 +1292,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testIsReady() throws LockedException, IOException, InvalidSourceAndDestinationFrameTypeException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check initial value
         assertFalse(calibrator.isReady());
@@ -1392,8 +1325,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetMagneticModel() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertNull(calibrator.getMagneticModel());
@@ -1408,8 +1341,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testIsSetLinearCalibratorUsed() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertTrue(calibrator.isLinearCalibratorUsed());
@@ -1423,8 +1356,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertFalse(calibrator.isPreliminarySolutionRefined());
@@ -1438,8 +1371,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getProgressDelta(), 0.05f, 0.0);
@@ -1465,8 +1398,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getConfidence(), 0.99, 0.0);
@@ -1492,8 +1425,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getMaxIterations(), 5000);
@@ -1512,8 +1445,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertTrue(calibrator.isResultRefined());
@@ -1527,8 +1460,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertTrue(calibrator.isCovarianceKept());
@@ -1542,8 +1475,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertNull(calibrator.getQualityScores());
@@ -1557,12 +1490,12 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator();
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator();
 
         // check default value
         assertEquals(calibrator.getPreliminarySubsetSize(),
-                RANSACRobustKnownFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
+                MSACRobustKnownFrameMagnetometerCalibrator.MINIMUM_MEASUREMENTS);
 
         // set new value
         calibrator.setPreliminarySubsetSize(5);
@@ -1616,8 +1549,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
             measurements.add(b);
         }
 
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         measurements, false, this);
         calibrator.setThreshold(THRESHOLD);
 
@@ -1690,8 +1623,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
             measurements.add(b);
         }
 
-        final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                new RANSACRobustKnownFrameMagnetometerCalibrator(
+        final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                new MSACRobustKnownFrameMagnetometerCalibrator(
                         measurements, true, this);
         calibrator.setThreshold(THRESHOLD);
 
@@ -1769,8 +1702,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
                 measurements.add(b);
             }
 
-            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+            final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new MSACRobustKnownFrameMagnetometerCalibrator(
                             measurements, false, this);
             calibrator.setThreshold(LARGE_THRESHOLD);
 
@@ -1860,8 +1793,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
                 measurements.add(b);
             }
 
-            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+            final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new MSACRobustKnownFrameMagnetometerCalibrator(
                             measurements, true, this);
             calibrator.setThreshold(LARGE_THRESHOLD);
 
@@ -1948,8 +1881,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
                 measurements.add(b);
             }
 
-            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+            final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new MSACRobustKnownFrameMagnetometerCalibrator(
                             measurements, false, this);
             calibrator.setThreshold(THRESHOLD);
             calibrator.setResultRefined(false);
@@ -2038,8 +1971,8 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
                 measurements.add(b);
             }
 
-            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator =
-                    new RANSACRobustKnownFrameMagnetometerCalibrator(
+            final MSACRobustKnownFrameMagnetometerCalibrator calibrator =
+                    new MSACRobustKnownFrameMagnetometerCalibrator(
                             measurements, false, this);
             calibrator.setThreshold(THRESHOLD);
             calibrator.setInitialHardIron(hardIron);
@@ -2089,34 +2022,28 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-
+    
     @Override
-    public void onCalibrateStart(
-            final RobustKnownFrameMagnetometerCalibrator calibrator) {
-        checkLocked((RANSACRobustKnownFrameMagnetometerCalibrator) calibrator);
+    public void onCalibrateStart(RobustKnownFrameMagnetometerCalibrator calibrator) {
+        checkLocked((MSACRobustKnownFrameMagnetometerCalibrator) calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(
-            final RobustKnownFrameMagnetometerCalibrator calibrator) {
-        checkLocked((RANSACRobustKnownFrameMagnetometerCalibrator) calibrator);
+    public void onCalibrateEnd(RobustKnownFrameMagnetometerCalibrator calibrator) {
+        checkLocked((MSACRobustKnownFrameMagnetometerCalibrator) calibrator);
         mCalibrateEnd++;
     }
 
     @Override
-    public void onCalibrateNextIteration(
-            final RobustKnownFrameMagnetometerCalibrator calibrator,
-            final int iteration) {
-        checkLocked((RANSACRobustKnownFrameMagnetometerCalibrator) calibrator);
+    public void onCalibrateNextIteration(RobustKnownFrameMagnetometerCalibrator calibrator, int iteration) {
+        checkLocked((MSACRobustKnownFrameMagnetometerCalibrator) calibrator);
         mCalibrateNextIteration++;
     }
 
     @Override
-    public void onCalibrateProgressChange(
-            final RobustKnownFrameMagnetometerCalibrator calibrator,
-            final float progress) {
-        checkLocked((RANSACRobustKnownFrameMagnetometerCalibrator) calibrator);
+    public void onCalibrateProgressChange(RobustKnownFrameMagnetometerCalibrator calibrator, float progress) {
+        checkLocked((MSACRobustKnownFrameMagnetometerCalibrator) calibrator);
         mCalibrateProgressChange++;
     }
 
@@ -2128,20 +2055,10 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
     }
 
     private void checkLocked(
-            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator) {
+            final MSACRobustKnownFrameMagnetometerCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
             calibrator.setThreshold(0.0);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            calibrator.setComputeAndKeepInliersEnabled(false);
-            fail("LockedException expected but not thrown");
-        } catch (final LockedException ignore) {
-        }
-        try {
-            calibrator.setComputeAndKeepResidualsEnabled(false);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -2308,7 +2225,7 @@ public class RANSACRobustKnownFrameMagnetometerCalibratorTest implements
 
     private void assertEstimatedResult(
             final Matrix hardIron, final Matrix mm,
-            final RANSACRobustKnownFrameMagnetometerCalibrator calibrator)
+            final MSACRobustKnownFrameMagnetometerCalibrator calibrator)
             throws WrongSizeException {
 
         final double[] estimatedHardIron = calibrator.getEstimatedHardIron();
