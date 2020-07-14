@@ -95,19 +95,19 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
     private static final int GENERAL_UNKNOWNS = 9;
 
     /**
-     * X-coordinate of hard-iron bias to be used to find a solution.
+     * X-coordinate of known hard-iron bias.
      * This is expressed in Teslas (T).
      */
     private double mHardIronX;
 
     /**
-     * Y-coordinate of hard-iron bias to be used to find a solution.
+     * Y-coordinate of known hard-iron bias.
      * This is expressed in Teslas (T).
      */
     private double mHardIronY;
 
     /**
-     * Z-coordinate of hard-iron bias to be used to find a solution.
+     * Z-coordinate of known hard-iron bias.
      * This is expressed in Teslas (T).
      */
     private double mHardIronZ;
