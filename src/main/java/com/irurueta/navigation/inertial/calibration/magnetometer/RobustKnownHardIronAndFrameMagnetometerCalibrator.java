@@ -42,11 +42,11 @@ import java.util.List;
 
 /**
  * This is an abstract class to robustly estimate magnetometer
- * hard-iron biases, soft-iron cross couplings and scaling factors.
+ * soft-iron cross couplings and scaling factors.
  * <p>
- * To use this calibrator at least 4 measurements at different known
+ * To use this calibrator at least 3 measurements at different known
  * frames must be provided. In other words, magnetometer samples must
- * be obtained at 4 different positions or orientations.
+ * be obtained at 3 different positions or orientations.
  * Notice that frame velocities are ignored by this calibrator.
  * <p>
  * Measured magnetic flux density is assumed to follow the model shown below:
@@ -64,7 +64,7 @@ import java.util.List;
  * - mBtrue is ground-truth magnetic flux density. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public abstract class RobustKnownFrameMagnetometerCalibrator {
+public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for the accelerometer,
@@ -75,7 +75,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     /**
      * Required minimum number of measurements.
      */
-    public static final int MINIMUM_MEASUREMENTS = 4;
+    public static final int MINIMUM_MEASUREMENTS = 3;
 
     /**
      * Indicates that by default a linear calibrator is used for preliminary solution estimation.
@@ -170,7 +170,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * Listener to be notified of events such as when calibration starts, ends or its
      * progress significantly changes.
      */
-    protected RobustKnownFrameMagnetometerCalibratorListener mListener;
+    protected RobustKnownHardIronAndFrameMagnetometerCalibratorListener mListener;
 
     /**
      * Indicates whether estimator is running.
@@ -222,22 +222,22 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
 
     /**
-     * Initial x-coordinate of hard-iron bias to be used to find a solution.
+     * X-coordinate of known hard-iron bias.
      * This is expressed in Teslas (T).
      */
-    private double mInitialHardIronX;
+    private double mHardIronX;
 
     /**
-     * Initial y-coordinate of hard-iron bias to be used to find a solution.
+     * Y-coordinate of known hard-iron bias.
      * This is expressed in Teslas (T).
      */
-    private double mInitialHardIronY;
+    private double mHardIronY;
 
     /**
-     * Initial z-coordinate of hard-iron bias to be used to find a solution.
+     * Z-coordinate of known hard-iron bias.
      * This is expressed in Teslas (T).
      */
-    private double mInitialHardIronZ;
+    private double mHardIronZ;
 
     /**
      * Initial x scaling factor.
@@ -295,12 +295,6 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * is found.
      */
     private boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;
-
-    /**
-     * Estimated magnetometer hard-iron biases for each magnetometer axis
-     * expressed in Teslas (T).
-     */
-    private double[] mEstimatedHardIron;
 
     /**
      * Estimated magnetometer soft-iron matrix containing scale factors
@@ -363,14 +357,14 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     /**
      * A linear least squares calibrator.
      */
-    private final KnownFrameMagnetometerLinearLeastSquaresCalibrator mLinearCalibrator =
-            new KnownFrameMagnetometerLinearLeastSquaresCalibrator();
+    private final KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator mLinearCalibrator =
+            new KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator();
 
     /**
      * A non-linear least squares calibrator.
      */
-    private final KnownFrameMagnetometerNonLinearLeastSquaresCalibrator mNonLinearCalibrator =
-            new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator();
+    private final KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator mNonLinearCalibrator =
+            new KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator();
 
     /**
      * World Magnetic Model estimator.
@@ -380,7 +374,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     /**
      * Constructor.
      */
-    public RobustKnownFrameMagnetometerCalibrator() {
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator() {
     }
 
     /**
@@ -389,8 +383,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RobustKnownFrameMagnetometerCalibrator(
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         mListener = listener;
     }
 
@@ -401,7 +395,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                     deviations taken at different frames (positions and
      *                     orientations).
      */
-    public RobustKnownFrameMagnetometerCalibrator(
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
         mMeasurements = measurements;
     }
@@ -414,9 +408,9 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                     orientations).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public RobustKnownFrameMagnetometerCalibrator(
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         this(measurements);
         mListener = listener;
     }
@@ -427,7 +421,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public RobustKnownFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -438,9 +432,9 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RobustKnownFrameMagnetometerCalibrator(
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(
             final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         this(commonAxisUsed);
         mListener = listener;
     }
@@ -454,7 +448,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public RobustKnownFrameMagnetometerCalibrator(
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
         this(measurements);
@@ -471,120 +465,108 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public RobustKnownFrameMagnetometerCalibrator(
+    public RobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         this(measurements, commonAxisUsed);
         mListener = listener;
     }
 
     /**
-     * Gets initial x-coordinate of magnetometer hard-iron bias to be used
-     * to find a solution.
+     * Gets x-coordinate of known magnetometer hard-iron bias.
      * This is expressed in Teslas (T).
      *
-     * @return initial x-coordinate of magnetometer hard-iron bias.
+     * @return x-coordinate of known magnetometer hard-iron bias.
      */
-    public double getInitialHardIronX() {
-        return mInitialHardIronX;
+    public double getHardIronX() {
+        return mHardIronX;
     }
 
     /**
-     * Sets initial x-coordinate of magnetometer hard-iron bias to be used
-     * to find a solution.
+     * Sets x-coordinate of known magnetometer hard-iron bias.
      * This is expressed in Teslas (T).
      *
-     * @param initialHardIronX initial x-coordinate of magnetometer
-     *                         hard-iron bias.
+     * @param hardIronX x coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialHardIronX(final double initialHardIronX)
-            throws LockedException {
+    public void setHardIronX(
+            final double hardIronX) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialHardIronX = initialHardIronX;
+        mHardIronX = hardIronX;
     }
 
     /**
-     * Gets initial y-coordinate of magnetometer hard-iron bias to be used
-     * to find a solution.
+     * Gets y-coordinate of known magnetometer hard-iron bias.
      * This is expressed in Teslas (T).
      *
-     * @return initial y-coordinate of magnetometer hard-iron bias.
+     * @return y-coordinate of known magnetometer hard-iron bias.
      */
-    public double getInitialHardIronY() {
-        return mInitialHardIronY;
+    public double getHardIronY() {
+        return mHardIronY;
     }
 
     /**
-     * Sets initial y-coordinate of magnetometer hard-iron bias to be used
-     * to find a solution.
+     * Sets y-coordinate of known magnetometer hard-iron bias.
      * This is expressed in Teslas (T).
      *
-     * @param initialHardIronY initial y-coordinate of magnetometer
-     *                         hard-iron bias.
+     * @param hardIronY y coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialHardIronY(final double initialHardIronY)
-            throws LockedException {
+    public void setHardIronY(
+            final double hardIronY) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialHardIronY = initialHardIronY;
+        mHardIronY = hardIronY;
     }
 
     /**
-     * Gets initial z-coordinate of magnetometer hard-iron bias to be used
-     * to find a solution.
+     * Gets z-coordinate of known magnetometer hard-iron bias.
      * This is expressed in Teslas (T).
      *
-     * @return initial z-coordinate of magnetometer hard-iron bias.
+     * @return z-coordinate of known magnetometer hard-iron bias.
      */
-    public double getInitialHardIronZ() {
-        return mInitialHardIronZ;
+    public double getHardIronZ() {
+        return mHardIronZ;
     }
 
     /**
-     * Sets initial z-coordinate of magnetometer hard-iron bias to be used
-     * to find a solution.
-     * This is expressed in meters Teslas (T).
+     * Sets z-coordinate of known magnetometer hard-iron bias.
+     * This is expressed in Teslas (T).
      *
-     * @param initialHardIronZ initial z-coordinate of magnetometer
-     *                         hard-iron bias.
+     * @param hardIronZ z coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialHardIronZ(final double initialHardIronZ)
-            throws LockedException {
+    public void setHardIronZ(
+            final double hardIronZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialHardIronZ = initialHardIronZ;
+        mHardIronZ = hardIronZ;
     }
 
     /**
-     * Sets initial hard-iron bias coordinates of magnetometer used to find
-     * a solution expressed in Teslas (T).
+     * Sets known hard-iron bias coordinates of magnetometer expressed
+     * in Teslas (T).
      *
-     * @param initialHardIronX initial x-coordinate of magnetometer
-     *                         hard-iron bias.
-     * @param initialHardIronY initial y-coordinate of magnetometer
-     *                         hard-iron bias.
-     * @param initialHardIronZ initial z-coordinate of magnetometer
-     *                         hard-iron bias.
+     * @param hardIronX x-coordinate of magnetometer hard-iron.
+     * @param hardIronY y-coordinate of magnetometer hard-iron.
+     * @param hardIronZ z-coordinate of magnetometer hard-iron.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialHardIron(
-            final double initialHardIronX,
-            final double initialHardIronY,
-            final double initialHardIronZ) throws LockedException {
+    public void setHardIronCoordinates(
+            final double hardIronX,
+            final double hardIronY,
+            final double hardIronZ) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        mInitialHardIronX = initialHardIronX;
-        mInitialHardIronY = initialHardIronY;
-        mInitialHardIronZ = initialHardIronZ;
+        mHardIronX = hardIronX;
+        mHardIronY = hardIronY;
+        mHardIronZ = hardIronZ;
     }
 
     /**
@@ -602,8 +584,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialSx initial x scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialSx(final double initialSx)
-            throws LockedException {
+    public void setInitialSx(
+            final double initialSx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -625,8 +607,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialSy initial y scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialSy(final double initialSy)
-            throws LockedException {
+    public void setInitialSy(
+            final double initialSy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -648,8 +630,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialSz initial z scaling factor.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialSz(final double initialSz)
-            throws LockedException {
+    public void setInitialSz(
+            final double initialSz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -671,8 +653,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialMxy initial x-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialMxy(final double initialMxy)
-            throws LockedException {
+    public void setInitialMxy(
+            final double initialMxy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -694,8 +676,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialMxz initial x-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialMxz(final double initialMxz)
-            throws LockedException {
+    public void setInitialMxz(
+            final double initialMxz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -717,8 +699,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialMyx initial y-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialMyx(final double initialMyx)
-            throws LockedException {
+    public void setInitialMyx(
+            final double initialMyx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -740,8 +722,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialMyz initial y-z cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialMyz(final double initialMyz)
-            throws LockedException {
+    public void setInitialMyz(
+            final double initialMyz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -763,8 +745,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialMzx initial z-x cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialMzx(final double initialMzx)
-            throws LockedException {
+    public void setInitialMzx(
+            final double initialMzx) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -786,8 +768,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param initialMzy initial z-y cross coupling error.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setInitialMzy(final double initialMzy)
-            throws LockedException {
+    public void setInitialMzy(
+            final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -805,8 +787,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     public void setInitialScalingFactors(
             final double initialSx,
             final double initialSy,
-            final double initialSz)
-            throws LockedException {
+            final double initialSz) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -832,8 +813,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
             final double initialMyx,
             final double initialMyz,
             final double initialMzx,
-            final double initialMzy)
-            throws LockedException {
+            final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -868,8 +848,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
             final double initialMyx,
             final double initialMyz,
             final double initialMzx,
-            final double initialMzy)
-            throws LockedException {
+            final double initialMzy) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -879,70 +858,68 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     }
 
     /**
-     * Gets initial hard-iron bias to be used to find a solution as an array.
+     * Gets known hard-iron bias as an array.
      * Array values are expressed in Teslas (T).
      *
      * @return array containing coordinates of initial bias.
      */
-    public double[] getInitialHardIron() {
+    public double[] getHardIron() {
         final double[] result = new double[
                 BodyMagneticFluxDensity.COMPONENTS];
-        getInitialHardIron(result);
+        getHardIron(result);
         return result;
     }
 
     /**
-     * Gets initial hard-iron bias to be used to find a solution as an array.
+     * Gets known hard-iron bias as an array.
      * Array values are expressed in Teslas (T).
      *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided array does not have
      *                                  length 3.
      */
-    public void getInitialHardIron(final double[] result) {
+    public void getHardIron(final double[] result) {
         if (result.length != BodyMagneticFluxDensity.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        result[0] = mInitialHardIronX;
-        result[1] = mInitialHardIronY;
-        result[2] = mInitialHardIronZ;
+        result[0] = mHardIronX;
+        result[1] = mHardIronY;
+        result[2] = mHardIronZ;
     }
 
     /**
-     * Sets initial hard-iron bias to be used to find a solution as an array.
+     * Sets known hard-iron bias as an array.
      * Array values are expressed in Teslas (T).
      *
-     * @param initialHardIron initial hard-iron to find a solution.
+     * @param hardIron known hard-iron bias.
      * @throws LockedException          if calibrator is currently running.
-     * @throws IllegalArgumentException if provided array does not have length 3.
+     * @throws IllegalArgumentException if provided array does not have
+     *                                  length 3.
      */
-    public void setInitialHardIron(final double[] initialHardIron)
-            throws LockedException {
+    public void setHardIron(final double[] hardIron) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
 
-        if (initialHardIron.length != BodyMagneticFluxDensity.COMPONENTS) {
+        if (hardIron.length != BodyMagneticFluxDensity.COMPONENTS) {
             throw new IllegalArgumentException();
         }
-        mInitialHardIronX = initialHardIron[0];
-        mInitialHardIronY = initialHardIron[1];
-        mInitialHardIronZ = initialHardIron[2];
+        mHardIronX = hardIron[0];
+        mHardIronY = hardIron[1];
+        mHardIronZ = hardIron[2];
     }
 
     /**
-     * Gets initial hard-iron bias to be used to find a solution as a
-     * column matrix.
+     * Gets known hard-iron bias as a column matrix.
      *
-     * @return initial hard-iron bias to be used to find a solution as a
-     * column matrix.
+     * @return hard-iron bias as a column matrix.
      */
-    public Matrix getInitialHardIronAsMatrix() {
+    public Matrix getHardIronMatrix() {
         Matrix result;
         try {
             result = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
                     1);
-            getInitialHardIronAsMatrix(result);
+            getHardIronMatrix(result);
         } catch (final WrongSizeException ignore) {
             // never happens
             result = null;
@@ -951,42 +928,38 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     }
 
     /**
-     * Gets initial hard-iron bias to be used to find a solution as a
-     * column matrix.
-     *
+     * Gets known hard-iron bias as a column matrix.
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void getInitialHardIronAsMatrix(final Matrix result) {
+    public void getHardIronMatrix(final Matrix result) {
         if (result.getRows() != BodyMagneticFluxDensity.COMPONENTS
                 || result.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
-        result.setElementAtIndex(0, mInitialHardIronX);
-        result.setElementAtIndex(1, mInitialHardIronY);
-        result.setElementAtIndex(2, mInitialHardIronZ);
+        result.setElementAtIndex(0, mHardIronX);
+        result.setElementAtIndex(1, mHardIronY);
+        result.setElementAtIndex(2, mHardIronZ);
     }
 
     /**
-     * Sets initial hard-iron bias to be used to find a solution.
-     *
-     * @param initialHardIron initial hard-iron bias to find a solution.
-     * @throws LockedException          if calibrator is currently running.
+     * Sets known hard-iron bias.
+     * @param hardIron magnetometer hard-iron bias to be set.
+     * @throws LockedException if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
-    public void setInitialHardIron(final Matrix initialHardIron)
-            throws LockedException {
+    public void setHardIron(final Matrix hardIron) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (initialHardIron.getRows() != BodyMagneticFluxDensity.COMPONENTS
-                || initialHardIron.getColumns() != 1) {
+        if (hardIron.getRows() != BodyMagneticFluxDensity.COMPONENTS
+                || hardIron.getColumns() != 1) {
             throw new IllegalArgumentException();
         }
 
-        mInitialHardIronX = initialHardIron.getElementAtIndex(0);
-        mInitialHardIronY = initialHardIron.getElementAtIndex(1);
-        mInitialHardIronZ = initialHardIron.getElementAtIndex(2);
+        mHardIronX = hardIron.getElementAtIndex(0);
+        mHardIronY = hardIron.getElementAtIndex(1);
+        mHardIronZ = hardIron.getElementAtIndex(2);
     }
 
     /**
@@ -1144,7 +1117,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *
      * @return listener to handle events raised by this calibrator.
      */
-    public RobustKnownFrameMagnetometerCalibratorListener getListener() {
+    public RobustKnownHardIronAndFrameMagnetometerCalibratorListener getListener() {
         return mListener;
     }
 
@@ -1155,7 +1128,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setListener(
-            final RobustKnownFrameMagnetometerCalibratorListener listener)
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1444,98 +1417,6 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     }
 
     /**
-     * Gets array containing x,y,z components of estimated magnetometer
-     * hard-iron biases expressed in Teslas (T).
-     *
-     * @return array containing x,y,z components of estimated magnetometer
-     * hard-iron biases.
-     */
-    public double[] getEstimatedHardIron() {
-        return mEstimatedHardIron;
-    }
-
-    /**
-     * Gets array containing x,y,z components of estimated magnetometer
-     * hard-iron biases expressed in Teslas (T).
-     *
-     * @param result instance where estimated magnetometer biases will be
-     *               stored.
-     * @return true if result instance was updated, false otherwise (when
-     * estimation is not yet available).
-     */
-    public boolean getEstimatedHardIron(final double[] result) {
-        if (mEstimatedHardIron != null) {
-            System.arraycopy(mEstimatedHardIron, 0, result,
-                    0, mEstimatedHardIron.length);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated
-     * magnetometer hard-iron biases expressed in Teslas (T).
-     *
-     * @return column matrix containing x,y,z components of estimated
-     * magnetometer hard-iron biases.
-     */
-    public Matrix getEstimatedHardIronAsMatrix() {
-        return mEstimatedHardIron != null ? Matrix.newFromArray(mEstimatedHardIron) : null;
-    }
-
-    /**
-     * Gets column matrix containing x,y,z components of estimated
-     * magnetometer hard-iron biases expressed in Teslas (T).
-     *
-     * @param result instance where result data will be stored.
-     * @return true if result was updated, false otherwise.
-     * @throws WrongSizeException if provided result instance has invalid size.
-     */
-    public boolean getEstimatedHardIronAsMatrix(final Matrix result)
-            throws WrongSizeException {
-        if (mEstimatedHardIron != null) {
-            result.fromArray(mEstimatedHardIron);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Gets x coordinate of estimated magnetometer bias expressed in
-     * Teslas (T).
-     *
-     * @return x coordinate of estimated magnetometer bias or null if not
-     * available.
-     */
-    public Double getEstimatedHardIronX() {
-        return mEstimatedHardIron != null ? mEstimatedHardIron[0] : null;
-    }
-
-    /**
-     * Gets y coordinate of estimated magnetometer bias expressed in
-     * Teslas (T).
-     *
-     * @return y coordinate of estimated magnetometer bias or null if not
-     * available.
-     */
-    public Double getEstimatedHardIronY() {
-        return mEstimatedHardIron != null ? mEstimatedHardIron[1] : null;
-    }
-
-    /**
-     * Gets z coordinate of estimated magnetometer bias expressed in
-     * Teslas (T).
-     *
-     * @return z coordinate of estimated magnetometer bias or null if not
-     * available.
-     */
-    public Double getEstimatedHardIronZ() {
-        return mEstimatedHardIron != null ? mEstimatedHardIron[2] : null;
-    }
-
-    /**
      * Gets estimated magnetometer soft-iron matrix containing scale factors
      * and cross coupling errors.
      * This is the product of matrix Tm containing cross coupling errors and Km
@@ -1711,9 +1592,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
     }
 
     /**
-     * Estimates magnetometer calibration parameters containing hard-iron
-     * bias and soft-iron scale factors
-     * and cross-coupling errors.
+     * Estimates magnetometer calibration parameters containing soft-iron
+     * scale factors and cross-coupling errors.
      *
      * @throws LockedException      if calibrator is currently running.
      * @throws NotReadyException    if calibrator is not ready.
@@ -1727,683 +1607,6 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @return method being used for robust estimation.
      */
     public abstract RobustEstimatorMethod getMethod();
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param method robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator();
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator();
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator();
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator();
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator();
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method   robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param measurements list of body magnetic flux density measurements with standard
-     *                     deviations taken at different frames (positions and
-     *                     orientations).
-     * @param method       robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param measurements list of body magnetic flux density measurements with standard
-     *                     deviations taken at different frames (positions and
-     *                     orientations).
-     * @param listener     listener to handle events raised by this calibrator.
-     * @param method       robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final boolean commonAxisUsed,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param measurements   list of body magnetic flux density measurements with standard
-     *                       deviations taken at different frames (positions and
-     *                       orientations).
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final boolean commonAxisUsed,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param measurements   list of body magnetic flux density measurements with standard
-     *                       deviations taken at different frames (positions and
-     *                       orientations).
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores quality scores corresponding to each provided
-     *                      measurement. The larger the score value the better
-     *                      the quality of the sample.
-     * @param method        robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator();
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator();
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator();
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores quality scores corresponding to each provided
-     *                      measurement. The larger the score value the better
-     *                      the quality of the sample.
-     * @param listener      listener to be notified of events such as when estimation
-     *                      starts, ends or its progress significantly changes.
-     * @param method        robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores quality scores corresponding to each provided
-     *                      measurement. The larger the score value the better
-     *                      the quality of the sample.
-     * @param measurements  list of body magnetic flux density measurements with standard
-     *                      deviations taken at different frames (positions and
-     *                      orientations).
-     * @param method        robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores quality scores corresponding to each provided
-     *                      measurement. The larger the score value the better
-     *                      the quality of the sample.
-     * @param measurements  list of body magnetic flux density measurements with standard
-     *                      deviations taken at different frames (positions and
-     *                      orientations).
-     * @param listener      listener to handle events raised by this calibrator.
-     * @param method        robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements, listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements, listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores  quality scores corresponding to each provided
-     *                       measurement. The larger the score value the better
-     *                       the quality of the sample.
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final boolean commonAxisUsed,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, commonAxisUsed);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, commonAxisUsed);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores  quality scores corresponding to each provided
-     *                       measurement. The larger the score value the better
-     *                       the quality of the sample.
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        commonAxisUsed, listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, commonAxisUsed, listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, commonAxisUsed, listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores  quality scores corresponding to each provided
-     *                       measurement. The larger the score value the better
-     *                       the quality of the sample.
-     * @param measurements   list of body magnetic flux density measurements with standard
-     *                       deviations taken at different frames (positions and
-     *                       orientations).
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final boolean commonAxisUsed,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements, commonAxisUsed);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements, commonAxisUsed);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator.
-     *
-     * @param qualityScores  quality scores corresponding to each provided
-     *                       measurement. The larger the score value the better
-     *                       the quality of the sample.
-     * @param measurements   list of body magnetic flux density measurements with standard
-     *                       deviations taken at different frames (positions and
-     *                       orientations).
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @param method         robust estimator method.
-     * @return a robust known frame magnetometer calibrator.
-     * @throws IllegalArgumentException if provided quality scores length
-     *                                  is smaller than 4 samples.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final double[] qualityScores,
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener,
-            final RobustEstimatorMethod method) {
-        switch (method) {
-            case RANSAC:
-                return new RANSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case LMedS:
-                return new LMedSRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case MSAC:
-                return new MSACRobustKnownFrameMagnetometerCalibrator(
-                        measurements, commonAxisUsed, listener);
-            case PROSAC:
-                return new PROSACRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements, commonAxisUsed,
-                        listener);
-            case PROMedS:
-            default:
-                return new PROMedSRobustKnownFrameMagnetometerCalibrator(
-                        qualityScores, measurements, commonAxisUsed,
-                        listener);
-        }
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create() {
-        return create(DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
-        return create(listener, DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param measurements list of body magnetic flux density measurements with standard
-     *                     deviations taken at different frames (positions and
-     *                     orientations).
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
-        return create(measurements, DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param measurements list of body magnetic flux density measurements with standard
-     *                     deviations taken at different frames (positions and
-     *                     orientations).
-     * @param listener     listener to handle events raised by this calibrator.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
-        return create(measurements, listener,
-                DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final boolean commonAxisUsed) {
-        return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
-        return create(commonAxisUsed, listener,
-                DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param measurements   list of body magnetic flux density measurements with standard
-     *                       deviations taken at different frames (positions and
-     *                       orientations).
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final boolean commonAxisUsed) {
-        return create(measurements, commonAxisUsed,
-                DEFAULT_ROBUST_METHOD);
-    }
-
-    /**
-     * Creates a robust known frame magnetometer calibrator using default robust method.
-     *
-     * @param measurements   list of body magnetic flux density measurements with standard
-     *                       deviations taken at different frames (positions and
-     *                       orientations).
-     * @param commonAxisUsed indicates whether z-axis is assumed to be common
-     *                       for the accelerometer, gyroscope and magnetometer.
-     * @param listener       listener to handle events raised by this calibrator.
-     * @return a robust known frame magnetometer calibrator.
-     */
-    public static RobustKnownFrameMagnetometerCalibrator create(
-            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
-        return create(measurements, commonAxisUsed, listener,
-                DEFAULT_ROBUST_METHOD);
-    }
 
     /**
      * Setups World Magnetic Model estimator.
@@ -2426,7 +1629,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @return computed error.
      */
     protected double computeError(final StandardDeviationFrameBodyMagneticFluxDensity measurement,
-                                  final PreliminaryResult preliminaryResult) {
+                                  final Matrix preliminaryResult) {
         // The magnetometer model is:
         // mBmeas = ba + (I + Mm) * mBtrue
 
@@ -2468,17 +1671,10 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
         final double bTrueY = expectedMagneticFluxDensity.getBy();
         final double bTrueZ = expectedMagneticFluxDensity.getBz();
 
-        final double[] b = preliminaryResult.mEstimatedHardIron;
-        final double bx = b[0];
-        final double by = b[1];
-        final double bz = b[2];
-
-        final Matrix mm = preliminaryResult.mEstimatedMm;
-
         try {
             final Matrix m = Matrix.identity(BodyKinematics.COMPONENTS,
                     BodyKinematics.COMPONENTS);
-            m.add(mm);
+            m.add(preliminaryResult);
 
             final Matrix btrue = new Matrix(BodyKinematics.COMPONENTS, 1);
             btrue.setElementAtIndex(0, bTrueX);
@@ -2487,9 +1683,9 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
 
             m.multiply(btrue);
 
-            final double bMeasX2 = bx + m.getElementAtIndex(0);
-            final double bMeasY2 = by + m.getElementAtIndex(1);
-            final double bMeasZ2 = bz + m.getElementAtIndex(2);
+            final double bMeasX2 = mHardIronX + m.getElementAtIndex(0);
+            final double bMeasY2 = mHardIronY + m.getElementAtIndex(1);
+            final double bMeasZ2 = mHardIronZ + m.getElementAtIndex(2);
 
             final double diffX = bMeasX2 - bMeasX1;
             final double diffY = bMeasY2 - bMeasY1;
@@ -2509,7 +1705,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param solutions      list where estimated preliminary solution will be stored.
      */
     protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<PreliminaryResult> solutions) {
+                                               final List<Matrix> solutions) {
 
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 new ArrayList<>();
@@ -2519,28 +1715,25 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
         }
 
         try {
-            final PreliminaryResult result = new PreliminaryResult();
-            result.mEstimatedHardIron = getInitialHardIron();
-            result.mEstimatedMm = getInitialMm();
+            final Matrix result = getInitialMm();
 
             if (mUseLinearCalibrator) {
+                mLinearCalibrator.setHardIronCoordinates(mHardIronX, mHardIronY, mHardIronZ);
                 mLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);
                 mLinearCalibrator.setMeasurements(measurements);
                 mLinearCalibrator.calibrate();
 
-                mLinearCalibrator.getEstimatedHardIron(result.mEstimatedHardIron);
-                result.mEstimatedMm = mLinearCalibrator.getEstimatedMm();
+                result.copyFrom(mLinearCalibrator.getEstimatedMm());
             }
 
             if (mRefinePreliminarySolutions) {
-                mNonLinearCalibrator.setInitialHardIron(result.mEstimatedHardIron);
-                mNonLinearCalibrator.setInitialMm(result.mEstimatedMm);
+                mNonLinearCalibrator.setHardIronCoordinates(mHardIronX, mHardIronY, mHardIronZ);
+                mNonLinearCalibrator.setInitialMm(result);
                 mNonLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);
                 mNonLinearCalibrator.setMeasurements(measurements);
                 mNonLinearCalibrator.calibrate();
 
-                mNonLinearCalibrator.getEstimatedHardIron(result.mEstimatedHardIron);
-                result.mEstimatedMm = mNonLinearCalibrator.getEstimatedMm();
+                result.copyFrom(mNonLinearCalibrator.getEstimatedMm());
             }
 
             solutions.add(result);
@@ -2558,7 +1751,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *
      * @param preliminaryResult a preliminary result.
      */
-    protected void attemptRefine(final PreliminaryResult preliminaryResult) {
+    protected void attemptRefine(final Matrix preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
             BitSet inliers = mInliersData.getInliers();
             int nSamples = mMeasurements.size();
@@ -2573,13 +1766,12 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
             }
 
             try {
-                mNonLinearCalibrator.setInitialHardIron(preliminaryResult.mEstimatedHardIron);
-                mNonLinearCalibrator.setInitialMm(preliminaryResult.mEstimatedMm);
+                mNonLinearCalibrator.setHardIronCoordinates(mHardIronX, mHardIronY, mHardIronZ);
+                mNonLinearCalibrator.setInitialMm(preliminaryResult);
                 mNonLinearCalibrator.setCommonAxisUsed(mCommonAxisUsed);
                 mNonLinearCalibrator.setMeasurements(inlierMeasurements);
                 mNonLinearCalibrator.calibrate();
 
-                mEstimatedHardIron = mNonLinearCalibrator.getEstimatedHardIron();
                 mEstimatedMm = mNonLinearCalibrator.getEstimatedMm();
 
                 if (mKeepCovariance) {
@@ -2590,66 +1782,11 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
 
             } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
-                mEstimatedHardIron = preliminaryResult.mEstimatedHardIron;
-                mEstimatedMm = preliminaryResult.mEstimatedMm;
+                mEstimatedMm = preliminaryResult;
             }
         } else {
             mEstimatedCovariance = null;
-            mEstimatedHardIron = preliminaryResult.mEstimatedHardIron;
-            mEstimatedMm = preliminaryResult.mEstimatedMm;
+            mEstimatedMm = preliminaryResult;
         }
-    }
-
-    /**
-     * Internal class containing estimated preliminary result.
-     */
-    protected static class PreliminaryResult {
-        /**
-         * Estimated magnetometer hard-iron biases for each magnetometer axis
-         * expressed in Teslas (T).
-         */
-        private double[] mEstimatedHardIron;
-
-        /**
-         * Estimated magnetometer soft-iron matrix containing scale factors
-         * and cross coupling errors.
-         * This is the product of matrix Tm containing cross coupling errors and Km
-         * containing scaling factors.
-         * So tat:
-         * <pre>
-         *     Mm = [sx    mxy  mxz] = Tm*Km
-         *          [myx   sy   myz]
-         *          [mzx   mzy  sz ]
-         * </pre>
-         * Where:
-         * <pre>
-         *     Km = [sx 0   0 ]
-         *          [0  sy  0 ]
-         *          [0  0   sz]
-         * </pre>
-         * and
-         * <pre>
-         *     Tm = [1          -alphaXy    alphaXz ]
-         *          [alphaYx    1           -alphaYz]
-         *          [-alphaZx   alphaZy     1       ]
-         * </pre>
-         * Hence:
-         * <pre>
-         *     Mm = [sx    mxy  mxz] = Tm*Km =  [sx             -sy * alphaXy   sz * alphaXz ]
-         *          [myx   sy   myz]            [sx * alphaYx   sy              -sz * alphaYz]
-         *          [mzx   mzy  sz ]            [-sx * alphaZx  sy * alphaZy    sz           ]
-         * </pre>
-         * This instance allows any 3x3 matrix however, typically alphaYx, alphaZx and alphaZy
-         * are considered to be zero if the accelerometer z-axis is assumed to be the same
-         * as the body z-axis. When this is assumed, myx = mzx = mzy = 0 and the Mm matrix
-         * becomes upper diagonal:
-         * <pre>
-         *     Mm = [sx    mxy  mxz]
-         *          [0     sy   myz]
-         *          [0     0    sz ]
-         * </pre>
-         * Values of this matrix are unitless.
-         */
-        private Matrix mEstimatedMm;
     }
 }
