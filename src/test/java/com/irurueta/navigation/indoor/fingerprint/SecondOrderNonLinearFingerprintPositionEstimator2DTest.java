@@ -6021,7 +6021,7 @@ public class SecondOrderNonLinearFingerprintPositionEstimator2DTest
                         accuracy.getConfidence() * 100.0});
 
         assertTrue(avgEstimatedErrorWithInitialPosition >=
-                avgEstimatedErrorWithExactInitialPosition - ERROR_MARGIN);
+                avgEstimatedErrorWithExactInitialPosition - 2.0 * ERROR_MARGIN);
     }
 
     @Test

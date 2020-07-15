@@ -1608,6 +1608,683 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      */
     public abstract RobustEstimatorMethod getMethod();
 
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param method robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator();
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method   robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param measurements list of body magnetic flux density measurements with standard
+     *                     deviations taken at different frames (positions and
+     *                     orientations).
+     * @param method       robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param measurements list of body magnetic flux density measurements with standard
+     *                     deviations taken at different frames (positions and
+     *                     orientations).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @param method       robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param method        robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator();
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body magnetic flux density measurements with standard
+     *                      deviations taken at different frames (positions and
+     *                      orientations).
+     * @param method        robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param measurements  list of body magnetic flux density measurements with standard
+     *                      deviations taken at different frames (positions and
+     *                      orientations).
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements, listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final boolean commonAxisUsed,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, commonAxisUsed, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, commonAxisUsed, listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements, commonAxisUsed);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements, commonAxisUsed);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator.
+     *
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
+     * @return a robust known frame magnetometer calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final double[] qualityScores,
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener,
+            final RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case LMedS:
+                return new LMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case MSAC:
+                return new MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        measurements, commonAxisUsed, listener);
+            case PROSAC:
+                return new PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements, commonAxisUsed,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustKnownHardIronAndFrameMagnetometerCalibrator(
+                        qualityScores, measurements, commonAxisUsed,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create() {
+        return create(DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
+        return create(listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param measurements list of body magnetic flux density measurements with standard
+     *                     deviations taken at different frames (positions and
+     *                     orientations).
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
+        return create(measurements, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param measurements list of body magnetic flux density measurements with standard
+     *                     deviations taken at different frames (positions and
+     *                     orientations).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
+        return create(measurements, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final boolean commonAxisUsed) {
+        return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
+        return create(commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed) {
+        return create(measurements, commonAxisUsed,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust known frame magnetometer calibrator using default robust method.
+     *
+     * @param measurements   list of body magnetic flux density measurements with standard
+     *                       deviations taken at different frames (positions and
+     *                       orientations).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust known frame magnetometer calibrator.
+     */
+    public static RobustKnownHardIronAndFrameMagnetometerCalibrator create(
+            final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
+        return create(measurements, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }    
     /**
      * Setups World Magnetic Model estimator.
      *
