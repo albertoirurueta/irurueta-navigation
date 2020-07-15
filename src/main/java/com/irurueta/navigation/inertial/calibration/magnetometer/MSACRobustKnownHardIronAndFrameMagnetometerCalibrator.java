@@ -1,5 +1,21 @@
+/*
+ * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irurueta.navigation.inertial.calibration.magnetometer;
 
+import com.irurueta.algebra.Matrix;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
@@ -14,7 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Robustly estimates magnetometer hard-iron biases, soft-iron cross
+ * Robustly estimates magnetometer soft-iron cross
  * couplings and scaling factors using MSAC algorithm.
  * <p>
  * To use this calibrator at least 4 measurements at different known
@@ -37,8 +53,8 @@ import java.util.List;
  * - mBtrue is ground-truth magnetic flux density. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class MSACRobustKnownFrameMagnetometerCalibrator extends
-        RobustKnownFrameMagnetometerCalibrator {
+public class MSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
+        RobustKnownHardIronAndFrameMagnetometerCalibrator {
 
     /**
      * Constant defining default threshold to determine whether samples are
@@ -61,8 +77,7 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
     /**
      * Constructor.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator() {
-        super();
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator() {
     }
 
     /**
@@ -71,8 +86,8 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         super(listener);
     }
 
@@ -83,7 +98,7 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      *                     deviations taken at different frames (positions and
      *                     orientations).
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements) {
         super(measurements);
     }
@@ -96,9 +111,9 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      *                     orientations).
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         super(measurements, listener);
     }
 
@@ -108,7 +123,8 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(final boolean commonAxisUsed) {
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
+            final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -119,9 +135,9 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
             final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         super(commonAxisUsed, listener);
     }
 
@@ -134,7 +150,7 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
         super(measurements, commonAxisUsed);
@@ -150,10 +166,10 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public MSACRobustKnownFrameMagnetometerCalibrator(
+    public MSACRobustKnownHardIronAndFrameMagnetometerCalibrator(
             final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
-            final RobustKnownFrameMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         super(measurements, commonAxisUsed, listener);
     }
 
@@ -185,8 +201,8 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
     }
 
     /**
-     * Estimates magnetometer calibration parameters containing hard-iron
-     * bias and soft-iron scale factors and cross-coupling errors.
+     * Estimates magnetometer calibration parameters containing soft-iron
+     * scale factors and cross-coupling errors.
      *
      * @throws LockedException      if calibrator is currently running.
      * @throws NotReadyException    if calibrator is not ready.
@@ -201,8 +217,8 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
             throw new NotReadyException();
         }
 
-        final MSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+        final MSACRobustEstimator<Matrix> innerEstimator =
+                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<Matrix>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -221,13 +237,13 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
                     @Override
                     public void estimatePreliminarSolutions(
                             final int[] samplesIndices,
-                            final List<PreliminaryResult> solutions) {
+                            final List<Matrix> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override
                     public double computeResidual(
-                            final PreliminaryResult currentEstimation,
+                            final Matrix currentEstimation,
                             final int i) {
                         return computeError(mMeasurements.get(i),
                                 currentEstimation);
@@ -235,45 +251,45 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return MSACRobustKnownFrameMagnetometerCalibrator.super.isReady();
+                        return MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.super.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(
-                            final RobustEstimator<PreliminaryResult> estimator) {
+                            final RobustEstimator<Matrix> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateStart(
-                                    MSACRobustKnownFrameMagnetometerCalibrator.this);
+                                    MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(
-                            final RobustEstimator<PreliminaryResult> estimator) {
+                            final RobustEstimator<Matrix> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateEnd(
-                                    MSACRobustKnownFrameMagnetometerCalibrator.this);
+                                    MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this);
                         }
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator,
+                            final RobustEstimator<Matrix> estimator,
                             final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    MSACRobustKnownFrameMagnetometerCalibrator.this,
+                                    MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this,
                                     iteration);
                         }
                     }
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator,
+                            final RobustEstimator<Matrix> estimator,
                             final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    MSACRobustKnownFrameMagnetometerCalibrator.this,
+                                    MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this,
                                     progress);
                         }
                     }
@@ -288,7 +304,7 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            final PreliminaryResult preliminaryResult = innerEstimator.estimate();
+            final Matrix preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
             attemptRefine(preliminaryResult);
