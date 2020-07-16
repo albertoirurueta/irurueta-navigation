@@ -1817,8 +1817,13 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * been taken or null if not available.
      */
     public ECEFPosition getEcefPosition() {
-        final ECEFPosition result = new ECEFPosition();
-        return getEcefPosition(result) ? result : null;
+        if (mPosition != null) {
+            final ECEFPosition result = new ECEFPosition();
+            getEcefPosition(result);
+            return result;
+        } else {
+            return null;
+        }
     }
 
     /**
