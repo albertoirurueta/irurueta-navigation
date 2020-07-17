@@ -23,8 +23,8 @@ import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
-import com.irurueta.numerical.robust.PROSACRobustEstimator;
-import com.irurueta.numerical.robust.PROSACRobustEstimatorListener;
+import com.irurueta.numerical.robust.PROMedSRobustEstimator;
+import com.irurueta.numerical.robust.PROMedSRobustEstimatorListener;
 import com.irurueta.numerical.robust.RobustEstimator;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * Robustly estimates magnetometer hard-iron biases, cross couplings and
- * scaling factors using PROSAC algorithm.
+ * scaling factors using PROMedS algorithm.
  * <p>
  * To use this calibrator at least 10 measurements taken at a single known
  * position and instant must be taken at 10 different unknown orientations and
@@ -56,46 +56,50 @@ import java.util.List;
  * - mBtrue is ground-truth magnetic flux density. This is a 3x1 vector.
  * - w is measurement noise. This is a 3x1 vector.
  */
-public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
+public class PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator extends
         RobustKnownPositionAndInstantMagnetometerCalibrator {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 1e-9;
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-9;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Quality scores corresponding to each provided sample.
@@ -106,7 +110,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
     /**
      * Constructor.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator() {
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator() {
         super();
     }
 
@@ -115,7 +119,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *
      * @param listener listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final RobustKnownPositionAndInstantMagnetometerCalibratorListener listener) {
         super(listener);
     }
@@ -129,7 +133,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                     position with zero velocity and unknown different
      *                     orientations.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         super(measurements);
     }
@@ -140,7 +144,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
@@ -151,7 +155,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @param magneticModel Earth's magnetic model. If null, a default model
      *                      will be used instead.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final WorldMagneticModel magneticModel) {
         super(magneticModel);
     }
@@ -163,7 +167,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] initialHardIron) {
         super(initialHardIron);
     }
@@ -175,7 +179,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final Matrix initialHardIron) {
         super(initialHardIron);
     }
@@ -190,7 +194,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final Matrix initialHardIron, final Matrix initialMm) {
         super(initialHardIron, initialMm);
     }
@@ -201,7 +205,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @param position position where body magnetic flux density measurements
      *                 have been taken.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position) {
         super(position);
     }
@@ -217,7 +221,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                     position with zero velocity and unknown different
      *                     orientations.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         super(position, measurements);
@@ -235,7 +239,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                     orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final RobustKnownPositionAndInstantMagnetometerCalibratorListener listener) {
@@ -255,7 +259,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
@@ -276,7 +280,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
@@ -298,7 +302,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] initialHardIron) {
@@ -320,7 +324,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] initialHardIron,
@@ -344,7 +348,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] initialHardIron) {
@@ -368,7 +372,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] initialHardIron,
@@ -390,7 +394,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron) {
@@ -412,7 +416,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron,
@@ -436,7 +440,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron) {
@@ -460,7 +464,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron,
@@ -485,7 +489,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron, final Matrix initialMm) {
@@ -510,7 +514,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron, final Matrix initialMm,
@@ -537,7 +541,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron,
@@ -566,7 +570,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron,
@@ -582,7 +586,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @param position position where body magnetic flux density measurements
      *                 have been taken.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position) {
         super(position);
     }
@@ -598,7 +602,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                     position with zero velocity and unknown different
      *                     orientations.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         super(position, measurements);
@@ -616,7 +620,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                     orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final RobustKnownPositionAndInstantMagnetometerCalibratorListener listener) {
@@ -636,7 +640,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
@@ -657,7 +661,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
@@ -679,7 +683,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] initialHardIron) {
@@ -701,7 +705,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] initialHardIron,
@@ -725,7 +729,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] initialHardIron) {
@@ -749,7 +753,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] initialHardIron,
@@ -771,7 +775,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron) {
@@ -793,7 +797,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron,
@@ -817,7 +821,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron) {
@@ -841,7 +845,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron,
@@ -866,7 +870,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron, final Matrix initialMm) {
@@ -891,7 +895,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix initialHardIron, final Matrix initialMm,
@@ -918,7 +922,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron,
@@ -947,7 +951,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix initialHardIron,
@@ -971,7 +975,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         super(measurements);
@@ -989,7 +993,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final boolean commonAxisUsed) {
         super(commonAxisUsed);
@@ -1007,7 +1011,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final WorldMagneticModel magneticModel) {
         super(magneticModel);
@@ -1026,7 +1030,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final double[] initialHardIron) {
         super(initialHardIron);
@@ -1044,7 +1048,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final Matrix initialHardIron) {
         super(initialHardIron);
@@ -1065,7 +1069,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final Matrix initialHardIron, final Matrix initialMm) {
         super(initialHardIron, initialMm);
@@ -1083,7 +1087,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position) {
         super(position);
@@ -1106,7 +1110,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
@@ -1131,7 +1135,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1158,7 +1162,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1186,7 +1190,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1215,7 +1219,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1244,7 +1248,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1275,7 +1279,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1306,7 +1310,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1334,7 +1338,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1362,7 +1366,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1392,7 +1396,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1422,7 +1426,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1453,7 +1457,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1484,7 +1488,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1517,7 +1521,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1552,7 +1556,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1575,7 +1579,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position) {
         super(position);
@@ -1598,7 +1602,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
@@ -1623,7 +1627,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1650,7 +1654,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1678,7 +1682,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1707,7 +1711,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1736,7 +1740,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1767,7 +1771,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1798,7 +1802,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  quality scores length is smaller
      *                                  than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1826,7 +1830,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1854,7 +1858,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1884,7 +1888,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1914,7 +1918,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x1 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1945,7 +1949,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -1976,7 +1980,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -2009,7 +2013,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -2044,7 +2048,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      *                                  3x3 or if provided quality scores
      *                                  length is smaller than 10 samples.
      */
-    public PROSACRobustKnownPositionAndInstantMagnetometerCalibrator(
+    public PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
             final double[] qualityScores,
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
@@ -2057,33 +2061,58 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @return threshold to determine whether samples are inliers or not.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on norm between measured specific forces and the
-     * ones generated with estimated calibration parameters provided for each sample.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      *
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+
+        mStopThreshold = stopThreshold;
     }
 
     /**
@@ -2116,64 +2145,14 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
     }
 
     /**
-     * Indicates whether calibrator is ready to find a solution.
+     * Indicates whether solver is ready to find a solution.
      *
-     * @return true if calibrator is ready, false otherwise.
+     * @return true if solver is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
         return super.isReady() && mQualityScores != null &&
                 mQualityScores.length == mMeasurements.size();
-    }
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     *
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     *
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     *
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     *
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if calibrator is currently running.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (mRunning) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
     }
 
     /**
@@ -2185,8 +2164,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException,
-            CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2194,8 +2172,8 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
             throw new NotReadyException();
         }
 
-        final PROSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<PreliminaryResult>() {
+        final PROMedSRobustEstimator<PreliminaryResult> innerEstimator =
+                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -2203,7 +2181,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
 
                     @Override
                     public double getThreshold() {
-                        return mThreshold;
+                        return mStopThreshold;
                     }
 
                     @Override
@@ -2232,7 +2210,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
 
                     @Override
                     public boolean isReady() {
-                        return PROSACRobustKnownPositionAndInstantMagnetometerCalibrator.this.isReady();
+                        return PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this.isReady();
                     }
 
                     @Override
@@ -2240,7 +2218,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateStart(
-                                    PROSACRobustKnownPositionAndInstantMagnetometerCalibrator.this);
+                                    PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this);
                         }
                     }
 
@@ -2249,7 +2227,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
                             final RobustEstimator<PreliminaryResult> estimator) {
                         if (mListener != null) {
                             mListener.onCalibrateEnd(
-                                    PROSACRobustKnownPositionAndInstantMagnetometerCalibrator.this);
+                                    PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this);
                         }
                     }
 
@@ -2259,7 +2237,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
                             final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    PROSACRobustKnownPositionAndInstantMagnetometerCalibrator.this,
+                                    PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this,
                                     iteration);
                         }
                     }
@@ -2270,7 +2248,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
                             final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    PROSACRobustKnownPositionAndInstantMagnetometerCalibrator.this,
+                                    PROMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this,
                                     progress);
                         }
                     }
@@ -2282,10 +2260,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
 
             initialize();
 
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
+            innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -2312,7 +2287,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibrator extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROSAC;
+        return RobustEstimatorMethod.PROMedS;
     }
 
     /**
