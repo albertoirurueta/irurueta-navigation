@@ -34,23 +34,19 @@ import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyMagneticFluxDensity;
-import com.irurueta.numerical.EvaluationException;
-import com.irurueta.numerical.GradientEstimator;
-import com.irurueta.numerical.MultiDimensionFunctionEvaluatorListener;
-import com.irurueta.numerical.fitting.FittingException;
-import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
-import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
+import com.irurueta.numerical.robust.InliersData;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
- * Estimates magnetometer cross couplings and scaling factors.
- * This calibrator uses Levenberg-Marquardt to find a minimum least squared
- * error solution.
+ * This is an abstract class to robustly estimate magnetometer cross
+ * couplings and scaling factors.
  * <p>
  * To use this calibrator at least 7 measurements taken at a single known
  * position and instant must be taken at 7 different unknown orientations and
@@ -75,7 +71,7 @@ import java.util.List;
  * a short span of time where Earth magnetic field can be assumed to be
  * constant at provided location and instant.
  */
-public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
+public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrator {
 
     /**
      * Indicates whether by default a common z-axis is assumed for the accelerometer,
@@ -84,31 +80,190 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     public static final boolean DEFAULT_USE_COMMON_Z_AXIS = false;
 
     /**
-     * Number of unknowns when common z-axis is assumed for the accelerometer,
-     * gyroscope and magnetometer.
-     */
-    private static final int COMMON_Z_AXIS_UNKNOWNS = 6;
-
-    /**
-     * Number of unknowns for the general case.
-     */
-    private static final int GENERAL_UNKNOWNS = 9;
-
-    /**
      * Required minimum number of measurements when common z-axis is assumed.
      */
-    public static final int MINIMUM_MEASUREMENTS_COMMON_Z_AXIS = COMMON_Z_AXIS_UNKNOWNS + 1;
+    public static final int MINIMUM_MEASUREMENTS_COMMON_Z_AXIS =
+            KnownHardIronPositionAndInstantMagnetometerCalibrator.MINIMUM_MEASUREMENTS_COMMON_Z_AXIS;
 
     /**
      * Required minimum number of measurements for the general case.
      */
-    public static final int MINIMUM_MEASUREMENTS_GENERAL = GENERAL_UNKNOWNS + 1;
+    public static final int MINIMUM_MEASUREMENTS_GENERAL =
+            KnownHardIronPositionAndInstantMagnetometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL;
 
     /**
-     * Levenberg-Marquardt fitter to find a non-linear solution.
+     * Default robust estimator method when none is provided.
      */
-    private final LevenbergMarquardtMultiDimensionFitter mFitter =
-            new LevenbergMarquardtMultiDimensionFitter();
+    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
+            RobustEstimatorMethod.LMedS;
+
+    /**
+     * Indicates that result is refined by default.
+     */
+    public static final boolean DEFAULT_REFINE_RESULT = true;
+
+    /**
+     * Indicates that covariance is kept by default after refining result.
+     */
+    public static final boolean DEFAULT_KEEP_COVARIANCE = true;
+
+    /**
+     * Default amount of progress variation before notifying a change in estimation progress.
+     * By default this is set to 5%.
+     */
+    public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
+
+    /**
+     * Minimum allowed value for progress delta.
+     */
+    public static final float MIN_PROGRESS_DELTA = 0.0f;
+
+    /**
+     * Maximum allowed value for progress delta.
+     */
+    public static final float MAX_PROGRESS_DELTA = 1.0f;
+
+    /**
+     * Constant defining default confidence of the estimated result, which is
+     * 99%. This means that with a probability of 99% estimation will be
+     * accurate because chosen subsamples will be inliers.
+     */
+    public static final double DEFAULT_CONFIDENCE = 0.99;
+
+    /**
+     * Default maximum allowed number of iterations.
+     */
+    public static final int DEFAULT_MAX_ITERATIONS = 5000;
+
+    /**
+     * Minimum allowed confidence value.
+     */
+    public static final double MIN_CONFIDENCE = 0.0;
+
+    /**
+     * Maximum allowed confidence value.
+     */
+    public static final double MAX_CONFIDENCE = 1.0;
+
+    /**
+     * Minimum allowed number of iterations.
+     */
+    public static final int MIN_ITERATIONS = 1;
+
+    /**
+     * Contains a list of body magnetic flux density measurements taken
+     * at a given position with different unknown orientations and containing the
+     * standard deviation of magnetometer measurements.
+     */
+    protected List<StandardDeviationBodyMagneticFluxDensity> mMeasurements;
+
+    /**
+     * Listener to be notified of events such as when calibration starts, ends or its
+     * progress significantly changes.
+     */
+    protected RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener mListener;
+
+    /**
+     * Indicates whether estimator is running.
+     */
+    protected boolean mRunning;
+
+    /**
+     * Amount of progress variation before notifying a progress change during calibration.
+     */
+    protected float mProgressDelta = DEFAULT_PROGRESS_DELTA;
+
+    /**
+     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
+     * to 100%). The amount of confidence indicates the probability that the estimated
+     * result is correct. Usually this value will be close to 1.0, but not exactly 1.0.
+     */
+    protected double mConfidence = DEFAULT_CONFIDENCE;
+
+    /**
+     * Maximum allowed number of iterations. When the maximum number of iterations is
+     * exceeded, result will not be available, however an approximate result will be
+     * available for retrieval.
+     */
+    protected int mMaxIterations = DEFAULT_MAX_ITERATIONS;
+
+    /**
+     * Data related to inlier found after calibration.
+     */
+    protected InliersData mInliersData;
+
+    /**
+     * Indicates whether result must be refined using a non linear calibrator over
+     * found inliers.
+     * If true, inliers will be computed and kept in any implementation regardless of the
+     * settings.
+     */
+    protected boolean mRefineResult = DEFAULT_REFINE_RESULT;
+
+    /**
+     * Size of subsets to be checked during robust estimation.
+     */
+    protected int mPreliminarySubsetSize = MINIMUM_MEASUREMENTS_GENERAL;
+
+    /**
+     * This flag indicates whether z-axis is assumed to be common for accelerometer,
+     * gyroscope and magnetometer.
+     * When enabled, this eliminates 3 variables from soft-iron (Mm) matrix.
+     */
+    private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
+
+    /**
+     * Estimated magnetometer soft-iron matrix containing scale factors
+     * and cross coupling errors.
+     * This is the product of matrix Tm containing cross coupling errors and Km
+     * containing scaling factors.
+     * So tat:
+     * <pre>
+     *     Mm = [sx    mxy  mxz] = Tm*Km
+     *          [myx   sy   myz]
+     *          [mzx   mzy  sz ]
+     * </pre>
+     * Where:
+     * <pre>
+     *     Km = [sx 0   0 ]
+     *          [0  sy  0 ]
+     *          [0  0   sz]
+     * </pre>
+     * and
+     * <pre>
+     *     Tm = [1          -alphaXy    alphaXz ]
+     *          [alphaYx    1           -alphaYz]
+     *          [-alphaZx   alphaZy     1       ]
+     * </pre>
+     * Hence:
+     * <pre>
+     *     Mm = [sx    mxy  mxz] = Tm*Km =  [sx             -sy * alphaXy   sz * alphaXz ]
+     *          [myx   sy   myz]            [sx * alphaYx   sy              -sz * alphaYz]
+     *          [mzx   mzy  sz ]            [-sx * alphaZx  sy * alphaZy    sz           ]
+     * </pre>
+     * This instance allows any 3x3 matrix however, typically alphaYx, alphaZx and alphaZy
+     * are considered to be zero if the accelerometer z-axis is assumed to be the same
+     * as the body z-axis. When this is assumed, myx = mzx = mzy = 0 and the Mm matrix
+     * becomes upper diagonal:
+     * <pre>
+     *     Mm = [sx    mxy  mxz]
+     *          [0     sy   myz]
+     *          [0     0    sz ]
+     * </pre>
+     * Values of this matrix are unitless.
+     */
+    private Matrix mEstimatedMm;
+
+    /**
+     * Indicates whether covariance must be kept after refining result.
+     * This setting is only taken into account if result is refined.
+     */
+    private boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;
+
+    /**
+     * Estimated covariance matrix for estimated parameters.
+     */
+    private Matrix mEstimatedCovariance;
 
     /**
      * Known x-coordinate of hard-iron bias to be used to find a solution.
@@ -186,140 +341,52 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     private Double mYear = convertTime(System.currentTimeMillis());
 
     /**
-     * Contains a collection of body magnetic flux density measurements taken
-     * at a given position with different unknown orientations and containing the
-     * standard deviation of magnetometer measurements.
-     */
-    private Collection<StandardDeviationBodyMagneticFluxDensity> mMeasurements;
-
-    /**
-     * This flag indicates whether z-axis is assumed to be common for accelerometer,
-     * gyroscope and magnetometer.
-     * When enabled, this eliminates 3 variables from Mm matrix.
-     */
-    private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
-
-    /**
-     * Listener to handle events raised by this calibrator.
-     */
-    private KnownHardIronPositionAndInstantMagnetometerCalibratorListener mListener;
-
-    /**
-     * Estimated magnetometer soft-iron matrix containing scale factors
-     * and cross coupling errors.
-     * This is the product of matrix Tm containing cross coupling errors and Km
-     * containing scaling factors.
-     * So tat:
-     * <pre>
-     *     Mm = [sx    mxy  mxz] = Tm*Km
-     *          [myx   sy   myz]
-     *          [mzx   mzy  sz ]
-     * </pre>
-     * Where:
-     * <pre>
-     *     Km = [sx 0   0 ]
-     *          [0  sy  0 ]
-     *          [0  0   sz]
-     * </pre>
-     * and
-     * <pre>
-     *     Tm = [1          -alphaXy    alphaXz ]
-     *          [alphaYx    1           -alphaYz]
-     *          [-alphaZx   alphaZy     1       ]
-     * </pre>
-     * Hence:
-     * <pre>
-     *     Mm = [sx    mxy  mxz] = Tm*Km =  [sx             -sy * alphaXy   sz * alphaXz ]
-     *          [myx   sy   myz]            [sx * alphaYx   sy              -sz * alphaYz]
-     *          [mzx   mzy  sz ]            [-sx * alphaZx  sy * alphaZy    sz           ]
-     * </pre>
-     * This instance allows any 3x3 matrix however, typically alphaYx, alphaZx and alphaZy
-     * are considered to be zero if the accelerometer z-axis is assumed to be the same
-     * as the body z-axis. When this is assumed, myx = mzx = mzy = 0 and the Mm matrix
-     * becomes upper diagonal:
-     * <pre>
-     *     Mm = [sx    mxy  mxz]
-     *          [0     sy   myz]
-     *          [0     0    sz ]
-     * </pre>
-     * Values of this matrix are unitless.
-     */
-    private Matrix mEstimatedMm;
-
-    /**
-     * Estimated covariance matrix for estimated parameters.
-     */
-    private Matrix mEstimatedCovariance;
-
-    /**
-     * Estimated chi square value.
-     */
-    private double mEstimatedChiSq;
-
-    /**
-     * Indicates whether calibrator is running.
-     */
-    private boolean mRunning;
-
-    /**
      * Contains Earth's magnetic model.
      */
     private WorldMagneticModel mMagneticModel;
 
     /**
-     * Internally holds x-coordinate of measured magnetic flux density
+     * Inner calibrator to compute calibration for each subset of data or during
+     * final refining.
+     */
+    private final KnownHardIronPositionAndInstantMagnetometerCalibrator mInnerCalibrator =
+            new KnownHardIronPositionAndInstantMagnetometerCalibrator();
+
+    /**
+     * Contains magnetic field norm for current position to be reused
      * during calibration.
      */
-    private double mBmeasX;
+    protected double mMagneticDensityNorm;
 
     /**
-     * Internally holds y-coordinate of measured magnetic flux density
-     * during calibration.
+     * Contains 3x3 identify to be reused.
      */
-    private double mBmeasY;
+    protected Matrix mIdentity;
 
     /**
-     * Internally holds z-coordinate of measured magnetic flux density
-     * during calibration.
+     * Contains 3x3 temporary matrix.
      */
-    private double mBmeasZ;
+    protected Matrix mTmp1;
 
     /**
-     * Internaly holds measured magnetic flux density during calibration
-     * expressed as a column matrix.
+     * Contains 3x3 temporary matrix.
      */
-    private Matrix mBmeas;
+    protected Matrix mTmp2;
 
     /**
-     * Internally holds cross-coupling errors during calibration.
+     * Contains 3x1 temporary matrix.
      */
-    private Matrix mM;
+    protected Matrix mTmp3;
 
     /**
-     * Internally holds inverse of cross-coupling errors during calibration.
+     * Contains 3x1 temporary matrix.
      */
-    private Matrix mInvM;
-
-    /**
-     * Internally holds biases during calibration.
-     */
-    private Matrix mB;
-
-    /**
-     * Internally holds computed true magnetic flux density during
-     * calibration.
-     */
-    private Matrix mBtrue;
-
-    /**
-     * Internally hold biases during calibration in external format.
-     */
-    private Matrix mBm;
+    protected Matrix mTmp4;
 
     /**
      * Constructor.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator() {
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator() {
     }
 
     /**
@@ -327,22 +394,22 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *
      * @param listener listener to handle events raised by this calibrator.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param measurements collection of body magnetic flux density
+     * @param measurements list of body magnetic flux density
      *                     measurements with standard deviation of
      *                     magnetometer measurements taken at the same
      *                     position with zero velocity and unknown different
      *                     orientations.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
-            final Collection<StandardDeviationBodyMagneticFluxDensity> measurements) {
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
+            final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         mMeasurements = measurements;
     }
 
@@ -352,7 +419,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final boolean commonAxisUsed) {
         mCommonAxisUsed = commonAxisUsed;
     }
@@ -363,7 +430,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @param magneticModel Earth's magnetic model. If null, a default model
      *                      will be used instead.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final WorldMagneticModel magneticModel) {
         mMagneticModel = magneticModel;
     }
@@ -375,7 +442,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final double[] hardIron) {
         try {
             setHardIron(hardIron);
@@ -391,7 +458,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final Matrix hardIron) {
         try {
             setHardIron(hardIron);
@@ -410,7 +477,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final Matrix hardIron, final Matrix initialMm) {
         this(hardIron);
         try {
@@ -426,7 +493,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @param position position where body magnetic flux density measurements
      *                 have been taken.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position) {
         mPosition = position;
     }
@@ -442,7 +509,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                     position with zero velocity and unknown different
      *                     orientations.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         this(position);
@@ -461,10 +528,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                     orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements);
         mListener = listener;
     }
@@ -482,7 +549,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
@@ -504,11 +571,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, commonAxisUsed);
         mListener = listener;
     }
@@ -527,7 +594,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] hardIron) {
@@ -551,16 +618,18 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, hardIron);
         mListener = listener;
     }
 
     /**
+     * Constructor.
+     *
      * @param position       position where body magnetic flux density measurements
      *                       have been taken.
      * @param measurements   collection of body magnetic flux density
@@ -574,7 +643,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] hardIron) {
@@ -599,11 +668,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, commonAxisUsed, hardIron);
         mListener = listener;
     }
@@ -622,7 +691,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron) {
@@ -646,11 +715,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, hardIron);
         mListener = listener;
     }
@@ -671,7 +740,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron) {
@@ -696,11 +765,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, commonAxisUsed, hardIron);
         mListener = listener;
     }
@@ -722,7 +791,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron, final Matrix initialMm) {
@@ -749,11 +818,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron, final Matrix initialMm,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, hardIron, initialMm);
         mListener = listener;
     }
@@ -777,7 +846,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron,
@@ -806,12 +875,12 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final NEDPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron,
             final Matrix initialMm,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(position, measurements, commonAxisUsed, hardIron,
                 initialMm);
         mListener = listener;
@@ -823,7 +892,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @param position position where body magnetic flux density measurements
      *                 have been taken.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position) {
         this(convertPosition(position));
     }
@@ -839,7 +908,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                     position with zero velocity and unknown different
      *                     orientations.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements) {
         this(convertPosition(position), measurements);
@@ -857,10 +926,10 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                     orientations.
      * @param listener     listener to handle events raised by this calibrator.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, listener);
     }
 
@@ -877,7 +946,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common
      *                       for the accelerometer, gyroscope and magnetometer.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed) {
@@ -898,11 +967,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                       for the accelerometer, gyroscope and magnetometer.
      * @param listener       listener to handle events raised by this calibrator.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
                 listener);
     }
@@ -921,7 +990,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] hardIron) {
@@ -944,16 +1013,18 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final double[] hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, hardIron,
                 listener);
     }
 
     /**
+     * Constructor.
+     *
      * @param position       position where body magnetic flux density measurements
      *                       have been taken.
      * @param measurements   collection of body magnetic flux density
@@ -967,7 +1038,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] hardIron) {
@@ -992,11 +1063,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final double[] hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
                 hardIron, listener);
     }
@@ -1015,7 +1086,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron) {
@@ -1037,11 +1108,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, hardIron,
                 listener);
     }
@@ -1062,7 +1133,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron) {
@@ -1087,11 +1158,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
                 hardIron, listener);
     }
@@ -1113,7 +1184,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron, final Matrix initialMm) {
@@ -1139,11 +1210,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final Matrix hardIron, final Matrix initialMm,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, hardIron,
                 initialMm, listener);
     }
@@ -1167,7 +1238,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron,
@@ -1196,12 +1267,12 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                                  3x1 or if soft-iron matrix is not
      *                                  3x3.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibrator(
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibrator(
             final ECEFPosition position,
             final List<StandardDeviationBodyMagneticFluxDensity> measurements,
             final boolean commonAxisUsed, final Matrix hardIron,
             final Matrix initialMm,
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener) {
         this(convertPosition(position), measurements, commonAxisUsed,
                 hardIron, initialMm, listener);
     }
@@ -1937,7 +2008,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @return collection of body magnetic flux density measurements at
      * a known position and timestamp with unknown orientations.
      */
-    public Collection<StandardDeviationBodyMagneticFluxDensity> getMeasurements() {
+    public List<StandardDeviationBodyMagneticFluxDensity> getMeasurements() {
         return mMeasurements;
     }
 
@@ -1951,7 +2022,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *                     with unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final Collection<StandardDeviationBodyMagneticFluxDensity> measurements)
+    public void setMeasurements(final List<StandardDeviationBodyMagneticFluxDensity> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1995,7 +2066,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      *
      * @return listener to handle events raised by this calibrator.
      */
-    public KnownHardIronPositionAndInstantMagnetometerCalibratorListener getListener() {
+    public RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener getListener() {
         return mListener;
     }
 
@@ -2006,7 +2077,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
      * @throws LockedException if calibrator is currently running.
      */
     public void setListener(
-            final KnownHardIronPositionAndInstantMagnetometerCalibratorListener listener)
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2026,17 +2097,18 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
-     * Indicates whether calibrator is ready to start.
+     * Indicates whether calibrator is ready to start the estimator.
      *
      * @return true if calibrator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mMeasurements != null && mMeasurements.size() >= getMinimumRequiredMeasurements()
+        return mMeasurements != null
+                && mMeasurements.size() >= getMinimumRequiredMeasurements()
                 && mPosition != null && mYear != null;
     }
 
     /**
-     * Indicates whether calibrator is currently running or not.
+     * Indicates whether calibrator is currently running or no.
      *
      * @return true if calibrator is running, false otherwise.
      */
@@ -2068,47 +2140,182 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
-     * Estimates magnetometer calibration parameters containing scale factors
-     * and cross-coupling errors.
+     * Returns amount of progress variation before notifying a progress change during
+     * calibration.
      *
-     * @throws LockedException      if calibrator is currently running.
-     * @throws NotReadyException    if calibrator is not ready.
-     * @throws CalibrationException if calibration fails for numerical reasons.
+     * @return amount of progress variation before notifying a progress change during
+     * calibration.
      */
-    public void calibrate() throws LockedException, NotReadyException,
-            CalibrationException {
+    public float getProgressDelta() {
+        return mProgressDelta;
+    }
+
+    /**
+     * Sets amount of progress variation before notifying a progress change during
+     * calibration.
+     *
+     * @param progressDelta amount of progress variation before notifying a progress
+     *                      change during calibration.
+     * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
+     * @throws LockedException          if calibrator is currently running.
+     */
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
-
-        if (!isReady()) {
-            throw new NotReadyException();
+        if (progressDelta < MIN_PROGRESS_DELTA ||
+                progressDelta > MAX_PROGRESS_DELTA) {
+            throw new IllegalArgumentException();
         }
+        mProgressDelta = progressDelta;
+    }
 
-        try {
-            mRunning = true;
+    /**
+     * Returns amount of confidence expressed as a value between 0.0 and 1.0
+     * (which is equivalent to 100%). The amount of confidence indicates the probability
+     * that the estimated result is correct. Usually this value will be close to 1.0, but
+     * not exactly 1.0.
+     *
+     * @return amount of confidence as a value between 0.0 and 1.0.
+     */
+    public double getConfidence() {
+        return mConfidence;
+    }
 
-            if (mListener != null) {
-                mListener.onCalibrateStart(this);
-            }
-
-            if (mCommonAxisUsed) {
-                calibrateCommonAxis();
-            } else {
-                calibrateGeneral();
-            }
-
-            if (mListener != null) {
-                mListener.onCalibrateEnd(this);
-            }
-
-        } catch (final AlgebraException | FittingException
-                | com.irurueta.numerical.NotReadyException
-                | IOException e) {
-            throw new CalibrationException(e);
-        } finally {
-            mRunning = false;
+    /**
+     * Sets amount of confidence expressed as a value between 0.0 and 1.0 (which is
+     * equivalent to 100%). The amount of confidence indicates the probability that
+     * the estimated result is correct. Usually this value will be close to 1.0, but
+     * not exactly 1.0.
+     *
+     * @param confidence confidence to be set as a value between 0.0 and 1.0.
+     * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
+     * @throws LockedException          if calibrator is currently running.
+     */
+    public void setConfidence(final double confidence) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
         }
+        if (confidence < MIN_CONFIDENCE || confidence > MAX_CONFIDENCE) {
+            throw new IllegalArgumentException();
+        }
+        mConfidence = confidence;
+    }
+
+    /**
+     * Returns maximum allowed number of iterations. If maximum allowed number of
+     * iterations is achieved without converging to a result when calling calibrate(),
+     * a RobustEstimatorException will be raised.
+     *
+     * @return maximum allowed number of iterations.
+     */
+    public int getMaxIterations() {
+        return mMaxIterations;
+    }
+
+    /**
+     * Sets maximum allowed number of iterations. When the maximum number of iterations
+     * is exceeded, result will not be available, however an approximate result will be
+     * available for retrieval.
+     *
+     * @param maxIterations maximum allowed number of iterations to be set.
+     * @throws IllegalArgumentException if provided value is less than 1.
+     * @throws LockedException          if calibrator is currently running.
+     */
+    public void setMaxIterations(final int maxIterations) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        if (maxIterations < MIN_ITERATIONS) {
+            throw new IllegalArgumentException();
+        }
+        mMaxIterations = maxIterations;
+    }
+
+    /**
+     * Gets data related to inliers found after estimation.
+     *
+     * @return data related to inliers found after estimation.
+     */
+    public InliersData getInliersData() {
+        return mInliersData;
+    }
+
+    /**
+     * Indicates whether result must be refined using a non-linear solver over found inliers.
+     *
+     * @return true to refine result, false to simply use result found by robust estimator
+     * without further refining.
+     */
+    public boolean isResultRefined() {
+        return mRefineResult;
+    }
+
+    /**
+     * Specifies whether result must be refined using a non-linear solver over found inliers.
+     *
+     * @param refineResult true to refine result, false to simply use result found by robust
+     *                     estimator without further refining.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setResultRefined(boolean refineResult) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mRefineResult = refineResult;
+    }
+
+    /**
+     * Indicates whether covariance must be kept after refining result.
+     * This setting is only taken into account if result is refined.
+     *
+     * @return true if covariance must be kept after refining result, false otherwise.
+     */
+    public boolean isCovarianceKept() {
+        return mKeepCovariance;
+    }
+
+    /**
+     * Specifies whether covariance must be kept after refining result.
+     * This setting is only taken into account if result is refined.
+     *
+     * @param keepCovariance true if covariance must be kept after refining result,
+     *                       false otherwise.
+     * @throws LockedException if calibrator is currently running.
+     */
+    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        mKeepCovariance = keepCovariance;
+    }
+
+    /**
+     * Returns quality scores corresponding to each measurement.
+     * The larger the score value the better the quality of the sample.
+     * This implementation always returns null.
+     * Subclasses using quality scores must implement proper behavior.
+     *
+     * @return quality scores corresponding to each sample.
+     */
+    public double[] getQualityScores() {
+        return null;
+    }
+
+    /**
+     * Sets quality scores corresponding to each measurement.
+     * The larger the score value the better the quality of the sample.
+     * This implementation makes no action.
+     * Subclasses using quality scores must implement proper behaviour.
+     *
+     * @param qualityScores quality scores corresponding to each pair of
+     *                      matched points.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if calibrator is currently running.
+     */
+    public void setQualityScores(double[] qualityScores)
+            throws LockedException {
     }
 
     /**
@@ -2258,22 +2465,58 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
     }
 
     /**
-     * Gets estimated chi square value.
+     * Gets size of subsets to be checked during robust estimation.
+     * This has to be at least {@link #MINIMUM_MEASUREMENTS_COMMON_Z_AXIS}.
      *
-     * @return estimated chi square value.
+     * @return size of subsets to be checked during robust estimation.
      */
-    public double getEstimatedChiSq() {
-        return mEstimatedChiSq;
+    public int getPreliminarySubsetSize() {
+        return mPreliminarySubsetSize;
     }
 
     /**
-     * Sets input data into Levenberg-Marquardt fitter.
+     * Sets size of subsets to be checked during robust estimation.
+     * This has to be at least {@link #MINIMUM_MEASUREMENTS_COMMON_Z_AXIS}.
      *
-     * @throws WrongSizeException never happens.
-     * @throws IOException        if world magnetic model cannot be loaded.
+     * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
+     * @throws LockedException          if calibrator is currently running.
+     * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS_COMMON_Z_AXIS}.
      */
-    private void setInputData() throws WrongSizeException, IOException {
+    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+        if (mRunning) {
+            throw new LockedException();
+        }
+        if (preliminarySubsetSize < MINIMUM_MEASUREMENTS_COMMON_Z_AXIS) {
+            throw new IllegalArgumentException();
+        }
 
+        mPreliminarySubsetSize = preliminarySubsetSize;
+    }
+
+    /**
+     * Estimates magnetometer calibration parameters containing soft-iron
+     * scale factors and cross-coupling errors.
+     *
+     * @throws LockedException      if calibrator is currently running.
+     * @throws NotReadyException    if calibrator is not ready.
+     * @throws CalibrationException if estimation fails for numerical reasons.
+     */
+    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+
+    /**
+     * Returns method being used for robust estimation.
+     *
+     * @return method being used for robust estimation.
+     */
+    public abstract RobustEstimatorMethod getMethod();
+
+    /**
+     * Initializes calibrator and estimates magnetic flux density norm
+     * at provided position and timestamp.
+     *
+     * @throws IOException if world magnetic model cannot be loaded.
+     */
+    protected void initialize() throws IOException {
         final WMMEarthMagneticFluxDensityEstimator wmmEstimator;
         if (mMagneticModel != null) {
             wmmEstimator = new WMMEarthMagneticFluxDensityEstimator(mMagneticModel);
@@ -2284,476 +2527,161 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibrator {
         final NEDPosition position = getNedPosition();
         final NEDMagneticFluxDensity earthB = wmmEstimator.estimate(
                 position, mYear);
-        final double b = earthB.getNorm();
-        final double b2 = b * b;
-
-        final int numMeasurements = mMeasurements.size();
-        final Matrix x = new Matrix(numMeasurements,
-                BodyMagneticFluxDensity.COMPONENTS);
-        final double[] y = new double[numMeasurements];
-        final double[] specificForceStandardDeviations = new double[numMeasurements];
-        int i = 0;
-        for (final StandardDeviationBodyMagneticFluxDensity measurement : mMeasurements) {
-            final BodyMagneticFluxDensity measuredMagneticFluxDensity =
-                    measurement.getMagneticFluxDensity();
-
-            final double bmeasX = measuredMagneticFluxDensity.getBx();
-            final double bmeasY = measuredMagneticFluxDensity.getBy();
-            final double bmeasZ = measuredMagneticFluxDensity.getBz();
-
-            x.setElementAt(i, 0, bmeasX);
-            x.setElementAt(i, 1, bmeasY);
-            x.setElementAt(i, 2, bmeasZ);
-
-            y[i] = b2;
-
-            specificForceStandardDeviations[i] =
-                    measurement.getMagneticFluxDensityStandardDeviation();
-
-            i++;
-        }
-
-        mFitter.setInputData(x, y, specificForceStandardDeviations);
+        mMagneticDensityNorm = earthB.getNorm();
     }
 
     /**
-     * Internal method to perform general calibration.
+     * Computes error of a preliminary result respect a given measurement.
      *
-     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.
-     * @throws AlgebraException                         if there are numerical instabilities that prevent
-     *                                                  matrix inversion.
-     * @throws com.irurueta.numerical.NotReadyException never happens.
-     * @throws IOException                              if world magnetic model cannot be loaded.
+     * @param measurement       a measurement.
+     * @param preliminaryResult a preliminary result.
+     * @return computed error.
      */
-    private void calibrateGeneral() throws AlgebraException, FittingException,
-            com.irurueta.numerical.NotReadyException, IOException {
-        // The magnetometer model is:
-        // bmeas = bm + (I + Mm) * btrue + w
-
-        // Ideally a least squares solution tries to minimize noise component, so:
-        // bmeas = bm + (I + Mm) * btrue
-
-        // For convergence purposes of the Levenberg-Marquardt algorithm, the
-        // magnetometer model can be better expressed as:
-        // bmeas = T*K*(btrue + b)
-        // bmeas = M*(btrue + b)
-        // bmeas = M*btrue + M*b
-
-        // where:
-        // M = I + Mm
-        // bm = M*b = (I + Mm)*b --> b = M^-1*bm
-
-        // We know that the norm of the true body magnetic flux density
-        // is equal to the amount of Earth magnetic flux density at provided
-        // position and timestamp
-        // ||btrue|| = ||bEarth|| --> from 30 µT to 60 µT
-
-        // Hence:
-        // bmeas - M*b = M*btrue
-
-        // M^-1 * (bmeas - M*b) = btrue
-
-        // ||bEarth||^2 = ||btrue||^2 = (M^-1 * (bmeas - M*b))^T * (M^-1 * (bmeas - M*b))
-        // ||bEarth||^2 = (bmeas - M*b)^T*(M^-1)^T * M^-1 * (bmeas - M*b)
-        // ||bEarth||^2 = (bmeas - M * b)^T * ||M^-1||^2 * (bmeas - M * b)
-        // ||bEarth||^2 = ||bmeas - M * b||^2 * ||M^-1||^2
-
-        // Where:
-
-        // b = [bx]
-        //     [by]
-        //     [bz]
-
-        // M = [m11 	m12 	m13]
-        //     [m21 	m22 	m23]
-        //     [m31 	m32 	m33]
-
-        final GradientEstimator gradientEstimator = new GradientEstimator(
-                new MultiDimensionFunctionEvaluatorListener() {
-                    @Override
-                    public double evaluate(double[] point) throws EvaluationException {
-                        return evaluateGeneral(point);
-                    }
-                });
-
-        final Matrix initialM = Matrix.identity(BodyMagneticFluxDensity.COMPONENTS,
-                BodyMagneticFluxDensity.COMPONENTS);
-        initialM.add(getInitialMm());
-
-        mFitter.setFunctionEvaluator(
-                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-                    @Override
-                    public int getNumberOfDimensions() {
-                        // Input points are measured magnetic flux density coordinates
-                        return BodyMagneticFluxDensity.COMPONENTS;
-                    }
-
-                    @Override
-                    public double[] createInitialParametersArray() {
-                        // cross coupling errors M
-                        return initialM.toArray();
-                    }
-
-                    @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
-                            throws EvaluationException {
-
-                        mBmeasX = point[0];
-                        mBmeasY = point[1];
-                        mBmeasZ = point[2];
-
-                        gradientEstimator.gradient(params, derivatives);
-
-                        return evaluateGeneral(params);
-                    }
-                });
-
-        setInputData();
-
-        mFitter.fit();
-
-        final double[] result = mFitter.getA();
-
-        final double m11 = result[0];
-        final double m21 = result[1];
-        final double m31 = result[2];
-
-        final double m12 = result[3];
-        final double m22 = result[4];
-        final double m32 = result[5];
-
-        final double m13 = result[6];
-        final double m23 = result[7];
-        final double m33 = result[8];
-
-        final Matrix m = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
-                BodyMagneticFluxDensity.COMPONENTS);
-        m.setElementAtIndex(0, m11);
-        m.setElementAtIndex(1, m21);
-        m.setElementAtIndex(2, m31);
-
-        m.setElementAtIndex(3, m12);
-        m.setElementAtIndex(4, m22);
-        m.setElementAtIndex(5, m32);
-
-        m.setElementAtIndex(6, m13);
-        m.setElementAtIndex(7, m23);
-        m.setElementAtIndex(8, m33);
-
-        setResult(m);
-    }
-
-    /**
-     * Internal method to perform calibration when common z-axis is assumed for both
-     * the accelerometer and gyroscope.
-     *
-     * @throws FittingException                         if Levenberg-Marquardt fails for numerical reasons.
-     * @throws AlgebraException                         if there are numerical instabilities that prevent
-     *                                                  matrix inversion.
-     * @throws com.irurueta.numerical.NotReadyException never happens.
-     * @throws IOException                              if world magnetic model cannot be loaded.
-     */
-    private void calibrateCommonAxis() throws AlgebraException, FittingException,
-            com.irurueta.numerical.NotReadyException, IOException {
-        // The magnetometer model is:
-        // bmeas = bm + (I + Mm) * btrue + w
-
-        // Ideally a least squares solution tries to minimize noise component, so:
-        // bmeas = bm + (I + Mm) * btrue
-
-        // For convergence purposes of the Levenberg-Marquardt algorithm, the
-        // magnetometer model can be better expressed as:
-        // bmeas = T*K*(btrue + b)
-        // bmeas = M*(btrue + b)
-        // bmeas = M*btrue + M*b
-
-        //where:
-        // M = I + Mm
-        // bm = M*b = (I + Mm)*b --> b = M^-1*bm
-
-        // We know that the norm of the true body magnetic flux density
-        // is equal to the amount of Earth magnetic flux density at provided
-        // position and timestamp
-        // ||btrue|| = ||bEarth|| --> from 30 µT to 60 µT
-
-        // Hence:
-        // bmeas - M*b = M*btrue
-
-        // M^-1 * (bmeas - M*b) = btrue
-
-        // ||bEarth||^2 = ||btrue||^2 = (M^-1 * (bmeas - M*b))^T * (M^-1 * (bmeas - M*b))
-        // ||bEarth||^2 = (bmeas - M*b)^T*(M^-1)^T * M^-1 * (bmeas - M*b)
-        // ||bEarth||^2 = (bmeas - M * b)^T * ||M^-1||^2 * (bmeas - M * b)
-        // ||bEarth||^2 = ||bmeas - M * b||^2 * ||M^-1||^2
-
-        // Where:
-
-        // b = [bx]
-        //     [by]
-        //     [bz]
-
-        // M = [m11 	m12 	m13]
-        //     [0 		m22 	m23]
-        //     [0 	 	0 		m33]
-
-
-        final GradientEstimator gradientEstimator = new GradientEstimator(
-                new MultiDimensionFunctionEvaluatorListener() {
-                    @Override
-                    public double evaluate(double[] point) throws EvaluationException {
-                        return evaluateCommonAxis(point);
-                    }
-                });
-
-        final Matrix initialM = Matrix.identity(
-                BodyMagneticFluxDensity.COMPONENTS,
-                BodyMagneticFluxDensity.COMPONENTS);
-        initialM.add(getInitialMm());
-
-        // Force initial M to be upper diagonal
-        initialM.setElementAt(1, 0, 0.0);
-        initialM.setElementAt(2, 0, 0.0);
-        initialM.setElementAt(2, 1, 0.0);
-
-        mFitter.setFunctionEvaluator(
-                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-                    @Override
-                    public int getNumberOfDimensions() {
-                        // Input points are measured magnetic flux density coordinates
-                        return BodyKinematics.COMPONENTS;
-                    }
-
-                    @Override
-                    public double[] createInitialParametersArray() {
-                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
-
-                        // upper diagonal cross coupling errors M
-                        int k = 0;
-                        for (int j = 0; j < BodyMagneticFluxDensity.COMPONENTS; j++) {
-                            for (int i = 0; i < BodyMagneticFluxDensity.COMPONENTS; i++) {
-                                if (i <= j) {
-                                    initial[k] = initialM.getElementAt(i, j);
-                                    k++;
-                                }
-                            }
-                        }
-
-                        return initial;
-                    }
-
-                    @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
-                            throws EvaluationException {
-
-                        mBmeasX = point[0];
-                        mBmeasY = point[1];
-                        mBmeasZ = point[2];
-
-                        gradientEstimator.gradient(params, derivatives);
-
-                        return evaluateCommonAxis(params);
-                    }
-                });
-
-        setInputData();
-
-        mFitter.fit();
-
-        final double[] result = mFitter.getA();
-
-        final double m11 = result[0];
-
-        final double m12 = result[1];
-        final double m22 = result[2];
-
-        final double m13 = result[3];
-        final double m23 = result[4];
-        final double m33 = result[5];
-
-        final Matrix m = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
-                BodyMagneticFluxDensity.COMPONENTS);
-        m.setElementAtIndex(0, m11);
-        m.setElementAtIndex(1, 0.0);
-        m.setElementAtIndex(2, 0.0);
-
-        m.setElementAtIndex(3, m12);
-        m.setElementAtIndex(4, m22);
-        m.setElementAtIndex(5, 0.0);
-
-        m.setElementAtIndex(6, m13);
-        m.setElementAtIndex(7, m23);
-        m.setElementAtIndex(8, m33);
-
-        setResult(m);
-    }
-
-    /**
-     * Makes proper conversion of internal cross-coupling and bias matrices.
-     *
-     * @param m internal cross-coupling matrix.
-     */
-    private void setResult(final Matrix m) {
-        // Because:
-        // M = I + Mm
-
-        // Then:
-        // Mm = M - I
-
-        if (mEstimatedMm == null) {
-            mEstimatedMm = m;
-        } else {
-            mEstimatedMm.copyFrom(m);
-        }
-
-        for (int i = 0; i < BodyMagneticFluxDensity.COMPONENTS; i++) {
-            mEstimatedMm.setElementAt(i, i,
-                    mEstimatedMm.getElementAt(i, i) - 1.0);
-        }
-
-        mEstimatedCovariance = mFitter.getCovar();
-        mEstimatedChiSq = mFitter.getChisq();
-    }
-
-    /**
-     * Computes estimated true magnetic flux density squared norm using current measured
-     * body magnetic flux density and provided parameters for the general case.
-     * This method is internally executed during gradient estimation and
-     * Levenberg-Marquardt fitting needed for calibration computation.
-     *
-     * @param params array containing current parameters for the general purpose case.
-     *               Must have length 9.
-     * @return estimated true specific force squared norm.
-     * @throws EvaluationException if there are numerical instabilities.
-     */
-    private double evaluateGeneral(final double[] params) throws EvaluationException {
-        final double m11 = params[0];
-        final double m21 = params[1];
-        final double m31 = params[2];
-
-        final double m12 = params[3];
-        final double m22 = params[4];
-        final double m32 = params[5];
-
-        final double m13 = params[6];
-        final double m23 = params[7];
-        final double m33 = params[8];
-
-        return evaluate(m11, m21, m31, m12, m22, m32,
-                m13, m23, m33);
-    }
-
-    /**
-     * Computes estimated true magnetic flux density squared norm using current measured
-     * body magnetic flux density and provided parameters when common z-axis is assumed.
-     * This method is internally executed during gradient estimation and
-     * Levenberg-Marquardt fitting needed for calibration computation.
-     *
-     * @param params array containing current parameters for the common z-axis case.
-     *               Must have length 6.
-     * @return estimated true specific force squared norm.
-     * @throws EvaluationException if there are numerical instabilities.
-     */
-    private double evaluateCommonAxis(final double[] params) throws EvaluationException {
-        final double m11 = params[0];
-
-        final double m12 = params[1];
-        final double m22 = params[2];
-
-        final double m13 = params[3];
-        final double m23 = params[4];
-        final double m33 = params[5];
-
-        return evaluate(m11, 0.0, 0.0, m12, m22, 0.0,
-                m13, m23, m33);
-    }
-
-    /**
-     * Computes estimated true magnetic flux density squared norm using current measured
-     * body magnetic flux density and provided parameters.
-     * This method is internally executed during gradient estimation and
-     * Levenberg-Marquardt fitting needed for calibration computation.
-     *
-     * @param m11 element 1,1 of cross-coupling error matrix.
-     * @param m21 element 2,1 of cross-coupling error matrix.
-     * @param m31 element 3,1 of cross-coupling error matrix.
-     * @param m12 element 1,2 of cross-coupling error matrix.
-     * @param m22 element 2,2 of cross-coupling error matrix.
-     * @param m32 element 3,2 of cross-coupling error matrix.
-     * @param m13 element 1,3 of cross-coupling error matrix.
-     * @param m23 element 2,3 of cross-coupling error matrix.
-     * @param m33 element 3,3 of cross-coupling error matrix.
-     * @return estimated true specific force squared norm.
-     * @throws EvaluationException if there are numerical instabilities.
-     */
-    private double evaluate(
-            final double m11, final double m21, final double m31,
-            final double m12, final double m22, final double m32,
-            final double m13, final double m23, final double m33)
-            throws EvaluationException {
-
-        // bmeas = M*(btrue + b)
-
-        // btrue = M^-1*bmeas - b
+    protected double computeError(final StandardDeviationBodyMagneticFluxDensity measurement,
+                                  final Matrix preliminaryResult) {
 
         try {
-            if (mBmeas == null) {
-                mBmeas = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
-                        1);
-            }
-            if (mM == null) {
-                mM = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
+            // The magnetometer model is:
+            // mBmeas = bm + (I + Mm) * mBtrue
+
+            // mBmeas - bm = (I + Mm) * mBtrue
+
+            // mBtrue = (I + Mm)^-1 * (mBmeas - ba)
+
+            // We know that ||mBtrue||should be equal to the magnitude of the
+            // Earth magnetic field at provided location
+
+            if (mIdentity == null) {
+                mIdentity = Matrix.identity(
+                        BodyMagneticFluxDensity.COMPONENTS,
                         BodyMagneticFluxDensity.COMPONENTS);
             }
-            if (mInvM == null) {
-                mInvM = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
+
+            if (mTmp1 == null) {
+                mTmp1 = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
                         BodyMagneticFluxDensity.COMPONENTS);
             }
-            if (mB == null) {
-                mB = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
-                        1);
-            }
-            if (mBtrue == null) {
-                mBtrue = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
-                        1);
-            }
-            if (mBm == null) {
-                mBm = new Matrix(BodyMagneticFluxDensity.COMPONENTS,
-                        1);
+
+            if (mTmp2 == null) {
+                mTmp2 = new Matrix(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
             }
 
-            getHardIronAsMatrix(mBm);
+            if (mTmp3 == null) {
+                mTmp3 = new Matrix(BodyKinematics.COMPONENTS, 1);
+            }
 
-            mBmeas.setElementAtIndex(0, mBmeasX);
-            mBmeas.setElementAtIndex(1, mBmeasY);
-            mBmeas.setElementAtIndex(2, mBmeasZ);
+            if (mTmp4 == null) {
+                mTmp4 = new Matrix(BodyKinematics.COMPONENTS, 1);
+            }
 
-            mM.setElementAt(0, 0, m11);
-            mM.setElementAt(1, 0, m21);
-            mM.setElementAt(2, 0, m31);
+            mIdentity.add(preliminaryResult, mTmp1);
 
-            mM.setElementAt(0, 1, m12);
-            mM.setElementAt(1, 1, m22);
-            mM.setElementAt(2, 1, m32);
+            Utils.inverse(mTmp1, mTmp2);
 
-            mM.setElementAt(0, 2, m13);
-            mM.setElementAt(1, 2, m23);
-            mM.setElementAt(2, 2, m33);
+            final BodyMagneticFluxDensity measuredMagneticFluxDensity =
+                    measurement.getMagneticFluxDensity();
+            final double bMeasX = measuredMagneticFluxDensity.getBx();
+            final double bMeasY = measuredMagneticFluxDensity.getBy();
+            final double bMeasZ = measuredMagneticFluxDensity.getBz();
 
-            Utils.inverse(mM, mInvM);
+            mTmp3.setElementAtIndex(0, bMeasX - mHardIronX);
+            mTmp3.setElementAtIndex(1, bMeasY - mHardIronY);
+            mTmp3.setElementAtIndex(2, bMeasZ - mHardIronZ);
 
-            // b = m^-1 * bm
-            mInvM.multiply(mBm, mB);
+            mTmp2.multiply(mTmp3, mTmp4);
 
-            mInvM.multiply(mBmeas, mBtrue);
-            mBtrue.subtract(mB);
+            final double norm = Utils.normF(mTmp4);
+            final double diff = mMagneticDensityNorm - norm;
 
-            final double norm = Utils.normF(mBtrue);
-            return norm * norm;
+            return diff * diff;
 
         } catch (final AlgebraException e) {
-            throw new EvaluationException(e);
+            return Double.MAX_VALUE;
+        }
+    }
+
+    /**
+     * Computes a preliminary solution for a subset of samples picked by a robust estimator.
+     *
+     * @param samplesIndices indices of samples picked by the robust estimator.
+     * @param solutions      list where estimated preliminary solution will be stored.
+     */
+    protected void computePreliminarySolutions(final int[] samplesIndices,
+                                               final List<Matrix> solutions) {
+
+        final List<StandardDeviationBodyMagneticFluxDensity> measurements =
+                new ArrayList<>();
+
+        for (int samplesIndex : samplesIndices) {
+            measurements.add(mMeasurements.get(samplesIndex));
+        }
+
+        try {
+            final Matrix result = getInitialMm();
+
+            mInnerCalibrator.setHardIron(mHardIronX, mHardIronY, mHardIronZ);
+            mInnerCalibrator.setInitialMm(result);
+            mInnerCalibrator.setCommonAxisUsed(mCommonAxisUsed);
+            mInnerCalibrator.setPosition(mPosition);
+            mInnerCalibrator.setYear(mYear);
+            mInnerCalibrator.setMeasurements(measurements);
+            mInnerCalibrator.calibrate();
+
+            result.copyFrom(mInnerCalibrator.getEstimatedMm());
+
+            solutions.add(result);
+
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
+            solutions.clear();
+        }
+    }
+
+    /**
+     * Attempts to refine calibration parameters if refinement is requested.
+     * This method returns a refined solution or provided input if refinement is not
+     * requested or has failed.
+     * If refinement is enabled and it is requested to keep covariance, this method
+     * will also keep covariance of refined position.
+     *
+     * @param preliminaryResult a preliminary result.
+     */
+    protected void attemptRefine(final Matrix preliminaryResult) {
+        if (mRefineResult && mInliersData != null) {
+            BitSet inliers = mInliersData.getInliers();
+            int nSamples = mMeasurements.size();
+
+            final List<StandardDeviationBodyMagneticFluxDensity> inlierMeasurements =
+                    new ArrayList<>();
+            for (int i = 0; i < nSamples; i++) {
+                if (inliers.get(i)) {
+                    // sample is inlier
+                    inlierMeasurements.add(mMeasurements.get(i));
+                }
+            }
+
+            try {
+                mInnerCalibrator.setHardIron(mHardIronX, mHardIronY, mHardIronZ);
+                mInnerCalibrator.setInitialMm(preliminaryResult);
+                mInnerCalibrator.setCommonAxisUsed(mCommonAxisUsed);
+                mInnerCalibrator.setPosition(mPosition);
+                mInnerCalibrator.setYear(mYear);
+                mInnerCalibrator.setMeasurements(inlierMeasurements);
+                mInnerCalibrator.calibrate();
+
+                mEstimatedMm = mInnerCalibrator.getEstimatedMm();
+
+                if (mKeepCovariance) {
+                    mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
+                } else {
+                    mEstimatedCovariance = null;
+                }
+            } catch (final LockedException | CalibrationException | NotReadyException e) {
+                mEstimatedCovariance = null;
+                mEstimatedMm = preliminaryResult;
+            }
+        } else {
+            mEstimatedCovariance = null;
+            mEstimatedMm = preliminaryResult;
         }
     }
 
