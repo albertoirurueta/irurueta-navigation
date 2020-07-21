@@ -6231,7 +6231,7 @@ public class RANSACRobustKnownPositionAndInstantMagnetometerCalibratorTest imple
             NotReadyException, WrongSizeException {
 
         int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
             final WMMEarthMagneticFluxDensityEstimator wmmEstimator =
                     new WMMEarthMagneticFluxDensityEstimator();
