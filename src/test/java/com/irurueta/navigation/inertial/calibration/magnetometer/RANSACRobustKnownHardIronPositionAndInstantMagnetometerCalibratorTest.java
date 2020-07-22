@@ -5824,9 +5824,7 @@ public class RANSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTe
             assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedMm, calibrator);
-
-            assertNotNull(calibrator.getEstimatedCovariance());
-
+            
             numValid++;
             break;
         }
