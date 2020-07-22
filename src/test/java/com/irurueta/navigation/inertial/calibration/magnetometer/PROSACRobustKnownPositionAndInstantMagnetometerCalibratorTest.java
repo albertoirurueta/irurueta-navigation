@@ -11311,9 +11311,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibratorTest imple
             assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
-
-            assertNotNull(calibrator.getEstimatedCovariance());
-
+            
             numValid++;
             break;
         }
