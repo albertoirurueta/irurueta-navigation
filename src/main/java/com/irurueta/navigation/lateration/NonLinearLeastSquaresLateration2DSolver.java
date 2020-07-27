@@ -35,241 +35,279 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     *                                  length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start lateration solving.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D initialPosition) {
+    public NonLinearLeastSquaresLateration2DSolver(final Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions       known positions of static nodes.
+     * @param distances       euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     *                                  length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions,
-                                                   double[] distances, Point2D initialPosition) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions,
+            final double[] distances, final Point2D initialPosition) {
         super(positions, distances, initialPosition);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLateration2DSolver(LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final LaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     *                                  length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener        listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D initialPosition,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D initialPosition,
+            final LaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions       known positions of static nodes.
+     * @param distances       euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener        listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     *                                  length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions,
-                                                   double[] distances, Point2D initialPosition,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions,
+            final double[] distances, final Point2D initialPosition,
+            final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, initialPosition, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles) {
+    public NonLinearLeastSquaresLateration2DSolver(final Circle[] circles) {
         super();
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles         circles defining positions and distances.
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles, Point2D initialPosition) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles, final Point2D initialPosition) {
         super(initialPosition);
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles  circles defining positions and distances.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles,
+            final LaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles         circles defining positions and distances.
      * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener        listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles, Point2D initialPosition,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles, final Point2D initialPosition,
+            final LaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
+     * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations, Point2D initialPosition) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final Point2D initialPosition) {
         super(positions, distances, distanceStandardDeviations, initialPosition);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations, LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param initialPosition            initial position to start lateration solving.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations, Point2D initialPosition,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final Point2D initialPosition,
+            final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles,
-                                                   double[] distanceStandardDeviations) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles,
+            final double[] distanceStandardDeviations) {
         super();
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
+     * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles,
-                                                   double[] distanceStandardDeviations, Point2D initialPosition) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles,
+            final double[] distanceStandardDeviations, final Point2D initialPosition) {
         super(initialPosition);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles,
-                                                   double[] distanceStandardDeviations,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles,
+            final double[] distanceStandardDeviations,
+            final LaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param initialPosition            initial position to start lateration solving.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresLateration2DSolver(Circle[] circles,
-                                                   double[] distanceStandardDeviations, Point2D initialPosition,
-                                                   LaterationSolverListener<Point2D> listener) {
+    public NonLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles,
+            final double[] distanceStandardDeviations, final Point2D initialPosition,
+            final LaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
      * Gets circles defined by provided positions and distances.
+     *
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
@@ -277,7 +315,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             return null;
         }
 
-        Circle[] result = new Circle[mPositions.length];
+        final Circle[] result = new Circle[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
             result[i] = new Circle(mPositions[i], mDistances[i]);
@@ -287,13 +325,14 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
 
     /**
      * Sets circles defining positions and euclidean distances.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 2.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  is less than 2.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setCircles(Circle[] circles) throws LockedException {
-        if(isLocked()) {
+    public void setCircles(final Circle[] circles) throws LockedException {
+        if (isLocked()) {
             throw new LockedException();
         }
         internalSetCircles(circles);
@@ -302,15 +341,17 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     /**
      * Sets circles defining positions and euclidean distances along with the standard
      * deviations of provided circles radii.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                  circles defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
-     * 2 or don't have the same length.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  2 or don't have the same length.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
+    public void setCirclesAndStandardDeviations(
+            final Circle[] circles, final double[] radiusStandardDeviations)
             throws LockedException {
-        if(isLocked()) {
+        if (isLocked()) {
             throw new LockedException();
         }
         internalSetCirclesAndStandardDeviations(circles, radiusStandardDeviations);
@@ -318,6 +359,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -328,6 +370,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     /**
      * Minimum required number of positions and distances.
      * At least 3 positions and distances will be required to solve a 2D problem.
+     *
      * @return minimum required number of positions and distances.
      */
     @Override
@@ -337,6 +380,7 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
@@ -345,26 +389,27 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             return null;
         }
 
-        InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
         getEstimatedPosition(position);
         return position;
     }
 
     /**
      * Internally sets circles defining positions and euclidean distances.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 2.
+     *                                  is less than 2.
      */
-    private void internalSetCircles(Circle[] circles) {
+    private void internalSetCircles(final Circle[] circles) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
+        final Point2D[] positions = new Point2D[circles.length];
+        final double[] distances = new double[circles.length];
         for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
+            final Circle circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }
@@ -375,13 +420,15 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
     /**
      * Internally sets circles defining positions and euclidean distances along with the standard
      * deviations of provided circles radii.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                  circles defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
-     * 2 or don't have the same length.
+     *                                  2 or don't have the same length.
      */
-    private void internalSetCirclesAndStandardDeviations(Circle[] circles,
-            double[] radiusStandardDeviations) {
+    private void internalSetCirclesAndStandardDeviations(
+            final Circle[] circles,
+            final double[] radiusStandardDeviations) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -394,8 +441,8 @@ public class NonLinearLeastSquaresLateration2DSolver extends NonLinearLeastSquar
             throw new IllegalArgumentException();
         }
 
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
+        final Point2D[] positions = new Point2D[circles.length];
+        final double[] distances = new double[circles.length];
         for (int i = 0; i < circles.length; i++) {
             Circle circle = circles[i];
             positions[i] = circle.getCenter();

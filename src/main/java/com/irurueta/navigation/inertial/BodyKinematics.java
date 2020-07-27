@@ -167,12 +167,12 @@ public class BodyKinematics implements Serializable, Cloneable {
      *                       along body-frame y-axis, averaged over time interval.
      * @param specificForceZ Specific force of body frame with respect ECI, ECEF or NED frame resolved
      *                       along body-frame z-axis, averaged over time interval.
-     * @param angularSpeedX Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
-     *                      about body-frame x-axis, averaged over time interval.
-     * @param angularSpeedY Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
-     *                      about body-frame y-axis, averaged over time interval.
-     * @param angularSpeedZ Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
-     *                      about body-frame z-axis, averaged over time interval.
+     * @param angularSpeedX  Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                       about body-frame x-axis, averaged over time interval.
+     * @param angularSpeedY  Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                       about body-frame y-axis, averaged over time interval.
+     * @param angularSpeedZ  Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                       about body-frame z-axis, averaged over time interval.
      */
     public BodyKinematics(final Acceleration specificForceX,
                           final Acceleration specificForceY,

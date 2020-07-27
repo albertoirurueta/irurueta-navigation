@@ -27,6 +27,7 @@ import com.irurueta.navigation.NotReadyException;
  * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
  * Further information and algorithms can be found at Willy Hereman and William S. Murphy Jr. Determination of a
  * Position in Three Dimensions Using Trilateration and Approximate Distances.
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -42,41 +43,48 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required points.
+     *                                  length is smaller than required points.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(P[] positions, double[] distances) {
+    public InhomogeneousLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(LaterationSolverListener<P> listener) {
+    public InhomogeneousLinearLeastSquaresLaterationSolver(
+            final LaterationSolverListener<P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required points.
+     *                                  length is smaller than required points.
      */
-    public InhomogeneousLinearLeastSquaresLaterationSolver(P[] positions, double[] distances,
-                                                           LaterationSolverListener<P> listener) {
+    public InhomogeneousLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances,
+            final LaterationSolverListener<P> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Solves the lateration problem.
+     *
      * @throws LaterationException if lateration fails.
-     * @throws NotReadyException if solver is not ready.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws NotReadyException   if solver is not ready.
+     * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
     @SuppressWarnings("Duplicates")
@@ -134,28 +142,28 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
                 mListener.onSolveStart(this);
             }
 
-            int numberOfPositions = mPositions.length;
-            int numberOfPositionsMinus1 = numberOfPositions - 1;
-            int dims = getNumberOfDimensions();
+            final int numberOfPositions = mPositions.length;
+            final int numberOfPositionsMinus1 = numberOfPositions - 1;
+            final int dims = getNumberOfDimensions();
 
-            Matrix a = new Matrix(numberOfPositionsMinus1, dims);
+            final Matrix a = new Matrix(numberOfPositionsMinus1, dims);
             for (int i = 1, i2 = 0; i < numberOfPositions; i++, i2++) {
                 for (int j = 0; j < dims; j++) {
                     a.setElementAt(i2, j, mPositions[i].getInhomogeneousCoordinate(j) -
-                                    mPositions[0].getInhomogeneousCoordinate(j));
+                            mPositions[0].getInhomogeneousCoordinate(j));
                 }
             }
 
             //reference point is first position mPositions[0] with distance mDistances[0]
-            double referenceDistance = mDistances[0];
-            double sqrRefDistance = referenceDistance * referenceDistance;
-            double[] b = new double[numberOfPositionsMinus1];
+            final double referenceDistance = mDistances[0];
+            final double sqrRefDistance = referenceDistance * referenceDistance;
+            final double[] b = new double[numberOfPositionsMinus1];
             for (int i = 1, i2 = 0; i < numberOfPositions; i++, i2++) {
-                double ri = mDistances[i];
-                double sqrRi = ri * ri;
+                final double ri = mDistances[i];
+                final double sqrRi = ri * ri;
 
                 //find distance between ri and r0
-                double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);
+                final double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);
                 b[i2] = 0.5 * (sqrRefDistance - sqrRi + sqrRi0);
             }
 
@@ -169,7 +177,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
             if (mListener != null) {
                 mListener.onSolveEnd(this);
             }
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             throw new LaterationException(e);
         } finally {
             mLocked = false;
@@ -178,6 +186,7 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
 
     /**
      * Gets lateration solver type.
+     *
      * @return lateration solver type.
      */
     @Override

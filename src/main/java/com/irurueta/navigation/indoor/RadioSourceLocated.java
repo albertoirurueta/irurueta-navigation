@@ -23,17 +23,20 @@ import java.io.Serializable;
 /**
  * Interface defining any radio source (e.g. Wifi access point or
  * Bluetooth beacon) whose location is known.
+ *
  * @param <P> a {@link Point} type.
  */
 public interface RadioSourceLocated<P extends Point<?>> extends Serializable {
     /**
      * Gets position where radio source is located.
+     *
      * @return position where radio source is located.
      */
     P getPosition();
 
     /**
      * Gets covariance of inhomogeneous coordinates of current position (if available).
+     *
      * @return covariance of position or null.
      */
     Matrix getPositionCovariance();

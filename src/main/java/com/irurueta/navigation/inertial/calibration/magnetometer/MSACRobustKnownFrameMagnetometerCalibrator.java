@@ -174,7 +174,7 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
      *                                  zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -202,7 +202,8 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
         }
 
         final MSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+                new MSACRobustEstimator<>(
+                        new MSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -241,19 +242,11 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    MSACRobustKnownFrameMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    MSACRobustKnownFrameMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -281,6 +274,11 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
 
             setupWmmEstimator();
@@ -293,11 +291,15 @@ public class MSACRobustKnownFrameMagnetometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | IOException e) {
+        } catch (final RobustEstimatorException | IOException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

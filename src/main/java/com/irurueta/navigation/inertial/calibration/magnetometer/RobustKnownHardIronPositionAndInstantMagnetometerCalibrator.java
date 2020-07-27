@@ -2022,7 +2022,8 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *                     with unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final List<StandardDeviationBodyMagneticFluxDensity> measurements)
+    public void setMeasurements(
+            final List<StandardDeviationBodyMagneticFluxDensity> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2258,7 +2259,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2283,7 +2284,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2314,7 +2315,7 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -2482,7 +2483,8 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS_COMMON_Z_AXIS}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2501,7 +2503,8 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -5931,20 +5934,20 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator.
      *
-     * @param qualityScores   quality scores corresponding to each provided
-     *                        measurement. The larger the score value the better
-     *                        the quality of the sample.
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param method          robust estimator method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param position      position where body magnetic flux density measurements
+     *                      have been taken.
+     * @param measurements  collection of body magnetic flux density
+     *                      measurements with standard deviation of
+     *                      magnetometer measurements taken at the same
+     *                      position with zero velocity and unknown different
+     *                      orientations.
+     * @param hardIron      known hard-iron.
+     * @param initialMm     initial soft-iron matrix containing scale factors
+     *                      and cross coupling errors.
+     * @param method        robust estimator method.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -5982,21 +5985,21 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator.
      *
-     * @param qualityScores   quality scores corresponding to each provided
-     *                        measurement. The larger the score value the better
-     *                        the quality of the sample.
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param listener        listener to handle events raised by this calibrator.
-     * @param method          robust estimator method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param position      position where body magnetic flux density measurements
+     *                      have been taken.
+     * @param measurements  collection of body magnetic flux density
+     *                      measurements with standard deviation of
+     *                      magnetometer measurements taken at the same
+     *                      position with zero velocity and unknown different
+     *                      orientations.
+     * @param hardIron      known hard-iron.
+     * @param initialMm     initial soft-iron matrix containing scale factors
+     *                      and cross coupling errors.
+     * @param listener      listener to handle events raised by this calibrator.
+     * @param method        robust estimator method.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6038,22 +6041,22 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator.
      *
-     * @param qualityScores   quality scores corresponding to each provided
-     *                        measurement. The larger the score value the better
-     *                        the quality of the sample.
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param method          robust estimator method.
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param initialMm      initial soft-iron matrix containing scale factors
+     *                       and cross coupling errors.
+     * @param method         robust estimator method.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6095,23 +6098,23 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator.
      *
-     * @param qualityScores   quality scores corresponding to each provided
-     *                        measurement. The larger the score value the better
-     *                        the quality of the sample.
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param listener        listener to handle events raised by this calibrator.
-     * @param method          robust estimator method.
+     * @param qualityScores  quality scores corresponding to each provided
+     *                       measurement. The larger the score value the better
+     *                       the quality of the sample.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param initialMm      initial soft-iron matrix containing scale factors
+     *                       and cross coupling errors.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @param method         robust estimator method.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6239,9 +6242,9 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
+     * @param hardIron  known hard-iron.
+     * @param initialMm initial soft-iron matrix containing scale factors
+     *                  and cross coupling errors.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6351,14 +6354,14 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6374,15 +6377,15 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param listener     listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6399,16 +6402,16 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6424,17 +6427,17 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param listener       listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6451,14 +6454,14 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6474,15 +6477,15 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param listener     listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6499,16 +6502,16 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6524,17 +6527,17 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param listener       listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6551,16 +6554,16 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param initialMm    initial soft-iron matrix containing scale factors
+     *                     and cross coupling errors.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6577,17 +6580,17 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param initialMm    initial soft-iron matrix containing scale factors
+     *                     and cross coupling errors.
+     * @param listener     listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6605,18 +6608,18 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param initialMm      initial soft-iron matrix containing scale factors
+     *                       and cross coupling errors.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6634,19 +6637,19 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param initialMm      initial soft-iron matrix containing scale factors
+     *                       and cross coupling errors.
+     * @param listener       listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6762,14 +6765,14 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6785,15 +6788,15 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param listener     listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6810,16 +6813,16 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6835,17 +6838,17 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param listener       listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron array does
      *                                  not have length 3.
@@ -6862,14 +6865,14 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6885,15 +6888,15 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param listener     listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6910,16 +6913,16 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6935,17 +6938,17 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param listener       listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1.
@@ -6962,16 +6965,16 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param initialMm    initial soft-iron matrix containing scale factors
+     *                     and cross coupling errors.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -6988,17 +6991,17 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position     position where body magnetic flux density measurements
+     *                     have been taken.
+     * @param measurements collection of body magnetic flux density
+     *                     measurements with standard deviation of
+     *                     magnetometer measurements taken at the same
+     *                     position with zero velocity and unknown different
+     *                     orientations.
+     * @param hardIron     known hard-iron.
+     * @param initialMm    initial soft-iron matrix containing scale factors
+     *                     and cross coupling errors.
+     * @param listener     listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -7016,18 +7019,18 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param initialMm      initial soft-iron matrix containing scale factors
+     *                       and cross coupling errors.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -7045,19 +7048,19 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
     /**
      * Creates a robust magnetometer calibrator with default robust method.
      *
-     * @param position        position where body magnetic flux density measurements
-     *                        have been taken.
-     * @param measurements    collection of body magnetic flux density
-     *                        measurements with standard deviation of
-     *                        magnetometer measurements taken at the same
-     *                        position with zero velocity and unknown different
-     *                        orientations.
-     * @param commonAxisUsed  indicates whether z-axis is assumed to be common
-     *                        for the accelerometer, gyroscope and magnetometer.
-     * @param hardIron known hard-iron.
-     * @param initialMm       initial soft-iron matrix containing scale factors
-     *                        and cross coupling errors.
-     * @param listener        listener to handle events raised by this calibrator.
+     * @param position       position where body magnetic flux density measurements
+     *                       have been taken.
+     * @param measurements   collection of body magnetic flux density
+     *                       measurements with standard deviation of
+     *                       magnetometer measurements taken at the same
+     *                       position with zero velocity and unknown different
+     *                       orientations.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common
+     *                       for the accelerometer, gyroscope and magnetometer.
+     * @param hardIron       known hard-iron.
+     * @param initialMm      initial soft-iron matrix containing scale factors
+     *                       and cross coupling errors.
+     * @param listener       listener to handle events raised by this calibrator.
      * @return a robust magnetometer calibrator.
      * @throws IllegalArgumentException if provided hard-iron matrix is not
      *                                  3x1 or if soft-iron matrix is not
@@ -7101,8 +7104,9 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      * @param preliminaryResult a preliminary result.
      * @return computed error.
      */
-    protected double computeError(final StandardDeviationBodyMagneticFluxDensity measurement,
-                                  final Matrix preliminaryResult) {
+    protected double computeError(
+            final StandardDeviationBodyMagneticFluxDensity measurement,
+            final Matrix preliminaryResult) {
 
         try {
             // The magnetometer model is:
@@ -7170,13 +7174,13 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<Matrix> solutions) {
+    protected void computePreliminarySolutions(
+            final int[] samplesIndices, final List<Matrix> solutions) {
 
         final List<StandardDeviationBodyMagneticFluxDensity> measurements =
                 new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -7211,8 +7215,8 @@ public abstract class RobustKnownHardIronPositionAndInstantMagnetometerCalibrato
      */
     protected void attemptRefine(final Matrix preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationBodyMagneticFluxDensity> inlierMeasurements =
                     new ArrayList<>();

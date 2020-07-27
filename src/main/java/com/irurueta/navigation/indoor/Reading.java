@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 /**
  * Contains a reading related to a given WiFi access point.
+ *
  * @param <S> a {@link RadioSource} type.
  */
 public abstract class Reading<S extends RadioSource> implements Serializable {
@@ -30,10 +31,11 @@ public abstract class Reading<S extends RadioSource> implements Serializable {
 
     /**
      * Constructor.
+     *
      * @param source radio source associated to this reading.
      * @throws IllegalArgumentException if radios source data is null.
      */
-    public Reading(S source) {
+    public Reading(final S source) {
         if (source == null) {
             throw new IllegalArgumentException();
         }
@@ -43,10 +45,12 @@ public abstract class Reading<S extends RadioSource> implements Serializable {
     /**
      * Empty constructor.
      */
-    protected Reading() { }
+    protected Reading() {
+    }
 
     /**
      * Gets radio source associated to this reading.
+     *
      * @return radio source associated to this reading.
      */
     public S getSource() {
@@ -56,16 +60,18 @@ public abstract class Reading<S extends RadioSource> implements Serializable {
     /**
      * Determine whether another reading is made for the same radio source as
      * this reading or not.
+     *
      * @param otherReading other reading to be compared.
      * @return true if both readings are associated to the same access point,
      * false otherwise.
      */
-    public boolean hasSameSource(Reading<S> otherReading) {
+    public boolean hasSameSource(final Reading<S> otherReading) {
         return otherReading != null && otherReading.mSource.equals(mSource);
     }
 
     /**
      * Contains radio source reading type.
+     *
      * @return reading type.
      */
     public abstract ReadingType getType();

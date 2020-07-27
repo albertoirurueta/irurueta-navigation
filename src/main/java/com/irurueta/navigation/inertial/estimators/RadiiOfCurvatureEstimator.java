@@ -44,7 +44,7 @@ public class RadiiOfCurvatureEstimator {
      * provided geodetic latitude.
      *
      * @param latitude geodetic latitude expressed in radians (rad).
-     * @param result instance where estimated radii of curvature will be stored.
+     * @param result   instance where estimated radii of curvature will be stored.
      */
     public void estimate(final double latitude, final RadiiOfCurvature result) {
         estimateRadiiOfCurvature(latitude, result);
@@ -67,7 +67,7 @@ public class RadiiOfCurvatureEstimator {
      * provided geodetic latitude.
      *
      * @param latitude geodetic latitude.
-     * @param result instance where estimated radii of curvature will be stored.
+     * @param result   instance where estimated radii of curvature will be stored.
      */
     public void estimate(final Angle latitude, final RadiiOfCurvature result) {
         estimateRadiiOfCurvature(latitude, result);
@@ -90,7 +90,7 @@ public class RadiiOfCurvatureEstimator {
      * provided geodetic latitude.
      *
      * @param latitude geodetic latitude expressed in radians (rad).
-     * @param result instance where estimated radii of curvature will be stored.
+     * @param result   instance where estimated radii of curvature will be stored.
      */
     public static void estimateRadiiOfCurvature(final double latitude,
                                                 final RadiiOfCurvature result) {
@@ -125,7 +125,7 @@ public class RadiiOfCurvatureEstimator {
      * provided geodetic latitude.
      *
      * @param latitude geodetic latitude.
-     * @param result instance where estimated radii of curvature will be stored.
+     * @param result   instance where estimated radii of curvature will be stored.
      */
     public static void estimateRadiiOfCurvature(final Angle latitude,
                                                 final RadiiOfCurvature result) {

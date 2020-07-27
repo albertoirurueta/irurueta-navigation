@@ -20,5 +20,5 @@ package com.irurueta.navigation.inertial.calibration.magnetometer;
  * frame (position and orientation) is known for all measurements
  */
 public interface KnownFrameMagnetometerLinearLeastSquaresCalibratorListener extends
-        KnownFrameMagnetometerCalibratorListener<KnownFrameMagnetometerLinearLeastSquaresCalibrator>{
+        KnownFrameMagnetometerCalibratorListener<KnownFrameMagnetometerLinearLeastSquaresCalibrator> {
 }

@@ -1301,7 +1301,7 @@ public class AngularRateFixer {
      *                             specific force expressed in meters per
      *                             squared second (m/s^2).
      * @return restored true angular rate.
-     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws AlgebraException if there are numerical instabilities.
      */
     public double[] fixAndReturnNew(
             final double measuredAngularRateX,
@@ -1339,7 +1339,7 @@ public class AngularRateFixer {
      *                             specific force expressed in meters per
      *                             squared second (m/s^2).
      * @return restored true angular rate.
-     * @throws AlgebraException         if there are numerical instabilities.
+     * @throws AlgebraException if there are numerical instabilities.
      */
     public Matrix fixAndReturnNewMatrix(
             final double measuredAngularRateX,

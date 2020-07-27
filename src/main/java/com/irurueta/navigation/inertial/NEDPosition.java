@@ -144,7 +144,8 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param longitude longitude expressed in radians (rad) to be set.
      * @param height    height expressed in meters (m) to be set.
      */
-    public void setCoordinates(final double latitude, final double longitude, final double height) {
+    public void setCoordinates(
+            final double latitude, final double longitude, final double height) {
         mLatitude = latitude;
         mLongitude = longitude;
         mHeight = height;
@@ -244,7 +245,8 @@ public class NEDPosition implements Serializable, Cloneable {
      * @param longitude longitude to be set.
      * @param height    height to be set.
      */
-    public void setCoordinates(final Angle latitude, final Angle longitude, final Distance height) {
+    public void setCoordinates(
+            final Angle latitude, final Angle longitude, final Distance height) {
         setLatitudeAngle(latitude);
         setLongitudeAngle(longitude);
         setHeightDistance(height);
@@ -291,7 +293,7 @@ public class NEDPosition implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -343,7 +345,7 @@ public class NEDPosition implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final NEDPosition result = (NEDPosition)super.clone();
+        final NEDPosition result = (NEDPosition) super.clone();
         copyTo(result);
         return result;
     }

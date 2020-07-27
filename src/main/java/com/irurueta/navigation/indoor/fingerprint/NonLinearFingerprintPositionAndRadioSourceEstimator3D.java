@@ -36,186 +36,197 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3D extends
     /**
      * Constructor.
      */
-    public NonLinearFingerprintPositionAndRadioSourceEstimator3D() { }
+    public NonLinearFingerprintPositionAndRadioSourceEstimator3D() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
+            final FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super(locatedFingerprints, fingerprint);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param initialPosition     initial position to be assumed on non located fingerprint or
+     *                            null if unknown.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final Point3D initialPosition) {
         super(locatedFingerprints, fingerprint, initialPosition);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param initialPosition     initial position to be assumed on non located fingerprint or
+     *                            null if unknown.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition,
-            FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final Point3D initialPosition,
+            final FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point3D>> initialLocatedSources) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point3D>> initialLocatedSources) {
         super(locatedFingerprints, fingerprint, initialLocatedSources);
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
-     * @param listener listener in charge of handling events.
+     * @param listener              listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point3D>> initialLocatedSources,
-            FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point3D>> initialLocatedSources,
+            final FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, initialLocatedSources, listener);
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
+     * @param initialPosition       initial position to be assumed on non located fingerprint or
+     *                              null if unknown.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition,
-            List<? extends RadioSourceLocated<Point3D>> initialLocatedSources) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final Point3D initialPosition,
+            final List<? extends RadioSourceLocated<Point3D>> initialLocatedSources) {
         super(locatedFingerprints, fingerprint, initialPosition, initialLocatedSources);
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
+     * @param initialPosition       initial position to be assumed on non located fingerprint or
+     *                              null if unknown.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
-     * @param listener listener in charge of handling events.
+     * @param listener              listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition,
-            List<? extends RadioSourceLocated<Point3D>> initialLocatedSources,
-            FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final Point3D initialPosition,
+            final List<? extends RadioSourceLocated<Point3D>> initialLocatedSources,
+            final FingerprintPositionAndRadioSourceEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, initialPosition, initialLocatedSources,
                 listener);
     }
 
     /**
      * Propagates provided variances into RSSI differences.
-     * @param pathlossExponent path-loss exponent.
-     * @param fingerprintPosition position of closest located fingerprint.
-     * @param radioSourcePosition radio source position associated to fingerprint reading.
-     * @param estimatedPosition position to be estimated. Usually this is equal to the
-     *                          initial position used by a non linear algorithm.
-     * @param pathlossExponentVariance variance of path-loss exponent or null if unknown.
+     *
+     * @param pathlossExponent              path-loss exponent.
+     * @param fingerprintPosition           position of closest located fingerprint.
+     * @param radioSourcePosition           radio source position associated to fingerprint reading.
+     * @param estimatedPosition             position to be estimated. Usually this is equal to the
+     *                                      initial position used by a non linear algorithm.
+     * @param pathlossExponentVariance      variance of path-loss exponent or null if unknown.
      * @param fingerprintPositionCovariance covariance of fingerprint position or null if
      *                                      unknown.
      * @param radioSourcePositionCovariance covariance of radio source position or null if
@@ -224,12 +235,14 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3D extends
      */
     @Override
     @SuppressWarnings("Duplicates")
-    protected Double propagateVariances(double pathlossExponent, Point3D fingerprintPosition,
-            Point3D radioSourcePosition, Point3D estimatedPosition,
-            Double pathlossExponentVariance, Matrix fingerprintPositionCovariance,
-            Matrix radioSourcePositionCovariance) {
+    protected Double propagateVariances(
+            final double pathlossExponent, final Point3D fingerprintPosition,
+            final Point3D radioSourcePosition, final Point3D estimatedPosition,
+            final Double pathlossExponentVariance,
+            final Matrix fingerprintPositionCovariance,
+            final Matrix radioSourcePositionCovariance) {
         try {
-            MultivariateNormalDist dist = Utils.propagateVariancesToRssiDifferenceVariance3D(
+            final MultivariateNormalDist dist = Utils.propagateVariancesToRssiDifferenceVariance3D(
                     pathlossExponent, fingerprintPosition, radioSourcePosition,
                     estimatedPosition, pathlossExponentVariance,
                     fingerprintPositionCovariance, radioSourcePositionCovariance,
@@ -238,19 +251,20 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3D extends
                 return null;
             }
 
-            Matrix covariance = dist.getCovariance();
+            final Matrix covariance = dist.getCovariance();
             if (covariance == null) {
                 return null;
             }
 
             return covariance.getElementAt(0, 0);
-        } catch (IndoorException e) {
+        } catch (final IndoorException e) {
             return null;
         }
     }
 
     /**
      * Gets number of dimensions of points.
+     *
      * @return number of dimensions of points.
      */
     @Override
@@ -260,6 +274,7 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3D extends
 
     /**
      * Create a point.
+     *
      * @return point to be created.
      */
     @Override

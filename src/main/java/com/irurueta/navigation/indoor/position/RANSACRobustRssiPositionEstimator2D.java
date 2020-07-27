@@ -48,7 +48,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -62,7 +62,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -78,8 +78,8 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -92,7 +92,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * @param listener listener in charge of handling events.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -106,8 +106,8 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -122,8 +122,8 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -140,9 +140,9 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * null or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -172,7 +172,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if this estimator is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         ((RANSACRobustLateration2DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
@@ -196,7 +196,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      *                              kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         ((RANSACRobustLateration2DSolver) mLaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
@@ -220,7 +220,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         ((RANSACRobustLateration2DSolver) mLaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);

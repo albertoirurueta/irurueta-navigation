@@ -45,7 +45,7 @@ import java.util.List;
  * otherwise it will be assumed an RSSI standard deviation of 1 dB.
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
- *
+ * <p>
  * IMPORTANT: When using this class estimation can be done using a
  * combination of radio source position, transmitted power and path loss
  * exponent. However enabling all three estimations usually achieves
@@ -95,7 +95,7 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -105,7 +105,7 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
     }
 
@@ -118,8 +118,8 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -127,14 +127,14 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -144,19 +144,21 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public MSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition) {
+    public MSACRobustRssiRadioSourceEstimator2D(
+            final Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public MSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public MSACRobustRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -164,16 +166,16 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -185,7 +187,7 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   (expressed in dBm's)
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerdBm) {
+            final Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
 
@@ -193,29 +195,29 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final Double initialTransmittedPowerdBm,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
@@ -223,17 +225,17 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -241,47 +243,49 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of access
-     *                                      point position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param initialPosition            initial position to start the estimation of access
+     *                                   point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      */
-    public MSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public MSACRobustRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   in charge of attending events raised by this instance.
      */
-    public MSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
-            Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public MSACRobustRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -289,19 +293,19 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -309,19 +313,19 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -329,16 +333,16 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -346,18 +350,18 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -366,21 +370,21 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -399,11 +403,11 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *
      * @param threshold threshold to be set.
      * @throws IllegalArgumentException if provided value is equal or less than
-     * zero.
-     * @throws LockedException if robust estimator is locked because an
-     * estimation is already in progress.
+     *                                  zero.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -417,10 +421,10 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public void estimate() throws LockedException, NotReadyException, RobustEstimatorException {
@@ -431,7 +435,7 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
             throw new NotReadyException();
         }
 
-        MSACRobustEstimator<Solution<Point2D>> innerEstimator =
+        final MSACRobustEstimator<Solution<Point2D>> innerEstimator =
                 new MSACRobustEstimator<>(
                         new MSACRobustEstimatorListener<Solution<Point2D>>() {
                             @Override
@@ -450,13 +454,16 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
                             }
 
                             @Override
-                            public void estimatePreliminarSolutions(int[] samplesIndices,
-                                                                    List<Solution<Point2D>> solutions) {
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<Solution<Point2D>> solutions) {
                                 solvePreliminarSolutions(samplesIndices, solutions);
                             }
 
                             @Override
-                            public double computeResidual(Solution<Point2D> currentEstimation, int i) {
+                            public double computeResidual(
+                                    final Solution<Point2D> currentEstimation,
+                                    final int i) {
                                 return residual(currentEstimation, i);
                             }
 
@@ -466,51 +473,60 @@ public class MSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
                             }
 
                             @Override
-                            public void onEstimateStart(RobustEstimator<Solution<Point2D>> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateStart(
-                                            MSACRobustRssiRadioSourceEstimator2D.this);
-                                }
+                            public void onEstimateStart(
+                                    final RobustEstimator<Solution<Point2D>> estimator) {
                             }
 
                             @Override
-                            public void onEstimateEnd(RobustEstimator<Solution<Point2D>> estimator) {
-                                if (mListener != null) {
-                                    mListener.onEstimateEnd(
-                                            MSACRobustRssiRadioSourceEstimator2D.this);
-                                }
+                            public void onEstimateEnd(
+                                    final RobustEstimator<Solution<Point2D>> estimator) {
                             }
 
                             @Override
-                            public void onEstimateNextIteration(RobustEstimator<Solution<Point2D>> estimator, int iteration) {
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<Solution<Point2D>> estimator,
+                                    final int iteration) {
                                 if (mListener != null) {
                                     mListener.onEstimateNextIteration(
-                                            MSACRobustRssiRadioSourceEstimator2D.this, iteration);
+                                            MSACRobustRssiRadioSourceEstimator2D.this,
+                                            iteration);
                                 }
                             }
 
                             @Override
-                            public void onEstimateProgressChange(RobustEstimator<Solution<Point2D>> estimator, float progress) {
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<Solution<Point2D>> estimator,
+                                    final float progress) {
                                 if (mListener != null) {
                                     mListener.onEstimateProgressChange(
-                                            MSACRobustRssiRadioSourceEstimator2D.this, progress);
+                                            MSACRobustRssiRadioSourceEstimator2D.this,
+                                            progress);
                                 }
                             }
                         });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onEstimateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            Solution<Point2D> result = innerEstimator.estimate();
+            final Solution<Point2D> result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             attemptRefine(result);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onEstimateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;

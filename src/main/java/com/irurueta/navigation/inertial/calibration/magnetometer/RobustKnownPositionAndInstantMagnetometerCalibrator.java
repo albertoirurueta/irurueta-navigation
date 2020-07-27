@@ -2038,7 +2038,8 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      *                     with unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final List<StandardDeviationBodyMagneticFluxDensity> measurements)
+    public void setMeasurements(
+            final List<StandardDeviationBodyMagneticFluxDensity> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2274,7 +2275,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2299,7 +2300,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2330,7 +2331,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -2590,7 +2591,8 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS_COMMON_Z_AXIS}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2610,7 +2612,8 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -6262,6 +6265,7 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
 
     /**
      * Creates a robust magnetometer calibrator with default robust method.
+     *
      * @return a robust magnetometer calibrator.
      */
     public static RobustKnownPositionAndInstantMagnetometerCalibrator create() {
@@ -7209,8 +7213,9 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      * @param preliminaryResult a preliminary result.
      * @return computed error.
      */
-    protected double computeError(final StandardDeviationBodyMagneticFluxDensity measurement,
-                                  final PreliminaryResult preliminaryResult) {
+    protected double computeError(
+            final StandardDeviationBodyMagneticFluxDensity measurement,
+            final PreliminaryResult preliminaryResult) {
 
         try {
             // The magnetometer model is:
@@ -7285,13 +7290,14 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<PreliminaryResult> solutions) {
+    protected void computePreliminarySolutions(
+            final int[] samplesIndices,
+            final List<PreliminaryResult> solutions) {
 
         final List<StandardDeviationBodyMagneticFluxDensity> measurements =
                 new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -7329,8 +7335,8 @@ public abstract class RobustKnownPositionAndInstantMagnetometerCalibrator {
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationBodyMagneticFluxDensity> inlierMeasurements =
                     new ArrayList<>();

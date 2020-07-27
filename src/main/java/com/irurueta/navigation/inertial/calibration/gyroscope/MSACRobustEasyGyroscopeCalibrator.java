@@ -658,7 +658,7 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
      *                                  zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -677,7 +677,8 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -686,7 +687,8 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
         }
 
         final MSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+                new MSACRobustEstimator<>(
+                        new MSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -724,19 +726,11 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    MSACRobustEasyGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    MSACRobustEasyGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -745,7 +739,8 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
                             final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    MSACRobustEasyGyroscopeCalibrator.this, iteration);
+                                    MSACRobustEasyGyroscopeCalibrator.this,
+                                    iteration);
                         }
                     }
 
@@ -755,13 +750,18 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
                             final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    MSACRobustEasyGyroscopeCalibrator.this, progress);
+                                    MSACRobustEasyGyroscopeCalibrator.this,
+                                    progress);
                         }
                     }
                 });
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
 
             setupAccelerationFixer();
 
@@ -774,11 +774,15 @@ public class MSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCalibr
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | AlgebraException e) {
+        } catch (final RobustEstimatorException | AlgebraException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

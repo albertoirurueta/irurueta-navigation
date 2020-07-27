@@ -42,19 +42,19 @@ import java.util.List;
  * and lambda is the wavelength and is equal to: lambda = c / f,
  * where c is the speed of light
  * and f is the carrier frequency of the radio signal.
- *
+ * <p>
  * Implementations of this class sequentially estimate position and then remaining
  * parameters. First ranging data is used to robustly estimate position and then
  * remaining parameters are robustly estimated using former estimated position as
  * an initial guess.
- *
+ * <p>
  * Because usually information about the antenna of the radio source cannot be
  * retrieved (because many measurements are made on unknown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be assumed an RSSI standard deviation of 1 dB.
- *
+ * <p>
  * This implementation is like SequentialRobustRangingAndRssiRadioSourceEstimator but
  * allows mixing different kinds of located radio source readings (ranging, RSSI
  * and ranging+RSSI).
@@ -302,7 +302,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
@@ -388,7 +388,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      */
-    public SequentialRobustMixedRadioSourceEstimator() { }
+    public SequentialRobustMixedRadioSourceEstimator() {
+    }
 
     /**
      * Constructor.
@@ -398,7 +399,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings) {
+            final List<? extends ReadingLocated<P>> readings) {
         internalSetReadings(readings);
     }
 
@@ -408,7 +409,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param listener listener in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         mListener = listener;
     }
 
@@ -421,8 +422,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings);
         mListener = listener;
     }
@@ -431,14 +432,14 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition) {
         this(readings);
         mInitialPosition = initialPosition;
     }
@@ -449,19 +450,21 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public SequentialRobustMixedRadioSourceEstimator(P initialPosition) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public SequentialRobustMixedRadioSourceEstimator(P initialPosition,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final P initialPosition,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(listener);
         mInitialPosition = initialPosition;
     }
@@ -470,16 +473,16 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, listener);
         mInitialPosition = initialPosition;
     }
@@ -492,7 +495,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                                   (expressed in dBm's).
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            Double initialTransmittedPowerdBm) {
+            final Double initialTransmittedPowerdBm) {
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
@@ -500,15 +503,15 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            Double initialTransmittedPowerdBm) {
+            final List<? extends ReadingLocated<P>> readings,
+            final Double initialTransmittedPowerdBm) {
         this(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -516,14 +519,14 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -532,17 +535,17 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -551,17 +554,18 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         this(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -570,14 +574,15 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      */
-    public SequentialRobustMixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -585,16 +590,17 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      in charge of attenging events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   in charge of attenging events raised by this instance.
      */
-    public SequentialRobustMixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -604,19 +610,20 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -626,19 +633,20 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -646,15 +654,17 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      */
-    public SequentialRobustMixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -662,17 +672,19 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
-    public SequentialRobustMixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -681,21 +693,22 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructors.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -707,9 +720,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                      The larger the score value the better the quality of
      *                      the sample.
      * @throws IllegalArgumentException if quality scores is null, or length of
-     * quality scores is less than required minimum.
+     *                                  quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores) {
         this();
         internalSetQualityScores(qualityScores);
     }
@@ -723,10 +737,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                      the sample.
      * @param readings      signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid, quality scores is
-     * null, or length of quality scores is less than required minimum.
+     *                                  null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores, List<? extends ReadingLocated<P>> readings) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings) {
         this(readings);
         internalSetQualityScores(qualityScores);
     }
@@ -739,11 +754,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                      the sample.
      * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final double[] qualityScores,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -758,12 +773,12 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param readings      signal readings belonging to the same radio source.
      * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores is
-     * null, or length of quality scores is less than required minimum.
+     *                                  null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -772,19 +787,19 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores     quality scores corresponding to each provided sample.
-     *                          The larger the score value the better the quality of
-     *                          the sample.
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param qualityScores   quality scores corresponding to each provided sample.
+     *                        The larger the score value the better the quality of
+     *                        the sample.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid, quality scores is
-     * null, or length of quality scores is less than required minimum.
+     *                                  null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition) {
         this(readings, initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -792,16 +807,17 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores     quality scores corresponding to each provided sample.
-     *                          The larger the score value the better the quality of
-     *                          the sample.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param qualityScores   quality scores corresponding to each provided sample.
+     *                        The larger the score value the better the quality of
+     *                        the sample.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            P initialPosition) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final P initialPosition) {
         this(initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -809,18 +825,19 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores     quality scores corresponding to each provided sample.
-     *                          The larger the score value the better the quality of
-     *                          the sample.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param qualityScores   quality scores corresponding to each provided sample.
+     *                        The larger the score value the better the quality of
+     *                        the sample.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores, P initialPosition,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final double[] qualityScores,
+            final P initialPosition,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -829,21 +846,21 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores     quality scores corresponding to each provided sample.
-     *                          The larger the score value the better the quality of
-     *                          the sample.
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param qualityScores   quality scores corresponding to each provided sample.
+     *                        The larger the score value the better the quality of
+     *                        the sample.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -851,17 +868,18 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided sample.
-     *                                      The larger the score value the better the quality of
-     *                                      the sample.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores, Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final Double initialTransmittedPowerdBm) {
         this(initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -870,20 +888,20 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided sample.
-     *                                      The larger the score value the better the quality of
-     *                                      the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final Double initialTransmittedPowerdBm) {
         this(readings, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -891,19 +909,20 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided sample.
-     *                                      The larger the score value the better the quality of
-     *                                      the sample.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores, Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final double[] qualityScores,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -912,22 +931,22 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -936,22 +955,23 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -959,20 +979,21 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator(
-            double[] qualityScores, P initialPosition,
-            Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         this(initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -980,21 +1001,23 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -1003,23 +1026,25 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -1028,23 +1053,25 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
         internalSetQualityScores(qualityScores);
@@ -1053,21 +1080,23 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent);
         internalSetQualityScores(qualityScores);
     }
@@ -1075,23 +1104,25 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent,
                 listener);
         internalSetQualityScores(qualityScores);
@@ -1101,25 +1132,27 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Constructors.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustMixedRadioSourceEstimator(double[] qualityScores,
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
+    public SequentialRobustMixedRadioSourceEstimator(
+            final double[] qualityScores,
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -1152,9 +1185,9 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param progressDelta amount of progress variation before notifying a progress
      *                      change during estimation.
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
-     * @throws LockedException if this estimator is locked.
+     * @throws LockedException          if this estimator is locked.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1180,8 +1213,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param rangingRobustMethod robust method used for robust position estimation.
      * @throws LockedException if estimator is locked.
      */
-    public void setRangingRobustMethod(RobustEstimatorMethod rangingRobustMethod)
-            throws LockedException {
+    public void setRangingRobustMethod(
+            final RobustEstimatorMethod rangingRobustMethod) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1207,8 +1240,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                         power estimation.
      * @throws LockedException if estimator is locked.
      */
-    public void setRssiRobustMethod(RobustEstimatorMethod rssiRobustMethod)
-            throws LockedException {
+    public void setRssiRobustMethod(
+            final RobustEstimatorMethod rssiRobustMethod) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1229,11 +1262,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param rangingPreliminarySubsetSize size of subsets to be checked during
      *                                     ranging robust estimation.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinReadings()}.
      */
-    public void setRangingPreliminarySubsetSize(int rangingPreliminarySubsetSize)
-            throws LockedException {
+    public void setRangingPreliminarySubsetSize(
+            final int rangingPreliminarySubsetSize) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1258,11 +1291,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param rssiPreliminarySubsetSize size of subsets to be checked during
      *                                  RSSI robust estimation.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinReadings()}.
      */
-    public void setRssiPreliminarySubsetSize(int rssiPreliminarySubsetSize)
-            throws LockedException {
+    public void setRssiPreliminarySubsetSize(
+            final int rssiPreliminarySubsetSize) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1292,7 +1325,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param rangingThreshold threshold for ranging estimation or null.
      * @throws LockedException if estimator is locked.
      */
-    public void setRangingThreshold(Double rangingThreshold) throws LockedException {
+    public void setRangingThreshold(final Double rangingThreshold)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1318,7 +1352,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param rssiThreshold threshold for RSSI estimation or null.
      * @throws LockedException if estimator is locked.
      */
-    public void setRssiThreshold(Double rssiThreshold) throws LockedException {
+    public void setRssiThreshold(final Double rssiThreshold)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1347,9 +1382,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param rangingConfidence confidence to be set for robust position estimation
      *                          as a value between 0.0 and 1.0.
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      */
-    public void setRangingConfidence(double rangingConfidence) throws LockedException {
+    public void setRangingConfidence(
+            final double rangingConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1384,9 +1420,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                       transmitted power estimation as a value between 0.0 and
      *                       1.0.
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      */
-    public void setRssiConfidence(double rssiConfidence) throws LockedException {
+    public void setRssiConfidence(
+            final double rssiConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1415,9 +1452,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param rangingMaxIterations maximum allowed number of iterations to be set
      *                             for position estimation.
      * @throws IllegalArgumentException if provided value is less than 1.
-     * @throws LockedException if this estimator is locked.
+     * @throws LockedException          if this estimator is locked.
      */
-    public void setRangingMaxIterations(int rangingMaxIterations) throws LockedException {
+    public void setRangingMaxIterations(
+            final int rangingMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1448,9 +1486,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param rssiMaxIterations maximum allowed number of iterations to be set for
      *                          pathloss exponent and transmitted power estimation.
      * @throws IllegalArgumentException if provided value is less than 1.
-     * @throws LockedException if this estimator is locked.
+     * @throws LockedException          if this estimator is locked.
      */
-    public void setRssiMaxIterations(int rssiMaxIterations) throws LockedException {
+    public void setRssiMaxIterations(
+            final int rssiMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1477,7 +1516,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                     estimator without further refining.
      * @throws LockedException if estimator is locked.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(
+            final boolean refineResult) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1502,7 +1542,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                       false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(
+            final boolean keepCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1523,11 +1564,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param readings signal readings belonging to the same
      *                 radio source.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public void setReadings(
-            List<? extends ReadingLocated<P>> readings)
+            final List<? extends ReadingLocated<P>> readings)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1553,7 +1594,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @throws LockedException if estimator is locked.
      */
     public void setListener(
-            SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener)
+            final SequentialRobustMixedRadioSourceEstimatorListener<S, P> listener)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1585,11 +1626,12 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than minimum required samples.
-     * @throws LockedException if robust solver is locked because an
-     * estimation is already in progress.
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if robust solver is locked because an
+     *                                  estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException {
+    public void setQualityScores(
+            final double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1618,8 +1660,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                                   power.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialTransmittedPowerdBm(Double initialTransmittedPowerdBm)
-            throws LockedException {
+    public void setInitialTransmittedPowerdBm(
+            final Double initialTransmittedPowerdBm) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1646,11 +1688,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param initialTransmittedPower initial transmitted power to start the
      *                                estimation of radio source transmitted power.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setInitialTransmittedPower(Double initialTransmittedPower)
-            throws LockedException {
+    public void setInitialTransmittedPower(
+            final Double initialTransmittedPower) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1683,7 +1725,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                        source position.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(
+            final P initialPosition) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1698,7 +1741,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
@@ -1719,7 +1762,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
@@ -1729,8 +1772,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param initialPathLossExponent initial path loss exponent.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPathLossExponent(double initialPathLossExponent)
-            throws LockedException {
+    public void setInitialPathLossExponent(
+            final double initialPathLossExponent) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1753,8 +1796,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                                          false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setTransmittedPowerEstimationEnabled(boolean transmittedPowerEstimationEnabled)
-            throws LockedException {
+    public void setTransmittedPowerEstimationEnabled(
+            final boolean transmittedPowerEstimationEnabled) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1777,8 +1820,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                                  false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPathLossEstimationEnabled(boolean pathLossEstimationEnabled)
-            throws LockedException {
+    public void setPathLossEstimationEnabled(
+            final boolean pathLossEstimationEnabled) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1805,8 +1848,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *                                      otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setUseReadingPositionCovariances(boolean useReadingPositionCovariances)
-            throws LockedException {
+    public void setUseReadingPositionCovariances(
+            final boolean useReadingPositionCovariances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1833,7 +1876,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @throws LockedException if estimator is locked.
      */
     public void setHomogeneousRangingLinearSolverUsed(
-            boolean useHomogeneousRangingLinearSolver) throws LockedException {
+            final boolean useHomogeneousRangingLinearSolver) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1885,7 +1928,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @return true if readings are valid, false otherwise.
      */
     public boolean areValidReadings(
-            List<? extends ReadingLocated<P>> readings) {
+            final List<? extends ReadingLocated<P>> readings) {
         if (readings == null) {
             return false;
         }
@@ -1899,7 +1942,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                 (mRssiPositionEnabled && mNumRssiReadings >= getMinRssiReadings()) ||
                 //if only position is enabled, then only check for ranging readings
                 (!mTransmittedPowerEstimationEnabled && !mPathLossEstimationEnabled &&
-                mNumRangingReadings >= getMinRangingReadings())) &&
+                        mNumRangingReadings >= getMinRangingReadings())) &&
                 //in both upper cases enough general readings must be available
                 readings.size() >= getMinReadings();
     }
@@ -2029,10 +2072,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     public void estimate() throws LockedException, NotReadyException,
             RobustEstimatorException {
@@ -2115,9 +2158,9 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                     //if both ranging and RSSI data is used, we build covariance matrix by setting
                     //position covariance estimated by ranging estimator into top-left corner, and then
                     //adding covariance terms related to pathloss exponent and transmitted power
-                    Matrix rssiCov = mRssiEstimator.getCovariance();
+                    final Matrix rssiCov = mRssiEstimator.getCovariance();
                     if (mEstimatedPositionCovariance != null && rssiCov != null) {
-                        int dims = getNumberOfDimensions();
+                        final int dims = getNumberOfDimensions();
                         int n = dims;
                         if (mTransmittedPowerEstimationEnabled) {
                             n++;
@@ -2126,8 +2169,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                             n++;
                         }
 
-                        int dimsMinus1 = dims - 1;
-                        int nMinus1 = n - 1;
+                        final int dimsMinus1 = dims - 1;
+                        final int nMinus1 = n - 1;
                         mCovariance = new Matrix(n, n);
                         mCovariance.setSubmatrix(0, 0,
                                 dimsMinus1, dimsMinus1,
@@ -2150,7 +2193,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
             if (mListener != null) {
                 mListener.onEstimateEnd(this);
             }
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             throw new RobustEstimatorException(e);
         } finally {
             mLocked = false;
@@ -2180,8 +2223,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Gets estimated located radio source.
      *
-     * @return estimated located radio source.
      * @param <S2> type of located radio source.
+     * @return estimated located radio source.
      */
     public abstract <S2 extends RadioSourceLocated<P>> S2 getEstimatedRadioSource();
 
@@ -2205,25 +2248,25 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     protected void setupRangingEstimator() throws LockedException {
         if (mReadings != null && !mRssiPositionEnabled) {
             //build ranging readings
-            List<RangingReadingLocated<S, P>> rangingReadings = new ArrayList<>();
-            for (ReadingLocated<P> reading : mReadings) {
+            final List<RangingReadingLocated<S, P>> rangingReadings = new ArrayList<>();
+            for (final ReadingLocated<P> reading : mReadings) {
                 if (reading instanceof RangingReadingLocated) {
-                    rangingReadings.add((RangingReadingLocated<S, P>)reading);
+                    rangingReadings.add((RangingReadingLocated<S, P>) reading);
                 } else if (reading instanceof RangingAndRssiReadingLocated) {
                     rangingReadings.add(createRangingReading(
-                            (RangingAndRssiReadingLocated<S, P>)reading));
+                            (RangingAndRssiReadingLocated<S, P>) reading));
                 }
             }
             mRangingEstimator.setReadings(rangingReadings);
 
             if (mQualityScores != null && !rangingReadings.isEmpty()) {
                 //build quality scores
-                int numReadings = mReadings.size();
-                int numRangingReadings = rangingReadings.size();
-                double[] rangingQualityScores = new double[numRangingReadings];
+                final int numReadings = mReadings.size();
+                final int numRangingReadings = rangingReadings.size();
+                final double[] rangingQualityScores = new double[numRangingReadings];
                 int pos = 0;
                 for (int i = 0; i < numReadings; i++) {
-                    ReadingLocated<P> reading = mReadings.get(i);
+                    final ReadingLocated<P> reading = mReadings.get(i);
                     if (reading instanceof RangingReadingLocated ||
                             reading instanceof RangingAndRssiReadingLocated) {
                         rangingQualityScores[pos] = mQualityScores[i];
@@ -2254,23 +2297,28 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
 
         mRangingEstimator.setListener(new RobustRangingRadioSourceEstimatorListener<S, P>() {
             @Override
-            public void onEstimateStart(RobustRangingRadioSourceEstimator<S, P> estimator) {
+            public void onEstimateStart(
+                    final RobustRangingRadioSourceEstimator<S, P> estimator) {
                 //not used
             }
 
             @Override
-            public void onEstimateEnd(RobustRangingRadioSourceEstimator<S, P> estimator) {
+            public void onEstimateEnd(
+                    final RobustRangingRadioSourceEstimator<S, P> estimator) {
                 //not used
             }
 
             @Override
-            public void onEstimateNextIteration(RobustRangingRadioSourceEstimator<S, P> estimator,
-                                                int iteration) {
+            public void onEstimateNextIteration(
+                    final RobustRangingRadioSourceEstimator<S, P> estimator,
+                    final int iteration) {
                 //not used
             }
 
             @Override
-            public void onEstimateProgressChange(RobustRangingRadioSourceEstimator<S, P> estimator, float progress) {
+            public void onEstimateProgressChange(
+                    final RobustRangingRadioSourceEstimator<S, P> estimator,
+                    final float progress) {
                 if (mListener != null) {
                     mListener.onEstimateProgressChange(
                             SequentialRobustMixedRadioSourceEstimator.this,
@@ -2290,25 +2338,25 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
             mRssiEstimator.setPositionEstimationEnabled(mRssiPositionEnabled);
 
             //build RSSI readings
-            List<RssiReadingLocated<S, P>> rssiReadings = new ArrayList<>();
-            for (ReadingLocated<P> reading : mReadings) {
+            final List<RssiReadingLocated<S, P>> rssiReadings = new ArrayList<>();
+            for (final ReadingLocated<P> reading : mReadings) {
                 if (reading instanceof RssiReadingLocated) {
-                    rssiReadings.add((RssiReadingLocated<S, P>)reading);
+                    rssiReadings.add((RssiReadingLocated<S, P>) reading);
                 } else if (reading instanceof RangingAndRssiReadingLocated) {
                     rssiReadings.add(createRssiReading(
-                            (RangingAndRssiReadingLocated<S, P>)reading));
+                            (RangingAndRssiReadingLocated<S, P>) reading));
                 }
             }
             mRssiEstimator.setReadings(rssiReadings);
 
             if (mQualityScores != null && !rssiReadings.isEmpty()) {
                 //build quality scores
-                int numReadings = mReadings.size();
-                int numRssiReadings = rssiReadings.size();
-                double[] rssiQualityScores = new double[numRssiReadings];
+                final int numReadings = mReadings.size();
+                final int numRssiReadings = rssiReadings.size();
+                final double[] rssiQualityScores = new double[numRssiReadings];
                 int pos = 0;
                 for (int i = 0; i < numReadings; i++) {
-                    ReadingLocated<P> reading = mReadings.get(i);
+                    final ReadingLocated<P> reading = mReadings.get(i);
                     if (reading instanceof RssiReadingLocated ||
                             reading instanceof RangingAndRssiReadingLocated) {
                         rssiQualityScores[pos] = mQualityScores[i];
@@ -2337,17 +2385,22 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
 
         mRssiEstimator.setListener(new RobustRssiRadioSourceEstimatorListener<S, P>() {
             @Override
-            public void onEstimateStart(RobustRssiRadioSourceEstimator<S, P> estimator) { /* not used */ }
+            public void onEstimateStart(
+                    final RobustRssiRadioSourceEstimator<S, P> estimator) { /* not used */ }
 
             @Override
-            public void onEstimateEnd(RobustRssiRadioSourceEstimator<S, P> estimator) { /* not used */ }
+            public void onEstimateEnd(
+                    final RobustRssiRadioSourceEstimator<S, P> estimator) { /* not used */ }
 
             @Override
-            public void onEstimateNextIteration(RobustRssiRadioSourceEstimator<S, P> estimator,
-                                                int iteration) { /* not used */ }
+            public void onEstimateNextIteration(
+                    final RobustRssiRadioSourceEstimator<S, P> estimator,
+                    final int iteration) { /* not used */ }
 
             @Override
-            public void onEstimateProgressChange(RobustRssiRadioSourceEstimator<S, P> estimator, float progress) {
+            public void onEstimateProgressChange(
+                    final RobustRssiRadioSourceEstimator<S, P> estimator,
+                    final float progress) {
                 if (mListener != null) {
                     mListener.onEstimateProgressChange(
                             SequentialRobustMixedRadioSourceEstimator.this,
@@ -2362,10 +2415,10 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are null, not enough readings
-     * are available, or readings do not belong to the same access point.
+     *                                  are available, or readings do not belong to the same access point.
      */
     private void internalSetReadings(
-            List<? extends ReadingLocated<P>> readings) {
+            final List<? extends ReadingLocated<P>> readings) {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
         }
@@ -2380,9 +2433,9 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than required minimum.
+     *                                  is smaller than required minimum.
      */
-    private void internalSetQualityScores(double[] qualityScores) {
+    private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinReadings()) {
             throw new IllegalArgumentException();
@@ -2397,7 +2450,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param reading input reading to convert from.
      * @return a ranging reading containing only the ranging data of input reading.
      */
-    private RangingReadingLocated<S, P> createRangingReading(RangingAndRssiReadingLocated<S, P> reading) {
+    private RangingReadingLocated<S, P> createRangingReading(
+            final RangingAndRssiReadingLocated<S, P> reading) {
         return new RangingReadingLocated<>(reading.getSource(),
                 reading.getDistance(), reading.getPosition(),
                 reading.getDistanceStandardDeviation(),
@@ -2410,7 +2464,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @param reading input reading to convert from.
      * @return an RSSI reading containing only the RSSI data of input reading.
      */
-    private RssiReadingLocated<S, P> createRssiReading(RangingAndRssiReadingLocated<S, P> reading) {
+    private RssiReadingLocated<S, P> createRssiReading(
+            final RangingAndRssiReadingLocated<S, P> reading) {
         return new RssiReadingLocated<>(reading.getSource(),
                 reading.getRssi(), reading.getPosition(),
                 reading.getRssiStandardDeviation(),
@@ -2423,14 +2478,14 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      *
      * @param readings readings to be checked.
      */
-    private void checkReadings(List<? extends ReadingLocated<P>> readings) {
+    private void checkReadings(final List<? extends ReadingLocated<P>> readings) {
         mNumRangingReadings = mNumRssiReadings = 0;
 
         if (readings == null) {
             return;
         }
 
-        for (ReadingLocated<P> reading : readings) {
+        for (final ReadingLocated<P> reading : readings) {
             if (reading instanceof RangingReadingLocated) {
                 mNumRangingReadings++;
 

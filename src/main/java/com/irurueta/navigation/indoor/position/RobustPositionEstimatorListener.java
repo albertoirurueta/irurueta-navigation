@@ -28,14 +28,14 @@ public interface RobustPositionEstimatorListener<E extends RobustPositionEstimat
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(E estimator);
+    void onEstimateStart(final E estimator);
 
     /**
      * Called when estimation ends.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(E estimator);
+    void onEstimateEnd(final E estimator);
 
     /**
      * Called when estimator iterates to refine a possible solution.
@@ -43,7 +43,7 @@ public interface RobustPositionEstimatorListener<E extends RobustPositionEstimat
      * @param estimator estimator raising the event.
      * @param iteration current iteration.
      */
-    void onEstimateNextIteration(E estimator, int iteration);
+    void onEstimateNextIteration(final E estimator, final int iteration);
 
     /**
      * Called when estimation progress changes significantly.
@@ -51,5 +51,5 @@ public interface RobustPositionEstimatorListener<E extends RobustPositionEstimat
      * @param estimator estimator raising the event.
      * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onEstimateProgressChange(E estimator, float progress);
+    void onEstimateProgressChange(final E estimator, final float progress);
 }

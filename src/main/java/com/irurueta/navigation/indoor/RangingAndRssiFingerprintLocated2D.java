@@ -38,7 +38,8 @@ public class RangingAndRssiFingerprintLocated2D<S extends RadioSource,
      * @throws IllegalArgumentException if either readings or position are
      * null.
      */
-    public RangingAndRssiFingerprintLocated2D(List<R> readings, Point2D position) {
+    public RangingAndRssiFingerprintLocated2D(
+            final List<R> readings, Point2D position) {
         super(readings, position);
     }
 
@@ -52,8 +53,9 @@ public class RangingAndRssiFingerprintLocated2D<S extends RadioSource,
      * @throws IllegalArgumentException if either readings or position are null, or
      * covariance has invalid size.
      */
-    public RangingAndRssiFingerprintLocated2D(List<R> readings, Point2D position,
-            Matrix positionCovariance) {
+    public RangingAndRssiFingerprintLocated2D(
+            final List<R> readings, Point2D position,
+            final Matrix positionCovariance) {
         super(readings, position, positionCovariance);
     }
 

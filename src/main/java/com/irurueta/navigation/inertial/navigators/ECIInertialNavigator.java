@@ -1898,19 +1898,19 @@ public class ECIInertialNavigator {
      *                                                       body-to-ECI-frame coordinate transformation matrix are invalid.
      */
     public ECIFrame navigateAndReturnNew(final double timeInterval,
-                                        final double oldX,
-                                        final double oldY,
-                                        final double oldZ,
-                                        final CoordinateTransformation oldC,
-                                        final double oldVx,
-                                        final double oldVy,
-                                        final double oldVz,
-                                        final double fx,
-                                        final double fy,
-                                        final double fz,
-                                        final double angularRateX,
-                                        final double angularRateY,
-                                        final double angularRateZ)
+                                         final double oldX,
+                                         final double oldY,
+                                         final double oldZ,
+                                         final CoordinateTransformation oldC,
+                                         final double oldVx,
+                                         final double oldVy,
+                                         final double oldVz,
+                                         final double fx,
+                                         final double fy,
+                                         final double fz,
+                                         final double angularRateX,
+                                         final double angularRateY,
+                                         final double angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECIAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,

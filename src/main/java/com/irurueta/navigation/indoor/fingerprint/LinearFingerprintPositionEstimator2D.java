@@ -34,65 +34,70 @@ public class LinearFingerprintPositionEstimator2D extends
     /**
      * Constructor.
      */
-    public LinearFingerprintPositionEstimator2D() { }
+    public LinearFingerprintPositionEstimator2D() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public LinearFingerprintPositionEstimator2D(
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public LinearFingerprintPositionEstimator2D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public LinearFingerprintPositionEstimator2D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
     /**
      * Gets number of dimensions of points.
+     *
      * @return number of dimensions of points.
      */
     @Override
@@ -102,6 +107,7 @@ public class LinearFingerprintPositionEstimator2D extends
 
     /**
      * Gets estimated position or null if not available yet.
+     *
      * @return estimated position or null.
      */
     @Override

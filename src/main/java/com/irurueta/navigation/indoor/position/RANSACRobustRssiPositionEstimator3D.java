@@ -43,12 +43,13 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
 
     /**
      * Constructor.
+     *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -62,7 +63,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -71,15 +72,15 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -92,7 +93,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @param listener listener in charge of handling events.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+            final RobustRssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -100,14 +101,14 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RobustRssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -116,14 +117,14 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RobustRssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -132,17 +133,17 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     *                                  null or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RobustRssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -172,7 +173,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if this estimator is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
@@ -196,7 +197,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                              kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
@@ -220,7 +221,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);

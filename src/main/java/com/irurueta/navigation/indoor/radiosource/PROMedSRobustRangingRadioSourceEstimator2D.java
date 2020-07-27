@@ -99,7 +99,7 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -109,7 +109,7 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @param listener listener in charge of attending events raised by this instance.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
     }
 
@@ -122,8 +122,8 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -133,7 +133,7 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
-    public PROMedSRobustRangingRadioSourceEstimator2D(Point2D initialPosition) {
+    public PROMedSRobustRangingRadioSourceEstimator2D(final Point2D initialPosition) {
         super(initialPosition);
     }
 
@@ -141,26 +141,27 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
      *
-     * @param readings          radio signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param readings        radio signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustRangingRadioSourceEstimator2D(Point2D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+    public PROMedSRobustRangingRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -168,16 +169,16 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
      *
-     * @param readings          radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio source
-     *                          position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param readings        radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio source
+     *                        position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -185,13 +186,13 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * Constructor.
      *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            double[] qualityScores) {
+            final double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -206,11 +207,11 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @param readings      radio signal ranging readings belonging to the same
      *                      radio source.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingReadingLocated<S, Point2D>> readings) {
+            final double[] qualityScores,
+            final List<? extends RangingReadingLocated<S, Point2D>> readings) {
         super(readings);
         internalSetQualityScores(qualityScores);
     }
@@ -223,11 +224,11 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      *                      the quality of the sample.
      * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            double[] qualityScores,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -242,12 +243,12 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @param readings      radio signal readings belonging to the same radio source.
      * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROMedSRobustRangingRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -255,16 +256,17 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
     /**
      * Constructor.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param initialPosition   initial position to start the estimation or radio
-     *                          source position.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param initialPosition initial position to start the estimation or radio
+     *                        source position.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
-    public PROMedSRobustRangingRadioSourceEstimator2D(double[] qualityScores,
-            Point2D initialPosition) {
+    public PROMedSRobustRangingRadioSourceEstimator2D(
+            final double[] qualityScores,
+            final Point2D initialPosition) {
         super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -273,18 +275,19 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param readings          radio signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param readings        radio signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustRangingRadioSourceEstimator2D(double[] qualityScores,
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+    public PROMedSRobustRangingRadioSourceEstimator2D(
+            final double[] qualityScores,
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -292,18 +295,19 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
     /**
      * Constructor.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustRangingRadioSourceEstimator2D(double[] qualityScores,
-            Point2D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+    public PROMedSRobustRangingRadioSourceEstimator2D(
+            final double[] qualityScores,
+            final Point2D initialPosition,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -312,20 +316,21 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param readings          radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio source
-     *                          position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param readings        radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio source
+     *                        position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustRangingRadioSourceEstimator2D(double[] qualityScores,
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
+    public PROMedSRobustRangingRadioSourceEstimator2D(
+            final double[] qualityScores,
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -372,9 +377,9 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
+    public void setStopThreshold(final double stopThreshold)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -410,11 +415,11 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than minimum required samples.
-     * @throws LockedException if robust solver is locked because an
-     * estimation is already in progress.
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if robust solver is locked because an
+     *                                  estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException {
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -435,10 +440,10 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
     /**
      * Robustly estimates position for a radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public void estimate() throws LockedException, NotReadyException, RobustEstimatorException {
@@ -449,81 +454,89 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
             throw new NotReadyException();
         }
 
-        PROMedSRobustEstimator<Solution<Point2D>> innerEstimator =
+        final PROMedSRobustEstimator<Solution<Point2D>> innerEstimator =
                 new PROMedSRobustEstimator<>(
                         new PROMedSRobustEstimatorListener<Solution<Point2D>>() {
 
-                    @Override
-                    public double[] getQualityScores() {
-                        return mQualityScores;
-                    }
+                            @Override
+                            public double[] getQualityScores() {
+                                return mQualityScores;
+                            }
 
-                    @Override
-                    public double getThreshold() {
-                        return mStopThreshold;
-                    }
+                            @Override
+                            public double getThreshold() {
+                                return mStopThreshold;
+                            }
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mReadings.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mReadings.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return Math.max(mPreliminarySubsetSize, getMinReadings());
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return Math.max(mPreliminarySubsetSize, getMinReadings());
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices,
-                            List<Solution<Point2D>> solutions) {
-                        solvePreliminarSolutions(samplesIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<Solution<Point2D>> solutions) {
+                                solvePreliminarSolutions(samplesIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(Solution<Point2D> currentEstimation, int i) {
-                        return residual(currentEstimation, i);
-                    }
+                            @Override
+                            public double computeResidual(
+                                    final Solution<Point2D> currentEstimation,
+                                    final int i) {
+                                return residual(currentEstimation, i);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return PROMedSRobustRangingRadioSourceEstimator2D.this.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return PROMedSRobustRangingRadioSourceEstimator2D.this.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(RobustEstimator<Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateStart(
-                                    PROMedSRobustRangingRadioSourceEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator<Solution<Point2D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateEnd(RobustEstimator<Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateEnd(
-                                    PROMedSRobustRangingRadioSourceEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator<Solution<Point2D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Solution<Point2D>> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onEstimateNextIteration(
-                                    PROMedSRobustRangingRadioSourceEstimator2D.this, iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<Solution<Point2D>> estimator,
+                                    final int iteration) {
+                                if (mListener != null) {
+                                    mListener.onEstimateNextIteration(
+                                            PROMedSRobustRangingRadioSourceEstimator2D.this,
+                                            iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Solution<Point2D>> estimator, float progress) {
-                        if (mListener != null) {
-                            mListener.onEstimateProgressChange(
-                                    PROMedSRobustRangingRadioSourceEstimator2D.this, progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<Solution<Point2D>> estimator,
+                                    final float progress) {
+                                if (mListener != null) {
+                                    mListener.onEstimateProgressChange(
+                                            PROMedSRobustRangingRadioSourceEstimator2D.this,
+                                            progress);
+                                }
+                            }
+                        });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onEstimateStart(this);
+            }
+
             mInliersData = null;
 
             //inlier thresholds are disable to obtain a less restrictive amount of inliers
@@ -532,13 +545,17 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            Solution<Point2D> result = innerEstimator.estimate();
+            final Solution<Point2D> result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             attemptRefine(result);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onEstimateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;
@@ -562,9 +579,9 @@ public class PROMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> e
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than 3 samples.
+     *                                  is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores) {
+    private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinReadings()) {
             throw new IllegalArgumentException();

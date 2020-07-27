@@ -404,7 +404,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public RobustKnownPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed) {
         mCommonAxisUsed = commonAxisUsed;
     }
 
@@ -431,7 +432,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param initialBias initial bias to find a solution.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final Matrix initialBias) {
+    public RobustKnownPositionAccelerometerCalibrator(
+            final Matrix initialBias) {
         try {
             setInitialBias(initialBias);
         } catch (final LockedException ignore) {
@@ -462,7 +464,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public RobustKnownPositionAccelerometerCalibrator(final ECEFPosition position) {
+    public RobustKnownPositionAccelerometerCalibrator(
+            final ECEFPosition position) {
         mPosition = position;
     }
 
@@ -1976,7 +1979,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setListener(final RobustKnownPositionAccelerometerCalibratorListener listener)
+    public void setListener(
+            final RobustKnownPositionAccelerometerCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2034,7 +2038,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2067,7 +2071,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(final double confidence) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2097,7 +2101,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(final int maxIterations) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2133,7 +2137,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2158,7 +2162,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2189,7 +2193,7 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -2526,7 +2530,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinimumRequiredMeasurements()}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(
+            final int preliminarySubsetSize) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2545,7 +2550,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -6501,12 +6507,12 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
 
         final List<StandardDeviationBodyKinematics> measurements = new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
         try {
-            PreliminaryResult result = new PreliminaryResult();
+            final PreliminaryResult result = new PreliminaryResult();
             result.mEstimatedBiases = getInitialBias();
             result.mEstimatedMa = getInitialMa();
 
@@ -6538,8 +6544,8 @@ public abstract class RobustKnownPositionAccelerometerCalibrator {
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationBodyKinematics> inlierMeasurements =
                     new ArrayList<>();

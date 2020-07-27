@@ -30,14 +30,14 @@ public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P exten
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
+    void onEstimateStart(final SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
 
     /**
      * Called when estimation ends.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
+    void onEstimateEnd(final SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
 
     /**
      * Called when estimation progress significantly changes.
@@ -46,6 +46,6 @@ public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P exten
      * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
     void onEstimateProgressChange(
-            SequentialRobustRangingAndRssiPositionEstimator<P> estimator,
-            float progress);
+            final SequentialRobustRangingAndRssiPositionEstimator<P> estimator,
+            final float progress);
 }

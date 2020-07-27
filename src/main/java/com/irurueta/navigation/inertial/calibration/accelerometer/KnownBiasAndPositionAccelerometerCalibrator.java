@@ -6481,7 +6481,8 @@ public class KnownBiasAndPositionAccelerometerCalibrator {
      *                     known position witn unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final Collection<StandardDeviationBodyKinematics> measurements)
+    public void setMeasurements(
+            final Collection<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();

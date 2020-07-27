@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Contains 3D located RSSI readings from several radio sources.
+ *
  * @param <S> a {@link RadioSource} type.
  * @param <R> a {@link RssiReading} type.
  */
@@ -31,24 +32,28 @@ public class RssiFingerprintLocated3D<S extends RadioSource, R extends RssiReadi
 
     /**
      * Constructor.
+     *
      * @param readings non-located RSSI readings defining the fingerprint.
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public RssiFingerprintLocated3D(List<R> readings, Point3D position) {
+    public RssiFingerprintLocated3D(
+            final List<R> readings, final Point3D position) {
         super(readings, position);
     }
 
     /**
      * Constructor.
-     * @param readings non-located RSSI readings defining the fingerprint.
-     * @param position position where readings were made.
+     *
+     * @param readings           non-located RSSI readings defining the fingerprint.
+     * @param position           position where readings were made.
      * @param positionCovariance 2x2 covariance of inhomogeneous coordinates of
      *                           current position (if available).
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public RssiFingerprintLocated3D(List<R> readings, Point3D position,
-                                    Matrix positionCovariance) {
+    public RssiFingerprintLocated3D(
+            final List<R> readings, final Point3D position,
+            final Matrix positionCovariance) {
         super(readings, position, positionCovariance);
     }
 

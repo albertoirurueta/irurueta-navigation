@@ -60,10 +60,10 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -77,7 +77,7 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -86,15 +86,15 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown
-     *                      location for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown
+     *                    location for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -107,7 +107,7 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -115,14 +115,14 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -131,14 +131,14 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown
-     *                      location for provided location radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing readings at an unknown
+     *                    location for provided location radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -147,17 +147,17 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown
-     *                      location for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown
+     *                    location for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     *                                  null or the number of provided sources is less than the required minimum.
      */
     public PROMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -166,17 +166,19 @@ public class PROMedSRobustMixedPositionEstimator3D extends
 
     /**
      * Constructor.
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
+     *
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores) {
         this();
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -185,22 +187,23 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param sources                          located radio sources used for
+     *                                         lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 List<? extends RadioSourceLocated<Point3D>> sources) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         this(sources);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -209,22 +212,23 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param fingerprint                       fingerprint containing ranging+RSSI
-     *                                          readings at an unknown location for
-     *                                          provided located radio sources.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param fingerprint                      fingerprint containing ranging+RSSI
+     *                                         readings at an unknown location for
+     *                                         provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(fingerprint);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -233,26 +237,27 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param fingerprint                       fingerprint containing ranging+RSSI
-     *                                          readings at an unknown location for
-     *                                          provided located radio sources.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param sources                          located radio sources used for
+     *                                         lateration.
+     * @param fingerprint                      fingerprint containing ranging+RSSI
+     *                                         readings at an unknown location for
+     *                                         provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 List<? extends RadioSourceLocated<Point3D>> sources,
-                                                 Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(sources, fingerprint);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -261,19 +266,20 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param listener                         listener in charge of handling events.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 RobustMixedPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         this(listener);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -282,24 +288,25 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param sources                          located radio sources used for
+     *                                         lateration.
+     * @param listener                         listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 List<? extends RadioSourceLocated<Point3D>> sources,
-                                                 RobustMixedPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         this(sources, listener);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -308,24 +315,25 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param fingerprint                       fingerprint containing ranging+RSSI
-     *                                          readings at an unknown location for
-     *                                          provided location radio sources.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param fingerprint                      fingerprint containing ranging+RSSI
+     *                                         readings at an unknown location for
+     *                                         provided location radio sources.
+     * @param listener                         listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-                                                 RobustMixedPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         this(fingerprint, listener);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -334,28 +342,29 @@ public class PROMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param fingerprint                       fingerprint containing ranging+RSSI
-     *                                          readings at an unknown location for
-     *                                          provided located radio sources.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores              quality scores corresponding to
+     *                                         each provided located radio source.
+     *                                         The larger the score value the better
+     *                                         the quality of the radio source.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to readings
+     *                                         within provided fingerprint. The larger
+     *                                         the score the better the quality of the
+     *                                         reading.
+     * @param sources                          located radio sources used for
+     *                                         lateration.
+     * @param fingerprint                      fingerprint containing ranging+RSSI
+     *                                         readings at an unknown location for
+     *                                         provided located radio sources.
+     * @param listener                         listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     *                                  null or the number of provided sources is less than the required minimum.
      */
-    public PROMedSRobustMixedPositionEstimator3D(double[] sourceQualityScores,
-                                                 double[] fingerprintReadingsQualityScores,
-                                                 List<? extends RadioSourceLocated<Point3D>> sources,
-                                                 Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-                                                 RobustMixedPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustMixedPositionEstimator3D(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingsQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         this(sources, fingerprint, listener);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
@@ -380,7 +389,7 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      * @throws IllegalArgumentException if provided quality scores length is smaller
      *                                  than minimum required samples.
      */
-    public void setSourceQualityScores(double[] sourceQualityScores)
+    public void setSourceQualityScores(final double[] sourceQualityScores)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -414,7 +423,7 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      *                                  than minimum required samples.
      */
     public void setFingerprintReadingsQualityScores(
-            double[] fingerprintReadingsQualityScores) throws LockedException {
+            final double[] fingerprintReadingsQualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -464,15 +473,16 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         ((PROMedSRobustLateration3DSolver) mLaterationSolver).
                 setStopThreshold(stopThreshold);
     }
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override
@@ -492,11 +502,12 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      * Sets quality scores corresponding to each provided located radio source.
      * This method is used internally and does not check whether instance is
      * locked or not.
+     *
      * @param sourceQualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than 3 samples.
+     *                                  is smaller than 3 samples.
      */
-    private void internalSetSourceQualityScores(double[] sourceQualityScores) {
+    private void internalSetSourceQualityScores(final double[] sourceQualityScores) {
         if (sourceQualityScores == null ||
                 sourceQualityScores.length < getMinRequiredSources()) {
             throw new IllegalArgumentException();
@@ -512,12 +523,13 @@ public class PROMedSRobustMixedPositionEstimator3D extends
      * fingerprint.
      * This method is used internally and does not check whether instance is locked
      * or not.
+     *
      * @param fingerprintReadingsQualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores lengt is
-     * smaller than 3 samples.
+     *                                  smaller than 3 samples.
      */
     private void internalSetFingerprintReadingsQualityScores(
-            double[] fingerprintReadingsQualityScores) {
+            final double[] fingerprintReadingsQualityScores) {
         if (fingerprintReadingsQualityScores == null ||
                 fingerprintReadingsQualityScores.length < getMinRequiredSources()) {
             throw new IllegalArgumentException();

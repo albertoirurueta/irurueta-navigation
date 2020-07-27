@@ -40,33 +40,37 @@ public class Accumulator {
 
     /**
      * Constructor from a double.
+     *
      * @param y set <i>sum</i> = <i>y</i>.
      */
-    public Accumulator(double y) {
+    public Accumulator(final double y) {
         mS = y;
         mT = 0;
     }
 
     /**
      * Constructor from another Accumulator.
+     *
      * @param a set <i>sum</i> = <i>a</i>.
      */
-    public Accumulator(Accumulator a) {
+    public Accumulator(final Accumulator a) {
         mS = a.mS;
         mT = a.mT;
     }
 
     /**
      * Sets the value to a double.
+     *
      * @param y set <i>sum</i> = <i>y</i>.
      */
-    public void set(double y) {
+    public void set(final double y) {
         mS = y;
         mT = 0;
     }
 
     /**
      * Returns the value held in the accumulator.
+     *
      * @return <i>sum</i>.
      */
     public double getSum() {
@@ -75,10 +79,11 @@ public class Accumulator {
 
     /**
      * Returns the result of adding a number to <i>sum</i> (but don't change <i>sum</i>).
+     *
      * @param y the number to be added to the sum.
      * @return <i>sum</i> + <i>y</i>.
      */
-    public double sum(double y) {
+    public double sum(final double y) {
         Accumulator a = new Accumulator(this);
         a.add(y);
         return a.mS;
@@ -86,6 +91,7 @@ public class Accumulator {
 
     /**
      * Add a number to the accumulator.
+     *
      * @param y set <i>sum</i> += <i>y</i>.
      */
     public void add(double y) {

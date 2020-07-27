@@ -23,6 +23,7 @@ import com.irurueta.navigation.NotReadyException;
  * Solves the lateration problem.
  * This is a formulation for a nonlinear least squares optimizer.
  * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("Duplicates")
@@ -61,44 +62,51 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Constructor.
      */
-    public LaterationSolver() { }
+    public LaterationSolver() {
+    }
 
     /**
      * Constructor.
      * Sets known positions and euclidean distances.
+     *
      * @param positions known positios of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points).
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public LaterationSolver(P[] positions, double[] distances) {
+    public LaterationSolver(final P[] positions, final double[] distances) {
         internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public LaterationSolver(LaterationSolverListener<P> listener) {
+    public LaterationSolver(final LaterationSolverListener<P> listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
      * Sets known positions and euclidean distances.
+     *
      * @param positions known positios of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points).
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public LaterationSolver(P[] positions, double[] distances, LaterationSolverListener<P> listener) {
+    public LaterationSolver(
+            final P[] positions, final double[] distances,
+            final LaterationSolverListener<P> listener) {
         this(positions, distances);
         mListener = listener;
     }
 
     /**
      * Gets listener to be notified of events raised by this instance.
+     *
      * @return listener to be notified of events raised by this instance.
      */
     public LaterationSolverListener<P> getListener() {
@@ -107,10 +115,12 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Sets listener to be notified of events raised by this instance.
+     *
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if instance is busy solving the lateration problem.
      */
-    public void setListener(LaterationSolverListener<P> listener) throws LockedException {
+    public void setListener(
+            final LaterationSolverListener<P> listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -119,6 +129,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Gets known positions of static nodes.
+     *
      * @return known positions of static nodes.
      */
     public P[] getPositions() {
@@ -127,6 +138,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Gets euclidean distances from static nodes to mobile node.
+     *
      * @return euclidean distances from static nodes to mobile node.
      */
     public double[] getDistances() {
@@ -135,6 +147,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Indicates whether solver is ready to find a solution.
+     *
      * @return true if solver is ready, false otherwise.
      */
     public boolean isReady() {
@@ -145,6 +158,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Returns boolean indicating if solver is locked because estimation is under
      * progress.
+     *
      * @return true if solver is locked, false otherwise.
      */
     public boolean isLocked() {
@@ -154,13 +168,15 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     *
      * @param positions known positios of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  length is smaller than required (2 points).
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setPositionsAndDistances(P[] positions, double[] distances) throws LockedException {
+    public void setPositionsAndDistances(
+            final P[] positions, final double[] distances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -169,6 +185,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Gets estimated inhomogeneous position coordinates.
+     *
      * @return estimated inhomogeneous position coordinates.
      */
     public double[] getEstimatedPositionCoordinates() {
@@ -177,9 +194,10 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Gets estimated estimated position and stores result into provided instance.
+     *
      * @param estimatedPosition instance where estimated estimated position will be stored.
      */
-    public void getEstimatedPosition(P estimatedPosition) {
+    public void getEstimatedPosition(final P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
             for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
                 estimatedPosition.setInhomogeneousCoordinate(i,
@@ -190,27 +208,31 @@ public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     public abstract P getEstimatedPosition();
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return number of dimensions of provided points.
      */
     public abstract int getNumberOfDimensions();
 
     /**
      * Solves the lateration problem.
+     *
      * @throws LaterationException if lateration fails.
-     * @throws NotReadyException is solver is not ready.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws NotReadyException   is solver is not ready.
+     * @throws LockedException     if instance is busy solving the lateration problem.
      */
     public abstract void solve() throws LaterationException, NotReadyException,
             LockedException;
 
     /**
      * Gets lateration solver type.
+     *
      * @return lateration solver type.
      */
     public abstract LaterationSolverType getType();
@@ -218,6 +240,7 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Minimum required number of positions and distances.
      * This value will depend on actual implementation and whether we are solving a 2D or 3D problem.
+     *
      * @return minimum required number of positions and distances.
      */
     public abstract int getMinRequiredPositionsAndDistances();
@@ -225,13 +248,15 @@ public abstract class LaterationSolver<P extends Point<?>> {
     /**
      * Internally sets known positions and euclidean distances.
      * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     *
      * @param positions known positios of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     *                                  length is smaller than required (2 points).
      */
-    protected void internalSetPositionsAndDistances(P[] positions, double[] distances) {
-        if(positions == null || distances == null) {
+    protected void internalSetPositionsAndDistances(
+            final P[] positions, final double[] distances) {
+        if (positions == null || distances == null) {
             throw new IllegalArgumentException();
         }
 

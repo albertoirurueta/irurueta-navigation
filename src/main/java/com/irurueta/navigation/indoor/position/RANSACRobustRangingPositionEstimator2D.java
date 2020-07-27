@@ -44,12 +44,13 @@ public class RANSACRobustRangingPositionEstimator2D extends
 
     /**
      * Constructor.
+     *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -63,7 +64,7 @@ public class RANSACRobustRangingPositionEstimator2D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -72,15 +73,15 @@ public class RANSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing ranging readings at an unknown location for
-     *                      provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location for
+     *                    provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -93,7 +94,7 @@ public class RANSACRobustRangingPositionEstimator2D extends
      * @param listener listener in charge of handling events.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -101,14 +102,14 @@ public class RANSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -117,14 +118,14 @@ public class RANSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -133,17 +134,17 @@ public class RANSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     *                                  null or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -173,7 +174,7 @@ public class RANSACRobustRangingPositionEstimator2D extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if this estimator is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         ((RANSACRobustLateration2DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
@@ -197,7 +198,7 @@ public class RANSACRobustRangingPositionEstimator2D extends
      *                              kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         ((RANSACRobustLateration2DSolver) mLaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
@@ -221,7 +222,7 @@ public class RANSACRobustRangingPositionEstimator2D extends
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         ((RANSACRobustLateration2DSolver) mLaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);

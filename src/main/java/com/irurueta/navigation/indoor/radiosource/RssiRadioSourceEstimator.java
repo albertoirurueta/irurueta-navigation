@@ -50,7 +50,7 @@ import java.util.List;
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
- *
+ * <p>
  * IMPORTANT: Implementations of this class can choose to estimate a
  * combination of radio source position, transmitted power and path loss
  * exponent. However enabling all three estimations usually achieves
@@ -171,7 +171,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
@@ -188,7 +188,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Levenberg-Marquardt fitter to find a solution.
      */
-    private LevenbergMarquardtMultiDimensionFitter mFitter =
+    private final LevenbergMarquardtMultiDimensionFitter mFitter =
             new LevenbergMarquardtMultiDimensionFitter();
 
     /**
@@ -201,69 +201,77 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings) {
+            final List<? extends RssiReadingLocated<S, P>> readings) {
         super(readings);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator(
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public RssiRadioSourceEstimator(P initialPosition) {
+    public RssiRadioSourceEstimator(
+            final P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings        radio signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public RssiRadioSourceEstimator(P initialPosition,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+    public RssiRadioSourceEstimator(
+            final P initialPosition,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
     }
@@ -271,57 +279,61 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings        radio signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final P initialPosition,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's).
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      */
     public RssiRadioSourceEstimator(
-            Double initialTransmittedPowerdBm) {
+            final Double initialTransmittedPowerdBm) {
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's).
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            Double initialTransmittedPowerdBm) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator(
-            Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final Double initialTransmittedPowerdBm,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -329,17 +341,18 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final Double initialTransmittedPowerdBm,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -347,17 +360,19 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -365,30 +380,34 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
      */
-    public RssiRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public RssiRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
-    public RssiRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+    public RssiRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -397,19 +416,21 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -418,51 +439,59 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      */
-    public RssiRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+    public RssiRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
-    public RssiRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+    public RssiRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -470,21 +499,23 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RssiRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends RssiReadingLocated<S, P>> readings,
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RssiRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -493,12 +524,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Gets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @return initial transmitted power to start the estimation of radio source
      * transmitted power.
      */
@@ -510,18 +542,19 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Sets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted
      *                                   power.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialTransmittedPowerdBm(Double initialTransmittedPowerdBm)
+    public void setInitialTransmittedPowerdBm(final Double initialTransmittedPowerdBm)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -533,12 +566,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Gets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in mW).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @return initial transmitted power to start the estimation of radio source
      * transmitted power.
      */
@@ -551,18 +585,19 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Sets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in mW).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @param initialTransmittedPower initial transmitted power to start the
      *                                estimation of radio source transmitted power.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setInitialTransmittedPower(Double initialTransmittedPower)
+    public void setInitialTransmittedPower(final Double initialTransmittedPower)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -580,6 +615,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Indicates whether transmitted power estimation is enabled or not.
+     *
      * @return true if transmitted power estimation is enabled, false otherwise.
      */
     public boolean isTransmittedPowerEstimationEnabled() {
@@ -588,12 +624,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Specifies whether transmitted power estimation is enabled or not.
+     *
      * @param transmittedPowerEstimationEnabled true if transmitted power estimation is enabled,
      *                                          false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setTransmittedPowerEstimationEnabled(boolean transmittedPowerEstimationEnabled)
-        throws LockedException {
+    public void setTransmittedPowerEstimationEnabled(
+            final boolean transmittedPowerEstimationEnabled)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -603,11 +641,12 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Gets initial position to start the estimation of radio source position.
      * If not defined, centroid of provided readings will be used.
-     *
+     * <p>
      * If position estimation is enabled, estimation will start at this value
      * and will converge to the most appropriate value.
      * If position estimation is disabled, this value will be assumed to
      * be exact and the estimated position will be equal to this value.
+     *
      * @return initial position to start the estimation of radio source position.
      */
     public P getInitialPosition() {
@@ -617,16 +656,17 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Sets initial position to start the estimation of radio source position.
      * If not defined, centroid of provided fingerprints will be used.
-     *
+     * <p>
      * If position estimation is enabled, estimation will start at this value
      * and will converge to the most appropriate value.
      * If position estimation is disabled, this value will be assumed to
      * be exact and the estimated position will be equal to this value.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(final P initialPosition) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -635,6 +675,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Indicates whether radio source position estimation is enabled or not.
+     *
      * @return true if position estimation is enabled, false otherwise.
      */
     public boolean isPositionEstimationEnabled() {
@@ -643,11 +684,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Specifies whether radio source position estimation is enabled or not.
+     *
      * @param positionEstimationEnabled true if position estimation is enabled,
      *                                  false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPositionEstimationEnabled(boolean positionEstimationEnabled)
+    public void setPositionEstimationEnabled(
+            final boolean positionEstimationEnabled)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -663,12 +706,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
      * to be exact and the estimated path loss exponent will be equal to this
      * value.
+     *
      * @return initial path loss exponent.
      */
     public double getInitialPathLossExponent() {
@@ -683,16 +727,18 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
      * to be exact and the estimated path loss exponent will be equal to this
      * value.
+     *
      * @param initialPathLossExponent initial path loss exponent.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPathLossExponent(double initialPathLossExponent)
+    public void setInitialPathLossExponent(
+            final double initialPathLossExponent)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -702,6 +748,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Indicates whether path loss estimation is enabled or not.
+     *
      * @return true if path loss estimation is enabled, false otherwise.
      */
     public boolean isPathLossEstimationEnabled() {
@@ -710,11 +757,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Specifies whether path loss estimation is enabled or not.
+     *
      * @param pathLossEstimationEnabled true if path loss estimation is enabled,
      *                                  false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPathLossEstimationEnabled(boolean pathLossEstimationEnabled)
+    public void setPathLossEstimationEnabled(
+            final boolean pathLossEstimationEnabled)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -724,6 +773,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Indicates whether this instance is ready to start the estimation.
+     *
      * @return true if this instance is ready, false otherwise.
      */
     @Override
@@ -740,9 +790,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Estimate position, transmitted power and path loss exponent.
+     *
      * @throws RadioSourceEstimationException if estimation fails.
-     * @throws NotReadyException if estimator is not ready.
-     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException              if estimator is not ready.
+     * @throws LockedException                if estimator is locked.
      */
     @SuppressWarnings("all")
     @Override
@@ -794,8 +845,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             mFitter.fit();
 
             //estimated position and transmitted power
-            double[] a = mFitter.getA();
-            int dims = getNumberOfDimensions();
+            final double[] a = mFitter.getA();
+            final int dims = getNumberOfDimensions();
 
             mEstimatedCovariance = mFitter.getCovar();
             mChiSq = mFitter.getChisq();
@@ -807,7 +858,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 System.arraycopy(a, 0, mEstimatedPositionCoordinates, 0, dims);
 
                 if (mEstimatedCovariance != null) {
-                    int d = dims -1;
+                    final int d = dims - 1;
                     if (mEstimatedPositionCovariance == null) {
                         mEstimatedPositionCovariance = mEstimatedCovariance.
                                 getSubmatrix(0, 0, d, d);
@@ -864,7 +915,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             if (mListener != null) {
                 mListener.onEstimateEnd(this);
             }
-        } catch (NumericalException e) {
+        } catch (final NumericalException e) {
             throw new RadioSourceEstimationException(e);
         } finally {
             mLocked = false;
@@ -873,6 +924,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Gets estimated transmitted power expressed in milli watts (mW).
+     *
      * @return estimated transmitted power expressed in milli watts.
      */
     public double getEstimatedTransmittedPower() {
@@ -881,6 +933,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Gets estimated transmitted power expressed in dBm's.
+     *
      * @return estimated transmitted power expressed in dBm's.
      */
     public double getEstimatedTransmittedPowerdBm() {
@@ -897,6 +950,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * - Indoor (line-of-sight): 1.6 to 1.8
      * If path loss exponent estimation is not enabled, this value will always be equal to
      * {@link #DEFAULT_PATH_LOSS_EXPONENT}
+     *
      * @return estimated path loss exponent.
      */
     public double getEstimatedPathLossExponent() {
@@ -907,6 +961,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Gets estimated transmitted power variance.
      * This value will only be available when transmitted power
      * estimation is enabled.
+     *
      * @return estimated transmitted power variance or null.
      */
     public Double getEstimatedTransmittedPowerVariance() {
@@ -917,6 +972,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Gets estimated path loss exponent variance.
      * This value will only be available when pathloss
      * exponent estimation is enabled.
+     *
      * @return estimated path loss exponent variance or null.
      */
     public Double getEstimatedPathLossExponentVariance() {
@@ -925,6 +981,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Gets estimated chi square value.
+     *
      * @return estimated chi square value.
      */
     public double getChiSq() {
@@ -933,13 +990,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Setups fitter to estimated position.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterPosition() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent (which is typically 2.0)
 
@@ -951,7 +1009,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //compute k as the constant part of the isotropic received power formula
         //so that: Pr = Pte*k/d^n
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
                 mInitialPathLossExponent);
         final double kdB = 10.0 * Math.log10(k);
 
@@ -970,13 +1028,15 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[dims];
+                final double[] initial = new double[dims];
                 computeInitialPosition(initial, dims);
                 return initial;
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
                 double sqrDistance = 0.0;
                 double diff;
                 for (int j = 0; j < dims; j++) {
@@ -991,7 +1051,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //f(x,y) = -5*n*log((x - xap)^2 + (y - yap)^2)
                 //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
-                double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
+                final double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
                 if (ln10PerSqrDistance != 0.0) {
                     for (int j = 0; j < dims; j++) {
                         derivatives[j] /= ln10PerSqrDistance;
@@ -1004,7 +1064,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //          received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1015,14 +1076,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, dims);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, dims);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 reading = mReadings.get(i);
-                P position = reading.getPosition();
+                final P position = reading.getPosition();
 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
@@ -1035,20 +1096,21 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) {
+        } catch (final AlgebraException ignore) {
             //never happens
         }
     }
 
     /**
      * Setups fitter to estimate transmitted power.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterTransmittedPower() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent (which is typically 2.0)
 
@@ -1060,7 +1122,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //compute k as the constant part of the isotropic received power formula
         //so that: Pr = Pte*k/d^n
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
                 mInitialPathLossExponent);
         final double kdB = 10.0 * Math.log10(k);
         final double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
@@ -1077,16 +1139,18 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[1];
+                final double[] initial = new double[1];
                 initial[0] = initialTransmittedPowerdBm;
                 return initial;
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
+                final double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
 
-                double transmittedPowerdBm = params[0];
+                final double transmittedPowerdBm = params[0];
 
                 //derivative respect transmitted power Pt (dBm) = 10*log(Pte)
                 derivatives[0] = 1.0;
@@ -1097,7 +1161,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //          received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1108,11 +1173,11 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, 1);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, 1);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
 
             x.initialize(initialTransmittedPowerdBm);
             for (int i = 0; i < numReadings; i++) {
@@ -1125,20 +1190,21 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) {
+        } catch (final AlgebraException ignore) {
             //never happens
         }
     }
 
     /**
      * Setups fitter to estimated path loss exponent.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterPathLossExponent() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent
 
@@ -1150,7 +1216,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //k is defined so that: Pr = Pte * k^n / d^n so that
         //k = (c/(4*pi*f))
-        double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
+        final double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
         final double kdB = 10.0 * Math.log10(k);
         final double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
 
@@ -1166,20 +1232,22 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[1];
+                final double[] initial = new double[1];
                 initial[0] = mInitialPathLossExponent;
                 return initial;
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
-                double pathLossExponent = params[0];
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
+                final double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
+                final double pathLossExponent = params[0];
 
                 //derivative respect to path loss exponent
                 //f(x,y,n) = n*kdB -5*n*log((x - xap)^2 + (y - yap)^2)
                 //df/dn = kdB -5*log((x - xap)^2 + (y - yap)^2) = kdB - 5*log(sqrDistance)
-                double logSqrDistance = Math.log10(sqrDistance);
+                final double logSqrDistance = Math.log10(sqrDistance);
                 derivatives[0] = kdB - 5 * logSqrDistance;
 
                 //d^2 = (x - xap)^2 + (y - yap)^2
@@ -1188,7 +1256,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //          received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k^n) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k^n) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1199,11 +1268,11 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, 1);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, 1);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
 
             x.initialize(mInitialPathLossExponent);
             for (int i = 0; i < numReadings; i++) {
@@ -1216,20 +1285,21 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) {
+        } catch (final AlgebraException ignore) {
             //never happens
         }
     }
 
     /**
      * Setups fitter to estimate transmitted power and position.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterPositionAndTransmittedPower() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent (which is typically 2.0)
 
@@ -1241,7 +1311,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //compute k as the constant part of the isotropic received power formula
         //so that: Pr = Pte*k/d^n
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
                 mInitialPathLossExponent);
         final double kdB = 10.0 * Math.log10(k);
 
@@ -1263,7 +1333,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[dimsPlus1];
+                final double[] initial = new double[dimsPlus1];
 
                 //initial position
                 computeInitialPosition(initial, dims);
@@ -1275,8 +1345,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params,
-                                   double[] derivatives) {
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
                 double sqrDistance = 0.0;
                 double diff;
                 for (int j = 0; j < dims; j++) {
@@ -1287,13 +1358,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                     derivatives[j] = -10.0 * mInitialPathLossExponent * diff;
                 }
 
-                double transmittedPowerdBm = params[dims];
+                final double transmittedPowerdBm = params[dims];
 
                 //derivatives respect position coordinates are (2D case):
                 //f(x,y) = -5*n*log((x - xap)^2 + (y - yap)^2)
                 //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
-                double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
+                final double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
                 if (ln10PerSqrDistance != 0.0) {
                     for (int j = 0; j < dims; j++) {
                         derivatives[j] /= ln10PerSqrDistance;
@@ -1309,7 +1380,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //              received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1320,14 +1392,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, dimsPlus1);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, dimsPlus1);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 reading = mReadings.get(i);
-                P position = reading.getPosition();
+                final P position = reading.getPosition();
 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
@@ -1341,20 +1413,21 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) {
+        } catch (final AlgebraException ignore) {
             //never happens
         }
     }
 
     /**
      * Setups fitter to estimate position and path loss exponent.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterPositionAndPathLossExponent() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent (which is typically 2.0)
 
@@ -1366,7 +1439,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //compute k as the constant part of the isotropic received power formula
         //so that: Pr = Pte*k/d^n
-        double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
+        final double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
         final double kdB = 10.0 * Math.log10(k);
 
         final int dims = getNumberOfDimensions();
@@ -1386,7 +1459,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[dimsPlus1];
+                final double[] initial = new double[dimsPlus1];
 
                 //initial position
                 computeInitialPosition(initial, dims);
@@ -1397,10 +1470,12 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
                 double sqrDistance = 0.0;
                 double diff;
-                double pathLossExponent = params[dims];
+                final double pathLossExponent = params[dims];
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
                     sqrDistance += diff * diff;
@@ -1414,7 +1489,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 //df/dn = kdB -5*log((x - xap)^2 + (y - yap)^2) = kdB - 5*log(sqrDistance)
-                double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
+                final double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
                 if (ln10PerSqrDistance != 0.0) {
                     for (int j = 0; j < dims; j++) {
                         derivatives[j] /= ln10PerSqrDistance;
@@ -1422,7 +1497,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 }
 
                 //derivative respect to path loss exponent
-                double logSqrDistance = Math.log10(sqrDistance);
+                final double logSqrDistance = Math.log10(sqrDistance);
                 derivatives[dims] = kdB - 5 * logSqrDistance;
 
                 //d^2 = (x - xap)^2 + (y - yap)^2
@@ -1432,7 +1507,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //              received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k^n) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k^n) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1444,14 +1520,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, dimsPlus1);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, dimsPlus1);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 reading = mReadings.get(i);
-                P position = reading.getPosition();
+                final P position = reading.getPosition();
 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
@@ -1465,20 +1541,21 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) {
+        } catch (final AlgebraException ignore) {
             //never happens
         }
     }
 
     /**
      * Setups fitter to estimate transmitted power and path loss exponent.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterTransmittedPowerAndPathLossExponent() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent
 
@@ -1490,7 +1567,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //k is defined so that: Pr = Pte * k^n / d^n so that
         //k = (c/(4*pi*f))
-        double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
+        final double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
         final double kdB = 10.0 * Math.log10(k);
 
         final double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
@@ -1507,7 +1584,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[2];
+                final double[] initial = new double[2];
 
                 //initial transmitted power
                 initial[0] = initialTransmittedPowerdBm;
@@ -1519,16 +1596,18 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
-                double transmittedPowerdBm = params[0];
-                double pathLossExponent = params[1];
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
+                final double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
+                final double transmittedPowerdBm = params[0];
+                final double pathLossExponent = params[1];
 
                 //derivative respect transmitted power
                 derivatives[0] = 1.0;
 
                 //derivative respect to path loss exponent
-                double logSqrDistance = Math.log10(sqrDistance);
+                final double logSqrDistance = Math.log10(sqrDistance);
                 derivatives[1] = kdB - 5 * logSqrDistance;
 
                 //d^2 = (x - xap)^2 + (y - yap)^2
@@ -1538,7 +1617,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //                 received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k^n) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k^n) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1550,11 +1630,11 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, 2);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, 2);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 reading = mReadings.get(i);
 
@@ -1576,13 +1656,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Setups fitter to estimate transmitted power, position and path
      * loss exponent.
+     *
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
     private void setupFitterPositionTransmittedPowerAndPathLossExponent() throws FittingException {
         //because all readings must belong to the same radio source, we
         //obtain the frequency of the first radio source on the first reading
         RssiReadingLocated<S, P> reading = mReadings.get(0);
-        double frequency = reading.getSource().getFrequency();
+        final double frequency = reading.getSource().getFrequency();
 
         //n = 2.0, is the path loss exponent
 
@@ -1594,7 +1675,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
         //k is defined so that: Pr = Pte * k^n / d^n so that
         //k = (c/(4*pi*f))
-        double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
+        final double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
         final double kdB = 10.0 * Math.log10(k);
 
         final int dims = getNumberOfDimensions();
@@ -1616,7 +1697,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[dimsPlus2];
+                final double[] initial = new double[dimsPlus2];
 
                 //initial position
                 computeInitialPosition(initial, dims);
@@ -1631,11 +1712,12 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params,
-                                   double[] derivatives) {
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
                 double sqrDistance = 0.0;
                 double diff;
-                double pathLossExponent = params[dimsPlus1];
+                final double pathLossExponent = params[dimsPlus1];
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
                     sqrDistance += diff * diff;
@@ -1644,14 +1726,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                     derivatives[j] = -10.0 * pathLossExponent * diff;
                 }
 
-                double transmittedPowerdBm = params[dims];
+                final double transmittedPowerdBm = params[dims];
 
                 //derivatives respect position coordinates are (2D case):
                 //f(x,y,n) = n*kdB -5*n*log((x - xap)^2 + (y - yap)^2)
                 //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 //df/dn = kdB -5*log((x - xap)^2 + (y - yap)^2) = kdB - 5*log(sqrDistance)
-                double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
+                final double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
                 if (ln10PerSqrDistance != 0.0) {
                     for (int j = 0; j < dims; j++) {
                         derivatives[j] /= ln10PerSqrDistance;
@@ -1662,7 +1744,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 derivatives[dims] = 1.0;
 
                 //derivative respect to path loss exponent
-                double logSqrDistance = Math.log10(sqrDistance);
+                final double logSqrDistance = Math.log10(sqrDistance);
                 derivatives[dimsPlus1] = kdB - 5 * logSqrDistance;
 
                 //d^2 = (x - xap)^2 + (y - yap)^2
@@ -1672,7 +1754,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
                 //n is the path loss exponent
                 //lambda = c/f, where lambda is wavelength,
-                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the
+                //          received Gain
                 //Pr = Pte*c^n/((4*pi*f)^n * d^n)
                 //Pr (dBm) = 10*log(k^n) + 10*log(Pte) - 10*log(d^n) =
                 //10*log(k^n) + 10*log(Pte) - 10*log((d^2)^n/2) =
@@ -1684,14 +1767,14 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
         });
 
-        int numReadings = mReadings.size();
+        final int numReadings = mReadings.size();
         try {
-            Matrix x = new Matrix(numReadings, dimsPlus2);
-            double[] y = new double[numReadings];
-            double[] standardDeviations = new double[numReadings];
+            final Matrix x = new Matrix(numReadings, dimsPlus2);
+            final double[] y = new double[numReadings];
+            final double[] standardDeviations = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 reading = mReadings.get(i);
-                P position = reading.getPosition();
+                final P position = reading.getPosition();
 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
@@ -1706,7 +1789,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) {
+        } catch (final AlgebraException ignore) {
             //never happens
         }
     }
@@ -1715,16 +1798,17 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Computes initial transmitted power expressed in dBm's.
      * If no initial transmitted power is provided, the average of all measures
      * is used, otherwise provided value is used.
+     *
      * @return initial transmitted power.
      */
     private double computeInitialTransmittedPowerdBm() {
         if (mInitialTransmittedPowerdBm == null) {
             //compute average transmitted power (in mW)
-            int num = mReadings.size();
+            final int num = mReadings.size();
             double result = 0.0;
-            for (RssiReadingLocated<S, P> reading : mReadings) {
-                double rssi = reading.getRssi();
-                result += rssi / (double)num;
+            for (final RssiReadingLocated<S, P> reading : mReadings) {
+                final double rssi = reading.getRssi();
+                result += rssi / (double) num;
             }
             return result;
         } else {
@@ -1735,16 +1819,17 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Computes initial position.
+     *
      * @param result array where result will be stored.
-     * @param dims number of dimensions of position coordinates (either 2 or 3).
+     * @param dims   number of dimensions of position coordinates (either 2 or 3).
      */
-    private void computeInitialPosition(double[] result, int dims) {
+    private void computeInitialPosition(final double[] result, final int dims) {
         if (mInitialPosition == null) {
-            int num = mReadings.size();
+            final int num = mReadings.size();
 
             //compute average centroid of fingerprint positions
-            for (RssiReadingLocated<S, P> reading : mReadings) {
-                P position = reading.getPosition();
+            for (final RssiReadingLocated<S, P> reading : mReadings) {
+                final P position = reading.getPosition();
                 for (int i = 0; i < dims; i++) {
                     result[i] += position.getInhomogeneousCoordinate(i) /
                             (double) num;

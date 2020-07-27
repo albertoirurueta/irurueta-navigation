@@ -26,6 +26,7 @@ import java.util.List;
  * (not their actual location) where mean values are removed to account for possible
  * biases when measuring from different devices.
  * Typically this class should be preferred over {@link RadioSourceKNearestFinder}.
+ *
  * @param <P> a {@link Point} type.
  * @param <S> a {@link RadioSource type}.
  */
@@ -35,15 +36,16 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point<?>, S extends Radio
     /**
      * Collection of fingerprints to match against.
      */
-    private Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> mFingerprints;
+    private final Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> mFingerprints;
 
     /**
      * Constructor.
+     *
      * @param fingerprints collection of fingerprints to match against.
      * @throws IllegalArgumentException if collection of fingerprints is null.
      */
     public RadioSourceNoMeanKNearestFinder(
-            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
+            final Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
         if (fingerprints == null) {
             throw new IllegalArgumentException();
         }
@@ -53,45 +55,53 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point<?>, S extends Radio
     /**
      * Finds nearest fingerprint to provided one, in terms of signal euclidean distances
      * (with removed signal means), within the collection of provided fingerprints.
+     *
      * @param fingerprint fingerprint to find the nearest to.
      * @return nearest fingerprint or null if none could be found.
      */
-    public RssiFingerprintLocated<S, RssiReading<S>, P> findNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint) {
+    public RssiFingerprintLocated<S, RssiReading<S>, P> findNearestTo(
+            final RssiFingerprint<S, RssiReading<S>> fingerprint) {
         return findNearestTo(fingerprint, mFingerprints);
     }
 
     /**
      * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances
      * (with removed signal means), within the collection of provided fingerprints.
+     *
      * @param fingerprint fingerprint to find the k-nearest ones to.
-     * @param k number of nearest fingerprints to find.
+     * @param k           number of nearest fingerprints to find.
      * @return nearest fingerprints ordered from closest to farthest or an empty list if none could be found.
      * @throws IllegalArgumentException if either fingerprint is null or k is les than 1.
      */
     public List<RssiFingerprintLocated<S, RssiReading<S>, P>> findKNearestTo(
-            RssiFingerprint<S, RssiReading<S>> fingerprint, int k) {
+            final RssiFingerprint<S, RssiReading<S>> fingerprint,
+            final int k) {
         return findKNearestTo(fingerprint, mFingerprints, k);
     }
 
     /**
      * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances
      * (with removed signal means), within the collection of provided fingerprints.
-     * @param fingerprint fingerprint to find the k-nearest ones to.
-     * @param k number of nearest fingerprints to find.
+     *
+     * @param fingerprint         fingerprint to find the k-nearest ones to.
+     * @param k                   number of nearest fingerprints to find.
      * @param nearestFingerprints list where found nearest fingerprints will be stored ordered from closest to farthest
      *                            or an empty list if none could be found.
      * @param nearestSqrDistances list where squared signal euclidean distances corresponding to found fingerprints will
      *                            be stored or an empty list if no fingerprint is found.
      * @throws IllegalArgumentException if any parameter is null or k is less than 1.
      */
-    public void findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint, int k,
-            List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
-            List<Double> nearestSqrDistances) {
+    public void findKNearestTo(
+            final RssiFingerprint<S, RssiReading<S>> fingerprint,
+            final int k,
+            final List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
+            final List<Double> nearestSqrDistances) {
         findKNearestTo(fingerprint, mFingerprints, k, nearestFingerprints, nearestSqrDistances);
     }
 
     /**
      * Gets collection of fingerprints to match against.
+     *
      * @return collection of fingerprints to match against.
      */
     public Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> getFingerprints() {
@@ -101,24 +111,25 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point<?>, S extends Radio
     /**
      * Finds nearest fingerprint to provided one, in terms of signal euclidean distances
      * (with removed signal means), within the collection of provided fingerprints.
-     * @param fingerprint fingerprint to find the nearest to.
+     *
+     * @param fingerprint  fingerprint to find the nearest to.
      * @param fingerprints collection of fingerprints to make the search for the nearest one.
+     * @param <P>          a {@link Point} type.
+     * @param <S>          a {@link RadioSource} type.
      * @return nearest fingerprint or null if none could be found.
      * @throws IllegalArgumentException if either fingerprint or collection of fingerprints is null.
-     * @param <P> a {@link Point} type.
-     * @param <S> a {@link RadioSource} type.
      */
     @SuppressWarnings("Duplicates")
-    public static <P extends Point<?>, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P>
-            findNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
+    public static <P extends Point<?>, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P> findNearestTo(
+            final RssiFingerprint<S, RssiReading<S>> fingerprint,
+            final Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
         if (fingerprint == null || fingerprints == null) {
             throw new IllegalArgumentException();
         }
 
         double bestSqrDist = Double.MAX_VALUE;
         RssiFingerprintLocated<S, RssiReading<S>, P> result = null;
-        for(RssiFingerprintLocated<S, RssiReading<S>, P> f : fingerprints) {
+        for (RssiFingerprintLocated<S, RssiReading<S>, P> f : fingerprints) {
             double sqrDist = f.noMeanSqrDistanceTo(fingerprint);
             if (sqrDist < bestSqrDist) {
                 bestSqrDist = sqrDist;
@@ -132,19 +143,20 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point<?>, S extends Radio
     /**
      * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances, within the collection
      * of provided fingerprints.
-     * @param fingerprint fingerprint to find the k-nearest ones to.
+     *
+     * @param fingerprint  fingerprint to find the k-nearest ones to.
      * @param fingerprints collection of fingerprints to make the search for the nearest ones.
-     * @param k number of nearest fingerprints to find.
+     * @param k            number of nearest fingerprints to find.
+     * @param <P>          a {@link Point} type.
+     * @param <S>          a {@link RadioSource} type.
      * @return nearest fingerprints ordered from closest to farthest or an empty list if none could be found.
      * @throws IllegalArgumentException if either fingerprint or collection of fingerprints is null, or k is less than
-     * 1.
-     * @param <P> a {@link Point} type.
-     * @param <S> a {@link RadioSource} type.
+     *                                  1.
      */
     public static <P extends Point<?>, S extends RadioSource> List<RssiFingerprintLocated<S, RssiReading<S>, P>>
-            findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
-            int k) {
+    findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
+                   Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
+                   int k) {
 
         List<RssiFingerprintLocated<S, RssiReading<S>, P>> result =
                 new ArrayList<>();
@@ -157,23 +169,25 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point<?>, S extends Radio
     /**
      * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances, within the collection
      * of provided fingerprints.
-     * @param fingerprint fingerprint to find the k-nearest ones to.
-     * @param fingerprints collection of fingerprints ot make the search for the nearest ones.
-     * @param k number of nearest fingerprints to find.
+     *
+     * @param fingerprint         fingerprint to find the k-nearest ones to.
+     * @param fingerprints        collection of fingerprints ot make the search for the nearest ones.
+     * @param k                   number of nearest fingerprints to find.
      * @param nearestFingerprints list where found nearest fingerprints will be stored ordered from closest to farthest
      *                            or an empty list if none could be found.
      * @param nearestSqrDistances list where squared signal euclidean distances corresponding to found fingerprints will
      *                            be stored or an empty list if no fingerprint is found.
+     * @param <P>                 a {@link Point} type.
+     * @param <S>                 a {@link RadioSource} type.
      * @throws IllegalArgumentException if any parameter is null or k is less than 1.
-     * @param <P> a {@link Point} type.
-     * @param <S> a {@link RadioSource} type.
      */
     @SuppressWarnings("Duplicates")
     public static <P extends Point<?>, S extends RadioSource> void findKNearestTo(
-            RssiFingerprint<S, RssiReading<S>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
-            int k, List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
-            List<Double> nearestSqrDistances) {
+            final RssiFingerprint<S, RssiReading<S>> fingerprint,
+            final Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
+            final int k,
+            final List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
+            final List<Double> nearestSqrDistances) {
 
         if (fingerprint == null || fingerprints == null || k < 1 || nearestFingerprints == null ||
                 nearestSqrDistances == null) {
@@ -184,14 +198,14 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point<?>, S extends Radio
         nearestFingerprints.clear();
 
         double maxSqrDist = Double.MAX_VALUE;
-        for (RssiFingerprintLocated<S, RssiReading<S>, P> f : fingerprints) {
-            double sqrDist = f.noMeanSqrDistanceTo(fingerprint);
+        for (final RssiFingerprintLocated<S, RssiReading<S>, P> f : fingerprints) {
+            final double sqrDist = f.noMeanSqrDistanceTo(fingerprint);
             if (sqrDist < maxSqrDist || nearestSqrDistances.size() < k) {
 
                 //find insertion point
                 int pos = -1;
                 int i = 0;
-                for(Double sd : nearestSqrDistances) {
+                for (final Double sd : nearestSqrDistances) {
                     if (sqrDist < sd) {
                         //insertion point found
                         pos = i;

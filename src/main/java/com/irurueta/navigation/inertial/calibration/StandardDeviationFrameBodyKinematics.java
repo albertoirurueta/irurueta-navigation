@@ -1431,7 +1431,6 @@ public class StandardDeviationFrameBodyKinematics extends FrameBodyKinematics {
      * Copies data of provided instance into this instance.
      *
      * @param input instance to copy data from.
-     *
      */
     public void copyFrom(final StandardDeviationFrameBodyKinematics input) {
         super.copyFrom(input);
@@ -1476,7 +1475,8 @@ public class StandardDeviationFrameBodyKinematics extends FrameBodyKinematics {
     /**
      * Checks if provided instance has contents similar to this instance up to provided
      * threshold value.
-     * @param other instance to be compared.
+     *
+     * @param other     instance to be compared.
      * @param threshold maximum allowed difference between values.
      * @return true if both instances are considered to be equal (up to provided
      * threshold), false otherwise.

@@ -36,7 +36,8 @@ public class PositionEstimatorHelper {
     /**
      * Constructor to prevent instantiation.
      */
-    private PositionEstimatorHelper() { }
+    private PositionEstimatorHelper() {
+    }
 
     /**
      * Builds positions and distances from provided located radio sources and
@@ -47,17 +48,17 @@ public class PositionEstimatorHelper {
      * If no sources, fingerprint readings, positions and distances are provided, this
      * method makes no action.
      *
-     * @param sources       located radio sources to obtain positions and other
-     *                      parameters.
-     * @param fingerprint   fingerprint containing ranged RSSI readings.
-     * @param positions     list where extracted positions will be stored.
-     * @param distances     list where extracted distances will be stored.
-     * @param <P> a {@link Point} type.
+     * @param sources     located radio sources to obtain positions and other
+     *                    parameters.
+     * @param fingerprint fingerprint containing ranged RSSI readings.
+     * @param positions   list where extracted positions will be stored.
+     * @param distances   list where extracted distances will be stored.
+     * @param <P>         a {@link Point} type.
      */
     public static <P extends Point<?>> void buildPositionsAndDistances(
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            List<P> positions, List<Double> distances) {
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final List<P> positions, final List<Double> distances) {
 
         if (sources == null || fingerprint == null ||
                 fingerprint.getReadings() == null ||
@@ -68,14 +69,14 @@ public class PositionEstimatorHelper {
         positions.clear();
         distances.clear();
 
-        List<? extends Reading<? extends RadioSource>> readings =
+        final List<? extends Reading<? extends RadioSource>> readings =
                 fingerprint.getReadings();
-        for (Reading<? extends RadioSource> reading : readings) {
+        for (final Reading<? extends RadioSource> reading : readings) {
             //noinspection all
-            int index = sources.indexOf(reading.getSource());
+            final int index = sources.indexOf(reading.getSource());
             if (index >= 0) {
-                RadioSourceLocated<P> locatedSource = sources.get(index);
-                P position = locatedSource.getPosition();
+                final RadioSourceLocated<P> locatedSource = sources.get(index);
+                final P position = locatedSource.getPosition();
 
                 //compute distance
                 Double distance1 = null;
@@ -83,19 +84,19 @@ public class PositionEstimatorHelper {
                 switch (reading.getType()) {
                     case RANGING_READING:
                         distance1 = computeDistanceRanging(
-                                (RangingReading<? extends RadioSource>)reading);
+                                (RangingReading<? extends RadioSource>) reading);
                         break;
                     case RSSI_READING:
-                        distance1 =  computeDistanceRssi(locatedSource,
-                                (RssiReading<? extends RadioSource>)reading);
+                        distance1 = computeDistanceRssi(locatedSource,
+                                (RssiReading<? extends RadioSource>) reading);
                         break;
                     case RANGING_AND_RSSI_READING:
                         //in this case two positions and distance might be added to
                         //the lateration solver
                         distance1 = computeDistanceRanging(
-                                (RangingAndRssiReading<? extends RadioSource>)reading);
-                        distance2 =  computeDistanceRssi(locatedSource,
-                                (RangingAndRssiReading<? extends RadioSource>)reading);
+                                (RangingAndRssiReading<? extends RadioSource>) reading);
+                        distance2 = computeDistanceRssi(locatedSource,
+                                (RangingAndRssiReading<? extends RadioSource>) reading);
                         break;
                     default:
                         break;
@@ -138,17 +139,17 @@ public class PositionEstimatorHelper {
      *                                          stored.
      * @param distanceStandardDeviations        list where extracted standard deviations
      *                                          of distances will be stored.
+     * @param <P>                               a {@link Point} type.
      * @throws IllegalArgumentException if provided distance standard deviation fallback
-     * is negative.
-     * @param <P> a {@link Point} type.
+     *                                  is negative.
      */
     public static <P extends Point<?>> void buildPositionsDistancesAndDistanceStandardDeviations(
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            boolean useRadioSourcePositionCovariance,
-            double fallbackDistanceStandardDeviation,
-            List<P> positions, List<Double> distances,
-            List<Double> distanceStandardDeviations) {
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final boolean useRadioSourcePositionCovariance,
+            final double fallbackDistanceStandardDeviation,
+            final List<P> positions, final List<Double> distances,
+            final List<Double> distanceStandardDeviations) {
         buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(sources,
                 fingerprint, null, null, useRadioSourcePositionCovariance,
                 fallbackDistanceStandardDeviation, positions, distances,
@@ -186,19 +187,19 @@ public class PositionEstimatorHelper {
      * @param distanceQualityScores             list where extracted quality scores will
      *                                          be stored. If null, quality scores will
      *                                          be ignored.
+     * @param <P>                               a {@link Point} type.
      * @throws IllegalArgumentException if provided distance standard deviation
-     * fallback is negative.
-     * @param <P> a {@link Point} type.
+     *                                  fallback is negative.
      */
     public static <P extends Point<?>> void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            double[] sourceQualityScores, double[] fingerprintReadingsQualityScores,
-            boolean useRadioSourcePositionCovariance,
-            double fallbackDistanceStandardDeviation,
-            List<P> positions, List<Double> distances,
-            List<Double> distanceStandardDeviations,
-            List<Double> distanceQualityScores) {
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final double[] sourceQualityScores, final double[] fingerprintReadingsQualityScores,
+            final boolean useRadioSourcePositionCovariance,
+            final double fallbackDistanceStandardDeviation,
+            final List<P> positions, final List<Double> distances,
+            final List<Double> distanceStandardDeviations,
+            final List<Double> distanceQualityScores) {
 
         if (fallbackDistanceStandardDeviation < 0.0) {
             throw new IllegalArgumentException();
@@ -220,22 +221,22 @@ public class PositionEstimatorHelper {
             distanceQualityScores.clear();
         }
 
-        Double[] result1 = new Double[2];
-        Double[] result2 = new Double[2];
+        final Double[] result1 = new Double[2];
+        final Double[] result2 = new Double[2];
 
-        List<? extends Reading<? extends RadioSource>> readings =
+        final List<? extends Reading<? extends RadioSource>> readings =
                 fingerprint.getReadings();
         int readingIndex = 0;
-        for (Reading<? extends RadioSource> reading : readings) {
+        for (final Reading<? extends RadioSource> reading : readings) {
             // noinspection all
-            int sourceIndex = sources.indexOf(reading.getSource());
-            Double readingQualityScore = fingerprintReadingsQualityScores != null ?
+            final int sourceIndex = sources.indexOf(reading.getSource());
+            final Double readingQualityScore = fingerprintReadingsQualityScores != null ?
                     fingerprintReadingsQualityScores[readingIndex] : null;
             Double sourceQualityScore = null;
             Double qualityScore = null;
             if (sourceIndex >= 0) {
-                RadioSourceLocated<P> locatedSource = sources.get(sourceIndex);
-                P position = locatedSource.getPosition();
+                final RadioSourceLocated<P> locatedSource = sources.get(sourceIndex);
+                final P position = locatedSource.getPosition();
                 if (sourceQualityScores != null) {
                     sourceQualityScore = sourceQualityScores[sourceIndex];
                 }
@@ -261,23 +262,23 @@ public class PositionEstimatorHelper {
                     try {
                         // compute standard deviation associated to position
                         // uncertainty
-                        SingularValueDecomposer decomposer =
+                        final SingularValueDecomposer decomposer =
                                 new SingularValueDecomposer(positionCovariance);
                         decomposer.decompose();
 
                         // singular values contain variances on each principal axis
-                        double[] singularValues = decomposer.getSingularValues();
+                        final double[] singularValues = decomposer.getSingularValues();
 
                         // compute average of singular values as an "average" variance
                         // of position
                         double variance = 0.0;
-                        for (double singularValue : singularValues) {
+                        for (final double singularValue : singularValues) {
                             variance += singularValue / singularValues.length;
                         }
 
                         positionStandardDeviation = Math.sqrt(variance);
 
-                    } catch (AlgebraException e) {
+                    } catch (final AlgebraException e) {
                         positionStandardDeviation = null;
                     }
                 }
@@ -308,10 +309,10 @@ public class PositionEstimatorHelper {
                 }
 
                 if (position != null) {
-                    Double distance1 = result1[0];
-                    Double distance2 = result2[0];
+                    final Double distance1 = result1[0];
+                    final Double distance2 = result2[0];
                     if (distance1 != null) {
-                        Double standardDeviation1 = result1[1];
+                        final Double standardDeviation1 = result1[1];
 
                         positions.add(position);
                         distances.add(distance1);
@@ -324,7 +325,7 @@ public class PositionEstimatorHelper {
                     }
 
                     if (distance2 != null) {
-                        Double standardDeviation2 = result2[1];
+                        final Double standardDeviation2 = result2[1];
 
                         positions.add(position);
                         distances.add(distance2);
@@ -347,7 +348,7 @@ public class PositionEstimatorHelper {
      * @return distance to reading source or null if not available.
      */
     private static Double computeDistanceRanging(
-            RangingReading<? extends RadioSource> reading) {
+            final RangingReading<? extends RadioSource> reading) {
         return reading.getDistance();
     }
 
@@ -358,7 +359,7 @@ public class PositionEstimatorHelper {
      * @return distance to reading source or null if not available.
      */
     private static Double computeDistanceRanging(
-            RangingAndRssiReading<? extends RadioSource> reading) {
+            final RangingAndRssiReading<? extends RadioSource> reading) {
         return reading.getDistance();
     }
 
@@ -366,13 +367,13 @@ public class PositionEstimatorHelper {
      * Obtains distance for an RSSI reading.
      *
      * @param locatedSource a located source, that must also have power information.
-     * @param reading an RSSI reading.
+     * @param reading       an RSSI reading.
+     * @param <P>           a {@link Point} type.
      * @return estimated distance or null if not available.
-     * @param <P> a {@link Point} type.
      */
     private static <P extends Point<?>> Double computeDistanceRssi(
-            RadioSourceLocated<P> locatedSource,
-            RssiReading<? extends RadioSource> reading) {
+            final RadioSourceLocated<P> locatedSource,
+            final RssiReading<? extends RadioSource> reading) {
         return computeDistanceRssi(locatedSource, reading.getRssi());
     }
 
@@ -380,13 +381,13 @@ public class PositionEstimatorHelper {
      * Obtains distance for a ranging and RSSI reading.
      *
      * @param locatedSource a located source, that must also have power information.
-     * @param reading a ranging and RSSI reading.
+     * @param reading       a ranging and RSSI reading.
+     * @param <P>           a {@link Point} type.
      * @return estimated distance or null if not available.
-     * @param <P> a {@link Point} type.
      */
     private static <P extends Point<?>> Double computeDistanceRssi(
-            RadioSourceLocated<P> locatedSource,
-            RangingAndRssiReading<? extends RadioSource> reading) {
+            final RadioSourceLocated<P> locatedSource,
+            final RangingAndRssiReading<? extends RadioSource> reading) {
         return computeDistanceRssi(locatedSource, reading.getRssi());
     }
 
@@ -394,29 +395,29 @@ public class PositionEstimatorHelper {
      * Obtains distance.
      *
      * @param locatedSource a located source, that must also have power information.
-     * @param rxPower ;
+     * @param rxPower       ;
+     * @param <P>           a {@link Point} type.
      * @return estimated distance or null if not available.
-     * @param <P> a {@link Point} type.
      */
     private static <P extends Point<?>> Double computeDistanceRssi(
-            RadioSourceLocated<P> locatedSource, double rxPower) {
-        if(!(locatedSource instanceof RadioSourceWithPower)) {
+            final RadioSourceLocated<P> locatedSource, final double rxPower) {
+        if (!(locatedSource instanceof RadioSourceWithPower)) {
             return null;
         }
 
-        RadioSourceWithPower poweredSource = (RadioSourceWithPower)locatedSource;
+        final RadioSourceWithPower poweredSource = (RadioSourceWithPower) locatedSource;
 
         //source related parameters:
 
         //transmitted power in dBm's
-        double txPower = poweredSource.getTransmittedPower();
+        final double txPower = poweredSource.getTransmittedPower();
 
         //path loss exponent
-        double pathLossExponent = poweredSource.getPathLossExponent();
+        final double pathLossExponent = poweredSource.getPathLossExponent();
 
-        double frequency = poweredSource.getFrequency();
-        double k = RssiRadioSourceEstimator.SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
-        double kdB = 10.0 * Math.log10(k);
+        final double frequency = poweredSource.getFrequency();
+        final double k = RssiRadioSourceEstimator.SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
+        final double kdB = 10.0 * Math.log10(k);
 
 
         //received power in dBm's follows the equation:
@@ -425,13 +426,13 @@ public class PositionEstimatorHelper {
         //hence:
         //5.0 * pathLossExponent * logSqrDistance = pathLossExponent * kdB + txPower - rxPower
 
-        double logSqrDistance = (pathLossExponent * kdB + txPower - rxPower) / (5.0 * pathLossExponent);
+        final double logSqrDistance = (pathLossExponent * kdB + txPower - rxPower) / (5.0 * pathLossExponent);
 
         //where logSqrDistance = Math.log10(sqrDistance)
         //and sqrDistance = distance * distance, hence
         //logSqrDistance = Math.log10(distance * distance) = 2 * Math.log10(distance)
 
-        return Math.pow(10.0,logSqrDistance / 2.0);
+        return Math.pow(10.0, logSqrDistance / 2.0);
     }
 
     /**
@@ -444,8 +445,8 @@ public class PositionEstimatorHelper {
      *                                  deviation, in such order.
      */
     private static void computeDistanceAndStandardDeviationRanging(
-            RangingReading<? extends RadioSource> reading,
-            Double positionStandardDeviation, Double[] result) {
+            final RangingReading<? extends RadioSource> reading,
+            final Double positionStandardDeviation, final Double[] result) {
         computeDistanceAndStandardDeviationRanging(reading.getDistance(),
                 reading.getDistanceStandardDeviation(),
                 positionStandardDeviation, result);
@@ -461,8 +462,8 @@ public class PositionEstimatorHelper {
      *                                  deviation, in such order.
      */
     private static void computeDistanceAndStandardDeviationRanging(
-            RangingAndRssiReading<? extends RadioSource> reading,
-            Double positionStandardDeviation, Double[] result) {
+            final RangingAndRssiReading<? extends RadioSource> reading,
+            final Double positionStandardDeviation, final Double[] result) {
         computeDistanceAndStandardDeviationRanging(reading.getDistance(),
                 reading.getDistanceStandardDeviation(),
                 positionStandardDeviation, result);
@@ -477,9 +478,9 @@ public class PositionEstimatorHelper {
      * @param result                    array containing distance and its standard
      *                                  deviation, in such order.
      */
-    private static void computeDistanceAndStandardDeviationRanging(double distance,
-            Double distanceStandardDeviation, Double positionStandardDeviation,
-            Double[] result) {
+    private static void computeDistanceAndStandardDeviationRanging(
+            final double distance, final Double distanceStandardDeviation,
+            final Double positionStandardDeviation, final Double[] result) {
         result[0] = distance;
 
         if (positionStandardDeviation != null || distanceStandardDeviation != null) {
@@ -506,12 +507,12 @@ public class PositionEstimatorHelper {
      *                                  available.
      * @param result                    array containing distance and its standard
      *                                  deviation, in such order.
-     * @param <P> a {@link Point} type.
+     * @param <P>                       a {@link Point} type.
      */
     private static <P extends Point<?>> void computeDistanceAndStandardDeviationRssi(
-            RadioSourceLocated<P> locatedSource,
-            RssiReading<? extends RadioSource> reading,
-            Double positionStandardDeviation, Double[] result) {
+            final RadioSourceLocated<P> locatedSource,
+            final RssiReading<? extends RadioSource> reading,
+            final Double positionStandardDeviation, final Double[] result) {
         computeDistanceAndStandardDeviationRssi(locatedSource, reading.getRssi(),
                 reading.getRssiStandardDeviation(), positionStandardDeviation,
                 result);
@@ -527,12 +528,12 @@ public class PositionEstimatorHelper {
      *                                  available.
      * @param result                    array containing distance and its standard
      *                                  deviation, in such order.
-     * @param <P> a {@link Point} type.
+     * @param <P>                       a {@link Point} type.
      */
     private static <P extends Point<?>> void computeDistanceAndStandardDeviationRssi(
-            RadioSourceLocated<P> locatedSource,
-            RangingAndRssiReading<? extends RadioSource> reading,
-            Double positionStandardDeviation, Double[] result) {
+            final RadioSourceLocated<P> locatedSource,
+            final RangingAndRssiReading<? extends RadioSource> reading,
+            final Double positionStandardDeviation, final Double[] result) {
         computeDistanceAndStandardDeviationRssi(locatedSource, reading.getRssi(),
                 reading.getRssiStandardDeviation(), positionStandardDeviation,
                 result);
@@ -548,46 +549,46 @@ public class PositionEstimatorHelper {
      * @param positionStandardDeviation position standard deviation.
      * @param result                    array containing distance and its standard
      *                                  deviation, in such order.
-     * @param <P> a {@link Point} type.
+     * @param <P>                       a {@link Point} type.
      */
     private static <P extends Point<?>> void computeDistanceAndStandardDeviationRssi(
-            RadioSourceLocated<P> locatedSource, double rxPower,
-            Double rxPowerStandardDeviation,
-            Double positionStandardDeviation,
-            Double[] result) {
+            final RadioSourceLocated<P> locatedSource, final double rxPower,
+            final Double rxPowerStandardDeviation,
+            final Double positionStandardDeviation,
+            final Double[] result) {
 
         if (!(locatedSource instanceof RadioSourceWithPower)) {
             return;
         }
 
-        RadioSourceWithPower poweredSource = (RadioSourceWithPower) locatedSource;
+        final RadioSourceWithPower poweredSource = (RadioSourceWithPower) locatedSource;
 
         // source related parameters
         // transmitted power in dBm's
-        double txPower = poweredSource.getTransmittedPower();
-        Double txPowerStandardDeviation =
+        final double txPower = poweredSource.getTransmittedPower();
+        final Double txPowerStandardDeviation =
                 poweredSource.getTransmittedPowerStandardDeviation();
 
         // path loss exponent
-        double pathLossExponent = poweredSource.getPathLossExponent();
-        Double pathLossExponentStandardDeviation =
+        final double pathLossExponent = poweredSource.getPathLossExponent();
+        final Double pathLossExponentStandardDeviation =
                 poweredSource.getPathLossExponentStandardDeviation();
 
         //WARNING: covariance between tx power and path loss exponent is ignored
 
-        double frequency = poweredSource.getFrequency();
+        final double frequency = poweredSource.getFrequency();
 
-        double txPowerVariance = txPowerStandardDeviation != null ?
+        final double txPowerVariance = txPowerStandardDeviation != null ?
                 txPowerStandardDeviation * txPowerStandardDeviation : 0.0;
-        double rxPowerVariance = rxPowerStandardDeviation != null ?
+        final double rxPowerVariance = rxPowerStandardDeviation != null ?
                 rxPowerStandardDeviation * rxPowerStandardDeviation : 0.0;
-        double pathLossVariance = pathLossExponentStandardDeviation != null ?
+        final double pathLossVariance = pathLossExponentStandardDeviation != null ?
                 pathLossExponentStandardDeviation * pathLossExponentStandardDeviation :
                 0.0;
 
         double distanceVariance = 0.0;
         try {
-            MultivariateNormalDist dist = Utils.propagateVariancesToDistanceVariance(
+            final MultivariateNormalDist dist = Utils.propagateVariancesToDistanceVariance(
                     txPower, rxPower, pathLossExponent, frequency, txPowerVariance,
                     rxPowerVariance, pathLossVariance);
             // distance
@@ -595,7 +596,7 @@ public class PositionEstimatorHelper {
 
             // distance variance
             distanceVariance = dist.getCovariance().getElementAt(0, 0);
-        } catch (IndoorException e) {
+        } catch (final IndoorException e) {
             result[0] = computeDistanceRssi(locatedSource, rxPower);
             if (rxPowerStandardDeviation != null) {
                 // take into account only received power standard deviation

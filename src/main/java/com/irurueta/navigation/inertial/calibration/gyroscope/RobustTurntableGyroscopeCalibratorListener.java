@@ -39,15 +39,17 @@ public interface RobustTurntableGyroscopeCalibratorListener {
      * Called when calibrator iterates to refine a possible solution.
      *
      * @param calibrator calibrator raising the event.
-     * @param iteration current iteration.
+     * @param iteration  current iteration.
      */
-    void onCalibrateNextIteration(final RobustTurntableGyroscopeCalibrator calibrator, final int iteration);
+    void onCalibrateNextIteration(final RobustTurntableGyroscopeCalibrator calibrator,
+                                  final int iteration);
 
     /**
      * Called when calibration progress changes significantly.
      *
      * @param calibrator calibrator raising the event.
-     * @param progress progress of calibration expressed as a value between 0.0 and 1.0.
+     * @param progress   progress of calibration expressed as a value between 0.0 and 1.0.
      */
-    void onCalibrateProgressChange(final RobustTurntableGyroscopeCalibrator calibrator, final float progress);
+    void onCalibrateProgressChange(final RobustTurntableGyroscopeCalibrator calibrator,
+                                   final float progress);
 }

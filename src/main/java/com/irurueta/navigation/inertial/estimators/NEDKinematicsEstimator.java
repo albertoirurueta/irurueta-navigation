@@ -4982,10 +4982,10 @@ public class NEDKinematicsEstimator {
      *                                  matrices are not NED frame valid.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                    final NEDFrame frame,
-                                                    final CoordinateTransformation oldC,
-                                                    final NEDVelocity oldVelocity,
-                                                    final NEDPosition oldPosition) {
+                                                                final NEDFrame frame,
+                                                                final CoordinateTransformation oldC,
+                                                                final NEDVelocity oldVelocity,
+                                                                final NEDPosition oldPosition) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVelocity, oldPosition,
                 result);
@@ -5007,10 +5007,10 @@ public class NEDKinematicsEstimator {
      *                                  matrices are not NED frame valid.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                    final NEDFrame frame,
-                                                    final CoordinateTransformation oldC,
-                                                    final NEDVelocity oldVelocity,
-                                                    final NEDPosition oldPosition) {
+                                                                final NEDFrame frame,
+                                                                final CoordinateTransformation oldC,
+                                                                final NEDVelocity oldVelocity,
+                                                                final NEDPosition oldPosition) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVelocity, oldPosition,
                 result);

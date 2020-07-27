@@ -74,96 +74,103 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
     public RobustLateration2DSolver(
-            RobustLaterationSolverListener<Point2D> listener) {
+            final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
         init();
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustLateration2DSolver(Point2D[] positions, double[] distances) {
+    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances) {
         super(positions, distances);
         init();
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustLateration2DSolver(Point2D[] positions, double[] distances,
-                                    double[] distanceStandardDeviations) {
+    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
+                                    final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         init();
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustLateration2DSolver(Point2D[] positions, double[] distances,
-                                    RobustLaterationSolverListener<Point2D> listener) {
+    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
+                                    final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
         init();
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length is smaller
-     * than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length is smaller
+     *                                  than required (3 points).
      */
-    public RobustLateration2DSolver(Point2D[] positions, double[] distances,
-                                    double[] distanceStandardDeviations,
-                                    RobustLaterationSolverListener<Point2D> listener) {
+    public RobustLateration2DSolver(final Point2D[] positions, final double[] distances,
+                                    final double[] distanceStandardDeviations,
+                                    final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         init();
     }
 
     /**
      * Constructor.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array
-     * is less than required (3 points).
+     *                                  is less than required (3 points).
      */
-    public RobustLateration2DSolver(Circle[] circles) {
+    public RobustLateration2DSolver(final Circle[] circles) {
         this();
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if circles is null, length of circles array is less
-     * than required (3 points) or don't have the same length.
+     *                                  than required (3 points) or don't have the same length.
      */
-    public RobustLateration2DSolver(Circle[] circles,
-                                    double[] distanceStandardDeviations) {
+    public RobustLateration2DSolver(final Circle[] circles,
+                                    final double[] distanceStandardDeviations) {
         this();
         internalSetCirclesAndStandardDeviations(circles,
                 distanceStandardDeviations);
@@ -171,29 +178,31 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles  circles defining positions and distances.
      * @param listener listener to be notified of events such as when estimation starts,
      *                 ends or its progress significantly changes.
      * @throws IllegalArgumentException if circles is null or if length of circles array
-     * is less than required (3 points).
+     *                                  is less than required (3 points).
      */
-    public RobustLateration2DSolver(Circle[] circles,
-                                    RobustLaterationSolverListener<Point2D> listener) {
+    public RobustLateration2DSolver(final Circle[] circles,
+                                    final RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if circles is null, length of circles array is less
-     * than required (3 points) or don't have the same length.
+     *                                  than required (3 points) or don't have the same length.
      */
-    public RobustLateration2DSolver(Circle[] circles,
-                                    double[] distanceStandardDeviations,
+    public RobustLateration2DSolver(final Circle[] circles,
+                                    final double[] distanceStandardDeviations,
                                     RobustLaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCirclesAndStandardDeviations(circles,
@@ -202,6 +211,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -212,6 +222,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     /**
      * Minimum required number of positions and distances.
      * At least 3 positions will be required.
+     *
      * @return minimum required number of positions and distances.
      */
     @Override
@@ -224,11 +235,11 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * This has to be at least {@link #getMinRequiredPositionsAndDistances()}.
      *
      * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredPositionsAndDistances()}.
      */
     @Override
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize) throws LockedException {
         super.setPreliminarySubsetSize(preliminarySubsetSize);
 
         mInnerPositions = new Point2D[preliminarySubsetSize];
@@ -238,6 +249,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Gets circles defined by provided positions and distances.
+     *
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
@@ -245,7 +257,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             return null;
         }
 
-        Circle[] result = new Circle[mPositions.length];
+        final Circle[] result = new Circle[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
             result[i] = new Circle(mPositions[i], mDistances[i]);
@@ -255,12 +267,13 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Sets circles defining positions and euclidean distances.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 3.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  is less than 3.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setCircles(Circle[] circles) throws LockedException {
+    public void setCircles(final Circle[] circles) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -270,13 +283,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     /**
      * Sets circles defining positions and euclidean distances along with the standard
      * deviations of provided circles radii.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                  circles defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
-     * 3 or don't have the same length.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  3 or don't have the same length.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
+    public void setCirclesAndStandardDeviations(
+            final Circle[] circles, final double[] radiusStandardDeviations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -286,10 +301,11 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param method robust estimator method.
      * @return a new robust 2D lateration solver.
      */
-    public static RobustLateration2DSolver create(RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver();
@@ -307,14 +323,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param method   robust estimator method.
      * @return a new robust 2D lateration solver.
      */
     public static RobustLateration2DSolver create(
-            RobustLaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) {
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(listener);
@@ -332,17 +349,19 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param method robust estimator method.
+     * @param method    robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (3 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions,
+            final double[] distances, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances);
@@ -360,21 +379,22 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations if either positions or distances are null,
      *                                   don't have the same length or their length
      *                                   is smaller than required (3 points).
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaler than required
-     * (3 points).
+     *                                  don't have the same length or their length is smaler than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
@@ -397,19 +417,21 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener  listener to be notified of events such as when estimation
+     *                  starts, ends or its progress significantly changes.
+     * @param method    robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
@@ -432,23 +454,25 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length
-     * is smaller than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
@@ -471,14 +495,15 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param circles circles defining positions and distances.
-     * @param method robust estimator method.
+     * @param method  robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null, length of circles array
-     * is less than required (3 points) or don't have the same length.
+     *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles);
@@ -496,16 +521,18 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null, length of circles array
-     * is less than required (3 points) or don't have the same length.
+     *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  double[] distanceStandardDeviations, RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final double[] distanceStandardDeviations,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
@@ -528,17 +555,18 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles  circles defining positions and distances.
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param method   robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null or if length of circles
-     * array is less than required (3 points).
+     *                                  array is less than required (3 points).
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles, listener);
@@ -556,20 +584,21 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null, length of circles array
-     * is less than required (3 points) or don't have the same length.
+     *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
@@ -592,16 +621,17 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param method robust estimator method.
+     * @param method        robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (3 samples).
+     *                                  quality scores is less than required minimum (3 samples).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver();
@@ -619,19 +649,21 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (3 samples).
+     *                                  quality scores is less than required minimum (3 samples).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(listener);
@@ -651,20 +683,22 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
-     * @param method robust estimator method.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node to be
+     *                      estimated.
+     * @param method        robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or quality
-     * scores are null, don't have the same length or their length is smaller than
-     * required (3 points).
+     *                                  scores are null, don't have the same length or their length is smaller than
+     *                                  required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances, RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions,
+            final double[] distances, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances);
@@ -684,23 +718,24 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or the
-     * length is smaller than required (3 points).
+     *                                  scores or standard deviations are null, don't have the same length or the
+     *                                  length is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations, RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
@@ -723,26 +758,27 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or standard
-     * deviations are null, don't have the same length or their length is smaller
-     * than required (3 points).
+     *                                  deviations are null, don't have the same length or their length is smaller
+     *                                  than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
@@ -765,23 +801,24 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (3 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(positions, distances,
@@ -804,18 +841,20 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param circles circles defining positions and distances.
-     * @param method robust estimator method.
+     * @param circles       circles defining positions and distances.
+     * @param method        robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either circles or quality scores are
-     * null don't have the same length or their length is less than required
-     * (3 points).
+     *                                  null don't have the same length or their length is less than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Circle[] circles, RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Circle[] circles,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles);
@@ -835,21 +874,22 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param circles circles defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either circles, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Circle[] circles, double[] distanceStandardDeviations,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Circle[] circles,
+            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
@@ -872,24 +912,26 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param circles circles defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either circles, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Circle[] circles, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Circle[] circles,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration2DSolver(circles,
@@ -912,6 +954,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @return a new robust 2D lateration solver.
      */
     public static RobustLateration2DSolver create() {
@@ -920,312 +963,337 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      */
     public static RobustLateration2DSolver create(
-            RobustLaterationSolverListener<Point2D> listener) {
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (3 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances) {
         return create(positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations if either positions or distances are null,
      *                                   don't have the same length or their length
      *                                   is smaller than required (3 points).
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (3 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         return create(positions, distances, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation
+     *                  starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (3 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(positions, distances, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length
-     * is smaller than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(Point2D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(positions, distances, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param circles circles defining positions and distances.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null, length of circles array
-     * is less than required (3 points) or don't have the same length.
+     *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(Circle[] circles) {
+    public static RobustLateration2DSolver create(final Circle[] circles) {
         return create(circles, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null, length of circles array
-     * is less than required (3 points) or don't have the same length.
+     *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  double[] distanceStandardDeviations) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final double[] distanceStandardDeviations) {
         return create(circles, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles  circles defining positions and distances.
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null or if length of circles
-     * array is less than required (3 points).
+     *                                  array is less than required (3 points).
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final RobustLaterationSolverListener<Point2D> listener) {
         return create(circles, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if circles is null, length of circles array
-     * is less than required (3 points) or don't have the same length.
+     *                                  is less than required (3 points) or don't have the same length.
      */
-    public static RobustLateration2DSolver create(Circle[] circles,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final Circle[] circles, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(circles, distanceStandardDeviations, listener,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required (3 samples).
+     *                                  quality scores is less than required (3 samples).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores) {
+    public static RobustLateration2DSolver create(final double[] qualityScores) {
         return create(qualityScores, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (3 samples).
+     *                                  quality scores is less than required minimum (3 samples).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores,
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node to be
+     *                      estimated.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or quality
-     * scores are null, don't have the same length or their length is smaller
-     * than required (3 points).
+     *                                  scores are null, don't have the same length or their length is smaller
+     *                                  than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions,
+            final double[] distances) {
         return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distance from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distance from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (3 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions,
+            final double[] distances, final double[] distanceStandardDeviations) {
         return create(qualityScores, positions, distances,
                 distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or standard
-     * deviations are null, don't have the same length or their length is smaller
-     * than required (3 points).
+     *                                  deviations are null, don't have the same length or their length is smaller
+     *                                  than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
-        return create (qualityScores, positions, distances,
-                distanceStandardDeviations,listener, DEFAULT_ROBUST_METHOD);
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener) {
+        return create(qualityScores, positions, distances,
+                distanceStandardDeviations, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static ndoes to mobile node.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static ndoes to mobile node.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (3 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Point2D[] positions, double[] distances,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Point2D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(qualityScores, positions, distances, listener,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param circles circles defining positions and distances.
+     * @param circles       circles defining positions and distances.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either circles or quality scores are
-     * null, don't have the same length or their length is less than required
-     * (3 points).
+     *                                  null, don't have the same length or their length is less than required
+     *                                  (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Circle[] circles) {
+    public static RobustLateration2DSolver create(final double[] qualityScores,
+                                                  final Circle[] circles) {
         return create(qualityScores, circles, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param circles circles defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either circles, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Circle[] circles, double[] distanceStandardDeviations) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Circle[] circles,
+            final double[] distanceStandardDeviations) {
         return create(qualityScores, circles, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 2D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param circles circles defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 2D lateration solver.
      * @throws IllegalArgumentException if either circles, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (3 points).
      */
-    public static RobustLateration2DSolver create(double[] qualityScores,
-                                                  Circle[] circles, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point2D> listener) {
+    public static RobustLateration2DSolver create(
+            final double[] qualityScores, final Circle[] circles,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener) {
         return create(qualityScores, circles, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1236,17 +1304,18 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * requested or has failed.
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined position.
+     *
      * @param position position estimated by a robust estimator without refinement.
      * @return solution after refinement (if requested) or provided non-refined
      * estimated position if not requested or refinement failed.
      */
-    protected Point2D attemptRefine(Point2D position) {
+    protected Point2D attemptRefine(final Point2D position) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mDistances.length;
-            int nInliers = mInliersData.getNumInliers();
-            Point2D[] inlierPositions = new Point2D[nInliers];
-            double[] inlierDistances = new double[nInliers];
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mDistances.length;
+            final int nInliers = mInliersData.getNumInliers();
+            final Point2D[] inlierPositions = new Point2D[nInliers];
+            final double[] inlierDistances = new double[nInliers];
             double[] inlierStandardDeviations = null;
             if (mDistanceStandardDeviations != null) {
                 inlierStandardDeviations = new double[nInliers];
@@ -1298,12 +1367,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
 
     /**
      * Solves a preliminar solution for a subset of samples picked by a robust estimator.
+     *
      * @param samplesIndices indices of samples picked by the robust estimator.
-     * @param solutions list where estimated preliminar solution will be stored.
+     * @param solutions      list where estimated preliminar solution will be stored.
      */
-    protected void solvePreliminarSolutions(int[] samplesIndices, List<Point2D> solutions) {
+    protected void solvePreliminarSolutions(
+            final int[] samplesIndices, final List<Point2D> solutions) {
         try {
-            int length = samplesIndices.length;
+            final int length = samplesIndices.length;
             int index;
             for (int i = 0; i < length; i++) {
                 index = samplesIndices[i];
@@ -1340,26 +1411,27 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             }
 
             solutions.add(estimatedPosition);
-        } catch (NavigationException ignore) {
+        } catch (final NavigationException ignore) {
             //if anything fails, no solution is added
         }
     }
 
     /**
      * Internally sets circles defining positions and euclidean distances.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than {@link #getMinRequiredPositionsAndDistances}.
+     *                                  is less than {@link #getMinRequiredPositionsAndDistances}.
      */
-    private void internalSetCircles(Circle[] circles) {
+    private void internalSetCircles(final Circle[] circles) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
+        final Point2D[] positions = new Point2D[circles.length];
+        final double[] distances = new double[circles.length];
         for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
+            final Circle circle = circles[i];
             positions[i] = circle.getCenter();
             distances[i] = circle.getRadius();
         }
@@ -1370,13 +1442,14 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
     /**
      * Internally sets circles defining positions and euclidean distances along with the standard
      * deviations of provided circles radii.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                  circles defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
-     * 3 or don't have the same length.
+     *                                  3 or don't have the same length.
      */
-    private void internalSetCirclesAndStandardDeviations(Circle[] circles,
-            double[] radiusStandardDeviations) {
+    private void internalSetCirclesAndStandardDeviations(
+            final Circle[] circles, final double[] radiusStandardDeviations) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -1389,8 +1462,8 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
             throw new IllegalArgumentException();
         }
 
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
+        final Point2D[] positions = new Point2D[circles.length];
+        final double[] distances = new double[circles.length];
         for (int i = 0; i < circles.length; i++) {
             Circle circle = circles[i];
             positions[i] = circle.getCenter();
@@ -1405,7 +1478,7 @@ public abstract class RobustLateration2DSolver extends RobustLaterationSolver<Po
      * Setup inner positions and distances.
      */
     private void init() {
-        int points = getMinRequiredPositionsAndDistances();
+        final int points = getMinRequiredPositionsAndDistances();
         mPreliminarySubsetSize = points;
         mInnerPositions = new Point2D[points];
         mInnerDistances = new double[points];

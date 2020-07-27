@@ -316,7 +316,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
      * @throws LockedException if calibrator is currently running.
      */
     @Override
-    public void setMeasurements(final Collection<? extends FrameBodyKinematics> measurements)
+    public void setMeasurements(
+            final Collection<? extends FrameBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -412,7 +413,8 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
      * @throws CalibrationException if calibration fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }

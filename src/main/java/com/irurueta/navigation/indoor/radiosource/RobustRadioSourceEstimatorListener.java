@@ -18,33 +18,38 @@ package com.irurueta.navigation.indoor.radiosource;
 /**
  * Listener to be notified of events produced by a robust radio source estimator when
  * estimation starts, ends or when progress changes.
+ *
  * @param <E> a {@link RobustRadioSourceEstimator} type.
  */
 public interface RobustRadioSourceEstimatorListener<E extends RobustRadioSourceEstimator<?, ?, ?>> {
 
     /**
      * Called when estimation starts.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(E estimator);
+    void onEstimateStart(final E estimator);
 
     /**
      * Called when estimation ends.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(E estimator);
+    void onEstimateEnd(final E estimator);
 
     /**
      * Called when estimator iterates to refine a possible solution.
+     *
      * @param estimator estimator raising the event.
      * @param iteration current iteration.
      */
-    void onEstimateNextIteration(E estimator, int iteration);
+    void onEstimateNextIteration(final E estimator, final int iteration);
 
     /**
      * Called when estimation progress significantly changes.
+     *
      * @param estimator estimator raising the event.
-     * @param progress progress of estimation expressed as a value between 0.0 and 1.0.
+     * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onEstimateProgressChange(E estimator, float progress);
+    void onEstimateProgressChange(final E estimator, final float progress);
 }

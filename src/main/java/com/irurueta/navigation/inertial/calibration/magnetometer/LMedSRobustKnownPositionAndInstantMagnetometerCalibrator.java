@@ -1002,7 +1002,7 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1031,7 +1031,8 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibrator extends
         }
 
         final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
-                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
+                new LMedSRobustEstimator<>(
+                        new LMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public int getTotalSamples() {
                         return mMeasurements.size();
@@ -1066,19 +1067,11 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    LMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    LMedSRobustKnownPositionAndInstantMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -1106,6 +1099,11 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
 
             initialize();
@@ -1119,11 +1117,15 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | IOException e) {
+        } catch (final RobustEstimatorException | IOException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

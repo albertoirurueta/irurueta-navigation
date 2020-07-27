@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * Contains readings from several radio sources for an unknown location
  * to be determined.
+ *
  * @param <S> a {@link RadioSource} type.
  * @param <R> a {@link RssiReading} type.
  */
@@ -36,14 +37,16 @@ public class Fingerprint<S extends RadioSource, R extends Reading<S>>
     /**
      * Constructor.
      */
-    public Fingerprint() { }
+    public Fingerprint() {
+    }
 
     /**
      * Constructor.
+     *
      * @param readings non-located readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public Fingerprint(List<R> readings) {
+    public Fingerprint(final List<R> readings) {
         if (readings == null) {
             throw new IllegalArgumentException();
         }
@@ -52,6 +55,7 @@ public class Fingerprint<S extends RadioSource, R extends Reading<S>>
 
     /**
      * Gets non-located ranging readings.
+     *
      * @return non-located ranging readings.
      */
     public List<R> getReadings() {
@@ -60,10 +64,11 @@ public class Fingerprint<S extends RadioSource, R extends Reading<S>>
 
     /**
      * Sets non-located ranging readings.
+     *
      * @param readings non-located ranging readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public void setReadings(List<R> readings) {
+    public void setReadings(final List<R> readings) {
         if (readings == null) {
             throw new IllegalArgumentException();
         }

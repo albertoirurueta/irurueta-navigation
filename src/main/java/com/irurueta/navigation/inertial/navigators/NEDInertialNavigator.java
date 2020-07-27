@@ -7792,7 +7792,7 @@ public class NEDInertialNavigator {
                     + 0.5 * timeInterval * (oldVn / (oldRn + oldHeight) + vn / (oldRn + height));
 
             // Calculate meridian and transverse radii of curvature
-            RadiiOfCurvature radiiOfCurvature = RadiiOfCurvatureEstimator
+            final RadiiOfCurvature radiiOfCurvature = RadiiOfCurvatureEstimator
                     .estimateRadiiOfCurvatureAndReturnNew(latitude);
             final double rn = radiiOfCurvature.getRn();
             final double re = radiiOfCurvature.getRe();
@@ -14512,17 +14512,17 @@ public class NEDInertialNavigator {
      *                                                       invalid.
      */
     public static NEDFrame navigateNEDAndReturnNew(final double timeInterval,
-                                                final NEDPosition oldPosition,
-                                                final CoordinateTransformation oldC,
-                                                final Speed oldSpeedN,
-                                                final Speed oldSpeedE,
-                                                final Speed oldSpeedD,
-                                                final Acceleration fx,
-                                                final Acceleration fy,
-                                                final Acceleration fz,
-                                                final AngularSpeed angularRateX,
-                                                final AngularSpeed angularRateY,
-                                                final AngularSpeed angularRateZ)
+                                                   final NEDPosition oldPosition,
+                                                   final CoordinateTransformation oldC,
+                                                   final Speed oldSpeedN,
+                                                   final Speed oldSpeedE,
+                                                   final Speed oldSpeedD,
+                                                   final Acceleration fx,
+                                                   final Acceleration fy,
+                                                   final Acceleration fz,
+                                                   final AngularSpeed angularRateX,
+                                                   final AngularSpeed angularRateY,
+                                                   final AngularSpeed angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final NEDFrame result = new NEDFrame();
         navigateNED(timeInterval, oldPosition, oldC, oldSpeedN, oldSpeedE, oldSpeedD,
@@ -14565,17 +14565,17 @@ public class NEDInertialNavigator {
      *                                                       invalid.
      */
     public static NEDFrame navigateNEDAndReturnNew(final Time timeInterval,
-                                                final NEDPosition oldPosition,
-                                                final CoordinateTransformation oldC,
-                                                final Speed oldSpeedN,
-                                                final Speed oldSpeedE,
-                                                final Speed oldSpeedD,
-                                                final Acceleration fx,
-                                                final Acceleration fy,
-                                                final Acceleration fz,
-                                                final AngularSpeed angularRateX,
-                                                final AngularSpeed angularRateY,
-                                                final AngularSpeed angularRateZ)
+                                                   final NEDPosition oldPosition,
+                                                   final CoordinateTransformation oldC,
+                                                   final Speed oldSpeedN,
+                                                   final Speed oldSpeedE,
+                                                   final Speed oldSpeedD,
+                                                   final Acceleration fx,
+                                                   final Acceleration fy,
+                                                   final Acceleration fz,
+                                                   final AngularSpeed angularRateX,
+                                                   final AngularSpeed angularRateY,
+                                                   final AngularSpeed angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final NEDFrame result = new NEDFrame();
         navigateNED(timeInterval, oldPosition, oldC, oldSpeedN, oldSpeedE, oldSpeedD,
@@ -14615,17 +14615,17 @@ public class NEDInertialNavigator {
      *                                                       invalid.
      */
     public static NEDFrame navigateNEDAndReturnNew(final double timeInterval,
-                                                final Angle oldLatitude,
-                                                final Angle oldLongitude,
-                                                final Distance oldHeight,
-                                                final CoordinateTransformation oldC,
-                                                final NEDVelocity oldVelocity,
-                                                final Acceleration fx,
-                                                final Acceleration fy,
-                                                final Acceleration fz,
-                                                final AngularSpeed angularRateX,
-                                                final AngularSpeed angularRateY,
-                                                final AngularSpeed angularRateZ)
+                                                   final Angle oldLatitude,
+                                                   final Angle oldLongitude,
+                                                   final Distance oldHeight,
+                                                   final CoordinateTransformation oldC,
+                                                   final NEDVelocity oldVelocity,
+                                                   final Acceleration fx,
+                                                   final Acceleration fy,
+                                                   final Acceleration fz,
+                                                   final AngularSpeed angularRateX,
+                                                   final AngularSpeed angularRateY,
+                                                   final AngularSpeed angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final NEDFrame result = new NEDFrame();
         navigateNED(timeInterval, oldLatitude, oldLongitude, oldHeight, oldC,
@@ -14666,17 +14666,17 @@ public class NEDInertialNavigator {
      *                                                       invalid.
      */
     public static NEDFrame navigateNEDAndReturnNew(final Time timeInterval,
-                                                final Angle oldLatitude,
-                                                final Angle oldLongitude,
-                                                final Distance oldHeight,
-                                                final CoordinateTransformation oldC,
-                                                final NEDVelocity oldVelocity,
-                                                final Acceleration fx,
-                                                final Acceleration fy,
-                                                final Acceleration fz,
-                                                final AngularSpeed angularRateX,
-                                                final AngularSpeed angularRateY,
-                                                final AngularSpeed angularRateZ)
+                                                   final Angle oldLatitude,
+                                                   final Angle oldLongitude,
+                                                   final Distance oldHeight,
+                                                   final CoordinateTransformation oldC,
+                                                   final NEDVelocity oldVelocity,
+                                                   final Acceleration fx,
+                                                   final Acceleration fy,
+                                                   final Acceleration fz,
+                                                   final AngularSpeed angularRateX,
+                                                   final AngularSpeed angularRateY,
+                                                   final AngularSpeed angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final NEDFrame result = new NEDFrame();
         navigateNED(timeInterval, oldLatitude, oldLongitude, oldHeight, oldC,
@@ -14716,15 +14716,15 @@ public class NEDInertialNavigator {
      *                                                       invalid.
      */
     public static NEDFrame navigateNEDAndReturnNew(final double timeInterval,
-                                                final NEDPosition oldPosition,
-                                                final CoordinateTransformation oldC,
-                                                final NEDVelocity oldVelocity,
-                                                final Acceleration fx,
-                                                final Acceleration fy,
-                                                final Acceleration fz,
-                                                final AngularSpeed angularRateX,
-                                                final AngularSpeed angularRateY,
-                                                final AngularSpeed angularRateZ)
+                                                   final NEDPosition oldPosition,
+                                                   final CoordinateTransformation oldC,
+                                                   final NEDVelocity oldVelocity,
+                                                   final Acceleration fx,
+                                                   final Acceleration fy,
+                                                   final Acceleration fz,
+                                                   final AngularSpeed angularRateX,
+                                                   final AngularSpeed angularRateY,
+                                                   final AngularSpeed angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final NEDFrame result = new NEDFrame();
         navigateNED(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
@@ -14763,15 +14763,15 @@ public class NEDInertialNavigator {
      *                                                       invalid.
      */
     public static NEDFrame navigateNEDAndReturnNew(final Time timeInterval,
-                                                final NEDPosition oldPosition,
-                                                final CoordinateTransformation oldC,
-                                                final NEDVelocity oldVelocity,
-                                                final Acceleration fx,
-                                                final Acceleration fy,
-                                                final Acceleration fz,
-                                                final AngularSpeed angularRateX,
-                                                final AngularSpeed angularRateY,
-                                                final AngularSpeed angularRateZ)
+                                                   final NEDPosition oldPosition,
+                                                   final CoordinateTransformation oldC,
+                                                   final NEDVelocity oldVelocity,
+                                                   final Acceleration fx,
+                                                   final Acceleration fy,
+                                                   final Acceleration fz,
+                                                   final AngularSpeed angularRateX,
+                                                   final AngularSpeed angularRateY,
+                                                   final AngularSpeed angularRateZ)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final NEDFrame result = new NEDFrame();
         navigateNED(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,

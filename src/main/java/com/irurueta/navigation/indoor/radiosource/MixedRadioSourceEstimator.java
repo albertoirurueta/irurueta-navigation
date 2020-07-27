@@ -45,7 +45,7 @@ import java.util.List;
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
- *
+ * <p>
  * This implementation is like RangingAndRssiRadioSourceEstimator but allows mixing
  * different kinds of located radio source readings (ranging, RSSI and ranging+RSSI).
  *
@@ -160,7 +160,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
@@ -210,69 +210,76 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same
      *                 radio sources.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings) {
+            final List<? extends ReadingLocated<P>> readings) {
         super(readings);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public MixedRadioSourceEstimator(
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public MixedRadioSourceEstimator(P initialPosition) {
+    public MixedRadioSourceEstimator(final P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings        radio signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public MixedRadioSourceEstimator(P initialPosition,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(
+            final P initialPosition,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
     }
@@ -280,55 +287,60 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings        radio signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerDbm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public MixedRadioSourceEstimator(Double initialTransmittedPowerDbm) {
+    public MixedRadioSourceEstimator(final Double initialTransmittedPowerDbm) {
         mInitialTransmittedPowerdBm = initialTransmittedPowerDbm;
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            Double initialTransmittedPowerdBm) {
+            final List<? extends ReadingLocated<P>> readings,
+            final Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
-    public MixedRadioSourceEstimator(Double initialTransmittedPowerdBm,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(
+            final Double initialTransmittedPowerdBm,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -336,17 +348,18 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            Double initialTransmittedPowerdBm,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final Double initialTransmittedPowerdBm,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -354,17 +367,18 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition, Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -372,30 +386,34 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public MixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public MixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
-    public MixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -404,19 +422,20 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition, final Double initialTransmittedPowerdBm,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -425,51 +444,58 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      */
-    public MixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+    public MixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
-    public MixedRadioSourceEstimator(P initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(
+            final P initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -477,21 +503,22 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings                   radio signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator(
-            List<? extends ReadingLocated<P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            MixedRadioSourceEstimatorListener<S, P> listener) {
+            final List<? extends ReadingLocated<P>> readings,
+            final P initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final MixedRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -500,12 +527,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Gets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @return initial transmitted power to start the estimation of radio source
      * transmitted power.
      */
@@ -517,18 +545,19 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Sets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted
      *                                   power.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialTransmittedPowerdBm(Double initialTransmittedPowerdBm)
+    public void setInitialTransmittedPowerdBm(final Double initialTransmittedPowerdBm)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -540,12 +569,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Gets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in mW).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @return initial transmitted power to start the estimation of radio source
      * transmitted power.
      */
@@ -558,18 +588,19 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Sets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in mW).
      * If not defined, average value of received power readings will be used.
-     *
+     * <p>
      * If transmitted power estimation is enabled, estimation will start at this
      * value and will converte the most appropriate value.
      * If transmitted power estimation is disabled, this value will be assumed to be
      * exact and the estimated transmitted power will be equal to this value
      * (converted to dBm's).
+     *
      * @param initialTransmittedPower initial transmitted power to start the
      *                                estimation of radio source transmitted power.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is negative.
      */
-    public void setInitialTransmittedPower(Double initialTransmittedPower)
+    public void setInitialTransmittedPower(final Double initialTransmittedPower)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -587,6 +618,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Indicates whether transmitted power estimation is enabled or not.
+     *
      * @return true if transmitted power estimation is enabled, false otherwise.
      */
     public boolean isTransmittedPowerEstimationEnabled() {
@@ -595,11 +627,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Specifies whether transmitted power estimation is enabled or not.
+     *
      * @param transmittedPowerEstimationEnabled true if transmitted power estimation is enabled,
      *                                          false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setTransmittedPowerEstimationEnabled(boolean transmittedPowerEstimationEnabled)
+    public void setTransmittedPowerEstimationEnabled(
+            final boolean transmittedPowerEstimationEnabled)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -610,11 +644,12 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Gets initial position to start the estimation of radio source position.
      * If not defined, centroid of provided readings will be used.
-     *
+     * <p>
      * If position estimation is enabled, estimation will start at this value
      * and will converge to the most appropriate value.
      * If position estimation is disabled, this value will be assumed to
      * be exact and the estimated position will be equal to this value.
+     *
      * @return initial position to start the estimation of radio source position.
      */
     public P getInitialPosition() {
@@ -624,16 +659,17 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Sets initial position to start the estimation of radio source position.
      * If not defined, centroid of provided fingerprints will be used.
-     *
+     * <p>
      * If position estimation is enabled, estimation will start at this value
      * and will converge to the most appropriate value.
      * If position estimation is disabled, this value will be assumed to
      * be exact and the estimated position will be equal to this value.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(final P initialPosition) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -648,12 +684,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
      * to be exact and the estimated path loss exponent will be equal to this
      * value.
+     *
      * @return initial path loss exponent.
      */
     public double getInitialPathLossExponent() {
@@ -668,16 +705,17 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
-     *
+     * <p>
      * If path loss exponent estimation is enabled, estimation will start at this
      * value and will converge to the most appropriate value.
      * If path loss exponent estimation is disabled, this value will be assumed
      * to be exact and the estimated path loss exponent will be equal to this
      * value.
+     *
      * @param initialPathLossExponent initial path loss exponent.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPathLossExponent(double initialPathLossExponent)
+    public void setInitialPathLossExponent(final double initialPathLossExponent)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -687,6 +725,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Indicates whether path loss estimation is enabled or not.
+     *
      * @return true if path loss estimation is enabled, false otherwise.
      */
     public boolean isPathLossEstimationEnabled() {
@@ -695,11 +734,12 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Specifies whether path loss estimation is enabled or not.
+     *
      * @param pathLossEstimationEnabled true if path loss estimation is enabled,
      *                                  false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPathLossEstimationEnabled(boolean pathLossEstimationEnabled)
+    public void setPathLossEstimationEnabled(final boolean pathLossEstimationEnabled)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -711,6 +751,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Indicates whether position covariances of readings must be taken into account to increase
      * the amount of standard deviation of each ranging measure by the amount of position standard
      * deviation assuming that both measures are statistically independent.
+     *
      * @return true to take into account reading position covariances, false otherwise.
      */
     public boolean getUseReadingPositionCovariance() {
@@ -721,12 +762,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Specifies whether position covariances of readings must be taken into account to increase
      * the amount of standard deviation of each ranging measure by the amount of position standard
      * deviation assuming that both measures are statistically independent.
+     *
      * @param useReadingPositionCovariances true to take into account reading position covariances, false
      *                                      otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setUseReadingPositionCovariances(boolean useReadingPositionCovariances)
-            throws LockedException {
+    public void setUseReadingPositionCovariances(
+            final boolean useReadingPositionCovariances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -736,6 +778,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Indicates whether an homogeneous linear solver is used to estimate an initial
      * position for the internal ranging radio source estimator.
+     *
      * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
      * one is used instead.
      */
@@ -746,12 +789,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Specifies whether an homogeneous linear solver is used to estimate an initial
      * position for the internal ranging radio source estimator.
+     *
      * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
      *                                   if an inhomogeneous linear one is used instead.
      * @throws LockedException if estimator is locked.
      */
-    public void setHomogeneousRangingLinearSolverUsed(boolean useHomogeneousLinearSolver)
-            throws LockedException {
+    public void setHomogeneousRangingLinearSolverUsed(
+            final boolean useHomogeneousLinearSolver) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -762,6 +806,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Gets minimum required number of ranging or ranging+rssi readings
      * required to start estimation.
+     *
      * @return minimum required number of ranging or ranging+rssi readings.
      */
     public int getMinRangingReadings() {
@@ -771,6 +816,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Gets minimum required number of rssi or ranging+rssi readings
      * required to start estimation.
+     *
      * @return minimum required number of rssi or ranging+rssi readings.
      */
     public int getMinRssiReadings() {
@@ -783,6 +829,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * This value depends on the number of parameters to
      * be estimated, but for position only, this is 3
      * readings.
+     *
      * @return minimum required number of readings.
      * @throws IllegalStateException if inner RSSI estimator is busy.
      */
@@ -799,7 +846,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                         mTransmittedPowerEstimationEnabled);
                 mRssiInnerEstimator.setPathLossEstimationEnabled(
                         mPathLossEstimationEnabled);
-            } catch (LockedException e) {
+            } catch (final LockedException e) {
                 throw new IllegalStateException(e);
             }
 
@@ -813,6 +860,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Gets estimated radio source position.
+     *
      * @return estimated radio source position.
      */
     public P getEstimatedPosition() {
@@ -824,12 +872,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Indicates whether readings are valid or not.
      * Readings are considered valid when there are enough readings.
+     *
      * @param readings readings to be validated.
      * @return true if readings are valid, false otherwise.
      */
     @Override
     public boolean areValidReadings(
-            List<? extends ReadingLocated<P>> readings) {
+            final List<? extends ReadingLocated<P>> readings) {
         if (readings == null) {
             return false;
         }
@@ -843,13 +892,14 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                 (mRssiPositionEnabled && mNumRssiReadings >= getMinRssiReadings()) ||
                 //if only position is enabled, then only check for ranging readings
                 (!mTransmittedPowerEstimationEnabled && !mPathLossEstimationEnabled &&
-                mNumRangingReadings >= getMinRangingReadings())) &&
+                        mNumRangingReadings >= getMinRangingReadings())) &&
                 //in both upper cases enough general readings must be available
                 super.areValidReadings(readings);
     }
 
     /**
      * Indicates whether this instance is ready to start the estimation.
+     *
      * @return true if this instance is ready, false otherwise.
      */
     @Override
@@ -859,9 +909,10 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Estimate position, transmitted power and path loss exponent.
+     *
      * @throws RadioSourceEstimationException if estimation fails.
-     * @throws NotReadyException if estimator is not ready.
-     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException              if estimator is not ready.
+     * @throws LockedException                if estimator is locked.
      */
     @Override
     public void estimate() throws RadioSourceEstimationException, NotReadyException,
@@ -882,20 +933,20 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
             createInnerEstimatorsIfNeeded();
 
-            List<RangingReadingLocated<S, P>> rangingReadings = new ArrayList<>();
-            List<RssiReadingLocated<S, P>> rssiReadings = new ArrayList<>();
-            for (ReadingLocated<P> reading : mReadings) {
+            final List<RangingReadingLocated<S, P>> rangingReadings = new ArrayList<>();
+            final List<RssiReadingLocated<S, P>> rssiReadings = new ArrayList<>();
+            for (final ReadingLocated<P> reading : mReadings) {
                 if (reading instanceof RangingReadingLocated) {
-                    rangingReadings.add((RangingReadingLocated<S, P>)reading);
+                    rangingReadings.add((RangingReadingLocated<S, P>) reading);
 
                 } else if (reading instanceof RssiReadingLocated) {
-                    rssiReadings.add((RssiReadingLocated<S, P>)reading);
+                    rssiReadings.add((RssiReadingLocated<S, P>) reading);
 
                 } else if (reading instanceof RangingAndRssiReadingLocated) {
                     rangingReadings.add(createRangingReading(
-                            (RangingAndRssiReadingLocated<S, P>)reading));
+                            (RangingAndRssiReadingLocated<S, P>) reading));
                     rssiReadings.add(createRssiReading(
-                            (RangingAndRssiReadingLocated<S, P>)reading));
+                            (RangingAndRssiReadingLocated<S, P>) reading));
                 }
             }
 
@@ -977,9 +1028,9 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                     //if both ranging and RSSI data is used, we build covariance matrix by setting
                     //position covariance estimated by ranging estimator into top-left corner, and then
                     //adding covariance terms related to pathloss exponent and transmitted power
-                    Matrix rssiCov = mRssiInnerEstimator.getEstimatedCovariance();
+                    final Matrix rssiCov = mRssiInnerEstimator.getEstimatedCovariance();
                     if (mEstimatedPositionCovariance != null && rssiCov != null) {
-                        int dims = getNumberOfDimensions();
+                        final int dims = getNumberOfDimensions();
                         int n = dims;
                         if (mTransmittedPowerEstimationEnabled) {
                             n++;
@@ -988,8 +1039,8 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                             n++;
                         }
 
-                        int dimsMinus1 = dims - 1;
-                        int nMinus1 = n - 1;
+                        final int dimsMinus1 = dims - 1;
+                        final int nMinus1 = n - 1;
                         mEstimatedCovariance = new Matrix(n, n);
                         mEstimatedCovariance.setSubmatrix(0, 0,
                                 dimsMinus1, dimsMinus1,
@@ -1014,7 +1065,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                 mListener.onEstimateEnd(this);
             }
 
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             throw new RadioSourceEstimationException(e);
         } finally {
             mLocked = false;
@@ -1024,6 +1075,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Gets estimated transmitted power expressed in milli watts (mW) or null if
      * not available.
+     *
      * @return estimated transmitted power expressed in milli watts or null.
      */
     public Double getEstimatedTransmittedPower() {
@@ -1033,6 +1085,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Gets estimated transmitted power expressed in dBm's or null if not available.
+     *
      * @return estimated transmitted power expressed in dBm's or null.
      */
     public Double getEstimatedTransmittedPowerdBm() {
@@ -1049,6 +1102,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * - Indoor (line-of-sight): 1.6 to 1.8
      * If path loss exponent estimation is not enabled, this value will always be equal to
      * {@link #DEFAULT_PATH_LOSS_EXPONENT}
+     *
      * @return estimated path loss exponent.
      */
     public double getEstimatedPathLossExponent() {
@@ -1059,6 +1113,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Gets estimated transmitted power variance.
      * This value will only be available when transmitted power
      * estimation is enabled.
+     *
      * @return estimated transmitted power variance or null.
      */
     public Double getEstimatedTransmittedPowerVariance() {
@@ -1069,6 +1124,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * Gets estimated path loss exponent variance.
      * This value will only be available when pathloss
      * exponent estimation is enabled.
+     *
      * @return estimated path loss exponent variance or null.
      */
     public Double getEstimatedPathLossExponentVariance() {
@@ -1082,10 +1138,12 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Creates a ranging reading from a ranging and RSSI reading.
+     *
      * @param reading input reading to convert from.
      * @return a ranging reading containing only the ranging data of input reading.
      */
-    private RangingReadingLocated<S, P> createRangingReading(RangingAndRssiReadingLocated<S, P> reading) {
+    private RangingReadingLocated<S, P> createRangingReading(
+            final RangingAndRssiReadingLocated<S, P> reading) {
         return new RangingReadingLocated<>(reading.getSource(),
                 reading.getDistance(), reading.getPosition(),
                 reading.getDistanceStandardDeviation(),
@@ -1094,10 +1152,12 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
     /**
      * Creates an RSSI reading from a ranging and RSSI reading.
+     *
      * @param reading input reading to convert from.
      * @return an RSSI reading containing only the RSSI data of input reading.
      */
-    private RssiReadingLocated<S, P> createRssiReading(RangingAndRssiReadingLocated<S, P> reading) {
+    private RssiReadingLocated<S, P> createRssiReading(
+            final RangingAndRssiReadingLocated<S, P> reading) {
         return new RssiReadingLocated<>(reading.getSource(),
                 reading.getRssi(), reading.getPosition(),
                 reading.getRssiStandardDeviation(),
@@ -1107,16 +1167,17 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     /**
      * Checks number of available ranging readings and number of available RSSI readings. Also determines
      * whether position must be estimated using ranging data or RSSI data.
+     *
      * @param readings readings to be checked.
      */
-    private void checkReadings(List<? extends ReadingLocated<P>> readings) {
+    private void checkReadings(final List<? extends ReadingLocated<P>> readings) {
         mNumRangingReadings = mNumRssiReadings = 0;
 
         if (readings == null) {
             return;
         }
 
-        for (ReadingLocated<P> reading : readings) {
+        for (final ReadingLocated<P> reading : readings) {
             if (reading instanceof RangingReadingLocated) {
                 mNumRangingReadings++;
 

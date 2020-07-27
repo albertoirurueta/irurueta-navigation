@@ -34,8 +34,8 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * @throws IllegalArgumentException if either radio source data or position
      * are null.
      */
-    public RssiReadingLocated3D(S source, double rssi,
-            Point3D position) {
+    public RssiReadingLocated3D(
+            final S source, final double rssi, final Point3D position) {
         super(source, rssi, position);
     }
 
@@ -48,8 +48,9 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * @throws IllegalArgumentException if either radio source data or position
      * are null.
      */
-    public RssiReadingLocated3D(S source, double rssi,
-            Point3D position, Double rssiStandardDeviation) {
+    public RssiReadingLocated3D(
+            final S source, final double rssi, final Point3D position,
+            final Double rssiStandardDeviation) {
         super(source, rssi, position, rssiStandardDeviation);
     }
 
@@ -63,8 +64,9 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * @throws IllegalArgumentException if either radio source or position are
      * null, or covariance has invalid size.
      */
-    public RssiReadingLocated3D(S source, double rssi,
-            Point3D position, Matrix positionCovariance) {
+    public RssiReadingLocated3D(
+            final S source, final double rssi, final Point3D position,
+            final Matrix positionCovariance) {
         super(source, rssi, position, positionCovariance);
     }
 
@@ -79,9 +81,10 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * @throws IllegalArgumentException if either radio source or position are
      * null, or covariance has invalid size.
      */
-    public RssiReadingLocated3D(S source, double rssi,
-            Point3D position, Double rssiStandardDeviation,
-            Matrix positionCovariance) {
+    public RssiReadingLocated3D(
+            final S source, final double rssi, final Point3D position,
+            final Double rssiStandardDeviation,
+            final Matrix positionCovariance) {
         super(source, rssi, position, rssiStandardDeviation,
                 positionCovariance);
     }

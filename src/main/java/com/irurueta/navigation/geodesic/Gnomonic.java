@@ -115,24 +115,25 @@ public class Gnomonic {
     /**
      * Earth geodesic.
      */
-    private Geodesic mEarth;
+    private final Geodesic mEarth;
 
     /**
      * Major equatorial Earth radius.
      */
-    private double mA;
+    private final double mA;
 
     /**
      * Earth flattening.
      */
-    private double mF;
+    private final double mF;
 
     /**
      * Constructor for Gnomonic.
+     *
      * @param earth the {@link Geodesic} object to use for geodesic calculations.
      */
     @SuppressWarnings("WeakerAccess")
-    public Gnomonic(Geodesic earth) {
+    public Gnomonic(final Geodesic earth) {
         mEarth = earth;
         mA = mEarth.getMajorRadius();
         mF = mEarth.getFlattening();
@@ -148,23 +149,25 @@ public class Gnomonic {
      * correct values are returned for <i>azi</i> and <i>rk</i>). A call to forward followed by a
      * call to reverse will return the original (<i>lat</i>, <i>lon</i>) (to within roundoff)
      * provided the point in not over the horizon.
+     *
      * @param lat0 latitude of center point of projection (degrees).
      * @param lon0 longitude of center point of projection (degrees).
-     * @param lat latitude of point (degrees).
-     * @param lon longitude of point (degrees).
+     * @param lat  latitude of point (degrees).
+     * @param lon  longitude of point (degrees).
      * @return {@link GnomonicData} object with the following fields:
      * <i>lat0</i>, <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>, <i>azi</i>, <i>rk</i>.
      */
-    public GnomonicData forward(double lat0, double lon0, double lat, double lon) {
-        GeodesicData inv = mEarth.inverse(lat0, lon0, lat, lon,
+    public GnomonicData forward(
+            final double lat0, final double lon0, final double lat, final double lon) {
+        final GeodesicData inv = mEarth.inverse(lat0, lon0, lat, lon,
                 GeodesicMask.AZIMUTH | GeodesicMask.GEODESIC_SCALE |
                         GeodesicMask.REDUCED_LENGTH);
-        GnomonicData fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
+        final GnomonicData fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
                 inv.getAzi2(), inv.getScaleM12());
 
         if (inv.getScaleM12() > 0) {
-            double rho = inv.getM12() / inv.getScaleM12();
-            Pair p = GeoMath.sincosd(inv.getAzi1());
+            final double rho = inv.getM12() / inv.getScaleM12();
+            final Pair p = GeoMath.sincosd(inv.getAzi1());
             fwd.setX(rho * p.getFirst());
             fwd.setY(rho * p.getSecond());
         }
@@ -182,31 +185,33 @@ public class Gnomonic {
      * or <i>y</i>; in this case NaNs are returned for very large <i>x</i> or <i>y</i>; in this
      * case NaNs are returned for all the output arguments. A call to rverse followed by a call
      * to forward will return the original (<i>x</i>, <i>y</i>) (to roundoff).
+     *
      * @param lat0 latitude of center point of projection (degrees). <i>lat0</i> should be in the
      *             range [&minus;90&deg;, 90&deg;]
      * @param lon0 longitude of center point of projection (degrees). <i>lon0</i> should be in the
      *             range [&minus;540&deg;, 540&deg;).
-     * @param x easting of point (meters).
-     * @param y northing of point (meters).
+     * @param x    easting of point (meters).
+     * @param y    northing of point (meters).
      * @return {@link GnomonicData} object with the following fields:
      * <i>lat0</i>, <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>,
      * <i>azi</i>, <i>rk</i>.
      */
-    public GnomonicData reverse(double lat0, double lon0, double x, double y) {
-        GnomonicData rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN,
-                Double.NaN);
+    public GnomonicData reverse(
+            final double lat0, final double lon0, final double x, final double y) {
+        final GnomonicData rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y,
+                Double.NaN, Double.NaN);
 
         //noinspection all
-        double azi0 = GeoMath.atan2d(x, y);
+        final double azi0 = GeoMath.atan2d(x, y);
         double rho = Math.hypot(x, y);
         double s = mA * Math.atan(rho / mA);
-        boolean little = rho <= mA;
+        final boolean little = rho <= mA;
 
         if (!little) {
             rho = 1 / rho;
         }
 
-        GeodesicLine line = mEarth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE |
+        final GeodesicLine line = mEarth.line(lat0, lon0, azi0, GeodesicMask.LATITUDE |
                 GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
                 GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
 
@@ -214,7 +219,7 @@ public class Gnomonic {
         int trip = 0;
         GeodesicData pos = null;
 
-        while(count-- > 0) {
+        while (count-- > 0) {
             pos = line.position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE |
                     GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
                     GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
@@ -223,8 +228,9 @@ public class Gnomonic {
                 break;
             }
 
-            double ds = little ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12() :
-                    (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();
+            final double ds = little
+                    ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12()
+                    : (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();
             s -= ds;
 
             if (Math.abs(ds) <= EPS * mA) {
@@ -247,6 +253,7 @@ public class Gnomonic {
     /**
      * Gets the equatorial radius of the ellipsoid (meters). This is the value inherited from the
      * Geodesic object used in the constructor.
+     *
      * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
      */
     public double getMajorRadius() {
@@ -255,6 +262,7 @@ public class Gnomonic {
 
     /**
      * Gets the flattening of the ellipsoid.
+     *
      * @return <i>f</i> the flattening of the ellipsoid. This is the value inherited from the
      * Geodesic object used in the constructor.
      */

@@ -42,14 +42,16 @@ public interface RobustKnownBiasAndPositionAccelerometerCalibratorListener {
      * @param iteration  current iteration.
      */
     void onCalibrateNextIteration(
-            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator, final int iteration);
+            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator,
+            final int iteration);
 
     /**
      * Called when calibration progress changes significantly.
      *
      * @param calibrator calibrator raising the event.
-     * @param progress progress of calibration expressed as a value between 0.0 and 1.0.
+     * @param progress   progress of calibration expressed as a value between 0.0 and 1.0.
      */
     void onCalibrateProgressChange(
-            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator, final float progress);
+            final RobustKnownBiasAndPositionAccelerometerCalibrator calibrator,
+            final float progress);
 }

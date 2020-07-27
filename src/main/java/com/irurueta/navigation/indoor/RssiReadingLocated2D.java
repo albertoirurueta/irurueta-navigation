@@ -21,6 +21,7 @@ import com.irurueta.geometry.Point2D;
 /**
  * Contains a 2D located signal strength reading associated to a given radio source
  * (e.g. WiFi access point or bluetooth beacon).
+ *
  * @param <S> a {@link RadioSource} type.
  */
 public class RssiReadingLocated2D<S extends RadioSource> extends
@@ -28,60 +29,67 @@ public class RssiReadingLocated2D<S extends RadioSource> extends
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param rssi received signal strength indicator in dBm.
+     *
+     * @param source   radio source associated to this reading.
+     * @param rssi     received signal strength indicator in dBm.
      * @param position position where reading was made.
      * @throws IllegalArgumentException if either radio source data or position
-     * are null.
+     *                                  are null.
      */
-    public RssiReadingLocated2D(S source, double rssi,
-            Point2D position) {
+    public RssiReadingLocated2D(
+            final S source, final double rssi, final Point2D position) {
         super(source, rssi, position);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source                radio source associated to this reading.
+     * @param rssi                  received signal strength indicator in dBm.
+     * @param position              position where reading was made.
      * @param rssiStandardDeviation standard deviation of RSSI, if available.
      * @throws IllegalArgumentException if either radio source data or position
-     * are null.
+     *                                  are null.
      */
-    public RssiReadingLocated2D(S source, double rssi,
-            Point2D position, Double rssiStandardDeviation) {
+    public RssiReadingLocated2D(
+            final S source, final double rssi, final Point2D position,
+            final Double rssiStandardDeviation) {
         super(source, rssi, position, rssiStandardDeviation);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source             radio source associated to this reading.
+     * @param rssi               received signal strength indicator in dBm.
+     * @param position           position where reading was made.
      * @param positionCovariance covariance of inhomogeneous coordinates of
      *                           current position (if available).
      * @throws IllegalArgumentException if either radio source or position are
-     * null, or covariance has invalid size.
+     *                                  null, or covariance has invalid size.
      */
-    public RssiReadingLocated2D(S source, double rssi,
-            Point2D position, Matrix positionCovariance) {
+    public RssiReadingLocated2D(
+            final S source, final double rssi, final Point2D position,
+            final Matrix positionCovariance) {
         super(source, rssi, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source                radio source associated to this reading.
+     * @param rssi                  received signal strength indicator in dBm.
+     * @param position              position where reading was made.
      * @param rssiStandardDeviation standard deviation of RSSI, if available.
-     * @param positionCovariance covariance of inhomogeneous coordinates of
-     *                           current position (if available).
+     * @param positionCovariance    covariance of inhomogeneous coordinates of
+     *                              current position (if available).
      * @throws IllegalArgumentException if either radio source or position are
-     * null, or covariance has invalid size.
+     *                                  null, or covariance has invalid size.
      */
-    public RssiReadingLocated2D(S source, double rssi,
-            Point2D position, Double rssiStandardDeviation,
-            Matrix positionCovariance) {
+    public RssiReadingLocated2D(
+            final S source, final double rssi, final Point2D position,
+            final Double rssiStandardDeviation,
+            final Matrix positionCovariance) {
         super(source, rssi, position, rssiStandardDeviation,
                 positionCovariance);
     }

@@ -4224,7 +4224,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4257,7 +4257,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(final double confidence) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4287,7 +4287,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(final int maxIterations) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4323,7 +4323,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4348,7 +4348,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4378,7 +4378,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -4390,7 +4390,8 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Gets array containing x,y,z components of estimated gyroscope biases
@@ -4410,7 +4411,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
-    public boolean getEstimatedBiases(double[] result) {
+    public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
                     0, mEstimatedBiases.length);
@@ -4439,7 +4440,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
-    public boolean getEstimatedBiasesAsMatrix(Matrix result)
+    public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
             result.fromArray(mEstimatedBiases);
@@ -4496,7 +4497,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedX(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -4523,7 +4524,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedY(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -4550,7 +4551,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedZ(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -12576,7 +12577,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
 
         final List<StandardDeviationBodyKinematics> measurements = new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -12608,7 +12609,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
             result.mEstimatedGg = mInnerCalibrator.getEstimatedGg();
 
             solutions.add(result);
-        } catch (LockedException | CalibrationException | NotReadyException e) {
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
         }
     }
@@ -12664,7 +12665,7 @@ public abstract class RobustTurntableGyroscopeCalibrator {
                     mEstimatedCovariance = null;
                 }
 
-            } catch (LockedException | CalibrationException | NotReadyException e) {
+            } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedBiases = preliminaryResult.mEstimatedBiases;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;

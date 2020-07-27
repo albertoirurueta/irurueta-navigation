@@ -35,241 +35,279 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start lateration solving.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D initialPosition) {
+    public NonLinearLeastSquaresLateration3DSolver(final Point3D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions       known positions of static nodes.
+     * @param distances       euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions,
-                                                   double[] distances, Point3D initialPosition) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions,
+            final double[] distances, final Point3D initialPosition) {
         super(positions, distances, initialPosition);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLateration3DSolver(LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final LaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener        listener to be notified of events raised by this instance.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D initialPosition,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D initialPosition,
+            final LaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions       known positions of static nodes.
+     * @param distances       euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener        listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     *                                  length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions,
-                                                   double[] distances, Point3D initialPosition,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions,
+            final double[] distances, final Point3D initialPosition,
+            final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, initialPosition, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres) {
+    public NonLinearLeastSquaresLateration3DSolver(final Sphere[] spheres) {
         super();
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres         spheres defining positions and distances.
      * @param initialPosition initial position to start lateration solving.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres, Point3D initialPosition) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres, final Point3D initialPosition) {
         super(initialPosition);
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres,
+            final LaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres         spheres defining positions and distances.
      * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener        listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres, Point3D initialPosition,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres, final Point3D initialPosition,
+            final LaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
+     * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations, Point3D initialPosition) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final Point3D initialPosition) {
         super(positions, distances, distanceStandardDeviations, initialPosition);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations, LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param initialPosition            initial position to start lateration solving.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
-     * are null, don't have the same length of their length is smaller than required (2 points).
+     *                                  are null, don't have the same length of their length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances,
-                                                   double[] distanceStandardDeviations, Point3D initialPosition,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final Point3D initialPosition,
+            final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres,
-                                                   double[] distanceStandardDeviations) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres,
+            final double[] distanceStandardDeviations) {
         super();
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
+     * @param initialPosition            initial position to start lateration solving.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres,
-                                                   double[] distanceStandardDeviations, Point3D initialPosition) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres,
+            final double[] distanceStandardDeviations, final Point3D initialPosition) {
         super(initialPosition);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres,
-                                                   double[] distanceStandardDeviations,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres,
+            final double[] distanceStandardDeviations,
+            final LaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param initialPosition initial position to start lateration solving.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param initialPosition            initial position to start lateration solving.
+     * @param listener                   listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresLateration3DSolver(Sphere[] spheres,
-                                                   double[] distanceStandardDeviations, Point3D initialPosition,
-                                                   LaterationSolverListener<Point3D> listener) {
+    public NonLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres,
+            final double[] distanceStandardDeviations, final Point3D initialPosition,
+            final LaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
      * Gets spheres defined by provided positions and distances.
+     *
      * @return spheres defined by provided positions and distances.
      */
     public Sphere[] getSpheres() {
@@ -277,7 +315,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
             return null;
         }
 
-        Sphere[] result = new Sphere[mPositions.length];
+        final Sphere[] result = new Sphere[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
             result[i] = new Sphere(mPositions[i], mDistances[i]);
@@ -287,12 +325,13 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
 
     /**
      * Sets spheres defining positions and euclidean distances.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
-     * is less than 2.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  is less than 2.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws LockedException {
+    public void setSpheres(final Sphere[] spheres) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -302,13 +341,15 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     /**
      * Sets spheres defining positions and euclidean distances along with the standard
      * deviations of provided spheres radii.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                  spheres defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
-     * 2 or don't have the same length.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  2 or don't have the same length.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
+    public void setSpheresAndStandardDeviations(
+            final Sphere[] spheres, final double[] radiusStandardDeviations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -318,6 +359,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return always returns 3 dimensions.
      */
     @Override
@@ -328,6 +370,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     /**
      * Minimum required number of positions and distances.
      * At least 4 positions and distances will be required to solve a 3D problem.
+     *
      * @return minimum required number of positions and distances.
      */
     @Override
@@ -337,6 +380,7 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
@@ -345,26 +389,27 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
             return null;
         }
 
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
         getEstimatedPosition(position);
         return position;
     }
 
     /**
      * Internally sets spheres defining positions and euclidean distances.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
-     * is less than 2.
+     *                                  is less than 2.
      */
-    public void internalSetSpheres(Sphere[] spheres) {
+    public void internalSetSpheres(final Sphere[] spheres) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
+        final Point3D[] positions = new Point3D[spheres.length];
+        final double[] distances = new double[spheres.length];
         for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
+            final Sphere sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
@@ -375,13 +420,15 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
     /**
      * Internally sets spheres defining positions and euclidean distances along with the standard
      * deviations of provided spheres radii.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                  spheres defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
-     * 2 or don't have the same length.
+     *                                  2 or don't have the same length.
      */
-    private void internalSetSpheresAndStandardDeviations(Sphere[] spheres,
-            double[] radiusStandardDeviations) {
+    private void internalSetSpheresAndStandardDeviations(
+            final Sphere[] spheres,
+            final double[] radiusStandardDeviations) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -394,10 +441,10 @@ public class NonLinearLeastSquaresLateration3DSolver extends NonLinearLeastSquar
             throw new IllegalArgumentException();
         }
 
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
+        final Point3D[] positions = new Point3D[spheres.length];
+        final double[] distances = new double[spheres.length];
         for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
+            final Sphere sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }

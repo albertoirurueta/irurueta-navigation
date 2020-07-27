@@ -21,6 +21,7 @@ import com.irurueta.geometry.Point3D;
 /**
  * Contains a 3D located reading associated to a given radio source (e.g. WiFi access point
  * or bluetooth beacon) containing signal strength and distance to associated access point.
+ *
  * @param <S> a {@link RadioSource} type.
  */
 public class RangingAndRssiReadingLocated3D<S extends RadioSource> extends
@@ -28,75 +29,83 @@ public class RangingAndRssiReadingLocated3D<S extends RadioSource> extends
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
+     *
+     * @param source   radio source associated to this reading.
      * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
+     * @param rssi     received signal strength indicator in dBm.
      * @param position position where reading was made.
      * @throws IllegalArgumentException if radio source data is null, distance is negative
-     * or position is null.
+     *                                  or position is null.
      */
-    public RangingAndRssiReadingLocated3D(S source,
-            double distance, double rssi, Point3D position) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position) {
         super(source, distance, rssi, position);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
-     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param position                  position where reading was made.
+     * @param numAttemptedMeasurements  number of attempted measurements used in the RTT exchange.
      * @param numSuccessfulMeasurements number of successful measurements used to calculate the
      *                                  distance and standard deviation.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * position is null, number of attempted measures is less than 1 or number of
-     * successful measures is negative.
+     *                                  position is null, number of attempted measures is less than 1 or number of
+     *                                  successful measures is negative.
      */
-    public RangingAndRssiReadingLocated3D(S source, double distance, double rssi,
-            Point3D position, int numAttemptedMeasurements,
-            int numSuccessfulMeasurements) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final int numAttemptedMeasurements,
+            final int numSuccessfulMeasurements) {
         super(source, distance, rssi, position, numAttemptedMeasurements,
                 numSuccessfulMeasurements);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param position                  position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
-     * @param rssiStandardDeviation standard deviation of RSSI, if available.
+     * @param rssiStandardDeviation     standard deviation of RSSI, if available.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * position is null or any of the standard deviations is zero or negative.
+     *                                  position is null or any of the standard deviations is zero or negative.
      */
-    public RangingAndRssiReadingLocated3D(S source,
-            double distance, double rssi, Point3D position,
-            Double distanceStandardDeviation, Double rssiStandardDeviation) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final Double distanceStandardDeviation,
+            final Double rssiStandardDeviation) {
         super(source, distance, rssi, position, distanceStandardDeviation,
                 rssiStandardDeviation);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param position                  position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
-     * @param rssiStandardDeviation standard deviation of RSSI, if available.
-     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param rssiStandardDeviation     standard deviation of RSSI, if available.
+     * @param numAttemptedMeasurements  number of attempted measurements used in the RTT exchange.
      * @param numSuccessfulMeasurements number of successful measurements used to calculate the
      *                                  distance and standard deviation.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * position is null, any of the standard deviations is zero or negative, number of
-     * attempted measures is less than 1 or number of successful measures is negative.
+     *                                  position is null, any of the standard deviations is zero or negative, number of
+     *                                  attempted measures is less than 1 or number of successful measures is negative.
      */
-    public RangingAndRssiReadingLocated3D(S source, double distance, double rssi,
-            Point3D position, Double distanceStandardDeviation,
-            Double rssiStandardDeviation, int numAttemptedMeasurements,
-            int numSuccessfulMeasurements) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final Double distanceStandardDeviation,
+            final Double rssiStandardDeviation, final int numAttemptedMeasurements,
+            final int numSuccessfulMeasurements) {
         super(source, distance, rssi, position, distanceStandardDeviation,
                 rssiStandardDeviation, numAttemptedMeasurements,
                 numSuccessfulMeasurements);
@@ -104,86 +113,94 @@ public class RangingAndRssiReadingLocated3D<S extends RadioSource> extends
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source             radio source associated to this reading.
+     * @param distance           distance in meters to the radio source.
+     * @param rssi               received signal strength indicator in dBm.
+     * @param position           position where reading was made.
      * @param positionCovariance covariance of inhomogeneous coordinates of
      *                           current position (if available).
      * @throws IllegalArgumentException if radio source data is null, distance is negative
-     * or position is null.
+     *                                  or position is null.
      */
-    public RangingAndRssiReadingLocated3D(S source,
-            double distance, double rssi, Point3D position,
-            Matrix positionCovariance) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final Matrix positionCovariance) {
         super(source, distance, rssi, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
-     * @param positionCovariance covariance of inhomogeneous coordinates of
-     *                           current position (if available).
-     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param position                  position where reading was made.
+     * @param positionCovariance        covariance of inhomogeneous coordinates of
+     *                                  current position (if available).
+     * @param numAttemptedMeasurements  number of attempted measurements used in the RTT exchange.
      * @param numSuccessfulMeasurements number of successful measurements used to calculate the
      *                                  distance and standard deviation.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * position is null, position covariance has wrong size, number of attempted
-     * measures is less than 1 or number of successful measures is negative.
+     *                                  position is null, position covariance has wrong size, number of attempted
+     *                                  measures is less than 1 or number of successful measures is negative.
      */
-    public RangingAndRssiReadingLocated3D(S source, double distance, double rssi,
-            Point3D position, Matrix positionCovariance, int numAttemptedMeasurements,
-            int numSuccessfulMeasurements) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final Matrix positionCovariance,
+            final int numAttemptedMeasurements,
+            final int numSuccessfulMeasurements) {
         super(source, distance, rssi, position, positionCovariance,
                 numAttemptedMeasurements, numSuccessfulMeasurements);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param position                  position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
-     * @param rssiStandardDeviation standard deviation of RSSI value.
-     * @param positionCovariance covariance of inhomogeneous coordinates of
-     *                           current position (if available).
+     * @param rssiStandardDeviation     standard deviation of RSSI value.
+     * @param positionCovariance        covariance of inhomogeneous coordinates of
+     *                                  current position (if available).
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * position is null or standard deviation is zero or negative.
+     *                                  position is null or standard deviation is zero or negative.
      */
-    public RangingAndRssiReadingLocated3D(S source,
-            double distance, double rssi, Point3D position,
-            Double distanceStandardDeviation, Double rssiStandardDeviation,
-            Matrix positionCovariance) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final Double distanceStandardDeviation,
+            final Double rssiStandardDeviation,
+            final Matrix positionCovariance) {
         super(source, distance, rssi, position, distanceStandardDeviation,
                 rssiStandardDeviation, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param position position where reading was made.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param position                  position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
-     * @param rssiStandardDeviation standard deviation of RSSI value.
-     * @param positionCovariance covariance of inhomogeneous coordinates of
-     *                           current position (if available).
-     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param rssiStandardDeviation     standard deviation of RSSI value.
+     * @param positionCovariance        covariance of inhomogeneous coordinates of
+     *                                  current position (if available).
+     * @param numAttemptedMeasurements  number of attempted measurements used in the RTT exchange.
      * @param numSuccessfulMeasurements number of successful measurements used to calculate the
      *                                  distance and standard deviation.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * position is null, any of the standard deviations is zero or negative,
-     * position covariance has wrong size, number of attempted
-     * measures is less than 1 or number of successful measures is negative.
+     *                                  position is null, any of the standard deviations is zero or negative,
+     *                                  position covariance has wrong size, number of attempted
+     *                                  measures is less than 1 or number of successful measures is negative.
      */
-    public RangingAndRssiReadingLocated3D(S source, double distance, double rssi,
-            Point3D position, Double distanceStandardDeviation,
-            Double rssiStandardDeviation, Matrix positionCovariance,
-            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+    public RangingAndRssiReadingLocated3D(
+            final S source, final double distance, final double rssi,
+            final Point3D position, final Double distanceStandardDeviation,
+            final Double rssiStandardDeviation, final Matrix positionCovariance,
+            final int numAttemptedMeasurements, final int numSuccessfulMeasurements) {
         super(source, distance, rssi, position, distanceStandardDeviation,
                 rssiStandardDeviation, positionCovariance, numAttemptedMeasurements,
                 numSuccessfulMeasurements);

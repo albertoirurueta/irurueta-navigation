@@ -111,5 +111,6 @@ public class GeodesicMask {
      * Constructor.
      * Prevents instantiation.
      */
-    GeodesicMask() { }
+    GeodesicMask() {
+    }
 }

@@ -35,113 +35,120 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
     /**
      * Constructor.
      */
-    public NonLinearFingerprintPositionEstimator2D() { }
+    public NonLinearFingerprintPositionEstimator2D() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public NonLinearFingerprintPositionEstimator2D(
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public NonLinearFingerprintPositionEstimator2D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public NonLinearFingerprintPositionEstimator2D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param initialPosition initial position to start the solving algorithm or null.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param initialPosition     initial position to start the solving algorithm or null.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public NonLinearFingerprintPositionEstimator2D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition) {
         super(locatedFingerprints, fingerprint, sources, initialPosition);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param initialPosition initial position to start the solving algorithm or null.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param initialPosition     initial position to start the solving algorithm or null.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public NonLinearFingerprintPositionEstimator2D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, initialPosition, listener);
     }
 
     /**
      * Gets number of dimensions of points.
+     *
      * @return number of dimensions of points.
      */
     @Override
@@ -151,6 +158,7 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Gets estimated position or null if not available yet.
+     *
      * @return estimated position or null.
      */
     @Override
@@ -159,18 +167,19 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
             return null;
         }
 
-        Point2D result = new InhomogeneousPoint2D();
+        final Point2D result = new InhomogeneousPoint2D();
         getEstimatedPosition(result);
         return result;
     }
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param type type to be used.
      * @return a non-linear 2D position estimator.
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            NonLinearFingerprintPositionEstimatorType type) {
+            final NonLinearFingerprintPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
                 return new ThirdOrderNonLinearFingerprintPositionEstimator2D();
@@ -184,13 +193,14 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param listener listener in charge of handling events.
-     * @param type a non-linear 2D position estimator.
+     * @param type     a non-linear 2D position estimator.
      * @return a non-linear 2D position estimator.
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            FingerprintPositionEstimatorListener<Point2D> listener,
-            NonLinearFingerprintPositionEstimatorType type) {
+            final FingerprintPositionEstimatorListener<Point2D> listener,
+            final NonLinearFingerprintPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
                 return new ThirdOrderNonLinearFingerprintPositionEstimator2D(listener);
@@ -204,26 +214,27 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param type a non-linear 2D position estimator.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param type                a non-linear 2D position estimator.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            NonLinearFingerprintPositionEstimatorType type) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final NonLinearFingerprintPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
                 return new ThirdOrderNonLinearFingerprintPositionEstimator2D(
@@ -240,28 +251,29 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param listener listener in charge of handling events.
-     * @param type a non-linear 2D position estimator.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param listener            listener in charge of handling events.
+     * @param type                a non-linear 2D position estimator.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            FingerprintPositionEstimatorListener<Point2D> listener,
-            NonLinearFingerprintPositionEstimatorType type) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final FingerprintPositionEstimatorListener<Point2D> listener,
+            final NonLinearFingerprintPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
                 return new ThirdOrderNonLinearFingerprintPositionEstimator2D(
@@ -278,27 +290,29 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param initialPosition initial position to start the solving algorithm or null.
-     * @param type a non-linear 2D position estimator.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param initialPosition     initial position to start the solving algorithm or null.
+     * @param type                a non-linear 2D position estimator.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Point2D initialPosition, NonLinearFingerprintPositionEstimatorType type) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Point2D initialPosition,
+            final NonLinearFingerprintPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
                 return new ThirdOrderNonLinearFingerprintPositionEstimator2D(
@@ -315,29 +329,30 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param initialPosition initial position to start the solving algorithm or null.
-     * @param listener listener in charge of handling events.
-     * @param type a non-linear 2D position estimator.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param initialPosition     initial position to start the solving algorithm or null.
+     * @param listener            listener in charge of handling events.
+     * @param type                a non-linear 2D position estimator.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<
-            ? extends RadioSource, ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
-            FingerprintPositionEstimatorListener<Point2D> listener,
-            NonLinearFingerprintPositionEstimatorType type) {
+            final List<? extends RssiFingerprintLocated<
+                    ? extends RadioSource, ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
+            final FingerprintPositionEstimatorListener<Point2D> listener,
+            final NonLinearFingerprintPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
                 return new ThirdOrderNonLinearFingerprintPositionEstimator2D(
@@ -357,6 +372,7 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using default type.
+     *
      * @return a non-linear 2D position estimator.
      */
     public static NonLinearFingerprintPositionEstimator2D create() {
@@ -365,112 +381,117 @@ public abstract class NonLinearFingerprintPositionEstimator2D extends
 
     /**
      * Creates an instance of a non-linear 2D position estimator using default type.
+     *
      * @param listener listener in charge of handling events.
      * @return a non-linear 2D position estimator.
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         return create(listener, DEFAULT_TYPE);
     }
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         return create(locatedFingerprints, fingerprint, sources, DEFAULT_TYPE);
     }
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param listener            listener in charge of handling events.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         return create(locatedFingerprints, fingerprint, sources, listener,
                 DEFAULT_TYPE);
     }
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param initialPosition initial position to start the solving algorithm or null.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param initialPosition     initial position to start the solving algorithm or null.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Point2D initialPosition) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Point2D initialPosition) {
         return create(locatedFingerprints, fingerprint, sources, initialPosition,
                 DEFAULT_TYPE);
     }
 
     /**
      * Creates an instance of a non-linear 2D position estimator using provided type.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param initialPosition initial position to start the solving algorithm or null.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param initialPosition     initial position to start the solving algorithm or null.
+     * @param listener            listener in charge of handling events.
      * @return a non-linear 2D position estimator.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required).
      */
     public static NonLinearFingerprintPositionEstimator2D create(
-            List<? extends RssiFingerprintLocated<
-            ? extends RadioSource, ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
-            FingerprintPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RssiFingerprintLocated<
+                    ? extends RadioSource, ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
+            final FingerprintPositionEstimatorListener<Point2D> listener) {
         return create(locatedFingerprints, fingerprint, sources, initialPosition,
                 listener, DEFAULT_TYPE);
     }

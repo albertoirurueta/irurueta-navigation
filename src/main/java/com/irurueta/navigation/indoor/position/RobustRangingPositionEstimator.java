@@ -49,7 +49,7 @@ public abstract class RobustRangingPositionEstimator<P extends Point<?>> extends
      * @param listener listener in charge of handling events.
      */
     public RobustRangingPositionEstimator(
-            RobustRangingPositionEstimatorListener<P> listener) {
+            final RobustRangingPositionEstimatorListener<P> listener) {
         super(listener);
         init();
     }
@@ -60,7 +60,7 @@ public abstract class RobustRangingPositionEstimator<P extends Point<?>> extends
     private void init() {
         mTrilaterationSolverListener = new RobustLaterationSolverListener<P>() {
             @Override
-            public void onSolveStart(RobustLaterationSolver<P> solver) {
+            public void onSolveStart(final RobustLaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateStart(
                             RobustRangingPositionEstimator.this);
@@ -68,7 +68,7 @@ public abstract class RobustRangingPositionEstimator<P extends Point<?>> extends
             }
 
             @Override
-            public void onSolveEnd(RobustLaterationSolver<P> solver) {
+            public void onSolveEnd(final RobustLaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateEnd(
                             RobustRangingPositionEstimator.this);
@@ -76,8 +76,8 @@ public abstract class RobustRangingPositionEstimator<P extends Point<?>> extends
             }
 
             @Override
-            public void onSolveNextIteration(RobustLaterationSolver<P> solver,
-                                             int iteration) {
+            public void onSolveNextIteration(final RobustLaterationSolver<P> solver,
+                                             final int iteration) {
                 if (mListener != null) {
                     mListener.onEstimateNextIteration(
                             RobustRangingPositionEstimator.this, iteration);
@@ -85,8 +85,8 @@ public abstract class RobustRangingPositionEstimator<P extends Point<?>> extends
             }
 
             @Override
-            public void onSolveProgressChange(RobustLaterationSolver<P> solver,
-                                              float progress) {
+            public void onSolveProgressChange(final RobustLaterationSolver<P> solver,
+                                              final float progress) {
                 if (mListener != null) {
                     mListener.onEstimateProgressChange(
                             RobustRangingPositionEstimator.this, progress);

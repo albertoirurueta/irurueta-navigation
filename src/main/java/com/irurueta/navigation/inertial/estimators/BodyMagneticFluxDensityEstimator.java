@@ -34,7 +34,8 @@ public class BodyMagneticFluxDensityEstimator {
     /**
      * Private constructor to prevent instantiation.
      */
-    private BodyMagneticFluxDensityEstimator() { }
+    private BodyMagneticFluxDensityEstimator() {
+    }
 
     /**
      * Computes expected measured body magnetic flux density for a given Earth

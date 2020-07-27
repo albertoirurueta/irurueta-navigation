@@ -18,6 +18,7 @@ package com.irurueta.navigation.inertial.calibration.gyroscope;
 /**
  * Contains listener for gyroscope calibrators when
  * frame (position, velocity and orientation) is known for all measurements.
+ *
  * @param <T> a calibrator type.
  */
 public interface KnownFrameGyroscopeCalibratorListener<T extends KnownFrameGyroscopeCalibrator<?, ?>> {

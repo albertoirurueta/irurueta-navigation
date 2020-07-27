@@ -47,10 +47,10 @@ public class MSACRobustRangingPositionEstimator2D extends
      *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public MSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -64,7 +64,7 @@ public class MSACRobustRangingPositionEstimator2D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public MSACRobustRangingPositionEstimator2D(
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -73,15 +73,15 @@ public class MSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing ranging readings at an unknown location
-     *                      for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public MSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -94,7 +94,7 @@ public class MSACRobustRangingPositionEstimator2D extends
      * @param listener listener in charge of handling events.
      */
     public MSACRobustRangingPositionEstimator2D(
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -102,14 +102,14 @@ public class MSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public MSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -118,14 +118,14 @@ public class MSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing ranging readings at an unknown
-     *                      location for provided location radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing ranging readings at an unknown
+     *                    location for provided location radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public MSACRobustRangingPositionEstimator2D(
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -134,15 +134,15 @@ public class MSACRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing ranging readings at an unknown
-     *                      location for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing ranging readings at an unknown
+     *                    location for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      */
     public MSACRobustRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RobustRangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -168,9 +168,9 @@ public class MSACRobustRangingPositionEstimator2D extends
      *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         ((MSACRobustLateration2DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }

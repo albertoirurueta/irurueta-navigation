@@ -1383,7 +1383,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1408,7 +1408,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1439,7 +1439,7 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -1699,7 +1699,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1719,7 +1720,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -2425,8 +2427,9 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param preliminaryResult a preliminary result.
      * @return computed error.
      */
-    protected double computeError(final StandardDeviationFrameBodyMagneticFluxDensity measurement,
-                                  final PreliminaryResult preliminaryResult) {
+    protected double computeError(
+            final StandardDeviationFrameBodyMagneticFluxDensity measurement,
+            final PreliminaryResult preliminaryResult) {
         // The magnetometer model is:
         // mBmeas = ba + (I + Mm) * mBtrue
 
@@ -2508,13 +2511,14 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<PreliminaryResult> solutions) {
+    protected void computePreliminarySolutions(
+            final int[] samplesIndices,
+            final List<PreliminaryResult> solutions) {
 
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -2560,8 +2564,8 @@ public abstract class RobustKnownFrameMagnetometerCalibrator {
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationFrameBodyMagneticFluxDensity> inlierMeasurements =
                     new ArrayList<>();

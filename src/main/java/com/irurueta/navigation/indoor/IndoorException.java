@@ -31,26 +31,29 @@ public class IndoorException extends NavigationException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public IndoorException(String message) {
+    public IndoorException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public IndoorException(String message, Throwable cause) {
+    public IndoorException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public IndoorException(Throwable cause) {
+    public IndoorException(final Throwable cause) {
         super(cause);
     }
 }

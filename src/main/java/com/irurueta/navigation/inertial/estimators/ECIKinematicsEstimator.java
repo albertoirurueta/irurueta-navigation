@@ -503,11 +503,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final double vx, final double vy, final double vz,
-                                              final double oldVx, final double oldVy, final double oldVz,
-                                              final double x, final double y, final double z) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final double vx, final double vy, final double vz,
+                                               final double oldVx, final double oldVy, final double oldVz,
+                                               final double x, final double y, final double z) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
@@ -540,11 +540,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final double vx, final double vy, final double vz,
-                                              final double oldVx, final double oldVy, final double oldVz,
-                                              final double x, final double y, final double z) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final double vx, final double vy, final double vz,
+                                               final double oldVx, final double oldVy, final double oldVz,
+                                               final double x, final double y, final double z) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
@@ -566,9 +566,9 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final ECIFrame frame,
-                                              final CoordinateTransformation oldC,
-                                              final double oldVx, final double oldVy, final double oldVz) {
+                                               final ECIFrame frame,
+                                               final CoordinateTransformation oldC,
+                                               final double oldVx, final double oldVy, final double oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy, oldVz);
     }
 
@@ -590,9 +590,9 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final ECIFrame frame,
-                                              final CoordinateTransformation oldC,
-                                              final double oldVx, final double oldVy, final double oldVz) {
+                                               final ECIFrame frame,
+                                               final CoordinateTransformation oldC,
+                                               final double oldVx, final double oldVy, final double oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy, oldVz);
     }
 
@@ -609,7 +609,7 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final ECIFrame frame, final ECIFrame oldFrame) {
+                                               final ECIFrame frame, final ECIFrame oldFrame) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldFrame);
     }
 
@@ -626,7 +626,7 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final ECIFrame frame, final ECIFrame oldFrame) {
+                                               final ECIFrame frame, final ECIFrame oldFrame) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldFrame);
     }
 
@@ -659,11 +659,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final Speed vx, final Speed vy, final Speed vz,
-                                              final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                              final double x, final double y, final double z) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final Speed vx, final Speed vy, final Speed vz,
+                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                               final double x, final double y, final double z) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
@@ -696,11 +696,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final Speed vx, final Speed vy, final Speed vz,
-                                              final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                              final double x, final double y, final double z) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final Speed vx, final Speed vy, final Speed vz,
+                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                               final double x, final double y, final double z) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
@@ -722,9 +722,9 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final ECIFrame frame,
-                                              final CoordinateTransformation oldC,
-                                              final Speed oldVx, final Speed oldVy, final Speed oldVz) {
+                                               final ECIFrame frame,
+                                               final CoordinateTransformation oldC,
+                                               final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy, oldVz);
     }
 
@@ -746,9 +746,9 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final ECIFrame frame,
-                                              final CoordinateTransformation oldC,
-                                              final Speed oldVx, final Speed oldVy, final Speed oldVz) {
+                                               final ECIFrame frame,
+                                               final CoordinateTransformation oldC,
+                                               final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy, oldVz);
     }
 
@@ -777,11 +777,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final double vx, final double vy, final double vz,
-                                              final double oldVx, final double oldVy, final double oldVz,
-                                              final Point3D position) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final double vx, final double vy, final double vz,
+                                               final double oldVx, final double oldVy, final double oldVz,
+                                               final Point3D position) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position);
     }
 
@@ -810,11 +810,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final double vx, final double vy, final double vz,
-                                              final double oldVx, final double oldVy, final double oldVz,
-                                              final Point3D position) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final double vx, final double vy, final double vz,
+                                               final double oldVx, final double oldVy, final double oldVz,
+                                               final Point3D position) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position);
     }
 
@@ -843,11 +843,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final double timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final Speed vx, final Speed vy, final Speed vz,
-                                              final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                              final Point3D position) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final Speed vx, final Speed vy, final Speed vz,
+                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                               final Point3D position) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position);
     }
 
@@ -876,11 +876,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public BodyKinematics estimateAndReturnNew(final Time timeInterval,
-                                              final CoordinateTransformation c,
-                                              final CoordinateTransformation oldC,
-                                              final Speed vx, final Speed vy, final Speed vz,
-                                              final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                              final Point3D position) {
+                                               final CoordinateTransformation c,
+                                               final CoordinateTransformation oldC,
+                                               final Speed vx, final Speed vy, final Speed vz,
+                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                               final Point3D position) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position);
     }
 
@@ -1478,12 +1478,13 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final double vx, final double vy, final double vz,
-                                                               final double oldVx, final double oldVy, final double oldVz,
-                                                               final double x, final double y, final double z) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final double timeInterval,
+            final CoordinateTransformation c,
+            final CoordinateTransformation oldC,
+            final double vx, final double vy, final double vz,
+            final double oldVx, final double oldVy, final double oldVz,
+            final double x, final double y, final double z) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz,
                 x, y, z, result);
@@ -1518,12 +1519,13 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final double vx, final double vy, final double vz,
-                                                               final double oldVx, final double oldVy, final double oldVz,
-                                                               final double x, final double y, final double z) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final Time timeInterval,
+            final CoordinateTransformation c,
+            final CoordinateTransformation oldC,
+            final double vx, final double vy, final double vz,
+            final double oldVx, final double oldVy, final double oldVz,
+            final double x, final double y, final double z) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz,
                 x, y, z, result);
@@ -1547,10 +1549,11 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final ECIFrame frame,
-                                                               final CoordinateTransformation oldC,
-                                                               final double oldVx, final double oldVy, final double oldVz) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final double timeInterval,
+            final ECIFrame frame,
+            final CoordinateTransformation oldC,
+            final double oldVx, final double oldVy, final double oldVz) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
         return result;
@@ -1573,10 +1576,11 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final ECIFrame frame,
-                                                               final CoordinateTransformation oldC,
-                                                               final double oldVx, final double oldVy, final double oldVz) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final Time timeInterval,
+            final ECIFrame frame,
+            final CoordinateTransformation oldC,
+            final double oldVx, final double oldVy, final double oldVz) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
         return result;
@@ -1595,7 +1599,7 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final ECIFrame frame, final ECIFrame oldFrame) {
+                                                                final ECIFrame frame, final ECIFrame oldFrame) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldFrame, result);
         return result;
@@ -1614,7 +1618,7 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final ECIFrame frame, final ECIFrame oldFrame) {
+                                                                final ECIFrame frame, final ECIFrame oldFrame) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldFrame, result);
         return result;
@@ -1649,11 +1653,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final Speed vx, final Speed vy, final Speed vz,
-                                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                                               final double x, final double y, final double z) {
+                                                                final CoordinateTransformation c,
+                                                                final CoordinateTransformation oldC,
+                                                                final Speed vx, final Speed vy, final Speed vz,
+                                                                final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                                                final double x, final double y, final double z) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz,
                 x, y, z, result);
@@ -1689,11 +1693,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final Speed vx, final Speed vy, final Speed vz,
-                                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                                               final double x, final double y, final double z) {
+                                                                final CoordinateTransformation c,
+                                                                final CoordinateTransformation oldC,
+                                                                final Speed vx, final Speed vy, final Speed vz,
+                                                                final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                                                final double x, final double y, final double z) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz,
                 x, y, z, result);
@@ -1717,10 +1721,11 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final ECIFrame frame,
-                                                               final CoordinateTransformation oldC,
-                                                               final Speed oldVx, final Speed oldVy, final Speed oldVz) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final double timeInterval,
+            final ECIFrame frame,
+            final CoordinateTransformation oldC,
+            final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
         return result;
@@ -1743,10 +1748,11 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final ECIFrame frame,
-                                                               final CoordinateTransformation oldC,
-                                                               final Speed oldVx, final Speed oldVy, final Speed oldVz) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final Time timeInterval,
+            final ECIFrame frame,
+            final CoordinateTransformation oldC,
+            final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
         return result;
@@ -1776,12 +1782,13 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final double vx, final double vy, final double vz,
-                                                               final double oldVx, final double oldVy, final double oldVz,
-                                                               final Point3D position) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final double timeInterval,
+            final CoordinateTransformation c,
+            final CoordinateTransformation oldC,
+            final double vx, final double vy, final double vz,
+            final double oldVx, final double oldVy, final double oldVz,
+            final Point3D position) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position, result);
         return result;
@@ -1811,12 +1818,13 @@ public class ECIKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
-    public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final double vx, final double vy, final double vz,
-                                                               final double oldVx, final double oldVy, final double oldVz,
-                                                               final Point3D position) {
+    public static BodyKinematics estimateKinematicsAndReturnNew(
+            final Time timeInterval,
+            final CoordinateTransformation c,
+            final CoordinateTransformation oldC,
+            final double vx, final double vy, final double vz,
+            final double oldVx, final double oldVy, final double oldVz,
+            final Point3D position) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position, result);
         return result;
@@ -1847,11 +1855,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final Speed vx, final Speed vy, final Speed vz,
-                                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                                               final Point3D position) {
+                                                                final CoordinateTransformation c,
+                                                                final CoordinateTransformation oldC,
+                                                                final Speed vx, final Speed vy, final Speed vz,
+                                                                final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                                                final Point3D position) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position, result);
         return result;
@@ -1882,11 +1890,11 @@ public class ECIKinematicsEstimator {
      *                                  are not ECI frame valid.
      */
     public static BodyKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                               final CoordinateTransformation c,
-                                                               final CoordinateTransformation oldC,
-                                                               final Speed vx, final Speed vy, final Speed vz,
-                                                               final Speed oldVx, final Speed oldVy, final Speed oldVz,
-                                                               final Point3D position) {
+                                                                final CoordinateTransformation c,
+                                                                final CoordinateTransformation oldC,
+                                                                final Speed vx, final Speed vy, final Speed vz,
+                                                                final Speed oldVx, final Speed oldVy, final Speed oldVz,
+                                                                final Point3D position) {
         final BodyKinematics result = new BodyKinematics();
         estimateKinematics(timeInterval, c, oldC, vx, vy, vz, oldVx, oldVy, oldVz, position, result);
         return result;

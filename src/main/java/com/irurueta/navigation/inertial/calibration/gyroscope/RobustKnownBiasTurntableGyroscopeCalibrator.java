@@ -3936,7 +3936,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *                     known position witn unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final List<StandardDeviationBodyKinematics> measurements)
+    public void setMeasurements(
+            final List<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -3961,7 +3962,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param position position where body kinematics measures have been taken.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setPosition(final ECEFPosition position) throws LockedException {
+    public void setPosition(final ECEFPosition position)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4008,7 +4010,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param position position where body kinematics measures have been taken.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setPosition(final NEDPosition position) throws LockedException {
+    public void setPosition(final NEDPosition position)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4037,7 +4040,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
+    public void setCommonAxisUsed(final boolean commonAxisUsed)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4164,7 +4168,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4197,7 +4202,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(final double confidence)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4227,7 +4233,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(final int maxIterations)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4263,7 +4270,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4288,7 +4296,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4319,7 +4328,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -4331,7 +4340,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Gets estimated gyroscope scale factors and cross coupling errors.
@@ -4517,7 +4527,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @throws IllegalArgumentException if provided value is less than
      *                                  {@link #getMinimumRequiredMeasurements}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -11852,8 +11863,9 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param preliminaryResult a preliminary result.
      * @return computed error.
      */
-    protected double computeError(final StandardDeviationBodyKinematics measurement,
-                                  final PreliminaryResult preliminaryResult) {
+    protected double computeError(
+            final StandardDeviationBodyKinematics measurement,
+            final PreliminaryResult preliminaryResult) {
         // We know that measured angular rate is:
         // Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue
 
@@ -11970,12 +11982,13 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<PreliminaryResult> solutions) {
+    protected void computePreliminarySolutions(
+            final int[] samplesIndices,
+            final List<PreliminaryResult> solutions) {
 
         final List<StandardDeviationBodyKinematics> measurements = new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -12004,7 +12017,7 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
             result.mEstimatedGg = mInnerCalibrator.getEstimatedGg();
 
             solutions.add(result);
-        } catch (LockedException | CalibrationException | NotReadyException e) {
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
         }
     }
@@ -12020,8 +12033,8 @@ public abstract class RobustKnownBiasTurntableGyroscopeCalibrator {
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationBodyKinematics> inlierMeasurements =
                     new ArrayList<>();

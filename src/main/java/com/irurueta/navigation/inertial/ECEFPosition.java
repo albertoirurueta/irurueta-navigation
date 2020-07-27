@@ -461,7 +461,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      * Checks if provided instance has contents similar to this instance up to provided
      * threshold value.
      *
-     * @param other instance to be compared.
+     * @param other     instance to be compared.
      * @param threshold maximum difference allowed between position coordinates.
      * @return true if both instances are considered to be equal (up to provided
      * threshold), false otherwise.
@@ -484,7 +484,7 @@ public class ECEFPosition implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final ECEFPosition result = (ECEFPosition)super.clone();
+        final ECEFPosition result = (ECEFPosition) super.clone();
         copyTo(result);
         return result;
     }

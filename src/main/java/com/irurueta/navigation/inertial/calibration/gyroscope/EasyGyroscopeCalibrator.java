@@ -2859,7 +2859,7 @@ public class EasyGyroscopeCalibrator {
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
-    public boolean getEstimatedBiases(double[] result) {
+    public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
                     0, mEstimatedBiases.length);
@@ -2888,7 +2888,7 @@ public class EasyGyroscopeCalibrator {
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
-    public boolean getEstimatedBiasesAsMatrix(Matrix result)
+    public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
             result.fromArray(mEstimatedBiases);
@@ -2945,7 +2945,7 @@ public class EasyGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedX(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -2972,7 +2972,7 @@ public class EasyGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedY(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -2999,7 +2999,7 @@ public class EasyGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedZ(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3246,59 +3246,60 @@ public class EasyGyroscopeCalibrator {
         final Matrix initialGg = getInitialGg();
         final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Before and after normalized gravity versors
-                return 2 * BodyKinematics.COMPONENTS;
-            }
-
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial =
-                        new double[COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES];
-
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
-
-                // upper diagonal cross coupling errors M
-                int k = BodyKinematics.COMPONENTS;
-                for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
-                    for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                        if (i <= j) {
-                            initial[k] = initialM.getElementAt(i, j);
-                            k++;
-                        }
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Before and after normalized gravity versors
+                        return 2 * BodyKinematics.COMPONENTS;
                     }
-                }
 
-                // g-dependent cross biases G
-                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = k; i < num; i++, j++) {
-                    initial[j] = initialG.getElementAtIndex(i);
-                }
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial =
+                                new double[COMMON_Z_AXIS_UNKNOWNS_AND_CROSS_BIASES];
 
-                return initial;
-            }
+                        // biases b
+                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                            initial[i] = initialB.getElementAtIndex(i);
+                        }
 
-            @Override
-            public double evaluate(
-                    final int i, final double[] point,
-                    final double[] params, final double[] derivatives)
-                    throws EvaluationException {
-                mI = i;
+                        // upper diagonal cross coupling errors M
+                        int k = BodyKinematics.COMPONENTS;
+                        for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
+                            for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                                if (i <= j) {
+                                    initial[k] = initialM.getElementAt(i, j);
+                                    k++;
+                                }
+                            }
+                        }
 
-                // point contains fixed gravity versor values for current
-                // sequence
-                mPoint = point;
+                        // g-dependent cross biases G
+                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
+                        for (int i = 0, j = k; i < num; i++, j++) {
+                            initial[j] = initialG.getElementAtIndex(i);
+                        }
 
-                gradientEstimator.gradient(params, derivatives);
+                        return initial;
+                    }
 
-                return evaluateCommonAxisWithGDependentCrossBiases(i, params);
-            }
-        });
+                    @Override
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+                        mI = i;
+
+                        // point contains fixed gravity versor values for current
+                        // sequence
+                        mPoint = point;
+
+                        gradientEstimator.gradient(params, derivatives);
+
+                        return evaluateCommonAxisWithGDependentCrossBiases(i, params);
+                    }
+                });
 
         setInputData();
 
@@ -3403,7 +3404,7 @@ public class EasyGyroscopeCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] params)
+                    public double evaluate(final double[] params)
                             throws EvaluationException {
                         return evaluateGeneralWithGDependentCrossBiases(mI, params);
                     }
@@ -3419,53 +3420,54 @@ public class EasyGyroscopeCalibrator {
         final Matrix initialGg = getInitialGg();
         final Matrix initialG = invInitialM.multiplyAndReturnNew(initialGg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Before and after normalized gravity versors
-                return 2 * BodyKinematics.COMPONENTS;
-            }
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Before and after normalized gravity versors
+                        return 2 * BodyKinematics.COMPONENTS;
+                    }
 
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial =
-                        new double[GENERAL_UNKNOWNS_AND_CROSS_BIASES];
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial =
+                                new double[GENERAL_UNKNOWNS_AND_CROSS_BIASES];
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
+                        // biases b
+                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                            initial[i] = initialB.getElementAtIndex(i);
+                        }
 
-                // cross coupling errors M
-                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = initialM.getElementAtIndex(i);
-                }
+                        // cross coupling errors M
+                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
+                        for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
+                            initial[j] = initialM.getElementAtIndex(i);
+                        }
 
-                // g-dependent cross biases G
-                for (int i = 0, j = BodyKinematics.COMPONENTS + num; i < num; i++, j++) {
-                    initial[j] = initialG.getElementAtIndex(i);
-                }
+                        // g-dependent cross biases G
+                        for (int i = 0, j = BodyKinematics.COMPONENTS + num; i < num; i++, j++) {
+                            initial[j] = initialG.getElementAtIndex(i);
+                        }
 
-                return initial;
-            }
+                        return initial;
+                    }
 
-            @Override
-            public double evaluate(
-                    final int i, final double[] point,
-                    final double[] params, final double[] derivatives)
-                    throws EvaluationException {
-                mI = i;
+                    @Override
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+                        mI = i;
 
-                // point contains fixed gravity versor values for current
-                // sequence
-                mPoint = point;
+                        // point contains fixed gravity versor values for current
+                        // sequence
+                        mPoint = point;
 
-                gradientEstimator.gradient(params, derivatives);
+                        gradientEstimator.gradient(params, derivatives);
 
-                return evaluateGeneralWithGDependentCrossBiases(i, params);
-            }
-        });
+                        return evaluateGeneralWithGDependentCrossBiases(i, params);
+                    }
+                });
 
         setInputData();
 
@@ -3603,52 +3605,53 @@ public class EasyGyroscopeCalibrator {
         final Matrix initialBg = getInitialBiasAsMatrix();
         final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Before and after normalized gravity versors
-                return 2 * BodyKinematics.COMPONENTS;
-            }
-
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
-
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
-
-                // upper diagonal cross coupling errors M
-                int k = BodyKinematics.COMPONENTS;
-                for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
-                    for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                        if (i <= j) {
-                            initial[k] = initialM.getElementAt(i, j);
-                            k++;
-                        }
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Before and after normalized gravity versors
+                        return 2 * BodyKinematics.COMPONENTS;
                     }
-                }
 
-                return initial;
-            }
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
 
-            @Override
-            public double evaluate(
-                    final int i, final double[] point,
-                    final double[] params, final double[] derivatives)
-                    throws EvaluationException {
-                mI = i;
+                        // biases b
+                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                            initial[i] = initialB.getElementAtIndex(i);
+                        }
 
-                // point contains fixed gravity versor values for current
-                // sequence
-                mPoint = point;
+                        // upper diagonal cross coupling errors M
+                        int k = BodyKinematics.COMPONENTS;
+                        for (int j = 0; j < BodyKinematics.COMPONENTS; j++) {
+                            for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                                if (i <= j) {
+                                    initial[k] = initialM.getElementAt(i, j);
+                                    k++;
+                                }
+                            }
+                        }
 
-                gradientEstimator.gradient(params, derivatives);
+                        return initial;
+                    }
 
-                return evaluateCommonAxis(i, params);
-            }
-        });
+                    @Override
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+                        mI = i;
+
+                        // point contains fixed gravity versor values for current
+                        // sequence
+                        mPoint = point;
+
+                        gradientEstimator.gradient(params, derivatives);
+
+                        return evaluateCommonAxis(i, params);
+                    }
+                });
 
         setInputData();
 
@@ -3746,47 +3749,48 @@ public class EasyGyroscopeCalibrator {
         final Matrix initialBg = getInitialBiasAsMatrix();
         final Matrix initialB = invInitialM.multiplyAndReturnNew(initialBg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Before and after normalized gravity versors
-                return 2 * BodyKinematics.COMPONENTS;
-            }
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Before and after normalized gravity versors
+                        return 2 * BodyKinematics.COMPONENTS;
+                    }
 
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[GENERAL_UNKNOWNS];
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial = new double[GENERAL_UNKNOWNS];
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
+                        // biases b
+                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                            initial[i] = initialB.getElementAtIndex(i);
+                        }
 
-                // cross coupling errors M
-                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = initialM.getElementAtIndex(i);
-                }
+                        // cross coupling errors M
+                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
+                        for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
+                            initial[j] = initialM.getElementAtIndex(i);
+                        }
 
-                return initial;
-            }
+                        return initial;
+                    }
 
-            @Override
-            public double evaluate(
-                    final int i, final double[] point,
-                    final double[] params, final double[] derivatives)
-                    throws EvaluationException {
-                mI = i;
+                    @Override
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
+                            throws EvaluationException {
+                        mI = i;
 
-                // point contains fixed gravity versor values for current
-                // sequence
-                mPoint = point;
+                        // point contains fixed gravity versor values for current
+                        // sequence
+                        mPoint = point;
 
-                gradientEstimator.gradient(params, derivatives);
+                        gradientEstimator.gradient(params, derivatives);
 
-                return evaluateGeneral(i, params);
-            }
-        });
+                        return evaluateGeneral(i, params);
+                    }
+                });
 
         setInputData();
 
@@ -3856,7 +3860,7 @@ public class EasyGyroscopeCalibrator {
         // kinematics measurements with fixed values for memory efficiency
 
         mFixedSequences = new ArrayList<>();
-        for (BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
+        for (final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
             mFixedSequences.add(new BodyKinematicsSequence<>(sequence));
         }
 
@@ -3864,7 +3868,7 @@ public class EasyGyroscopeCalibrator {
         mAccelerationFixer.setCrossCouplingErrors(ma);
 
         int i = 0;
-        for (BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
+        for (final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
             // sequence mean accelerometer samples of previous static
             // period will need to be fixed using accelerometer calibration
             // parameters
@@ -3909,11 +3913,11 @@ public class EasyGyroscopeCalibrator {
      */
     private static double computeAverageAngularRateStandardDeviation(
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence) {
-        List<StandardDeviationTimedBodyKinematics> items = sequence.getSortedItems();
+        final List<StandardDeviationTimedBodyKinematics> items = sequence.getSortedItems();
         final double size = items.size();
 
         double result = 0.0;
-        for (StandardDeviationTimedBodyKinematics item : items) {
+        for (final StandardDeviationTimedBodyKinematics item : items) {
             result += item.getAngularRateStandardDeviation() / size;
         }
 
@@ -4285,7 +4289,7 @@ public class EasyGyroscopeCalibrator {
             mG.setElementAt(2, 2, g33);
 
             // fix kinematics
-            int numItems = measuredSequence.getItemsCount();
+            final int numItems = measuredSequence.getItemsCount();
             final List<StandardDeviationTimedBodyKinematics> measuredItems = measuredSequence.getSortedItems();
             final List<StandardDeviationTimedBodyKinematics> fixedItems = fixedSequence.getSortedItems();
             for (int j = 0; j < numItems; j++) {
@@ -4309,7 +4313,7 @@ public class EasyGyroscopeCalibrator {
 
             return mExpectedEndPoint.distanceTo(mEndPoint);
 
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             throw new EvaluationException(e);
         }
     }
@@ -4322,8 +4326,9 @@ public class EasyGyroscopeCalibrator {
      * @param result     kinematics where result will be stored.
      * @throws AlgebraException if for some reason kinematics
      */
-    private void fixKinematics(final BodyKinematics kinematics, final BodyKinematics result)
-            throws AlgebraException {
+    private void fixKinematics(
+            final BodyKinematics kinematics,
+            final BodyKinematics result) throws AlgebraException {
 
         // Ωmeas = bg + (I + Mg) * Ωtrue + Gg * ftrue
         // Ωmeas = M*(Ωtrue + b + G * ftrue)

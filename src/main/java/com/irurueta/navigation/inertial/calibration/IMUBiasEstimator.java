@@ -701,7 +701,7 @@ public class IMUBiasEstimator {
      */
     public IMUBiasEstimator(
             final Angle latitude, final Angle longitude, final double height,
-            int totalSamples, final IMUBiasEstimatorListener listener) {
+            final int totalSamples, final IMUBiasEstimatorListener listener) {
         this(latitude, longitude, height, totalSamples);
         mListener = listener;
     }
@@ -3667,7 +3667,8 @@ public class IMUBiasEstimator {
      *
      * @param result instance where result data will be copied to.
      */
-    public void getAverageGyroscopeStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+    public void getAverageGyroscopeStandardDeviationAsAngularSpeed(
+            final AngularSpeed result) {
         result.setValue(getAverageGyroscopeStandardDeviation());
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }

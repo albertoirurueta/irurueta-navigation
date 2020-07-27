@@ -913,7 +913,8 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibrator implements
             wmmEstimator = new WMMEarthMagneticFluxDensityEstimator();
         }
 
-        final BodyMagneticFluxDensity expectedMagneticFluxDensity = new BodyMagneticFluxDensity();
+        final BodyMagneticFluxDensity expectedMagneticFluxDensity =
+                new BodyMagneticFluxDensity();
         final NEDFrame nedFrame = new NEDFrame();
         final NEDMagneticFluxDensity earthB = new NEDMagneticFluxDensity();
         final CoordinateTransformation cbn = new CoordinateTransformation(
@@ -1053,7 +1054,8 @@ public class KnownFrameMagnetometerLinearLeastSquaresCalibrator implements
             wmmEstimator = new WMMEarthMagneticFluxDensityEstimator();
         }
 
-        final BodyMagneticFluxDensity expectedMagneticFluxDensity = new BodyMagneticFluxDensity();
+        final BodyMagneticFluxDensity expectedMagneticFluxDensity =
+                new BodyMagneticFluxDensity();
         final NEDFrame nedFrame = new NEDFrame();
         final NEDMagneticFluxDensity earthB = new NEDMagneticFluxDensity();
         final CoordinateTransformation cbn = new CoordinateTransformation(

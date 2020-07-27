@@ -1854,7 +1854,7 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
      *                                  zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1873,7 +1873,8 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1882,7 +1883,8 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
         }
 
         final MSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+                new MSACRobustEstimator<>(
+                        new MSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -1900,12 +1902,14 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
 
                     @Override
                     public void estimatePreliminarSolutions(
-                            final int[] samplesIndices, final List<PreliminaryResult> solutions) {
+                            final int[] samplesIndices,
+                            final List<PreliminaryResult> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
+                    public double computeResidual(
+                            final PreliminaryResult currentEstimation, final int i) {
                         return computeError(mMeasurements.get(i), currentEstimation);
                     }
 
@@ -1915,24 +1919,19 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    MSACRobustKnownBiasTurntableGyroscopeCalibrator.this);
-                        }
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    MSACRobustKnownBiasTurntableGyroscopeCalibrator.this);
-                        }
+                    public void onEstimateEnd(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
                                     MSACRobustKnownBiasTurntableGyroscopeCalibrator.this, iteration);
@@ -1941,7 +1940,8 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
                                     MSACRobustKnownBiasTurntableGyroscopeCalibrator.this, progress);
@@ -1951,6 +1951,11 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
@@ -1960,11 +1965,15 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

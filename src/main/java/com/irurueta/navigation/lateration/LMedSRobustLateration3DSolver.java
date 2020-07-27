@@ -82,116 +82,128 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public LMedSRobustLateration3DSolver(RobustLaterationSolverListener<Point3D> listener) {
+    public LMedSRobustLateration3DSolver(
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be estimated.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public LMedSRobustLateration3DSolver(Point3D[] positions, double[] distances) {
+    public LMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public LMedSRobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                         double[] distanceStandardDeviations) {
+    public LMedSRobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                         final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public LMedSRobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                         double[] distanceStandardDeviations,
-                                         RobustLaterationSolverListener<Point3D> listener) {
+    public LMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public LMedSRobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                         RobustLaterationSolverListener<Point3D> listener) {
+    public LMedSRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
-     * is less than required (4 points).
+     *                                  is less than required (4 points).
      */
-    public LMedSRobustLateration3DSolver(Sphere[] spheres) {
+    public LMedSRobustLateration3DSolver(final Sphere[] spheres) {
         super(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
-     * than required (4 points) or don't have the same length.
+     *                                  than required (4 points) or don't have the same length.
      */
-    public LMedSRobustLateration3DSolver(Sphere[] spheres,
-                                         double[] distanceStandardDeviations) {
+    public LMedSRobustLateration3DSolver(final Sphere[] spheres,
+                                         final double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events such as when estimation starts,
      *                 ends or its progress significantly changes.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
-     * is less than required (4 points).
+     *                                  is less than required (4 points).
      */
-    public LMedSRobustLateration3DSolver(Sphere[] spheres,
-                                         RobustLaterationSolverListener<Point3D> listener) {
+    public LMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, listener);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation stats,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation stats,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
-     * than required (4 points) or don't have the same length.
+     *                                  than required (4 points) or don't have the same length.
      */
-    public LMedSRobustLateration3DSolver(Sphere[] spheres,
-                                         double[] distanceStandardDeviations,
-                                         RobustLaterationSolverListener<Point3D> listener) {
+    public LMedSRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
     }
 
@@ -210,6 +222,7 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
+     *
      * @return stop threshold to stop the algorithm prematurely when a certain
      * accuracy has been reached.
      */
@@ -232,12 +245,13 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
+     *
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -250,11 +264,12 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Solves the lateration problem.
+     *
      * @return estimated position.
-     * @throws LockedException if instance is busy solving the lateration problem.
-     * @throws NotReadyException is solver is not ready.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     * @throws NotReadyException        is solver is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public Point3D solve() throws LockedException, NotReadyException, RobustEstimatorException {
@@ -265,7 +280,7 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
             throw new NotReadyException();
         }
 
-        LMedSRobustEstimator<Point3D> innerEstimator =
+        final LMedSRobustEstimator<Point3D> innerEstimator =
                 new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<Point3D>() {
                     @Override
                     public int getTotalSamples() {
@@ -278,12 +293,14 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices, List<Point3D> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<Point3D> solutions) {
                         solvePreliminarSolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(Point3D currentEstimation, int i) {
+                    public double computeResidual(
+                            final Point3D currentEstimation, final int i) {
                         return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
                     }
 
@@ -293,47 +310,56 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
                     }
 
                     @Override
-                    public void onEstimateStart(RobustEstimator<Point3D> estimator) {
+                    public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
+                    }
+
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
+                    }
+
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<Point3D> estimator, final int iteration) {
                         if (mListener != null) {
-                            mListener.onSolveStart(LMedSRobustLateration3DSolver.this);
+                            mListener.onSolveNextIteration(
+                                    LMedSRobustLateration3DSolver.this, iteration);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(RobustEstimator<Point3D> estimator) {
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<Point3D> estimator, final float progress) {
                         if (mListener != null) {
-                            mListener.onSolveEnd(LMedSRobustLateration3DSolver.this);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Point3D> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(LMedSRobustLateration3DSolver.this,
-                                    iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Point3D> estimator, float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(LMedSRobustLateration3DSolver.this, progress);
+                            mListener.onSolveProgressChange(
+                                    LMedSRobustLateration3DSolver.this, progress);
                         }
                     }
                 });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onSolveStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
             Point3D result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
-            return attemptRefine(result);
-        } catch (com.irurueta.numerical.LockedException e) {
+            result = attemptRefine(result);
+
+            if (mListener != null) {
+                mListener.onSolveEnd(this);
+            }
+
+            return result;
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;
@@ -342,6 +368,7 @@ public class LMedSRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

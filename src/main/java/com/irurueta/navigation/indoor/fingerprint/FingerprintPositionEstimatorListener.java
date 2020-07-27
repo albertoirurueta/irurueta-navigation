@@ -20,7 +20,9 @@ import com.irurueta.geometry.Point;
 /**
  * Listener to be notified of events such as when estimation of position using
  * fingerprints and radio sources starts or ends.
+ *
  * @param <P> a {@link Point} type.
  */
 public interface FingerprintPositionEstimatorListener<P extends Point<?>>
-        extends BaseFingerprintEstimatorListener<FingerprintPositionEstimator<P>> { }
+        extends BaseFingerprintEstimatorListener<FingerprintPositionEstimator<P>> {
+}

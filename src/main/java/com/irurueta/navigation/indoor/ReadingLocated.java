@@ -23,18 +23,21 @@ import java.io.Serializable;
 /**
  * Contains a located signal reading associated to a given radio source
  * (e.g. WiFi access point or bluetooth beacon).
+ *
  * @param <P> a {@link Point} type.
  */
 public interface ReadingLocated<P extends Point<?>> extends Serializable {
 
     /**
      * Gets position where reading was made.
+     *
      * @return position where reading was made.
      */
     P getPosition();
 
     /**
      * Gets covariance of inhomogeneous coordinates of current position (if available).
+     *
      * @return covariance of position or null.
      */
     Matrix getPositionCovariance();

@@ -4041,7 +4041,8 @@ public class TurntableGyroscopeCalibrator {
      *                     known position witn unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final Collection<StandardDeviationBodyKinematics> measurements)
+    public void setMeasurements(
+            final Collection<StandardDeviationBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -4142,7 +4143,8 @@ public class TurntableGyroscopeCalibrator {
      *                       and gyroscope, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
+    public void setCommonAxisUsed(final boolean commonAxisUsed)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4255,7 +4257,8 @@ public class TurntableGyroscopeCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -4316,7 +4319,7 @@ public class TurntableGyroscopeCalibrator {
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
-    public boolean getEstimatedBiases(double[] result) {
+    public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
                     0, mEstimatedBiases.length);
@@ -4345,7 +4348,7 @@ public class TurntableGyroscopeCalibrator {
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
-    public boolean getEstimatedBiasesAsMatrix(Matrix result)
+    public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
             result.fromArray(mEstimatedBiases);
@@ -4402,7 +4405,7 @@ public class TurntableGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedX(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -4429,7 +4432,7 @@ public class TurntableGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedY(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -4456,7 +4459,7 @@ public class TurntableGyroscopeCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
-    public boolean getEstimatedBiasAngularSpeedZ(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -4645,9 +4648,9 @@ public class TurntableGyroscopeCalibrator {
      * for both the accelerometer and gyroscope and when G-dependent cross
      * biases are being estimated.
      *
-     * @throws AlgebraException                         if there are numerical errors.
-     * @throws FittingException                         if no convergence to solution is found.
-     * @throws com.irurueta.numerical.NotReadyException if fitter is not ready.
+     * @throws AlgebraException                              if there are numerical errors.
+     * @throws FittingException                              if no convergence to solution is found.
+     * @throws com.irurueta.numerical.NotReadyException      if fitter is not ready.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens
      */
     private void calibrateCommonAxisAndGDependentCrossBiases()
@@ -4706,7 +4709,8 @@ public class TurntableGyroscopeCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] point) throws EvaluationException {
+                    public double evaluate(final double[] point)
+                            throws EvaluationException {
                         return evaluateCommonAxisWithGDependentCrossBiases(point);
                     }
                 });
@@ -4766,8 +4770,9 @@ public class TurntableGyroscopeCalibrator {
                     }
 
                     @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
                             throws EvaluationException {
 
                         mMeasAngularRateX = point[0];
@@ -4855,9 +4860,9 @@ public class TurntableGyroscopeCalibrator {
      * Internal method to perform general calibration when G-dependent cross
      * biases are being estimated.
      *
-     * @throws AlgebraException                         if there are numerical errors.
-     * @throws FittingException                         if no convergence to solution is found.
-     * @throws com.irurueta.numerical.NotReadyException if fitter is not ready.
+     * @throws AlgebraException                              if there are numerical errors.
+     * @throws FittingException                              if no convergence to solution is found.
+     * @throws com.irurueta.numerical.NotReadyException      if fitter is not ready.
      * @throws InvalidSourceAndDestinationFrameTypeException never happens
      */
     private void calibrateGeneralAndGDependentCrossBiases()
@@ -4916,7 +4921,8 @@ public class TurntableGyroscopeCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] point) throws EvaluationException {
+                    public double evaluate(final double[] point)
+                            throws EvaluationException {
                         return evaluateGeneralWithGDependentCrossBiases(point);
                     }
                 });
@@ -4965,8 +4971,9 @@ public class TurntableGyroscopeCalibrator {
                     }
 
                     @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
                             throws EvaluationException {
 
                         mMeasAngularRateX = point[0];
@@ -5115,7 +5122,8 @@ public class TurntableGyroscopeCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] point) throws EvaluationException {
+                    public double evaluate(final double[] point)
+                            throws EvaluationException {
                         return evaluateCommonAxis(point);
                     }
                 });
@@ -5165,8 +5173,9 @@ public class TurntableGyroscopeCalibrator {
                     }
 
                     @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
                             throws EvaluationException {
 
                         mMeasAngularRateX = point[0];
@@ -5282,7 +5291,8 @@ public class TurntableGyroscopeCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] point) throws EvaluationException {
+                    public double evaluate(final double[] point)
+                            throws EvaluationException {
                         return evaluateGeneral(point);
                     }
                 });
@@ -5322,8 +5332,9 @@ public class TurntableGyroscopeCalibrator {
                     }
 
                     @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
                             throws EvaluationException {
 
                         mMeasAngularRateX = point[0];

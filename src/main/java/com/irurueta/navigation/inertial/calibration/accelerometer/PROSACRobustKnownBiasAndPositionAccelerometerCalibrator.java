@@ -134,7 +134,8 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -156,7 +157,8 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param bias known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(final Matrix bias) {
+    public PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias) {
         super(bias);
     }
 
@@ -178,7 +180,8 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(final ECEFPosition position) {
+    public PROSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position) {
         super(position);
     }
 
@@ -916,15 +919,15 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
     /**
      * Constructor.
      *
-     * @param qualityScores  quality scores corresponding to each provided
-     *                       measurement. The larger the score value the better
-     *                       the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias. This must have length 3 and is expressed
-     *                     in meters per squared second (m/s^2).
+     * @param qualityScores quality scores corresponding to each provided
+     *                      measurement. The larger the score value the better
+     *                      the quality of the sample.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias. This must have length 3 and is expressed
+     *                      in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or quality scores array is smaller than 10
      *                                  samples.
@@ -944,13 +947,13 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias. This must have length 3 and is expressed
-     *                     in meters per squared second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias. This must have length 3 and is expressed
+     *                      in meters per squared second (m/s^2).
+     * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or if quality scores array is smaller than 10
      *                                  samples.
@@ -1030,11 +1033,11 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
      *                                  quality scores array is smaller than 10
      *                                  samples.
@@ -1054,12 +1057,12 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
+     * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
      *                                  quality scores array is smaller than 13
      *                                  samples.
@@ -1136,12 +1139,12 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
-     * @param initialMa    initial scale factors and cross coupling errors matrix.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
+     * @param initialMa     initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if quality scores array is smaller than 10
@@ -1162,13 +1165,13 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
-     * @param initialMa    initial scale factors and cross coupling errors matrix.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
+     * @param initialMa     initial scale factors and cross coupling errors matrix.
+     * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if quality scores array is smaller than 13
@@ -1252,10 +1255,10 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements list of body kinematics measurements taken at a given position with
-     *                     different unknown orientations and containing the standard deviations
-     *                     of accelerometer and gyroscope measurements.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  list of body kinematics measurements taken at a given position with
+     *                      different unknown orientations and containing the standard deviations
+     *                      of accelerometer and gyroscope measurements.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
@@ -1273,12 +1276,12 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements list of body kinematics measurements taken at a given position with
-     *                     different unknown orientations and containing the standard deviations
-     *                     of accelerometer and gyroscope measurements.
-     * @param listener     listener to be notified of events such as when estimation
-     *                     starts, ends or its progress significantly changes.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  list of body kinematics measurements taken at a given position with
+     *                      different unknown orientations and containing the standard deviations
+     *                      of accelerometer and gyroscope measurements.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 10 samples.
      */
@@ -1351,12 +1354,12 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias. This must have length 3 and is expressed
-     *                     in meters per squared second (m/s^2).
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias. This must have length 3 and is expressed
+     *                      in meters per squared second (m/s^2).
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or quality scores array is smaller than 10
      *                                  samples.
@@ -1376,13 +1379,13 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias. This must have length 3 and is expressed
-     *                     in meters per squared second (m/s^2).
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias. This must have length 3 and is expressed
+     *                      in meters per squared second (m/s^2).
+     * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias array does not have length 3
      *                                  or if quality scores array is smaller than 10
      *                                  samples.
@@ -1461,11 +1464,11 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
      *                                  quality scores array is smaller than 10
      *                                  samples.
@@ -1485,12 +1488,12 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
+     * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1 or if
      *                                  quality scores array is smaller than 10
      *                                  samples.
@@ -1567,12 +1570,12 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
-     * @param initialMa    initial scale factors and cross coupling errors matrix.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
+     * @param initialMa     initial scale factors and cross coupling errors matrix.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if quality scores array is smaller than 10
@@ -1593,13 +1596,13 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements collection of body kinematics measurements with standard
-     *                     deviations taken at the same position with zero velocity
-     *                     and unknown different orientations.
-     * @param bias         known accelerometer bias.
-     * @param initialMa    initial scale factors and cross coupling errors matrix.
-     * @param listener     listener to handle events raised by this calibrator.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  collection of body kinematics measurements with standard
+     *                      deviations taken at the same position with zero velocity
+     *                      and unknown different orientations.
+     * @param bias          known accelerometer bias.
+     * @param initialMa     initial scale factors and cross coupling errors matrix.
+     * @param listener      listener to handle events raised by this calibrator.
      * @throws IllegalArgumentException if either provided bias matrix is not 3x1 or
      *                                  scaling and coupling error matrix is not 3x3
      *                                  or if quality scores array is smaller than 10
@@ -1697,7 +1700,7 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1729,7 +1732,7 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1765,7 +1768,7 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1790,7 +1793,7 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1840,13 +1843,15 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                            final List<PreliminaryResult> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices,
+                            final List<PreliminaryResult> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
+                    public double computeResidual(
+                            final PreliminaryResult currentEstimation, final int i) {
                         return computeError(mMeasurements.get(i), currentEstimation);
                     }
 
@@ -1856,24 +1861,19 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.this);
-                        }
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.this);
-                        }
+                    public void onEstimateEnd(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
                                     PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.this, iteration);
@@ -1882,7 +1882,8 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
                                     PROSACRobustKnownBiasAndPositionAccelerometerCalibrator.this, progress);
@@ -1892,6 +1893,11 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -1905,11 +1911,15 @@ public class PROSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

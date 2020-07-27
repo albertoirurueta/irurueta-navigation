@@ -41,7 +41,9 @@ public interface RobustKnownFrameGyroscopeCalibratorListener {
      * @param calibrator calibrator raising the event.
      * @param iteration  current iteration.
      */
-    void onCalibrateNextIteration(final RobustKnownFrameGyroscopeCalibrator calibrator, final int iteration);
+    void onCalibrateNextIteration(
+            final RobustKnownFrameGyroscopeCalibrator calibrator,
+            final int iteration);
 
     /**
      * Called when calibration progress changes significantly.
@@ -49,5 +51,7 @@ public interface RobustKnownFrameGyroscopeCalibratorListener {
      * @param calibrator calibrator raising the event.
      * @param progress   progress of calibration expressed as a value between 0.0 and 1.0.
      */
-    void onCalibrateProgressChange(final RobustKnownFrameGyroscopeCalibrator calibrator, final float progress);
+    void onCalibrateProgressChange(
+            final RobustKnownFrameGyroscopeCalibrator calibrator,
+            final float progress);
 }

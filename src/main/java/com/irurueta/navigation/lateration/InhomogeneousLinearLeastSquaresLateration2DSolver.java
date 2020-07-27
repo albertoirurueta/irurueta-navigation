@@ -36,60 +36,70 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 points).
+     *                                  length is smaller than required (3 points).
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(LaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(
+            final LaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 points).
+     *                                  length is smaller than required (3 points).
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(Point2D[] positions, double[] distances,
-                                                             LaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final LaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(Circle[] circles) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(final Circle[] circles) {
         super();
         internalSetCircles(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles  circles defining positions and distances.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
      */
-    public InhomogeneousLinearLeastSquaresLateration2DSolver(Circle[] circles,
-                                                             LaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresLateration2DSolver(
+            final Circle[] circles,
+            final LaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
 
     /**
      * Gets circles defined by provided positions and distances.
+     *
      * @return circles defined by provided positions and distances.
      */
     public Circle[] getCircles() {
@@ -97,7 +107,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
             return null;
         }
 
-        Circle[] result = new Circle[mPositions.length];
+        final Circle[] result = new Circle[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
             result[i] = new Circle(mPositions[i], mDistances[i]);
@@ -107,13 +117,14 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
 
     /**
      * Sets circles defining positions and euclidean distances.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 2.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  is less than 2.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setCircles(Circle[] circles) throws LockedException {
-        if(isLocked()) {
+    public void setCircles(final Circle[] circles) throws LockedException {
+        if (isLocked()) {
             throw new LockedException();
         }
         internalSetCircles(circles);
@@ -121,6 +132,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -131,6 +143,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
     /**
      * Minimum required number of positions and distances.
      * At least 3 positions and distances will be required to linearly solve a 2D problem.
+     *
      * @return minimum required number of positions and distances.
      */
     @Override
@@ -140,6 +153,7 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
@@ -148,18 +162,19 @@ public class InhomogeneousLinearLeastSquaresLateration2DSolver extends
             return null;
         }
 
-        InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
         getEstimatedPosition(position);
         return position;
     }
 
     /**
      * Internally sets circles defining positions and euclidean distances.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 3.
+     *                                  is less than 3.
      */
-    private void internalSetCircles(Circle[] circles) {
+    private void internalSetCircles(final Circle[] circles) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }

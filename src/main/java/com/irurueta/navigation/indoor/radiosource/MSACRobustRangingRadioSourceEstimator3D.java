@@ -69,7 +69,7 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings) {
+            final List<? extends RangingReadingLocated<S, Point3D>> readings) {
         super(readings);
     }
 
@@ -79,7 +79,7 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      * @param listener listener in charge of attending events raised by this instance.
      */
     public MSACRobustRangingRadioSourceEstimator3D(
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
+            final RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(listener);
     }
 
@@ -92,8 +92,8 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
+            final List<? extends RangingReadingLocated<S, Point3D>> readings,
+            final RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
     }
 
@@ -103,7 +103,7 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
-    public MSACRobustRangingRadioSourceEstimator3D(Point3D initialPosition) {
+    public MSACRobustRangingRadioSourceEstimator3D(final Point3D initialPosition) {
         super(initialPosition);
     }
 
@@ -111,26 +111,27 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
      *
-     * @param readings          radio signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param readings        radio signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition) {
+            final List<? extends RangingReadingLocated<S, Point3D>> readings,
+            final Point3D initialPosition) {
         super(readings, initialPosition);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public MSACRobustRangingRadioSourceEstimator3D(Point3D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
+    public MSACRobustRangingRadioSourceEstimator3D(
+            final Point3D initialPosition,
+            final RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, listener);
     }
 
@@ -138,16 +139,16 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
      *
-     * @param readings          radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio source
-     *                          position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param readings        radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio source
+     *                        position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
+            final List<? extends RangingReadingLocated<S, Point3D>> readings,
+            final Point3D initialPosition,
+            final RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -165,11 +166,11 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
      *
      * @param threshold threshold to be set.
      * @throws IllegalArgumentException if provided value is equal or less than
-     * zero.
-     * @throws LockedException if robust estimator is locked because an
-     * estimation is already in progress.
+     *                                  zero.
+     * @throws LockedException          if robust estimator is locked because an
+     *                                  estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -182,10 +183,10 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
     /**
      * Robustly estimates position for a radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public void estimate() throws LockedException, NotReadyException,
@@ -197,78 +198,83 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
             throw new NotReadyException();
         }
 
-        MSACRobustEstimator<Solution<Point3D>> innerEstimator =
+        final MSACRobustEstimator<Solution<Point3D>> innerEstimator =
                 new MSACRobustEstimator<>(
                         new MSACRobustEstimatorListener<Solution<Point3D>>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
+                            @Override
+                            public double getThreshold() {
+                                return mThreshold;
+                            }
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mReadings.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mReadings.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return Math.max(mPreliminarySubsetSize, getMinReadings());
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return Math.max(mPreliminarySubsetSize, getMinReadings());
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(int[] sampleIndices,
-                            List<Solution<Point3D>> solutions) {
-                        solvePreliminarSolutions(sampleIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] sampleIndices,
+                                    final List<Solution<Point3D>> solutions) {
+                                solvePreliminarSolutions(sampleIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(Solution<Point3D> currentEstimation, int i) {
-                        return residual(currentEstimation, i);
-                    }
+                            @Override
+                            public double computeResidual(
+                                    final Solution<Point3D> currentEstimation,
+                                    final int i) {
+                                return residual(currentEstimation, i);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return MSACRobustRangingRadioSourceEstimator3D.this.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return MSACRobustRangingRadioSourceEstimator3D.this.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(RobustEstimator<Solution<Point3D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateStart(
-                                    MSACRobustRangingRadioSourceEstimator3D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator<Solution<Point3D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateEnd(RobustEstimator<Solution<Point3D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateEnd(
-                                    MSACRobustRangingRadioSourceEstimator3D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator<Solution<Point3D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Solution<Point3D>> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onEstimateNextIteration(
-                                    MSACRobustRangingRadioSourceEstimator3D.this,
-                                    iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<Solution<Point3D>> estimator,
+                                    final int iteration) {
+                                if (mListener != null) {
+                                    mListener.onEstimateNextIteration(
+                                            MSACRobustRangingRadioSourceEstimator3D.this,
+                                            iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Solution<Point3D>> robustEstimator,
-                            float progress) {
-                        if (mListener != null) {
-                            mListener.onEstimateProgressChange(
-                                    MSACRobustRangingRadioSourceEstimator3D.this,
-                                    progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<Solution<Point3D>> robustEstimator,
+                                    final float progress) {
+                                if (mListener != null) {
+                                    mListener.onEstimateProgressChange(
+                                            MSACRobustRangingRadioSourceEstimator3D.this,
+                                            progress);
+                                }
+                            }
+                        });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onEstimateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
@@ -277,9 +283,13 @@ public class MSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> exte
             mInliersData = innerEstimator.getInliersData();
             attemptRefine(result);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onEstimateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;

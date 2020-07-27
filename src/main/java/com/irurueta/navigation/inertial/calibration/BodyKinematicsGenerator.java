@@ -39,7 +39,8 @@ public class BodyKinematicsGenerator {
     /**
      * Prevents instantiation of utility class.
      */
-    private BodyKinematicsGenerator() { }
+    private BodyKinematicsGenerator() {
+    }
 
     /**
      * Generates uncalibrated body kinematics instances containing a certain level
@@ -140,7 +141,7 @@ public class BodyKinematicsGenerator {
                 result.add(r);
             }
 
-        } catch (WrongSizeException ignore) {
+        } catch (final WrongSizeException ignore) {
             // never happens
         }
 
@@ -399,7 +400,7 @@ public class BodyKinematicsGenerator {
                                          final Matrix tmp31a,
                                          final Matrix tmp31b) throws WrongSizeException {
 
-        int comp2 = 2 * BodyKinematics.COMPONENTS;
+        final int comp2 = 2 * BodyKinematics.COMPONENTS;
         if (oldQuantizationResiduals != null &&
                 oldQuantizationResiduals.length != comp2) {
             throw new IllegalArgumentException();

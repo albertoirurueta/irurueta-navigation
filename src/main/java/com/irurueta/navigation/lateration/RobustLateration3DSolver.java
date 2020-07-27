@@ -74,97 +74,104 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
     public RobustLateration3DSolver(
-            RobustLaterationSolverListener<Point3D> listener) {
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
         init();
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustLateration3DSolver(Point3D[] positions, double[] distances) {
+    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances) {
         super(positions, distances);
         init();
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                    double[] distanceStandardDeviations) {
+    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                    final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         init();
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                    RobustLaterationSolverListener<Point3D> listener) {
+    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                    final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
         init();
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public RobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                    double[] distanceStandardDeviations,
-                                    RobustLaterationSolverListener<Point3D> listener) {
+    public RobustLateration3DSolver(final Point3D[] positions, final double[] distances,
+                                    final double[] distanceStandardDeviations,
+                                    final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         init();
     }
 
     /**
      * Constructor.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
-     * is less than required (4 points).
+     *                                  is less than required (4 points).
      */
-    public RobustLateration3DSolver(Sphere[] spheres) {
+    public RobustLateration3DSolver(final Sphere[] spheres) {
         this();
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
-     * than required (4 points) or don't have the same length.
+     *                                  than required (4 points) or don't have the same length.
      */
-    public RobustLateration3DSolver(Sphere[] spheres,
-                                    double[] distanceStandardDeviations) {
+    public RobustLateration3DSolver(final Sphere[] spheres,
+                                    final double[] distanceStandardDeviations) {
         this();
         internalSetSpheresAndStandardDeviations(spheres,
                 distanceStandardDeviations);
@@ -172,30 +179,32 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events such as when estimation starts,
      *                 ends or its progress significantly changes.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
-     * is less than required (4 points).
+     *                                  is less than required (4 points).
      */
-    public RobustLateration3DSolver(Sphere[] spheres,
-                                    RobustLaterationSolverListener<Point3D> listener) {
+    public RobustLateration3DSolver(final Sphere[] spheres,
+                                    final RobustLaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
-     * than required (4 points) or don't have the same length.
+     *                                  than required (4 points) or don't have the same length.
      */
-    public RobustLateration3DSolver(Sphere[] spheres,
-                                    double[] distanceStandardDeviations,
-                                    RobustLaterationSolverListener<Point3D> listener) {
+    public RobustLateration3DSolver(final Sphere[] spheres,
+                                    final double[] distanceStandardDeviations,
+                                    final RobustLaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheresAndStandardDeviations(spheres,
                 distanceStandardDeviations);
@@ -203,6 +212,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -213,6 +223,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     /**
      * Minimum required number of positions and distances.
      * At least 3 positions will be required.
+     *
      * @return minimum required number of positions and distances.
      */
     @Override
@@ -225,19 +236,22 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * This has to be at least {@link #getMinRequiredPositionsAndDistances()}.
      *
      * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredPositionsAndDistances()}.
      */
     @Override
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         super.setPreliminarySubsetSize(preliminarySubsetSize);
 
         mInnerPositions = new Point3D[preliminarySubsetSize];
         mInnerDistances = new double[preliminarySubsetSize];
         mInnerDistanceStandardDeviations = new double[preliminarySubsetSize];
     }
+
     /**
      * Gets spheres defined by provided positions and distances.
+     *
      * @return spheres defined by provided positions and distances.
      */
     public Sphere[] getSpheres() {
@@ -245,7 +259,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             return null;
         }
 
-        Sphere[] result = new Sphere[mPositions.length];
+        final Sphere[] result = new Sphere[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
             result[i] = new Sphere(mPositions[i], mDistances[i]);
@@ -255,12 +269,13 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Sets spheres defining positions and euclidean distances.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if sphere is null or length of array of spheres
-     * is less than 4.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  is less than 4.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws LockedException {
+    public void setSpheres(final Sphere[] spheres) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -270,13 +285,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     /**
      * Sets spheres defining positions and euclidean distances along with the standard
      * deviations of provided spheres radii.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                  spheres defining positions and distances.
      * @param radiusStandardDeviations standard deviations of spheres radii.
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
-     * 4 or don' thave the same length.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  4 or don' thave the same length.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
+    public void setSpheresAndStandardDeviations(
+            final Sphere[] spheres, final double[] radiusStandardDeviations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -286,10 +303,11 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param method robust estimator method.
      * @return a new robust 3D lateration solver.
      */
-    public static RobustLateration3DSolver create(RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver();
@@ -307,14 +325,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param method   robust estimator method.
      * @return a new robust 3D lateration solver.
      */
     public static RobustLateration3DSolver create(
-            RobustLaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) {
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(listener);
@@ -332,16 +351,18 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param method robust estimator method.
+     * @param method    robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances);
@@ -359,21 +380,22 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations if either positions or distances are null,
      *                                   don't have the same length or their length
      *                                   is smaller than required (4 points).
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (4 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
@@ -396,19 +418,21 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
+     * @param method    robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
@@ -431,23 +455,25 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length
-     * is smaller than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
@@ -470,14 +496,15 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param spheres spheres defining positions and distances.
-     * @param method robust estimator method.
+     * @param method  robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null, length of spheres array
-     * is less than required (4 points) or don't have the same length.
+     *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres);
@@ -495,16 +522,18 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null, length of spheres array
-     * is less than required (4 points) or don't have the same length.
+     *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  double[] distanceStandardDeviations, RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
@@ -527,17 +556,18 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param method   robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null or if length of spheres
-     * array is less than required (4 points).
+     *                                  array is less than required (4 points).
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres, listener);
@@ -555,20 +585,21 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null, length of spheres array
-     * is less than required (4 points) or don't have the same length.
+     *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
@@ -591,16 +622,17 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param method robust estimator method.
+     * @param method        robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (4 samples).
+     *                                  quality scores is less than required minimum (4 samples).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver();
@@ -618,19 +650,21 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (4 samples).
+     *                                  quality scores is less than required minimum (4 samples).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(listener);
@@ -650,20 +684,22 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
-     * @param method robust estimator method.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node to be
+     *                      estimated.
+     * @param method        robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or quality
-     * scores are null, don't have the same length or their length is smaller than
-     * required (4 points).
+     *                                  scores are null, don't have the same length or their length is smaller than
+     *                                  required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances, RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances);
@@ -683,23 +719,24 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (4 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations, RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
@@ -722,26 +759,27 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or standard
-     * deviations are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  deviations are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
@@ -764,23 +802,24 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
+     * @param method        robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (4 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(positions, distances,
@@ -803,18 +842,20 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param spheres spheres defining positions and distances.
-     * @param method robust estimator method.
+     * @param spheres       spheres defining positions and distances.
+     * @param method        robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either spheres or quality scores are
-     * null don't have the same length or their length is less than required
-     * (4 points).
+     *                                  null don't have the same length or their length is less than required
+     *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Sphere[] spheres, RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Sphere[] spheres,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres);
@@ -834,21 +875,22 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param method robust estimator method.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either spheres, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Sphere[] spheres, double[] distanceStandardDeviations,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Sphere[] spheres,
+            final double[] distanceStandardDeviations, final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
@@ -871,24 +913,26 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
-     * @param method robust estimator method.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
+     * @param method                     robust estimator method.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either spheres, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Sphere[] spheres, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener,
-                                                  RobustEstimatorMethod method) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Sphere[] spheres,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener,
+            final RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustLateration3DSolver(spheres,
@@ -911,6 +955,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @return a new robust 3D lateration solver.
      */
     public static RobustLateration3DSolver create() {
@@ -919,312 +964,338 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      */
     public static RobustLateration3DSolver create(
-            RobustLaterationSolverListener<Point3D> listener) {
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (4 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances) {
         return create(positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations if either positions or distances are null,
      *                                   don't have the same length or their length
      *                                   is smaller than required (4 points).
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (4 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         return create(positions, distances, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation
+     *                  starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required
-     * (4 points).
+     *                                  don't have the same length or their length is smaller than required
+     *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(positions, distances, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length
-     * is smaller than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(Point3D[] positions,
-                                                  double[] distances, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(positions, distances, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param spheres spheres defining positions and distances.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null, length of spheres array
-     * is less than required (4 points) or don't have the same length.
+     *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres) {
+    public static RobustLateration3DSolver create(final Sphere[] spheres) {
         return create(spheres, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null, length of spheres array
-     * is less than required (4 points) or don't have the same length.
+     *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  double[] distanceStandardDeviations) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final double[] distanceStandardDeviations) {
         return create(spheres, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null or if length of spheres
-     * array is less than required (4 points).
+     *                                  array is less than required (4 points).
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final RobustLaterationSolverListener<Point3D> listener) {
         return create(spheres, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if spheres is null, length of spheres array
-     * is less than required (4 points) or don't have the same length.
+     *                                  is less than required (4 points) or don't have the same length.
      */
-    public static RobustLateration3DSolver create(Sphere[] spheres,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(spheres, distanceStandardDeviations, listener,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param qualityscores quality scores corresponding to each provided sample.
+     *
+     * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (4 samples).
+     *                                  quality scores is less than required minimum (4 samples).
      */
-    public static RobustLateration3DSolver create(double[] qualityscores) {
-        return create(qualityscores, DEFAULT_ROBUST_METHOD);
+    public static RobustLateration3DSolver create(final double[] qualityScores) {
+        return create(qualityScores, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, enda or its progress significantly changes.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, enda or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if quality scores is null, length of
-     * quality scores is less than required minimum (4 samples).
+     *                                  quality scores is less than required minimum (4 samples).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node to be
+     *                      estimated.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or quality
-     * scores are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  scores are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances) {
         return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (4 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances, final double[] distanceStandardDeviations) {
         return create(qualityScores, positions, distances,
                 distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances or standard
-     * deviations are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  deviations are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances,
-                                                  double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(qualityScores, positions, distances, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either positions, distances, quality
-     * scores or standard deviations are null, don't have the same length or their
-     * length is smaller than required (4 points).
+     *                                  scores or standard deviations are null, don't have the same length or their
+     *                                  length is smaller than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Point3D[] positions, double[] distances,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(qualityScores, positions, distances, listener,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param spheres spheres defining positions and distances.
+     * @param spheres       spheres defining positions and distances.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either spheres or quality scores are
-     * null, don't have the same length or their length is less than required
-     * (4 points).
+     *                                  null, don't have the same length or their length is less than required
+     *                                  (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Sphere[] spheres) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Sphere[] spheres) {
         return create(qualityScores, spheres, DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either spheres, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Sphere[] spheres, double[] distanceStandardDeviations) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Sphere[] spheres,
+            final double[] distanceStandardDeviations) {
         return create(qualityScores, spheres, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
 
     /**
      * Creates a robust 3D lateration solver using default robust method.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided sample.
+     *                                   The larger the score value the better the quality of
+     *                                   the sample.
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured
      *                                   distances.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation
+     *                                   starts, ends or its progress significantly changes.
      * @return a new robust 3D lateration solver.
      * @throws IllegalArgumentException if either spheres, quality scores or
-     * standard deviations are null, don't have the same length or their length
-     * is less than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length
+     *                                  is less than required (4 points).
      */
-    public static RobustLateration3DSolver create(double[] qualityScores,
-                                                  Sphere[] spheres, double[] distanceStandardDeviations,
-                                                  RobustLaterationSolverListener<Point3D> listener) {
+    public static RobustLateration3DSolver create(
+            final double[] qualityScores, final Sphere[] spheres,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         return create(qualityScores, spheres, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1235,17 +1306,18 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * requested or has failed.
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined position.
+     *
      * @param position position estimated by a robust estimator without refinement.
      * @return solution after refinement (if requested) or provided non-refined
      * estimated position if not requested or refinement failed.
      */
-    protected Point3D attemptRefine(Point3D position) {
+    protected Point3D attemptRefine(final Point3D position) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mDistances.length;
-            int nInliers = mInliersData.getNumInliers();
-            Point3D[] inlierPositions = new Point3D[nInliers];
-            double[] inlierDistances = new double[nInliers];
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mDistances.length;
+            final int nInliers = mInliersData.getNumInliers();
+            final Point3D[] inlierPositions = new Point3D[nInliers];
+            final double[] inlierDistances = new double[nInliers];
             double[] inlierStandardDeviations = null;
             if (mDistanceStandardDeviations != null) {
                 inlierStandardDeviations = new double[nInliers];
@@ -1297,12 +1369,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
 
     /**
      * Solves a preliminar solution for a subset of samples picked by a robust estimator.
+     *
      * @param samplesIndices indices of samples picked by the robust estimator.
-     * @param solutions list where estimated preliminar solution will be stored.
+     * @param solutions      list where estimated preliminar solution will be stored.
      */
-    protected void solvePreliminarSolutions(int[] samplesIndices, List<Point3D> solutions) {
+    protected void solvePreliminarSolutions(
+            final int[] samplesIndices, final List<Point3D> solutions) {
         try {
-            int length = samplesIndices.length;
+            final int length = samplesIndices.length;
             int index;
             for (int i = 0; i < length; i++) {
                 index = samplesIndices[i];
@@ -1339,26 +1413,27 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             }
 
             solutions.add(estimatedPosition);
-        } catch (NavigationException ignore) {
+        } catch (final NavigationException ignore) {
             //if anything fails, no solution is added
         }
     }
 
     /**
      * Internally sets spheres defining positions and euclidean distances.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
-     * is less than {@link #getMinRequiredPositionsAndDistances()}
+     *                                  is less than {@link #getMinRequiredPositionsAndDistances()}
      */
-    private void internalSetSpheres(Sphere[] spheres) {
+    private void internalSetSpheres(final Sphere[] spheres) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
+        final Point3D[] positions = new Point3D[spheres.length];
+        final double[] distances = new double[spheres.length];
         for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
+            final Sphere sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
@@ -1369,13 +1444,14 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
     /**
      * Internally sets spheres defining positions and euclidean distances along
      * with the standard deviations of provided spheres radii.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                  spheres defining positions and distances.
      * @param radiusStandardDeviations standard deviations of spheres radii.
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
-     * 4 or don't have the same length.
+     *                                  4 or don't have the same length.
      */
-    private void internalSetSpheresAndStandardDeviations(Sphere[] spheres,
-            double[] radiusStandardDeviations) {
+    private void internalSetSpheresAndStandardDeviations(
+            final Sphere[] spheres, final double[] radiusStandardDeviations) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -1388,10 +1464,10 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
             throw new IllegalArgumentException();
         }
 
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
+        final Point3D[] positions = new Point3D[spheres.length];
+        final double[] distances = new double[spheres.length];
         for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
+            final Sphere sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }
@@ -1404,7 +1480,7 @@ public abstract class RobustLateration3DSolver extends RobustLaterationSolver<Po
      * Setup inner positions and distances.
      */
     private void init() {
-        int points = getMinRequiredPositionsAndDistances();
+        final int points = getMinRequiredPositionsAndDistances();
         mPreliminarySubsetSize = points;
         mInnerPositions = new Point3D[points];
         mInnerDistances = new double[points];

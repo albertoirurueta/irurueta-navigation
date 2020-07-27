@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Data related to a beacon whose location is known.
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -40,14 +41,16 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
+     *
+     * @param identifiers      list of the multi-part identifiers of the beacon.
      * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI
-     *                   (expressed in dBm's).
-     * @param position position where beacon is located.
+     *                         (expressed in dBm's).
+     * @param position         position where beacon is located.
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            P position) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final P position) {
         super(identifiers, transmittedPower);
 
         if (position == null) {
@@ -59,19 +62,25 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
+     *
+     * @param identifiers      list of the multi-part identifiers of the beacon.
      * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI (expressed in dBm's).
      * @param bluetoothAddress the bluetooth mac addres.
-     * @param beaconTypeCode the two byte value indicating the type of beacon.
-     * @param manufacturer a two byte code indicating the beacon manufacturer.
-     * @param serviceUuid a 32 bit service uuid for the beacon.
-     * @param bluetoothName the bluetooth device name.
-     * @param position position where beacon is located.
+     * @param beaconTypeCode   the two byte value indicating the type of beacon.
+     * @param manufacturer     a two byte code indicating the beacon manufacturer.
+     * @param serviceUuid      a 32 bit service uuid for the beacon.
+     * @param bluetoothName    the bluetooth device name.
+     * @param position         position where beacon is located.
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, P position) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final String bluetoothAddress,
+                         final int beaconTypeCode,
+                         final int manufacturer,
+                         final int serviceUuid,
+                         final String bluetoothName,
+                         final P position) {
         super(identifiers, transmittedPower, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName);
 
@@ -84,16 +93,19 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
-     * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI
-     *                   (expressed in dBm's).
-     * @param position position where beacon is located.
+     *
+     * @param identifiers        list of the multi-part identifiers of the beacon.
+     * @param transmittedPower   calibrated measured Tx power of the Beacon in RSSI
+     *                           (expressed in dBm's).
+     * @param position           position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            P position, Matrix positionCovariance) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final P position,
+                         final Matrix positionCovariance) {
         this(identifiers, transmittedPower, position);
 
         if (positionCovariance != null) {
@@ -108,27 +120,33 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
-     * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI (expressed in dBm's).
-     * @param bluetoothAddress the bluetooth mac addres.
-     * @param beaconTypeCode the two byte value indicating the type of beacon.
-     * @param manufacturer a two byte code indicating the beacon manufacturer.
-     * @param serviceUuid a 32 bit service uuid for the beacon.
-     * @param bluetoothName the bluetooth device name.
-     * @param position position where beacon is located.
+     *
+     * @param identifiers        list of the multi-part identifiers of the beacon.
+     * @param transmittedPower   calibrated measured Tx power of the Beacon in RSSI (expressed in dBm's).
+     * @param bluetoothAddress   the bluetooth mac addres.
+     * @param beaconTypeCode     the two byte value indicating the type of beacon.
+     * @param manufacturer       a two byte code indicating the beacon manufacturer.
+     * @param serviceUuid        a 32 bit service uuid for the beacon.
+     * @param bluetoothName      the bluetooth device name.
+     * @param position           position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, P position,
-            Matrix positionCovariance) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final String bluetoothAddress,
+                         final int beaconTypeCode,
+                         final int manufacturer,
+                         final int serviceUuid,
+                         final String bluetoothName,
+                         final P position,
+                         final Matrix positionCovariance) {
         this(identifiers, transmittedPower, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position);
 
         if (positionCovariance != null) {
-            int dims = position.getDimensions();
+            final int dims = position.getDimensions();
             if (positionCovariance.getRows() != dims ||
                     positionCovariance.getColumns() != dims) {
                 throw new IllegalArgumentException();
@@ -139,16 +157,19 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
+     *
+     * @param identifiers      list of the multi-part identifiers of the beacon.
      * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI
-     *                   (expressed in dBm's).
-     * @param frequency frequency used by this Beacon.
-     * @param position position where beacon is located.
+     *                         (expressed in dBm's).
+     * @param frequency        frequency used by this Beacon.
+     * @param position         position where beacon is located.
      * @throws IllegalArgumentException if either identifiers or position are null or
-     * frequency is negative..
+     *                                  frequency is negative..
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, P position) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final double frequency,
+                         final P position) {
         super(identifiers, transmittedPower, frequency);
 
         if (position == null) {
@@ -160,21 +181,28 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
+     *
+     * @param identifiers      list of the multi-part identifiers of the beacon.
      * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI (expressed in dBm's).
-     * @param frequency frequency used by this Beacon.
+     * @param frequency        frequency used by this Beacon.
      * @param bluetoothAddress the bluetooth mac address.
-     * @param beaconTypeCode the two byte value indicating the type of beacon.
-     * @param manufacturer a two byte code indicating the beacon manufacturer.
-     * @param serviceUuid a 32 bit service uuid for the beacon.
-     * @param bluetoothName the bluetooth device name.
-     * @param position position where beacon is located.
+     * @param beaconTypeCode   the two byte value indicating the type of beacon.
+     * @param manufacturer     a two byte code indicating the beacon manufacturer.
+     * @param serviceUuid      a 32 bit service uuid for the beacon.
+     * @param bluetoothName    the bluetooth device name.
+     * @param position         position where beacon is located.
      * @throws IllegalArgumentException if either identifiers or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, P position) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final double frequency,
+                         final String bluetoothAddress,
+                         final int beaconTypeCode,
+                         final int manufacturer,
+                         final int serviceUuid,
+                         final String bluetoothName,
+                         final P position) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName);
 
@@ -187,22 +215,26 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
-     * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI
-     *                   (expressed in dBm's).
-     * @param frequency frequency used by this Beacon.
-     * @param position position where beacon is located.
+     *
+     * @param identifiers        list of the multi-part identifiers of the beacon.
+     * @param transmittedPower   calibrated measured Tx power of the Beacon in RSSI
+     *                           (expressed in dBm's).
+     * @param frequency          frequency used by this Beacon.
+     * @param position           position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either identifiers or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, P position, Matrix positionCovariance) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final double frequency,
+                         final P position,
+                         final Matrix positionCovariance) {
         this(identifiers, transmittedPower, frequency, position);
 
         if (positionCovariance != null) {
-            int dims = position.getDimensions();
+            final int dims = position.getDimensions();
             if (positionCovariance.getRows() != dims ||
                     positionCovariance.getColumns() != dims) {
                 throw new IllegalArgumentException();
@@ -213,24 +245,31 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Constructor.
-     * @param identifiers list of the multi-part identifiers of the beacon.
-     * @param transmittedPower calibrated measured Tx power of the Beacon in RSSI (expressed in dBm's).
-     * @param frequency frequency used by this Beacon.
-     * @param bluetoothAddress the bluetooth mac address.
-     * @param beaconTypeCode the two byte value indicating the type of beacon.
-     * @param manufacturer a two byte code indicating the beacon manufacturer.
-     * @param serviceUuid a 32 bit service uuid for the beacon.
-     * @param bluetoothName the bluetooth device name.
-     * @param position position where beacon is located.
+     *
+     * @param identifiers        list of the multi-part identifiers of the beacon.
+     * @param transmittedPower   calibrated measured Tx power of the Beacon in RSSI (expressed in dBm's).
+     * @param frequency          frequency used by this Beacon.
+     * @param bluetoothAddress   the bluetooth mac address.
+     * @param beaconTypeCode     the two byte value indicating the type of beacon.
+     * @param manufacturer       a two byte code indicating the beacon manufacturer.
+     * @param serviceUuid        a 32 bit service uuid for the beacon.
+     * @param bluetoothName      the bluetooth device name.
+     * @param position           position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either identifiers or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, P position,
-            Matrix positionCovariance) {
+    public BeaconLocated(final List<BeaconIdentifier> identifiers,
+                         final double transmittedPower,
+                         final double frequency,
+                         final String bluetoothAddress,
+                         final int beaconTypeCode,
+                         final int manufacturer,
+                         final int serviceUuid,
+                         final String bluetoothName,
+                         final P position,
+                         final Matrix positionCovariance) {
         this(identifiers, transmittedPower, frequency, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position);
 
@@ -253,6 +292,7 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Gets position where beacon is located.
+     *
      * @return position where beacon is located.
      */
     public P getPosition() {
@@ -261,6 +301,7 @@ public class BeaconLocated<P extends Point<?>> extends Beacon
 
     /**
      * Gets covariance of inhomogeneous coordinates of current position (if available).
+     *
      * @return covariance of position or null.
      */
     public Matrix getPositionCovariance() {

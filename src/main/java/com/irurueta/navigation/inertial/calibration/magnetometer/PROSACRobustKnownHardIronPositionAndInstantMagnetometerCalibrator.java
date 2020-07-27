@@ -2082,7 +2082,7 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2113,7 +2113,7 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2149,7 +2149,7 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2174,7 +2174,7 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2191,7 +2191,8 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2243,19 +2244,11 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<Matrix> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<Matrix> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -2283,6 +2276,11 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
 
             initialize();
@@ -2299,11 +2297,15 @@ public class PROSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator e
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | IOException e) {
+        } catch (final RobustEstimatorException | IOException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

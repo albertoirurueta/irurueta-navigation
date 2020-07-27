@@ -32,26 +32,29 @@ public class RadioSourceEstimationException extends IndoorException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public RadioSourceEstimationException(String message) {
+    public RadioSourceEstimationException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public RadioSourceEstimationException(String message, Throwable cause) {
+    public RadioSourceEstimationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public RadioSourceEstimationException(Throwable cause) {
+    public RadioSourceEstimationException(final Throwable cause) {
         super(cause);
     }
 }

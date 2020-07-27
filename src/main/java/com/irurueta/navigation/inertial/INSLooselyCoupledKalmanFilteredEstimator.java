@@ -318,7 +318,7 @@ public class INSLooselyCoupledKalmanFilteredEstimator {
      */
     public INSLooselyCoupledKalmanFilteredEstimator(
             final ECEFFrame frame,
-            INSLooselyCoupledKalmanFilteredEstimatorListener listener) {
+            final INSLooselyCoupledKalmanFilteredEstimatorListener listener) {
         this(frame);
         mListener = listener;
     }
@@ -1226,8 +1226,8 @@ public class INSLooselyCoupledKalmanFilteredEstimator {
      * @param result instance where configuration data will be stored.
      * @return true if result instance was updated, false otherwise.
      */
-    public boolean getInitialConfig
-    (final INSLooselyCoupledKalmanInitializerConfig result) {
+    public boolean getInitialConfig(
+            final INSLooselyCoupledKalmanInitializerConfig result) {
         if (mInitialConfig != null) {
             result.copyFrom(mInitialConfig);
             return true;

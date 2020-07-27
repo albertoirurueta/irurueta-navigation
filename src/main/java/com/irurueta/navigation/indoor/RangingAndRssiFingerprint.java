@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Contains ranging and RSSI readings from several radio sources for an unknown
  * location to be determined.
+ *
  * @param <R> a {@link RssiReading} type.
  * @param <S> a {@link RadioSource} type.
  */
@@ -35,10 +36,11 @@ public class RangingAndRssiFingerprint<S extends RadioSource,
 
     /**
      * Constructor.
+     *
      * @param readings non-located ranging and RSSI readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public RangingAndRssiFingerprint(List<R> readings) {
+    public RangingAndRssiFingerprint(final List<R> readings) {
         super(readings);
     }
 }

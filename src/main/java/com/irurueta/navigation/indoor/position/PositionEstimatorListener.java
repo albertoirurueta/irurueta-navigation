@@ -27,12 +27,12 @@ public interface PositionEstimatorListener<E extends PositionEstimator> {
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(E estimator);
+    void onEstimateStart(final E estimator);
 
     /**
      * Called when estimation ends.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(E estimator);
+    void onEstimateEnd(final E estimator);
 }

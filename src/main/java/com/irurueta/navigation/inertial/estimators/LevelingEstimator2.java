@@ -258,15 +258,15 @@ public class LevelingEstimator2 {
      * Gets partial body attitude where only roll and pitch angles
      * are reliable.
      *
-     * @param latitude     device latitude expressed in radians (rad).
-     * @param height       device height expressed in meters (m).
-     * @param fx           x-coordinate of measured body specific force
-     *                     expressed in meters per squared second (m/s^2).
-     * @param fy           y-coordinate of measured body specific force
-     *                     expressed in meters per squared second (m/s^2).
-     * @param fz           z-coordinate of measured body specific force
-     *                     expressed in meters per squared second (m/s^2).
-     * @param result instance where partial body attitude will be stored.
+     * @param latitude device latitude expressed in radians (rad).
+     * @param height   device height expressed in meters (m).
+     * @param fx       x-coordinate of measured body specific force
+     *                 expressed in meters per squared second (m/s^2).
+     * @param fy       y-coordinate of measured body specific force
+     *                 expressed in meters per squared second (m/s^2).
+     * @param fz       z-coordinate of measured body specific force
+     *                 expressed in meters per squared second (m/s^2).
+     * @param result   instance where partial body attitude will be stored.
      */
     static void getPartialAttitude(
             final double latitude, final double height,

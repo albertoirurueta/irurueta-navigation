@@ -29,26 +29,29 @@ public class NotReadyException extends NavigationException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public NotReadyException(String message) {
+    public NotReadyException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public NotReadyException(String message, Throwable cause) {
+    public NotReadyException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public NotReadyException(Throwable cause) {
+    public NotReadyException(final Throwable cause) {
         super(cause);
     }
 }

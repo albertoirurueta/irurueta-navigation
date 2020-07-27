@@ -24,4 +24,5 @@ import com.irurueta.geometry.Point;
  */
 @SuppressWarnings("WeakerAccess")
 public interface MixedPositionEstimatorListener<P extends Point<?>> extends
-        PositionEstimatorListener<MixedPositionEstimator<P>> { }
+        PositionEstimatorListener<MixedPositionEstimator<P>> {
+}

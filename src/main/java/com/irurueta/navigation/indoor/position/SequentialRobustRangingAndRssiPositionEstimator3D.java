@@ -47,7 +47,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                  provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super(sources);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -60,7 +60,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(fingerprint);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -75,8 +75,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                  or the number of provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(sources, fingerprint);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -87,7 +87,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -101,8 +101,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                  provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sources, listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -116,8 +116,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(fingerprint, listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -133,9 +133,9 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                  or the number of provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sources, fingerprint, listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -153,8 +153,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                        reading.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores) {
         super(sourceQualityScores, fingerprintReadingQualityScores);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -176,9 +176,9 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                  provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -200,9 +200,9 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(sourceQualityScores, fingerprintReadingQualityScores, fingerprint);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -210,27 +210,27 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param fingerprint                       fingerprint containing RSSI readings at an
-     *                                          unknown location for provided located
-     *                                          radio sources.
+     * @param sourceQualityScores             quality scores corresponding to
+     *                                        each provided located radio source.
+     *                                        The larger the score value the better
+     *                                        the quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param sources                         located radio sources used for
+     *                                        lateration.
+     * @param fingerprint                     fingerprint containing RSSI readings at an
+     *                                        unknown location for provided located
+     *                                        radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources,
                 fingerprint);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
@@ -250,9 +250,9 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      * @param listener                        listener in charge of handling events.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -275,10 +275,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      *                                  provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources, listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
@@ -301,10 +301,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, fingerprint,
                 listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
@@ -313,29 +313,29 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to
-     *                                          each provided located radio source.
-     *                                          The larger the score value the better
-     *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param fingerprint                       fingerprint containing RSSI readings at an
-     *                                          unknown location for provided located
-     *                                          radio sources.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores             quality scores corresponding to
+     *                                        each provided located radio source.
+     *                                        The larger the score value the better
+     *                                        the quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param sources                         located radio sources used for
+     *                                        lateration.
+     * @param fingerprint                     fingerprint containing RSSI readings at an
+     *                                        unknown location for provided located
+     *                                        radio sources.
+     * @param listener                        listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D(
-            double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
-            SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
+            final SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources,
                 fingerprint, listener);
         mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();

@@ -7750,7 +7750,7 @@ public class ECEFInertialNavigator {
             }
 
             // Update attitude using (5.75)
-            Matrix oldCbe = oldC.getMatrix();
+            final Matrix oldCbe = oldC.getMatrix();
             cEarth.multiply(oldCbe);
             cEarth.multiply(cNewOld); // cbe = cEarth * oldCbe * cNewOld
 

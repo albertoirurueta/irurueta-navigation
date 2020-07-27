@@ -110,7 +110,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -120,7 +120,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @param listener listener in charge of attending events raised by this instance.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         mListener = listener;
     }
 
@@ -133,8 +133,8 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -142,14 +142,14 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -159,19 +159,21 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition) {
+    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -179,16 +181,16 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -200,7 +202,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *                                   (expressed in dBm's)
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerdBm) {
+            final Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
 
@@ -208,29 +210,29 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
@@ -238,17 +240,17 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -256,47 +258,49 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      */
-    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   in charge of attending events raised by this instance.
      */
-    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -304,19 +308,19 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -324,19 +328,19 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -344,16 +348,16 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -361,18 +365,18 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -381,21 +385,21 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -407,10 +411,10 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores) {
+            final double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -424,11 +428,11 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *                      the quality of the sample.
      * @param readings      signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
         internalSetQualityScores(qualityScores);
     }
@@ -441,11 +445,11 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *                      the quality of the sample.
      * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -460,12 +464,12 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @param readings      signal readings belonging to the same radio source.
      * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -474,19 +478,19 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -494,16 +498,16 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores, Point2D initialPosition) {
+            final double[] qualityScores, final Point2D initialPosition) {
         super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -511,18 +515,18 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores, Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores, final Point2D initialPosition,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -531,21 +535,21 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores     quality scores corresponding to each provided
-     *                          sample. The larger the score value the better
-     *                          the quality of the sample.
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param qualityScores   quality scores corresponding to each provided
+     *                        sample. The larger the score value the better
+     *                        the quality of the sample.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -553,18 +557,18 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -573,20 +577,20 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -594,20 +598,20 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -616,22 +620,22 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -640,22 +644,22 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -663,21 +667,21 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            Point2D initialPosition,
-            Double initialTransmittedPowerdBm) {
+            final double[] qualityScores,
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -685,23 +689,23 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            Point2D initialPosition,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -710,24 +714,24 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -736,24 +740,24 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
         internalSetQualityScores(qualityScores);
@@ -762,21 +766,22 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores, Point2D initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+            final double[] qualityScores, final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
         internalSetQualityScores(qualityScores);
@@ -785,23 +790,23 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     /**
      * Constructor.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
-     * of quality scores is less than required minimum.
+     *                                  of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores, Point2D initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores, final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm, final double initialPathLossExponent,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -811,26 +816,26 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param qualityScores                 quality scores corresponding to each provided
-     *                                      sample. The larger the score value the better
-     *                                      the quality of the sample.
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
-     * is null, or length of quality scores is less than required minimum.
+     *                                  is null, or length of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final double[] qualityScores,
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -854,9 +859,9 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -890,11 +895,11 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than minimum required samples.
-     * @throws LockedException if robust solver is locked because an
-     * estimation is already in progress.
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if robust solver is locked because an
+     *                                  estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores) throws LockedException {
+    public void setQualityScores(final double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -929,7 +934,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -954,7 +959,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -966,10 +971,10 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public void estimate() throws LockedException, NotReadyException, RobustEstimatorException {
@@ -980,81 +985,89 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             throw new NotReadyException();
         }
 
-        PROSACRobustEstimator<Solution<Point2D>> innerEstimator =
+        final PROSACRobustEstimator<Solution<Point2D>> innerEstimator =
                 new PROSACRobustEstimator<>(
                         new PROSACRobustEstimatorListener<Solution<Point2D>>() {
 
-                    @Override
-                    public double[] getQualityScores() {
-                        return mQualityScores;
-                    }
+                            @Override
+                            public double[] getQualityScores() {
+                                return mQualityScores;
+                            }
 
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
+                            @Override
+                            public double getThreshold() {
+                                return mThreshold;
+                            }
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mReadings.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mReadings.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return Math.max(mPreliminarySubsetSize, getMinReadings());
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return Math.max(mPreliminarySubsetSize, getMinReadings());
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices,
-                            List<Solution<Point2D>> solutions) {
-                        solvePreliminarSolutions(samplesIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<Solution<Point2D>> solutions) {
+                                solvePreliminarSolutions(samplesIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(Solution<Point2D> currentEstimation, int i) {
-                        return residual(currentEstimation, i);
-                    }
+                            @Override
+                            public double computeResidual(
+                                    final Solution<Point2D> currentEstimation,
+                                    final int i) {
+                                return residual(currentEstimation, i);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return PROSACRobustRangingAndRssiRadioSourceEstimator2D.this.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return PROSACRobustRangingAndRssiRadioSourceEstimator2D.this.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(RobustEstimator<Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateStart(
-                                    PROSACRobustRangingAndRssiRadioSourceEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator<Solution<Point2D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateEnd(RobustEstimator<Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateEnd(
-                                    PROSACRobustRangingAndRssiRadioSourceEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator<Solution<Point2D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Solution<Point2D>> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onEstimateNextIteration(
-                                    PROSACRobustRangingAndRssiRadioSourceEstimator2D.this, iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<Solution<Point2D>> estimator,
+                                    final int iteration) {
+                                if (mListener != null) {
+                                    mListener.onEstimateNextIteration(
+                                            PROSACRobustRangingAndRssiRadioSourceEstimator2D.this,
+                                            iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Solution<Point2D>> estimator, float progress) {
-                        if (mListener != null) {
-                            mListener.onEstimateProgressChange(
-                                    PROSACRobustRangingAndRssiRadioSourceEstimator2D.this, progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<Solution<Point2D>> estimator,
+                                    final float progress) {
+                                if (mListener != null) {
+                                    mListener.onEstimateProgressChange(
+                                            PROSACRobustRangingAndRssiRadioSourceEstimator2D.this,
+                                            progress);
+                                }
+                            }
+                        });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onEstimateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -1063,13 +1076,17 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            Solution<Point2D> result = innerEstimator.estimate();
+            final Solution<Point2D> result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             attemptRefine(result);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onEstimateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;
@@ -1093,9 +1110,9 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than required minimum.
+     *                                  is smaller than required minimum.
      */
-    private void internalSetQualityScores(double[] qualityScores) {
+    private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinReadings()) {
             throw new IllegalArgumentException();

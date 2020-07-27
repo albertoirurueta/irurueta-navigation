@@ -32,26 +32,29 @@ public class GeodesicException extends NavigationException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
-    public GeodesicException(String message) {
+    public GeodesicException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public GeodesicException(String message, Throwable cause) {
+    public GeodesicException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
-    public GeodesicException(Throwable cause) {
+    public GeodesicException(final Throwable cause) {
         super(cause);
     }
 }

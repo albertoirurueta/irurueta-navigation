@@ -53,7 +53,8 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
      *                                  provided sources is less than the required
      *                                  minimum.
      */
-    public LinearRssiPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources) {
+    public LinearRssiPositionEstimator2D(
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -67,7 +68,7 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearRssiPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -76,16 +77,16 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      *                                  or the number of provided sources is less than
      *                                  the required minimum.
      */
     public LinearRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -98,7 +99,7 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
      * @param listener listener in charge of handling events.
      */
     public LinearRssiPositionEstimator2D(
-            RssiPositionEstimatorListener<Point2D> listener) {
+            final RssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -106,15 +107,15 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
     public LinearRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -123,14 +124,14 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided location radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided location radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearRssiPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RssiPositionEstimatorListener<Point2D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -139,18 +140,18 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
     public LinearRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -159,34 +160,36 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
     public Point2D getEstimatedPosition() {
-        if(mEstimatedPositionCoordinates == null) {
+        if (mEstimatedPositionCoordinates == null) {
             return null;
         }
 
-        InhomogeneousPoint2D result = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D result = new InhomogeneousPoint2D();
         getEstimatedPosition(result);
         return result;
     }
 
     /**
      * Sets positions and distances on internal lateration solver.
+     *
      * @param positions positions to be set.
      * @param distances distances to be set.
      * @throws IllegalArgumentException if something fails.
      */
     @Override
     @SuppressWarnings("Duplicates")
-    protected void setPositionsAndDistances(List<Point2D> positions,
-                                            List<Double> distances) {
-        int size = positions.size();
+    protected void setPositionsAndDistances(
+            final List<Point2D> positions, final List<Double> distances) {
+        final int size = positions.size();
         Point2D[] positionsArray = new InhomogeneousPoint2D[size];
         positionsArray = positions.toArray(positionsArray);
 
-        double[] distancesArray = new double[size];
+        final double[] distancesArray = new double[size];
         for (int i = 0; i < size; i++) {
             distancesArray[i] = distances.get(i);
         }
@@ -196,7 +199,7 @@ public class LinearRssiPositionEstimator2D extends LinearRssiPositionEstimator<P
                     distancesArray);
             mInhomogeneousTrilaterationSolver.setPositionsAndDistances(positionsArray,
                     distancesArray);
-        } catch (LockedException e) {
+        } catch (final LockedException e) {
             throw new IllegalArgumentException(e);
         }
     }

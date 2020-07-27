@@ -153,23 +153,23 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics>
      * Constructor.
      *
      * @param beforeMeanSpecificForceX x-coordinate of mean specific force during
-     *                           the static period happening right before this
-     *                           sequence was measured.
+     *                                 the static period happening right before this
+     *                                 sequence was measured.
      * @param beforeMeanSpecificForceY y-coordinate of mean specific force during
-     *                           the static period happening right before this
-     *                           sequence was measured.
+     *                                 the static period happening right before this
+     *                                 sequence was measured.
      * @param beforeMeanSpecificForceZ z-coordinate of mean specific force during
-     *                           the static period happening right before this
-     *                           sequence was measured.
-     * @param afterMeanSpecificForceX x-coordinate of mean specific force during
-     *                           the static period happening right after this
-     *                           sequence was measured.
-     * @param afterMeanSpecificForceY y-coordinate of mean specific force during
-     *                           the static period happening right after this
-     *                           sequence was measured.
-     * @param afterMeanSpecificForceZ z-coordinate of mean specific force during
-     *                           the static period happening right after this
-     *                           sequence was measured.
+     *                                 the static period happening right before this
+     *                                 sequence was measured.
+     * @param afterMeanSpecificForceX  x-coordinate of mean specific force during
+     *                                 the static period happening right after this
+     *                                 sequence was measured.
+     * @param afterMeanSpecificForceY  y-coordinate of mean specific force during
+     *                                 the static period happening right after this
+     *                                 sequence was measured.
+     * @param afterMeanSpecificForceZ  z-coordinate of mean specific force during
+     *                                 the static period happening right after this
+     *                                 sequence was measured.
      */
     public BodyKinematicsSequence(
             final Acceleration beforeMeanSpecificForceX,
@@ -189,8 +189,8 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics>
     }
 
     /**
-     * @param items  list of items containing body kinematics to be kept into
-     *               this sequence.
+     * @param items        list of items containing body kinematics to be kept into
+     *                     this sequence.
      * @param beforeMeanFx x-coordinate of mean specific force during the static
      *                     period happening right before this sequence was measured.
      *                     Expressed in meters per squared second (m/s^2).
@@ -228,26 +228,26 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics>
     /**
      * Constructor.
      *
-     * @param items              list of items containing body kinematics to be kept into
-     *                           this sequence.
+     * @param items                    list of items containing body kinematics to be kept into
+     *                                 this sequence.
      * @param beforeMeanSpecificForceX x-coordinate of mean specific force during
-     *                           the static period happening right before this
-     *                           sequence was measured.
+     *                                 the static period happening right before this
+     *                                 sequence was measured.
      * @param beforeMeanSpecificForceY y-coordinate of mean specific force during
-     *                           the static period happening right before this
-     *                           sequence was measured.
+     *                                 the static period happening right before this
+     *                                 sequence was measured.
      * @param beforeMeanSpecificForceZ z-coordinate of mean specific force during
-     *                           the static period happening right before this
-     *                           sequence was measured.
-     * @param afterMeanSpecificForceX x-coordinate of mean specific force during
-     *                           the static period happening right after this
-     *                           sequence was measured.
-     * @param afterMeanSpecificForceY y-coordinate of mean specific force during
-     *                           the static period happening right after this
-     *                           sequence was measured.
-     * @param afterMeanSpecificForceZ z-coordinate of mean specific force during
-     *                           the static period happening right after this
-     *                           sequence was measured.
+     *                                 the static period happening right before this
+     *                                 sequence was measured.
+     * @param afterMeanSpecificForceX  x-coordinate of mean specific force during
+     *                                 the static period happening right after this
+     *                                 sequence was measured.
+     * @param afterMeanSpecificForceY  y-coordinate of mean specific force during
+     *                                 the static period happening right after this
+     *                                 sequence was measured.
+     * @param afterMeanSpecificForceZ  z-coordinate of mean specific force during
+     *                                 the static period happening right after this
+     *                                 sequence was measured.
      */
     public BodyKinematicsSequence(
             final List<T> items,
@@ -752,7 +752,7 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics>
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(BodyKinematicsSequence<T> input) {
+    public void copyFrom(final BodyKinematicsSequence<T> input) {
         if (input.mItems != null) {
             mItems = cloneList(input.mItems);
         } else {
@@ -793,7 +793,7 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics>
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BodyKinematicsSequence<?> that = (BodyKinematicsSequence<?>) o;
+        final BodyKinematicsSequence<?> that = (BodyKinematicsSequence<?>) o;
         return Double.compare(that.mBeforeMeanFx, mBeforeMeanFx) == 0 &&
                 Double.compare(that.mBeforeMeanFy, mBeforeMeanFy) == 0 &&
                 Double.compare(that.mBeforeMeanFz, mBeforeMeanFz) == 0 &&
@@ -846,7 +846,7 @@ public class BodyKinematicsSequence<T extends TimedBodyKinematics>
         // of the elements contained within.
 
         final ArrayList<T> result = new ArrayList<>();
-        for (T item : list) {
+        for (final T item : list) {
             if (item instanceof StandardDeviationTimedBodyKinematics) {
                 final StandardDeviationTimedBodyKinematics newItem =
                         new StandardDeviationTimedBodyKinematics();

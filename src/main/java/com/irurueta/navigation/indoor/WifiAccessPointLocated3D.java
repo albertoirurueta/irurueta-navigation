@@ -25,62 +25,70 @@ public class WifiAccessPointLocated3D extends WifiAccessPointLocated<Point3D> {
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
+     *
+     * @param bssid     basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                  xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param position position where access point is located.
+     * @param position  position where access point is located.
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public WifiAccessPointLocated3D(String bssid, double frequency, Point3D position) {
+    public WifiAccessPointLocated3D(
+            final String bssid, final double frequency, final Point3D position) {
         super(bssid, frequency, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
+     *
+     * @param bssid     basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                  xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param position position where access point is located.
+     * @param ssid      service set identifier (SSID) of this 802.11 network.
+     * @param position  position where access point is located.
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public WifiAccessPointLocated3D(String bssid, double frequency, String ssid,
-            Point3D position) {
+    public WifiAccessPointLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final Point3D position) {
         super(bssid, frequency, ssid, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public WifiAccessPointLocated3D(String bssid, double frequency,
-            Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointLocated3D(
+            final String bssid, final double frequency,
+            final Point3D position, final Matrix positionCovariance) {
         super(bssid, frequency, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param ssid               service set identifier (SSID) of this 802.11 network.
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).*
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public WifiAccessPointLocated3D(String bssid, double frequency, String ssid,
-            Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final Point3D position, final Matrix positionCovariance) {
         super(bssid, frequency, ssid, position, positionCovariance);
     }
 

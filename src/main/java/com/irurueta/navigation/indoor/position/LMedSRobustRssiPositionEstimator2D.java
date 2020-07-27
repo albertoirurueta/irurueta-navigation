@@ -49,10 +49,10 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -66,7 +66,7 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -75,15 +75,15 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -96,7 +96,7 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * @param listener listener in charge of handling events.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -104,14 +104,14 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -120,14 +120,14 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided location radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided location radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -136,17 +136,17 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     *                                  null or the number of provided sources is less than the required minimum.
      */
     public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -196,9 +196,9 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         ((LMedSRobustLateration2DSolver) mLaterationSolver).
                 setStopThreshold(stopThreshold);
     }

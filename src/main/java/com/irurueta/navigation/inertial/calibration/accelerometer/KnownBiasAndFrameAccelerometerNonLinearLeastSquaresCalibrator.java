@@ -2977,7 +2977,9 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
             }
 
             @Override
-            public void evaluate(int i, double[] point, double[] result, double[] params, Matrix jacobian) {
+            public void evaluate(
+                    final int i, final double[] point, final double[] result,
+                    final double[] params, final Matrix jacobian) {
                 // We know that
                 //  fmeasx = bx + ftruex + sx * ftruex + mxy * ftruey + mxz * ftruez
                 //  fmeasy = by + ftruey + sy * ftruey + myz * ftruez
@@ -3160,7 +3162,9 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
             }
 
             @Override
-            public void evaluate(int i, double[] point, double[] result, double[] params, Matrix jacobian) {
+            public void evaluate(
+                    final int i, final double[] point, final double[] result,
+                    final double[] params, final Matrix jacobian) {
                 // We know that:
                 //  fmeasx = bx + ftruex + sx * ftruex + mxy * ftruey + mxz * ftruez
                 //  fmeasy = by + myx * ftruex + ftruey + sy * ftruey + myz * ftruez

@@ -733,7 +733,7 @@ public class MSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -761,7 +761,8 @@ public class MSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
         }
 
         final MSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
+                new MSACRobustEstimator<>(
+                        new MSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -798,17 +799,11 @@ public class MSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(MSACRobustKnownBiasAndFrameGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(MSACRobustKnownBiasAndFrameGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -817,7 +812,8 @@ public class MSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
                             final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    MSACRobustKnownBiasAndFrameGyroscopeCalibrator.this, iteration);
+                                    MSACRobustKnownBiasAndFrameGyroscopeCalibrator.this,
+                                    iteration);
                         }
                     }
 
@@ -827,13 +823,19 @@ public class MSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
                             final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    MSACRobustKnownBiasAndFrameGyroscopeCalibrator.this, progress);
+                                    MSACRobustKnownBiasAndFrameGyroscopeCalibrator.this,
+                                    progress);
                         }
                     }
                 });
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
@@ -843,11 +845,15 @@ public class MSACRobustKnownBiasAndFrameGyroscopeCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

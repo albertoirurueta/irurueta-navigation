@@ -31,6 +31,7 @@ public class InertialNavigatorException extends InertialException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
     public InertialNavigatorException(final String message) {
@@ -39,8 +40,9 @@ public class InertialNavigatorException extends InertialException {
 
     /**
      * Constructor with message and cause.
+     *
      * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
     public InertialNavigatorException(final String message, final Throwable cause) {
         super(message, cause);
@@ -48,6 +50,7 @@ public class InertialNavigatorException extends InertialException {
 
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
     public InertialNavigatorException(final Throwable cause) {

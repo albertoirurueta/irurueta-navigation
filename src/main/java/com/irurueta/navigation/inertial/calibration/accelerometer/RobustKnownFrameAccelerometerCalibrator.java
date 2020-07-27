@@ -1255,7 +1255,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setListener(final RobustKnownFrameAccelerometerCalibratorListener listener)
+    public void setListener(
+            final RobustKnownFrameAccelerometerCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1332,8 +1333,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      *                                   initial linear solution, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
-            throws LockedException {
+    public void setPreliminarySolutionRefined(
+            final boolean preliminarySolutionRefined) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1361,7 +1362,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(
+            final float progressDelta) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1394,7 +1396,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(
+            final double confidence) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1424,7 +1427,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(
+            final int maxIterations) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1460,7 +1464,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(
+            final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1485,7 +1490,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(
+            final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1516,7 +1522,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -1853,7 +1859,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(
+            final int preliminarySubsetSize) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1872,7 +1879,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -2512,7 +2520,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
             final List<StandardDeviationFrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final RobustKnownFrameAccelerometerCalibratorListener listener) {
-        return  create(measurements, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+        return create(measurements, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -2737,7 +2745,7 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
 
         final List<StandardDeviationFrameBodyKinematics> measurements = new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -2783,8 +2791,8 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      */
     protected void attemptRefine(final PreliminaryResult preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationFrameBodyKinematics> inlierMeasurements =
                     new ArrayList<>();

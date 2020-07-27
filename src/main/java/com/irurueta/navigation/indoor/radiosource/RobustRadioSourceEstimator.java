@@ -179,7 +179,8 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
     /**
      * Constructor.
      */
-    public RobustRadioSourceEstimator() { }
+    public RobustRadioSourceEstimator() {
+    }
 
     /**
      * Constructor.
@@ -189,7 +190,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRadioSourceEstimator(List<? extends R> readings) {
+    public RobustRadioSourceEstimator(final List<? extends R> readings) {
         internalSetReadings(readings);
     }
 
@@ -198,7 +199,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustRadioSourceEstimator(L listener) {
+    public RobustRadioSourceEstimator(final L listener) {
         mListener = listener;
     }
 
@@ -211,7 +212,8 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRadioSourceEstimator(List<? extends R> readings, L listener) {
+    public RobustRadioSourceEstimator(
+            final List<? extends R> readings, final L listener) {
         this(readings);
         mListener = listener;
     }
@@ -243,9 +245,9 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      * @param progressDelta amount of progress variation before notifying a progress
      *                      change during estimation.
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
-     * @throws LockedException if this estimator is locked.
+     * @throws LockedException          if this estimator is locked.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -276,9 +278,9 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *
      * @param confidence confidence to be set as a value between 0.0 and 1.0.
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(final double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -306,9 +308,9 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *
      * @param maxIterations maximum allowed number of iterations to be set.
      * @throws IllegalArgumentException if provided value is less than 1.
-     * @throws LockedException if this estimator is locked.
+     * @throws LockedException          if this estimator is locked.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(final int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -344,7 +346,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *                     estimator without further refining.
      * @throws LockedException if estimator is locked.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -369,7 +371,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *                       false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -390,10 +392,10 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *
      * @param readings signal readings belonging to the same
      *                 radio source.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public void setReadings(List<? extends R> readings)
+    public void setReadings(final List<? extends R> readings)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -418,7 +420,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *                 instance.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(L listener) throws LockedException {
+    public void setListener(final L listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -449,12 +451,13 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than minimum required samples.
-     * @throws LockedException if robust solver is locked because an
-     * estimation is already in progress.
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if robust solver is locked because an
+     *                                  estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores)
-            throws LockedException { }
+    public void setQualityScores(final double[] qualityScores)
+            throws LockedException {
+    }
 
     /**
      * Gets size of subsets to be checked during robust estimation.
@@ -471,10 +474,11 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      * This has to be at least {@link #getMinReadings()}.
      *
      * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinReadings()}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -527,7 +531,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      * @param readings readings to be validated.
      * @return true if readings are valid, false otherwise.
      */
-    public boolean areValidReadings(List<? extends R> readings) {
+    public boolean areValidReadings(final List<? extends R> readings) {
         return readings != null && readings.size() >= getMinReadings();
     }
 
@@ -560,10 +564,10 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     public abstract void estimate() throws LockedException, NotReadyException,
             RobustEstimatorException;
@@ -571,8 +575,8 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
     /**
      * Gets estimated located radio source.
      *
-     * @return estimated located radio source.
      * @param <S> type of located radio source.
+     * @return estimated located radio source.
      */
     public abstract <S extends RadioSourceLocated<P>> S getEstimatedRadioSource();
 
@@ -581,9 +585,9 @@ public abstract class RobustRadioSourceEstimator<P extends Point<?>,
      *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are null, not enough readings
-     * are available, or readings do not belong to the same access point.
+     *                                  are available, or readings do not belong to the same access point.
      */
-    protected void internalSetReadings(List<? extends R> readings) {
+    protected void internalSetReadings(final List<? extends R> readings) {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
         }

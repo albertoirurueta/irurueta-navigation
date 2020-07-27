@@ -45,7 +45,7 @@ public abstract class RangingPositionEstimator<P extends Point<?>> extends Posit
      *
      * @param listener listener in charge of handling events.
      */
-    public RangingPositionEstimator(RangingPositionEstimatorListener<P> listener) {
+    public RangingPositionEstimator(final RangingPositionEstimatorListener<P> listener) {
         super(listener);
     }
 }

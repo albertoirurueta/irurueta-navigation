@@ -139,7 +139,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Levenberg-Marquardt fitter to find a non-linear solution.
      */
-    private LevenbergMarquardtMultiDimensionFitter mFitter = new LevenbergMarquardtMultiDimensionFitter();
+    private final LevenbergMarquardtMultiDimensionFitter mFitter = new LevenbergMarquardtMultiDimensionFitter();
 
     /**
      * Estimated covariance matrix for estimated non-located fingerprint position and
@@ -160,182 +160,196 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Constructor.
      */
-    public NonLinearFingerprintPositionAndRadioSourceEstimator() { }
+    public NonLinearFingerprintPositionAndRadioSourceEstimator() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator(
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super(locatedFingerprints, fingerprint);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param initialPosition     initial position to be assumed on non located fingerprint or
+     *                            null if unknown.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            P initialPosition) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final P initialPosition) {
         super(locatedFingerprints, fingerprint);
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param initialPosition     initial position to be assumed on non located fingerprint or
+     *                            null if unknown.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            P initialPosition,
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final P initialPosition,
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, listener);
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public NonLinearFingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> initialLocatedSources) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<P>> initialLocatedSources) {
         super(locatedFingerprints, fingerprint);
         mInitialLocatedSources = initialLocatedSources;
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
-     * @param listener listener in charge of handling events.
+     * @param listener              listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
-    public NonLinearFingerprintPositionAndRadioSourceEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> initialLocatedSources,
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+    public NonLinearFingerprintPositionAndRadioSourceEstimator(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<P>> initialLocatedSources,
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, listener);
         mInitialLocatedSources = initialLocatedSources;
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
+     * @param initialPosition       initial position to be assumed on non located fingerprint or
+     *                              null if unknown.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
-    public NonLinearFingerprintPositionAndRadioSourceEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            P initialPosition,
-            List<? extends RadioSourceLocated<P>> initialLocatedSources) {
+    public NonLinearFingerprintPositionAndRadioSourceEstimator(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final P initialPosition,
+            final List<? extends RadioSourceLocated<P>> initialLocatedSources) {
         this(locatedFingerprints, fingerprint, initialPosition);
         mInitialLocatedSources = initialLocatedSources;
     }
 
     /**
      * Constructor.
-     * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param initialPosition initial position to be assumed on non located fingerprint or
-     *                        null if unknown.
+     *
+     * @param locatedFingerprints   located fingerprints containing RSSI readings.
+     * @param fingerprint           fingerprint containing readings at an unknown location
+     *                              for provided located fingerprints.
+     * @param initialPosition       initial position to be assumed on non located fingerprint or
+     *                              null if unknown.
      * @param initialLocatedSources sources containing initial location to be refined or null
      *                              if unknown.
-     * @param listener listener in charge of handling events.
+     * @param listener              listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
-    public NonLinearFingerprintPositionAndRadioSourceEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            P initialPosition,
-            List<? extends RadioSourceLocated<P>> initialLocatedSources,
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+    public NonLinearFingerprintPositionAndRadioSourceEstimator(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final P initialPosition,
+            final List<? extends RadioSourceLocated<P>> initialLocatedSources,
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         this(locatedFingerprints, fingerprint, initialPosition, listener);
         mInitialLocatedSources = initialLocatedSources;
     }
 
     /**
      * Gets initial radio sources whose location is known.
+     *
      * @return initial radio sources.
      */
     public List<? extends RadioSourceLocated<P>> getInitialLocatedSources() {
@@ -344,12 +358,13 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
     /**
      * Sets initial radio sources whose location is known.
+     *
      * @param initialLocatedSources initial radio sources.
      * @throws LockedException if estimator is locked.
      */
     public void setInitialLocatedSources(
-            List<? extends RadioSourceLocated<P>> initialLocatedSources)
-            throws LockedException  {
+            final List<? extends RadioSourceLocated<P>> initialLocatedSources)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -362,6 +377,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
      * This should be a value close to the expected solution.
      * If no value is provided, the average position among all selected nearest
      * located fingerprints will be used.
+     *
      * @return initial position to start the solving algorithm or null.
      */
     public P getInitialPosition() {
@@ -373,10 +389,11 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
      * This should be a value close to the expected solution.
      * If no value is provided, the average position among all selected nearest
      * located fingerprints will be used.
+     *
      * @param initialPosition initial position to start the solving algorithm or null.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(final P initialPosition) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -387,6 +404,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Gets estimated covariance matrix for estimated non-located fingerprint position
      * and estimated located radio sources position.
+     *
      * @return estimated covariance matrix for estimated non-located fingerprint
      * position and estimated located radio sources position.
      */
@@ -396,6 +414,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
     /**
      * Gets covariance of estimated position for non-located fingerprint.
+     *
      * @return covariance of estimated position for non-located fingerprint.
      */
     public Matrix getEstimatedPositionCovariance() {
@@ -404,6 +423,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
     /**
      * Gets estimated chi square value.
+     *
      * @return estimated chi square value.
      */
     public double getChiSq() {
@@ -413,6 +433,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Indicates whether path loss exponent of provided sources must be used when
      * available (if true), or if fallback path loss exponent must be used instead.
+     *
      * @return true to use path loss exponent of provided sources when available,
      * false otherwise.
      */
@@ -423,13 +444,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Specifies whether path loss exponent of provided sources must be used when
      * available (if true), or if fallback path loss exponent must be used instead.
+     *
      * @param useSourcesPathLossExponentWhenAvailable true to use path loss exponent of
      *                                                provided sources when available,
      *                                                false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setUseSourcesPathLossExponentWhenAvailable(
-            boolean useSourcesPathLossExponentWhenAvailable) throws LockedException {
+            final boolean useSourcesPathLossExponentWhenAvailable) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -440,6 +462,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Gets RSSI standard deviation fallback value to use when none can be
      * determined from provided readings.
+     *
      * @return RSSI standard deviation fallback.
      */
     public double getFallbackRssiStandardDeviation() {
@@ -449,13 +472,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Sets RSSI standard deviation fallback value to use when none can be
      * determined from provided readings.
+     *
      * @param fallbackRssiStandardDeviation RSSI standard deviation fallback
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is smaller than
-     * {@link #TINY}.
+     *                                  {@link #TINY}.
      */
     public void setFallbackRssiStandardDeviation(
-            double fallbackRssiStandardDeviation) throws LockedException {
+            final double fallbackRssiStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -468,6 +492,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Indicates whether measured RSSI standard deviation of closest fingerprint must be
      * propagated into measured RSSI reading variance at unknown location.
+     *
      * @return true to propagate RSSI standard deviation of closest fingerprint,
      * false otherwise.
      */
@@ -478,13 +503,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Specifies whether measured RSSI standard deviation of closest fingerprint must be
      * propagated into measured RSSI reading variance at unknown location.
+     *
      * @param propagateFingerprintRssiStandardDeviation true to propagate RSSI standard
      *                                                  deviation of closest fingerprint,
      *                                                  false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setFingerprintRssiStandardDeviationPropagated(
-            boolean propagateFingerprintRssiStandardDeviation) throws LockedException {
+            final boolean propagateFingerprintRssiStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -495,6 +521,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Indicates whether path-loss exponent standard deviation of radio source must be
      * propagated into measured RSSI reading variance at unknown location.
+     *
      * @return true to propagate  path-loss exponent standard deviation of radio source,
      * false otherwise.
      */
@@ -505,13 +532,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Specifies whether path-loss exponent standard deviation of radio source must be
      * propagated into measured RSSI reading variance at unknown location.
+     *
      * @param propagatePathlossExponentStandardDeviation true to propagate path-loss
      *                                                   exponent standard deviation of
      *                                                   radio source, false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setPathlossExponentStandardDeviationPropagated(
-            boolean propagatePathlossExponentStandardDeviation) throws LockedException {
+            final boolean propagatePathlossExponentStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -522,6 +550,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Indicates whether covariance of closest fingerprint position must be propagated
      * into measured RSSI reading variance at unknown location.
+     *
      * @return true to propagate fingerprint position covariance, false otherwise.
      */
     public boolean isFingerprintPositionCovariancePropagated() {
@@ -531,12 +560,13 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Specifies whether covariance of closest fingerprint position must be propagated
      * into measured RSSI reading variance at unknown location.
+     *
      * @param propagateFingerprintPositionCovariance true to propagate fingerprint
      *                                               position covariance, false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setFingerprintPositionCovariancePropagated(
-            boolean propagateFingerprintPositionCovariance) throws LockedException {
+            final boolean propagateFingerprintPositionCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -547,6 +577,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Indicates whether covariance of radio source position must be propagated into
      * measured RSSI reading variance at unknown location.
+     *
      * @return true to propagate radio source position covariance, false otherwise.
      */
     public boolean isRadioSourcePositionCovariancePropagated() {
@@ -556,12 +587,13 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Specifies whether covariance of radio source position must be propagated into
      * measured RSSI reading variance at unknown location.
+     *
      * @param propagateRadioSourcePositionCovariance true to propagate radio source
      *                                               position covariance, false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setRadioSourcePositionCovariancePropagated(
-            boolean propagateRadioSourcePositionCovariance) throws LockedException {
+            final boolean propagateRadioSourcePositionCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -572,8 +604,9 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Estimates position and radio sources based on provided located radio sources and readings of
      * such radio sources at an unknown location.
-     * @throws LockedException if estimator is locked.
-     * @throws NotReadyException if estimator is not ready.
+     *
+     * @throws LockedException                if estimator is locked.
+     * @throws NotReadyException              if estimator is not ready.
      * @throws FingerprintEstimationException if estimation fails for some other reason.
      */
     @Override
@@ -601,12 +634,12 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 //noinspection unchecked
                 noMeanfinder = new RadioSourceNoMeanKNearestFinder<>(
                         (Collection<? extends RssiFingerprintLocated<RadioSource,
-                                RssiReading<RadioSource>, P>>)mLocatedFingerprints);
+                                RssiReading<RadioSource>, P>>) mLocatedFingerprints);
             } else {
                 //noinspection unchecked
                 finder = new RadioSourceKNearestFinder<>(
                         (Collection<? extends RssiFingerprintLocated<RadioSource,
-                                RssiReading<RadioSource>, P>>)mLocatedFingerprints);
+                                RssiReading<RadioSource>, P>>) mLocatedFingerprints);
             }
 
             mEstimatedPositionCoordinates = null;
@@ -615,8 +648,8 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             mNearestFingerprints = null;
             mEstimatedLocatedSources = null;
 
-            int min = Math.max(1, mMinNearestFingerprints);
-            int max = mMaxNearestFingerprints < 0 ?
+            final int min = Math.max(1, mMinNearestFingerprints);
+            final int max = mMaxNearestFingerprints < 0 ?
                     mLocatedFingerprints.size() :
                     Math.min(mMaxNearestFingerprints, mLocatedFingerprints.size());
             for (int k = min; k <= max; k++) {
@@ -698,13 +731,13 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 //pb = (xb, yb) ... pM = (xM, yM)
 
                 try {
-                    List<RadioSource> sourcesToBeEstimated = setupFitter();
+                    final List<RadioSource> sourcesToBeEstimated = setupFitter();
                     if (mMinNearestFingerprints < 0) {
                         //if no limit is set in minimum value, then a minimum of
                         //dims * (1 + numSources) is used
-                        int numSources = sourcesToBeEstimated.size();
-                        int dims = getNumberOfDimensions();
-                        int minNearest = dims * (1 + numSources);
+                        final int numSources = sourcesToBeEstimated.size();
+                        final int dims = getNumberOfDimensions();
+                        final int minNearest = dims * (1 + numSources);
                         if (k < minNearest) {
                             continue;
                         }
@@ -713,37 +746,37 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     mFitter.fit();
 
                     //estimated position
-                    double[] a = mFitter.getA();
+                    final double[] a = mFitter.getA();
                     mCovariance = mFitter.getCovar();
                     mChiSq = mFitter.getChisq();
 
-                    int dims = getNumberOfDimensions();
+                    final int dims = getNumberOfDimensions();
 
                     //obtain estimated position coordinates and covariance
                     mEstimatedPositionCoordinates = new double[dims];
                     System.arraycopy(a, 0, mEstimatedPositionCoordinates,
                             0, dims);
 
-                    int dimsMinusOne = dims - 1;
+                    final int dimsMinusOne = dims - 1;
                     mEstimatedPositionCovariance = mCovariance.getSubmatrix(0, 0,
                             dimsMinusOne, dimsMinusOne);
 
                     //obtain radio sources estimated positions and covariance
-                    int totalSources = sourcesToBeEstimated.size();
+                    final int totalSources = sourcesToBeEstimated.size();
                     mEstimatedLocatedSources = new ArrayList<>();
                     for (int j = 0; j < totalSources; j++) {
-                        P sourcePosition = createPoint();
+                        final P sourcePosition = createPoint();
 
-                        int start = dims * (1 + j);
-                        int end = start + dimsMinusOne;
-                        for(int i = 0; i < dims; i++) {
+                        final int start = dims * (1 + j);
+                        final int end = start + dimsMinusOne;
+                        for (int i = 0; i < dims; i++) {
                             sourcePosition.setInhomogeneousCoordinate(i, a[start + i]);
                         }
 
-                        Matrix sourceCovariance = mCovariance.getSubmatrix(
+                        final Matrix sourceCovariance = mCovariance.getSubmatrix(
                                 start, start, end, end);
 
-                        RadioSource source = sourcesToBeEstimated.get(j);
+                        final RadioSource source = sourcesToBeEstimated.get(j);
                         mEstimatedLocatedSources.add(
                                 createRadioSource(source, sourcePosition,
                                         sourceCovariance));
@@ -751,7 +784,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
                     //a solution was found so we exit loop
                     break;
-                } catch (NumericalException e) {
+                } catch (final NumericalException e) {
                     //solution could not be found with current data
                     //Iterate to use additional nearby fingerprints
                     mEstimatedPositionCoordinates = null;
@@ -777,44 +810,49 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
     /**
      * Propagates provided variances into RSSI differences.
-     * @param pathlossExponent path-loss exponent.
-     * @param fingerprintPosition position of closest located fingerprint.
-     * @param radioSourcePosition radio source position associated to fingerprint reading.
-     * @param estimatedPosition position to be estimated. Usually this is equal to the
-     *                          initial position used by a non linear algorithm.
-     * @param pathlossExponentVariance variance of path-loss exponent or null if unknown.
+     *
+     * @param pathlossExponent              path-loss exponent.
+     * @param fingerprintPosition           position of closest located fingerprint.
+     * @param radioSourcePosition           radio source position associated to fingerprint reading.
+     * @param estimatedPosition             position to be estimated. Usually this is equal to the
+     *                                      initial position used by a non linear algorithm.
+     * @param pathlossExponentVariance      variance of path-loss exponent or null if unknown.
      * @param fingerprintPositionCovariance covariance of fingerprint position or null if
      *                                      unknown.
      * @param radioSourcePositionCovariance covariance of radio source position or null if
      *                                      unknown.
      * @return variance of RSSI difference measured at non located fingerprint reading.
      */
-    protected abstract Double propagateVariances(double pathlossExponent,
-            P fingerprintPosition, P radioSourcePosition, P estimatedPosition,
-            Double pathlossExponentVariance, Matrix fingerprintPositionCovariance,
-            Matrix radioSourcePositionCovariance);
+    protected abstract Double propagateVariances(
+            final double pathlossExponent, final P fingerprintPosition,
+            final P radioSourcePosition, final P estimatedPosition,
+            final Double pathlossExponentVariance,
+            final Matrix fingerprintPositionCovariance,
+            final Matrix radioSourcePositionCovariance);
 
     /**
      * Creates a located radio source from provided radio source, position and
      * covariance.
-     * @param source radio source.
-     * @param sourcePosition radio source position.
+     *
+     * @param source           radio source.
+     * @param sourcePosition   radio source position.
      * @param sourceCovariance radio source position covariance.
      * @return located radio source.
      */
-    private RadioSourceLocated<P> createRadioSource(RadioSource source,
-            P sourcePosition, Matrix sourceCovariance) {
+    private RadioSourceLocated<P> createRadioSource(
+            final RadioSource source, final P sourcePosition,
+            final Matrix sourceCovariance) {
 
-        int dims = getNumberOfDimensions();
+        final int dims = getNumberOfDimensions();
 
         switch (source.getType()) {
             case BEACON:
-                Beacon beacon = (Beacon)source;
+                final Beacon beacon = (Beacon) source;
                 if (dims == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
                     //2D
 
                     //noinspection unchecked
-                    return (RadioSourceLocated<P>)new BeaconLocated2D(
+                    return (RadioSourceLocated<P>) new BeaconLocated2D(
                             beacon.getIdentifiers(), beacon.getTransmittedPower(),
                             beacon.getFrequency(), beacon.getBluetoothAddress(),
                             beacon.getBeaconTypeCode(), beacon.getManufacturer(),
@@ -824,7 +862,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     //3D
 
                     //noinspection unchecked
-                    return (RadioSourceLocated<P>)new BeaconLocated3D(
+                    return (RadioSourceLocated<P>) new BeaconLocated3D(
                             beacon.getIdentifiers(), beacon.getTransmittedPower(),
                             beacon.getFrequency(), beacon.getBluetoothAddress(),
                             beacon.getBeaconTypeCode(), beacon.getManufacturer(),
@@ -833,12 +871,12 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 }
             case WIFI_ACCESS_POINT:
             default:
-                WifiAccessPoint accessPoint = (WifiAccessPoint)source;
+                final WifiAccessPoint accessPoint = (WifiAccessPoint) source;
                 if (dims == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
                     //2D
 
                     //noinspection unchecked
-                    return (RadioSourceLocated<P>)new WifiAccessPointLocated2D(
+                    return (RadioSourceLocated<P>) new WifiAccessPointLocated2D(
                             accessPoint.getBssid(), accessPoint.getFrequency(),
                             accessPoint.getSsid(), (Point2D) sourcePosition,
                             sourceCovariance);
@@ -846,7 +884,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     //3D
 
                     //noinspection unchecked
-                    return (RadioSourceLocated<P>)new WifiAccessPointLocated3D(
+                    return (RadioSourceLocated<P>) new WifiAccessPointLocated3D(
                             accessPoint.getBssid(), accessPoint.getFrequency(),
                             accessPoint.getSsid(), (Point3D) sourcePosition,
                             sourceCovariance);
@@ -859,39 +897,41 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
      * Builds data required to solve the problem.
      * This method takes into account current nearest fingerprints and discards those
      * readings belonging to radio sources not having enough data to be estimated.
-     * @param allPowerDiffs list of received power differences of RSSI readings between a
-     *                      located fingerprint and an unknown fingerprint for a given radio
-     *                      source.
-     * @param allFingerprintPositions positions of all located fingerprints being taken into
-     *                                account.
-     * @param allInitialSourcesPositions initial positions of all radio sources to be taken
-     *                                   into account. If initial located sources where provided,
-     *                                   their positions will be used, otherwise the centroid of
-     *                                   all located fingerprints associated to a radio source will
-     *                                   be used as initial position.
-     * @param allSourcesToBeEstimated all radio sources that will be estimated.
-     * @param allSourcesIndices indices indicating the position radio source being used
-     *                          within the list of sources for current reading.
-     * @param allPathLossExponents list of path loss exponents.
-     * @param allStandardDeviations list of standard deviations for readings being used.
+     *
+     * @param allPowerDiffs               list of received power differences of RSSI readings between a
+     *                                    located fingerprint and an unknown fingerprint for a given radio
+     *                                    source.
+     * @param allFingerprintPositions     positions of all located fingerprints being taken into
+     *                                    account.
+     * @param allInitialSourcesPositions  initial positions of all radio sources to be taken
+     *                                    into account. If initial located sources where provided,
+     *                                    their positions will be used, otherwise the centroid of
+     *                                    all located fingerprints associated to a radio source will
+     *                                    be used as initial position.
+     * @param allSourcesToBeEstimated     all radio sources that will be estimated.
+     * @param allSourcesIndices           indices indicating the position radio source being used
+     *                                    within the list of sources for current reading.
+     * @param allPathLossExponents        list of path loss exponents.
+     * @param allStandardDeviations       list of standard deviations for readings being used.
      * @param nearestFingerprintsCentroid centroid of nearest fingerprints being taken into account.
      */
     @SuppressWarnings("Duplicates")
-    private void buildData(List<Double> allPowerDiffs,
-                           List<P> allFingerprintPositions,
-                           List<P> allInitialSourcesPositions,
-                           List<RadioSource> allSourcesToBeEstimated,
-                           List<Integer> allSourcesIndices,
-                           List<Double> allPathLossExponents,
-                           List<Double> allStandardDeviations,
-                           P nearestFingerprintsCentroid) {
+    private void buildData(
+            final List<Double> allPowerDiffs,
+            final List<P> allFingerprintPositions,
+            final List<P> allInitialSourcesPositions,
+            final List<RadioSource> allSourcesToBeEstimated,
+            final List<Integer> allSourcesIndices,
+            final List<Double> allPathLossExponents,
+            final List<Double> allStandardDeviations,
+            final P nearestFingerprintsCentroid) {
 
-        int dims = getNumberOfDimensions();
+        final int dims = getNumberOfDimensions();
         int num = 0;
-        double[] centroidCoords = new double[dims];
-        for (RssiFingerprintLocated<? extends RadioSource,
+        final double[] centroidCoords = new double[dims];
+        for (final RssiFingerprintLocated<? extends RadioSource,
                 ? extends RssiReading<? extends RadioSource>, P> fingerprint : mNearestFingerprints) {
-            P position = fingerprint.getPosition();
+            final P position = fingerprint.getPosition();
             if (position == null) {
                 continue;
             }
@@ -902,35 +942,35 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             num++;
         }
 
-        for(int i = 0; i < dims; i++) {
+        for (int i = 0; i < dims; i++) {
             centroidCoords[i] /= num;
             nearestFingerprintsCentroid.setInhomogeneousCoordinate(i, centroidCoords[i]);
         }
 
         //maps to keep cached in memory computed values to speed up computations
-        HashMap<RadioSource, Integer> numReadingsMap = new HashMap<>();
-        HashMap<RadioSource, P> centroidsMap = new HashMap<>();
+        final HashMap<RadioSource, Integer> numReadingsMap = new HashMap<>();
+        final HashMap<RadioSource, P> centroidsMap = new HashMap<>();
 
-        for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
+        for (final RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
                 mNearestFingerprints) {
 
-            List<RssiReading<RadioSource>> locatedReadings =
+            final List<RssiReading<RadioSource>> locatedReadings =
                     locatedFingerprint.getReadings();
             if (locatedReadings == null) {
                 continue;
             }
 
-            P fingerprintPosition = locatedFingerprint.getPosition();
-            Matrix fingerprintPositionCovariance = locatedFingerprint.
+            final P fingerprintPosition = locatedFingerprint.getPosition();
+            final Matrix fingerprintPositionCovariance = locatedFingerprint.
                     getPositionCovariance();
 
-            for (RssiReading<RadioSource> locatedReading : locatedReadings) {
-                RadioSource source = locatedReading.getSource();
+            for (final RssiReading<RadioSource> locatedReading : locatedReadings) {
+                final RadioSource source = locatedReading.getSource();
 
                 //obtain the total number of readings available for this source and
                 //the centroid of all located fingerprints containing readings for
                 //such source
-                int numReadings;
+                final int numReadings;
                 if (!numReadingsMap.containsKey(source)) {
                     numReadings = totalReadingsForSource(source, mNearestFingerprints, null);
                     numReadingsMap.put(source, numReadings);
@@ -942,7 +982,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     continue;
                 }
 
-                P centroid;
+                final P centroid;
                 if (!centroidsMap.containsKey(source)) {
                     centroid = createPoint();
 
@@ -958,37 +998,36 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
                 //find within the list of located sources (if available) the source
                 //of current located fingerprint
-                @SuppressWarnings("SuspiciousMethodCalls")
-                int pos = mInitialLocatedSources != null ?
+                @SuppressWarnings("SuspiciousMethodCalls") final int pos = mInitialLocatedSources != null ?
                         mInitialLocatedSources.indexOf(source) : -1;
 
                 double pathLossExponent = mPathLossExponent;
                 Double pathLossExponentVariance = null;
                 if (mUseSourcesPathLossExponentWhenAvailable &&
                         source instanceof RadioSourceWithPower) {
-                    RadioSourceWithPower sourceWithPower = (RadioSourceWithPower)source;
+                    RadioSourceWithPower sourceWithPower = (RadioSourceWithPower) source;
                     pathLossExponent = sourceWithPower.getPathLossExponent();
-                    Double std = sourceWithPower.getPathLossExponentStandardDeviation();
+                    final Double std = sourceWithPower.getPathLossExponentStandardDeviation();
                     pathLossExponentVariance = std != null ? std * std : null;
                 }
 
 
-                P sourcePosition;
+                final P sourcePosition;
                 Matrix sourcePositionCovariance = null;
                 if (pos < 0) {
                     //located source is not available, so we use centroid
                     sourcePosition = centroid;
                 } else {
-                    RadioSourceLocated<P> locatedSource = mInitialLocatedSources.get(pos);
+                    final RadioSourceLocated<P> locatedSource = mInitialLocatedSources.get(pos);
                     sourcePosition = locatedSource.getPosition();
 
                     if (mUseSourcesPathLossExponentWhenAvailable &&
                             locatedSource instanceof RadioSourceWithPower &&
                             pathLossExponentVariance == null) {
-                        RadioSourceWithPower locatedSourceWithPower =
-                                (RadioSourceWithPower)locatedSource;
+                        final RadioSourceWithPower locatedSourceWithPower =
+                                (RadioSourceWithPower) locatedSource;
                         pathLossExponent = locatedSourceWithPower.getPathLossExponent();
-                        Double std = locatedSourceWithPower.
+                        final Double std = locatedSourceWithPower.
                                 getPathLossExponentStandardDeviation();
                         pathLossExponentVariance = std != null ? std * std : null;
                     }
@@ -996,7 +1035,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     sourcePositionCovariance = locatedSource.getPositionCovariance();
                 }
 
-                int sourceIndex;
+                final int sourceIndex;
                 if (!allSourcesToBeEstimated.contains(source)) {
                     sourceIndex = allSourcesToBeEstimated.size();
 
@@ -1007,15 +1046,15 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 }
 
 
-                double locatedRssi = locatedReading.getRssi();
+                final double locatedRssi = locatedReading.getRssi();
 
-                Double locatedRssiStd = locatedReading.getRssiStandardDeviation();
-                Double locatedRssiVariance = locatedRssiStd != null ?
+                final Double locatedRssiStd = locatedReading.getRssiStandardDeviation();
+                final Double locatedRssiVariance = locatedRssiStd != null ?
                         locatedRssiStd * locatedRssiStd : null;
 
-                List<? extends RssiReading<? extends RadioSource>> readings =
+                final List<? extends RssiReading<? extends RadioSource>> readings =
                         mFingerprint.getReadings();
-                for (RssiReading<? extends RadioSource> reading : readings) {
+                for (final RssiReading<? extends RadioSource> reading : readings) {
                     if (reading.getSource() == null ||
                             !reading.getSource().equals(source)) {
                         continue;
@@ -1023,9 +1062,9 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
                     //only take into account reading for matching sources on located
                     //and non-located readings
-                    double rssi = reading.getRssi();
+                    final double rssi = reading.getRssi();
 
-                    double powerDiff = rssi - locatedRssi;
+                    final double powerDiff = rssi - locatedRssi;
 
                     Double standardDeviation = null;
                     if (mPropagatePathlossExponentStandardDeviation ||
@@ -1033,10 +1072,10 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                             mPropagateRadioSourcePositionCovariance) {
 
                         //compute initial position
-                        P initialPosition = mInitialPosition != null ?
+                        final P initialPosition = mInitialPosition != null ?
                                 mInitialPosition : nearestFingerprintsCentroid;
 
-                        Double variance = propagateVariances(pathLossExponent,
+                        final Double variance = propagateVariances(pathLossExponent,
                                 fingerprintPosition, sourcePosition, initialPosition,
                                 mPropagatePathlossExponentStandardDeviation ? pathLossExponentVariance : null,
                                 mPropagateFingerprintPositionCovariance ? fingerprintPositionCovariance : null,
@@ -1052,7 +1091,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
                     if (mPropagateFingerprintRssiStandardDeviation) {
                         if (standardDeviation != null &&
-                                reading.getRssiStandardDeviation() != null){
+                                reading.getRssiStandardDeviation() != null) {
                             //consider propagated variance and reading variance independent, so we
                             //sum them both
                             standardDeviation = standardDeviation * standardDeviation +
@@ -1085,6 +1124,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
     /**
      * Setups fitter to solve positions.
+     *
      * @return list of radio sources whose location will be estimated.
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
@@ -1116,7 +1156,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
             @Override
             public double[] createInitialParametersArray() {
-                double[] initial = new double[dims * (totalSources + 1)];
+                final double[] initial = new double[dims * (totalSources + 1)];
 
                 if (mInitialPosition == null) {
                     //use centroid of nearest fingerprints as initial value
@@ -1125,14 +1165,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     }
                 } else {
                     //use provided initial position
-                    for(int i = 0; i < dims; i++) {
+                    for (int i = 0; i < dims; i++) {
                         initial[i] = mInitialPosition.getInhomogeneousCoordinate(i);
                     }
                 }
 
                 int pos = dims;
                 for (int j = 0; j < totalSources; j++) {
-                    P initialSourcePosition = allInitialSourcesPositions.get(j);
+                    final P initialSourcePosition = allInitialSourcesPositions.get(j);
                     for (int i = 0; i < dims; i++) {
                         initial[pos] = initialSourcePosition.
                                 getInhomogeneousCoordinate(i);
@@ -1144,7 +1184,9 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             }
 
             @Override
-            public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
+            public double evaluate(
+                    final int i, final double[] point, final double[] params,
+                    final double[] derivatives) {
 
                 //For 2D:
                 //-------
@@ -1210,16 +1252,16 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 //for other radio source pb=(xb,yb)
                 //diff(Prdiff1a)/diff(xb) = diff(Prdiff1a)/diff(yb) = 0
 
-                int dims = NonLinearFingerprintPositionAndRadioSourceEstimator.this.
+                final int dims = NonLinearFingerprintPositionAndRadioSourceEstimator.this.
                         getNumberOfDimensions();
 
                 //path loss exponent
-                double n = point[0];
+                final double n = point[0];
 
-                double ln10 = Math.log(10.0);
+                final double ln10 = Math.log(10.0);
 
-                int sourceIndex = allSourcesIndices.get(i);
-                int start = dims * (1 + sourceIndex);
+                final int sourceIndex = allSourcesIndices.get(i);
+                final int start = dims * (1 + sourceIndex);
 
                 //d1a^2, d2a^2, ...
                 double distanceFingerprint2 = 0.0;
@@ -1228,22 +1270,22 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 double distancePoint2 = 0.0;
                 for (int j = 0; j < dims; j++) {
                     //fingerprint coordinate p1=(x1,y1,z1), ...
-                    double fingerprintCoord = point[1 + j];
+                    final double fingerprintCoord = point[1 + j];
 
                     //unknown point "pi" coordinate
-                    double pointCoord = params[j];
+                    final double pointCoord = params[j];
 
                     //radio source coordinate pa=(xa,ya,za), ...
-                    double sourceCoord = params[start + j];
+                    final double sourceCoord = params[start + j];
 
                     //x1 - xa, y1 - ya, ...
-                    double diffFingerprint = fingerprintCoord - sourceCoord;
+                    final double diffFingerprint = fingerprintCoord - sourceCoord;
 
                     //xi - xa, yi - ya, ...
-                    double diffPoint = pointCoord - sourceCoord;
+                    final double diffPoint = pointCoord - sourceCoord;
 
-                    double diffFingerprint2 = diffFingerprint * diffFingerprint;
-                    double diffPoint2 = diffPoint * diffPoint;
+                    final double diffFingerprint2 = diffFingerprint * diffFingerprint;
+                    final double diffPoint2 = diffPoint * diffPoint;
 
                     distanceFingerprint2 += diffFingerprint2;
                     distancePoint2 += diffPoint2;
@@ -1252,7 +1294,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 distanceFingerprint2 = Math.max(distanceFingerprint2, TINY);
                 distancePoint2 = Math.max(distancePoint2, TINY);
 
-                double result = 5*n*(Math.log10(distanceFingerprint2) -
+                final double result = 5 * n * (Math.log10(distanceFingerprint2) -
                         Math.log10(distancePoint2));
 
 
@@ -1260,31 +1302,31 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 //radio sources are zero
                 Arrays.fill(derivatives, 0.0);
 
-                for(int j = 0; j < dims; j++) {
+                for (int j = 0; j < dims; j++) {
                     //fingerprint coordinate p1=(x1,y1,z1), ...
-                    double fingerprintCoord = point[1 + j];
+                    final double fingerprintCoord = point[1 + j];
 
                     //unknown point "pi" coordinate
-                    double pointCoord = params[j];
+                    final double pointCoord = params[j];
 
                     //radio source coordinate pa=(xa,ya,za), ...
-                    double sourceCoord = params[start + j];
+                    final double sourceCoord = params[start + j];
 
                     //x1 - xa, y1 - ya, ...
-                    double diffFingerprint = fingerprintCoord - sourceCoord;
+                    final double diffFingerprint = fingerprintCoord - sourceCoord;
 
                     //xi - xa, yi - ya, ...
-                    double diffPoint = pointCoord - sourceCoord;
+                    final double diffPoint = pointCoord - sourceCoord;
 
 
                     //Example: diff(Prdiff1a)/diff(xi) =  -10*n*(xi - xa)/(log(10)*dia^2)
-                    double derivativePointCoord = -10.0 * n * diffPoint / (ln10 * distancePoint2);
+                    final double derivativePointCoord = -10.0 * n * diffPoint / (ln10 * distancePoint2);
 
                     //Example: diff(Prdiff1a)/diff(xa) = 10*n*(-(x1 - xa)/(log(10)*d1a^2) + (xi - xa)/(log(10)*dia^2)) =
                     //  -10*n*(x1 - xa)/(log(10)*d1a^2) - diff(Prdiff1a)/diff(xi)
-                    double derivativeSameRadioSourceCoord =
+                    final double derivativeSameRadioSourceCoord =
                             -10.0 * n * diffFingerprint / (ln10 * distanceFingerprint2)
-                            - derivativePointCoord;
+                                    - derivativePointCoord;
 
                     //derivatives respect point pi = (xi, yi, zi)
                     derivatives[j] = derivativePointCoord;
@@ -1304,14 +1346,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
             //Therefore x must have 1 + dims columns (for path-loss n and fingerprint position (x1,y1)
 
-            Matrix x = new Matrix(totalReadings, n);
-            double[] y = new double[totalReadings];
-            double[] standardDeviations = new double[totalReadings];
+            final Matrix x = new Matrix(totalReadings, n);
+            final double[] y = new double[totalReadings];
+            final double[] standardDeviations = new double[totalReadings];
             for (int i = 0; i < totalReadings; i++) {
                 //path loss exponent
                 x.setElementAt(i, 0, allPathLossExponents.get(i));
 
-                P fingerprintPosition = allFingerprintPositions.get(i);
+                final P fingerprintPosition = allFingerprintPositions.get(i);
                 int col = 1;
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, col,
@@ -1327,7 +1369,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             mFitter.setInputData(x, y, standardDeviations);
 
             return allSourcesToBeEstimated;
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             throw new FittingException(e);
         }
     }
@@ -1335,40 +1377,42 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
     /**
      * Gets the total number of readings associated to provided radio source.
      * This method uses only current nearest fingerprints.
-     * @param source radio source to be checked
-     * @param centroid centroid to be computed.
+     *
+     * @param source       radio source to be checked
+     * @param centroid     centroid to be computed.
      * @param fingerprints fingerprints where search is made.
      * @return total number of readings associated to provided radio source.
      */
-    private int totalReadingsForSource(RadioSource source,
-            List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>> fingerprints,
-            P centroid) {
+    private int totalReadingsForSource(
+            final RadioSource source,
+            final List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>> fingerprints,
+            final P centroid) {
         if (source == null) {
             return 0;
         }
 
-        int dims = getNumberOfDimensions();
+        final int dims = getNumberOfDimensions();
 
         int result = 0;
-        double[] centroidCoords = centroid != null ?
+        final double[] centroidCoords = centroid != null ?
                 new double[dims] : null;
 
-        for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> fingerprint : fingerprints) {
-            List<RssiReading<RadioSource>> readings = fingerprint.getReadings();
+        for (final RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> fingerprint : fingerprints) {
+            final List<RssiReading<RadioSource>> readings = fingerprint.getReadings();
             if (readings == null) {
                 continue;
             }
 
-            P fingerprintPosition = fingerprint.getPosition();
+            final P fingerprintPosition = fingerprint.getPosition();
 
-            for(RssiReading<RadioSource> reading : readings) {
-                RadioSource readingSource = reading.getSource();
+            for (final RssiReading<RadioSource> reading : readings) {
+                final RadioSource readingSource = reading.getSource();
                 if (readingSource != null && readingSource.equals(source)) {
                     result++;
 
                     if (centroid != null) {
                         for (int i = 0; i < dims; i++) {
-                            double coord = fingerprintPosition.getInhomogeneousCoordinate(i);
+                            final double coord = fingerprintPosition.getInhomogeneousCoordinate(i);
                             centroidCoords[i] += coord;
                         }
                     }

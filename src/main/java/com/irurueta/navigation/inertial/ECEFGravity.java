@@ -93,7 +93,7 @@ public class ECEFGravity extends GravityOrGravitation<ECEFGravity> {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final ECEFGravity result = (ECEFGravity)super.clone();
+        final ECEFGravity result = (ECEFGravity) super.clone();
         copyTo(result);
         return result;
     }

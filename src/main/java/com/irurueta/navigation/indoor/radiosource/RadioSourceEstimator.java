@@ -75,41 +75,47 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
     /**
      * Constructor.
      */
-    public RadioSourceEstimator() { }
+    public RadioSourceEstimator() {
+    }
 
     /**
      * Constructor.
      * Sets located radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RadioSourceEstimator(List<? extends R> readings) {
+    public RadioSourceEstimator(final List<? extends R> readings) {
         internalSetReadings(readings);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RadioSourceEstimator(L listener) {
+    public RadioSourceEstimator(final L listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
-    public RadioSourceEstimator(List<? extends R> readings, L listener) {
+    public RadioSourceEstimator(
+            final List<? extends R> readings, final L listener) {
         this(readings);
         mListener = listener;
     }
 
     /**
      * Indicates whether estimator is locked during estimation.
+     *
      * @return true if estimator is locked, false otherwise.
      */
     public boolean isLocked() {
@@ -118,6 +124,7 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Gets radio signal readings belonging to the same radio source to be estimated.
+     *
      * @return radio signal readings belonging to the same radio source.
      */
     public List<? extends R> getReadings() {
@@ -126,11 +133,12 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings WiFi signal readings belonging to the same radio source.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public void setReadings(List<? extends R> readings) throws LockedException {
+    public void setReadings(final List<? extends R> readings) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -140,6 +148,7 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Gets listener in charge of attending events raised by this instance.
+     *
      * @return listener in charge of attending events raised by this instance.
      */
     public L getListener() {
@@ -148,11 +157,12 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Sets listener in charge of attending events raised by this instance.
+     *
      * @param listener listener in charge of attending events raised by this
      *                 instance.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(L listener) throws LockedException {
+    public void setListener(final L listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -163,16 +173,18 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
     /**
      * Indicates whether readings are valid or not.
      * Readings are considered valid when there are enough readings.
+     *
      * @param readings readings to be validated.
      * @return true if readings are valid, false otherwise.
      */
-    public boolean areValidReadings(List<? extends R> readings) {
+    public boolean areValidReadings(final List<? extends R> readings) {
 
         return readings != null && readings.size() >= getMinReadings();
     }
 
     /**
      * Gets estimated inhomogeneous position coordinates.
+     *
      * @return estimated inhomogeneous position coordinates.
      */
     public double[] getEstimatedPositionCoordinates() {
@@ -181,9 +193,10 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Gets estimated estimated position and stores result into provided instance.
+     *
      * @param estimatedPosition instance where estimated estimated position will be stored.
      */
-    public void getEstimatedPosition(P estimatedPosition) {
+    public void getEstimatedPosition(final P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
             for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
                 estimatedPosition.setInhomogeneousCoordinate(i,
@@ -198,6 +211,7 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
      * Top-left submatrix contains covariance of position,
      * then follows transmitted power variance, and finally
      * the last element contains pathloss exponent variance.
+     *
      * @return covariance for estimated parameters.
      */
     public Matrix getEstimatedCovariance() {
@@ -209,6 +223,7 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
      * Size of this matrix will depend on the number of dimensions
      * of estimated position (either 2 or 3).
      * This value will only be available when position estimation is enabled.
+     *
      * @return estimated position covariance or null.
      */
     public Matrix getEstimatedPositionCovariance() {
@@ -217,6 +232,7 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Indicates whether this instance is ready to start the estimation.
+     *
      * @return true if this instance is ready, false otherwise.
      */
     public abstract boolean isReady();
@@ -227,24 +243,28 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
      * This value depends on the number of parameters to
      * be estimated, but for position only, this is 3
      * readings for 2D, and 4 readings for 3D.
+     *
      * @return minimum required number of readings.
      */
     public abstract int getMinReadings();
 
     /**
      * Gets number of dimensions of position points.
+     *
      * @return number of dimensions of position points.
      */
     public abstract int getNumberOfDimensions();
 
     /**
      * Gets estimated radio sourceposition.
+     *
      * @return estimated radio source position.
      */
     public abstract P getEstimatedPosition();
 
     /**
      * Gets estimated located radio source.
+     *
      * @param <S> type of located radio source.
      * @return estimated located radio source.
      */
@@ -252,20 +272,22 @@ public abstract class RadioSourceEstimator<P extends Point<?>, R extends Reading
 
     /**
      * Estimate radio source.
+     *
      * @throws RadioSourceEstimationException if estimation fails.
-     * @throws NotReadyException if estimator is not ready.
-     * @throws LockedException if estimator is locked.
+     * @throws NotReadyException              if estimator is not ready.
+     * @throws LockedException                if estimator is locked.
      */
     public abstract void estimate() throws RadioSourceEstimationException, NotReadyException,
             LockedException;
 
     /**
      * Internally sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are null or not enough readings
-     * are available.
+     *                                  are available.
      */
-    protected void internalSetReadings(List<? extends R> readings) {
+    protected void internalSetReadings(final List<? extends R> readings) {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
         }

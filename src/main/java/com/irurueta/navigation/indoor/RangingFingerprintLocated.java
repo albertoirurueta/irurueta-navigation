@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Contains located ranging readings from several radio sources.
+ *
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  * @param <R> a {@link RangingReading} type.
@@ -43,12 +44,14 @@ public class RangingFingerprintLocated<S extends RadioSource, R extends RangingR
 
     /**
      * Constructor.
+     *
      * @param readings non-located ranging readings defining the fingerprint.
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are
-     * null.
+     *                                  null.
      */
-    public RangingFingerprintLocated(List<R> readings, P position) {
+    public RangingFingerprintLocated(
+            final List<R> readings, final P position) {
         super(readings);
 
         if (position == null) {
@@ -60,19 +63,21 @@ public class RangingFingerprintLocated<S extends RadioSource, R extends RangingR
 
     /**
      * Constructor.
-     * @param readings non-located ranging readings defining the fingerprint.
-     * @param position position where readings were made.
+     *
+     * @param readings           non-located ranging readings defining the fingerprint.
+     * @param position           position where readings were made.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either readings or position are null, or
-     * covariance has invalid size.
+     *                                  covariance has invalid size.
      */
-    public RangingFingerprintLocated(List<R> readings, P position,
-            Matrix positionCovariance) {
+    public RangingFingerprintLocated(
+            final List<R> readings, final P position,
+            final Matrix positionCovariance) {
         this(readings, position);
 
         if (positionCovariance != null) {
-            int dims = position.getDimensions();
+            final int dims = position.getDimensions();
             if (positionCovariance.getRows() != dims ||
                     positionCovariance.getColumns() != dims) {
                 throw new IllegalArgumentException();
@@ -90,6 +95,7 @@ public class RangingFingerprintLocated<S extends RadioSource, R extends RangingR
 
     /**
      * Gets position where fingerprint readings were made.
+     *
      * @return position where fingerprint readings were made.
      */
     public P getPosition() {
@@ -98,6 +104,7 @@ public class RangingFingerprintLocated<S extends RadioSource, R extends RangingR
 
     /**
      * Gets covariance of inhomogeneous coordinates of current position (if available).
+     *
      * @return covariance of position or null.
      */
     public Matrix getPositionCovariance() {

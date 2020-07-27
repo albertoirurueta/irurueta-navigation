@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * Contains RSSI readings from several radio sources for an unknown location to be
  * determined.
+ *
  * @param <R> a {@link RssiReading} type.
  * @param <S> a {@link RadioSource} type.
  */
@@ -30,44 +31,48 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
     /**
      * Constructor.
      */
-    public RssiFingerprint() { }
+    public RssiFingerprint() {
+    }
 
     /**
      * Constructor.
+     *
      * @param readings non-located RSSI readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public RssiFingerprint(List<R> readings) {
+    public RssiFingerprint(final List<R> readings) {
         super(readings);
     }
 
     /**
      * Gets euclidean distance of signal readings from another fingerprint.
+     *
      * @param otherFingerprint other fingerprint to compare.
      * @return euclidean distance of signal readings from another fingerprint.
      */
-    public double distanceTo(RssiFingerprint<S, R> otherFingerprint) {
+    public double distanceTo(final RssiFingerprint<S, R> otherFingerprint) {
         return Math.sqrt(sqrDistanceTo(otherFingerprint));
     }
 
     /**
      * Gets squared euclidean distance of signal readings from another fingerprint.
+     *
      * @param otherFingerprint other fingerprint to compare.
      * @return squared euclidean distance of signal readings from another
      * fingerprint.
      */
     @SuppressWarnings("Duplicates")
-    public double sqrDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
+    public double sqrDistanceTo(final RssiFingerprint<S, R> otherFingerprint) {
         if (otherFingerprint == null) {
             return Double.MAX_VALUE;
         }
 
-        List<R> otherReadings = otherFingerprint.getReadings();
+        final List<R> otherReadings = otherFingerprint.getReadings();
         int numAccessPoints = 0;
         double result = 0.0;
         double diff;
-        for (R reading : mReadings) {
-            for (R otherReading : otherReadings) {
+        for (final R reading : mReadings) {
+            for (final R otherReading : otherReadings) {
                 if (reading.hasSameSource(otherReading)) {
                     diff = reading.getRssi() - otherReading.getRssi();
                     result += diff * diff;
@@ -86,6 +91,7 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
     /**
      * Gets average RSSI (received signal strength indicator) of all readings contained in this fingerprint
      * expressed in dB's.
+     *
      * @return average RSSI of all readings.
      */
     public double getMeanRssi() {
@@ -94,8 +100,8 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
         }
 
         double result = 0.0;
-        for (R reading : mReadings) {
-            result += reading.getRssi() / (double)mReadings.size();
+        for (final R reading : mReadings) {
+            result += reading.getRssi() / (double) mReadings.size();
         }
 
         return result;
@@ -103,10 +109,11 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
 
     /**
      * Gets euclidean distance of signal readings from another fingerprint.
+     *
      * @param otherFingerprint other fingerprint to compare.
      * @return euclidean distance of signal readings from another fingerprint.
      */
-    public double noMeanDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
+    public double noMeanDistanceTo(final RssiFingerprint<S, R> otherFingerprint) {
         return Math.sqrt(noMeanSqrDistanceTo(otherFingerprint));
     }
 
@@ -114,22 +121,23 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
      * Gets squared euclidean distance of signal readings with mean RSSI removed from another fingerprint.
      * Mean RSSI's are taken into account so that bias effects introduced by different device's hardware is
      * partially removed.
+     *
      * @param otherFingerprint other fingerprint to compare.
      * @return squared euclidean distance of signal readings from another
      * fingerprint with average RSSI's removed.
      */
     @SuppressWarnings("Duplicates")
-    public double noMeanSqrDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
+    public double noMeanSqrDistanceTo(final RssiFingerprint<S, R> otherFingerprint) {
         if (otherFingerprint == null) {
             return Double.MAX_VALUE;
         }
 
-        List<R> otherReadings = otherFingerprint.getReadings();
+        final List<R> otherReadings = otherFingerprint.getReadings();
         int numAccessPoints = 0;
         double avgRssiThis = 0.0;
         double avgRssiOther = 0.0;
-        for (R reading : mReadings) {
-            for (R otherReading : otherReadings) {
+        for (final R reading : mReadings) {
+            for (final R otherReading : otherReadings) {
                 if (reading.hasSameSource(otherReading)) {
                     avgRssiThis += reading.getRssi();
                     avgRssiOther += otherReading.getRssi();
@@ -150,8 +158,8 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
 
         double result = 0.0;
         double diff;
-        for (R reading : mReadings) {
-            for (R otherReading : otherReadings) {
+        for (final R reading : mReadings) {
+            for (final R otherReading : otherReadings) {
                 if (reading.hasSameSource(otherReading)) {
                     diff = (reading.getRssi() - avgRssiThis) -
                             (otherReading.getRssi() - avgRssiOther);

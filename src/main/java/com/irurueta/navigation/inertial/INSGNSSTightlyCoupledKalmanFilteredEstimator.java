@@ -50,7 +50,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimator {
     /**
      * Internal estimator to compute least squares solution for GNSS measurements.
      */
-    private GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator
+    private final GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator
             = new GNSSLeastSquaresPositionAndVelocityEstimator();
 
     /**
@@ -1387,7 +1387,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimator {
         }
 
         final List<GNSSMeasurement> result = new ArrayList<>();
-        for (GNSSMeasurement measurement : mMeasurements) {
+        for (final GNSSMeasurement measurement : mMeasurements) {
             result.add(new GNSSMeasurement(measurement));
         }
         return result;
@@ -1638,7 +1638,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimator {
                 mListener.onUpdateGNSSMeasurementsEnd(this);
             }
 
-        } catch (GNSSException e) {
+        } catch (final GNSSException e) {
             throw new INSGNSSException(e);
         } finally {
             mRunning = false;

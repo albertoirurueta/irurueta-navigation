@@ -1525,7 +1525,8 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
      */
     @Override
     public void setMeasurements(
-            final Collection<? extends FrameBodyMagneticFluxDensity> measurements) throws LockedException {
+            final Collection<? extends FrameBodyMagneticFluxDensity> measurements)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1663,7 +1664,7 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
      *                                  length 3.
      */
     @Override
-    public void getHardIron(double[] result) {
+    public void getHardIron(final double[] result) {
         if (result.length != BodyMagneticFluxDensity.COMPONENTS) {
             throw new IllegalArgumentException();
         }
@@ -1682,7 +1683,7 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
      *                                  length 3.
      */
     @Override
-    public void setHardIron(double[] hardIron) throws LockedException {
+    public void setHardIron(final double[] hardIron) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1716,11 +1717,12 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
 
     /**
      * Gets known hard-iron bias as a column matrix.
+     *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     @Override
-    public void getHardIronMatrix(Matrix result) {
+    public void getHardIronMatrix(final Matrix result) {
         if (result.getRows() != BodyMagneticFluxDensity.COMPONENTS
                 || result.getColumns() != 1) {
             throw new IllegalArgumentException();
@@ -1732,12 +1734,13 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
 
     /**
      * Sets known hard-iron bias.
+     *
      * @param hardIron magnetometer hard-iron bias to be set.
-     * @throws LockedException if calibrator is currently running.
+     * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     @Override
-    public void setHardIron(Matrix hardIron) throws LockedException {
+    public void setHardIron(final Matrix hardIron) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1946,7 +1949,7 @@ public class KnownHardIronAndFrameMagnetometerLinearLeastSquaresCalibrator imple
      * for the accelerometer, gyroscope and magnetometer.
      *
      * @throws AlgebraException if there are numerical errors.
-     * @throws IOException if world magnetic model cannot be loaded.
+     * @throws IOException      if world magnetic model cannot be loaded.
      */
     private void calibrateCommonAxis() throws AlgebraException, IOException {
         // The magnetometer model is:

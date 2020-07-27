@@ -53,7 +53,8 @@ public class LocationUtils {
      * Constructor.
      * Prevents public instantiation.
      */
-    LocationUtils() { }
+    LocationUtils() {
+    }
 
     /**
      * Converts a coordinate to a String representation. The outputType
@@ -62,15 +63,16 @@ public class LocationUtils {
      * This conversion is performed in a method that is dependent on the
      * default locale, and so is not guaranteed to round-trip with
      * {@link #convert(String)}.
+     *
      * @param coordinate coordinate to be converted.
      * @param outputType output format.
      * @return converted coordinate.
      * @throws IllegalArgumentException if coordinate is less than
-     * -180.0, greater than 180.0, or is not a number.
+     *                                  -180.0, greater than 180.0, or is not a number.
      * @throws IllegalArgumentException if outputType is not one of
-     * FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
+     *                                  FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
      */
-    public static String convert(double coordinate, int outputType) {
+    public static String convert(double coordinate, final int outputType) {
         if (coordinate < -180.0 || coordinate > 180.0 ||
                 Double.isNaN(coordinate)) {
             throw new IllegalArgumentException();
@@ -81,7 +83,7 @@ public class LocationUtils {
             throw new IllegalArgumentException();
         }
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         // Handle negative values
         if (coordinate < 0) {
@@ -89,15 +91,15 @@ public class LocationUtils {
             coordinate = -coordinate;
         }
 
-        DecimalFormat df = new DecimalFormat("###.#####");
+        final DecimalFormat df = new DecimalFormat("###.#####");
         if (outputType == FORMAT_MINUTES || outputType == FORMAT_SECONDS) {
-            int degrees = (int) Math.floor(coordinate);
+            final int degrees = (int) Math.floor(coordinate);
             sb.append(degrees);
             sb.append(':');
             coordinate -= degrees;
             coordinate *= 60.0;
             if (outputType == FORMAT_SECONDS) {
-                int minutes = (int) Math.floor(coordinate);
+                final int minutes = (int) Math.floor(coordinate);
                 sb.append(minutes);
                 sb.append(':');
                 coordinate -= minutes;
@@ -114,11 +116,12 @@ public class LocationUtils {
      * double. This conversion is performed in a locale agnostic
      * method, and so is not guaranteed to round-trip with
      * {@link #convert(double, int)}.
+     *
      * @param coordinate coordinate to be parsed.
      * @return parsed value.
-     * @throws NullPointerException if coordinate is null
+     * @throws NullPointerException     if coordinate is null
      * @throws IllegalArgumentException if the coordinate is not
-     * in one of the valid formats.
+     *                                  in one of the valid formats.
      */
     public static double convert(String coordinate) {
         // IllegalArgumentException if bad syntax
@@ -132,35 +135,35 @@ public class LocationUtils {
             negative = true;
         }
 
-        StringTokenizer st = new StringTokenizer(coordinate, ":");
-        int tokens = st.countTokens();
+        final StringTokenizer st = new StringTokenizer(coordinate, ":");
+        final int tokens = st.countTokens();
         if (tokens < 1) {
             throw new IllegalArgumentException();
         }
         try {
-            String degrees = st.nextToken();
+            final String degrees = st.nextToken();
             double val;
             if (tokens == 1) {
                 val = Double.parseDouble(degrees);
                 return negative ? -val : val;
             }
 
-            String minutes = st.nextToken();
-            int deg = Integer.parseInt(degrees);
+            final String minutes = st.nextToken();
+            final int deg = Integer.parseInt(degrees);
             double min;
             double sec = 0.0;
             boolean secPresent = false;
 
             if (st.hasMoreTokens()) {
                 min = Integer.parseInt(minutes);
-                String seconds = st.nextToken();
+                final String seconds = st.nextToken();
                 sec = Double.parseDouble(seconds);
                 secPresent = true;
             } else {
                 min = Double.parseDouble(minutes);
             }
 
-            boolean isNegative180 = negative && (deg == 180) &&
+            final boolean isNegative180 = negative && (deg == 180) &&
                     (min == 0) && (sec == 0);
 
             // deg must be in [0, 179] except for the case of -180 degrees
@@ -178,10 +181,10 @@ public class LocationUtils {
                 throw new IllegalArgumentException();
             }
 
-            val = deg*3600.0 + min*60.0 + sec;
+            val = deg * 3600.0 + min * 60.0 + sec;
             val /= 3600.0;
             return negative ? -val : val;
-        } catch (NumberFormatException nfe) {
+        } catch (final NumberFormatException nfe) {
             throw new IllegalArgumentException();
         }
     }
@@ -189,14 +192,17 @@ public class LocationUtils {
     /**
      * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
      * shortest path between them. Distance and bearing are defined using the WGS84 ellipsoid.
-     * @param startLatitude the starting latitude.
+     *
+     * @param startLatitude  the starting latitude.
      * @param startLongitude the starting longitude.
-     * @param endLatitude the ending latitude.
-     * @param endLongitude the ending longitude.
-     * @param results instance containing results.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @param results        instance containing results.
      */
-    public static void distanceAndBearing(double startLatitude, double startLongitude,
-            double endLatitude, double endLongitude, BearingDistance results) {
+    public static void distanceAndBearing(
+            final double startLatitude, final double startLongitude,
+            final double endLatitude, final double endLongitude,
+            final BearingDistance results) {
         //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
         results.mStartLatitude = data.getLat1();
@@ -211,15 +217,17 @@ public class LocationUtils {
     /**
      * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
      * shortest path between them. Distance and bearing are defined using the WGS84 ellipsoid.
-     * @param startLatitude the starting latitude.
+     *
+     * @param startLatitude  the starting latitude.
      * @param startLongitude the starting longitude.
-     * @param endLatitude the ending latitude.
-     * @param endLongitude the ending longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
      * @return bearing and distance results.
      */
-    public static BearingDistance distanceAndBearing(double startLatitude, double startLongitude, double endLatitude,
-            double endLongitude) {
-        BearingDistance results = new BearingDistance();
+    public static BearingDistance distanceAndBearing(
+            final double startLatitude, final double startLongitude,
+            final double endLatitude, final double endLongitude) {
+        final BearingDistance results = new BearingDistance();
         distanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, results);
         return results;
     }
@@ -227,21 +235,23 @@ public class LocationUtils {
     /**
      * Computes the approximate distance in meters between two locations, and the initial and final bearings of the
      * shortest path between them. Distance and bearing are defined using the WGS84 ellipsoid.
-     * @param startLatitude the starting latitude.
+     *
+     * @param startLatitude  the starting latitude.
      * @param startLongitude the starting longitude.
-     * @param endLatitude the ending latitude.
-     * @param endLongitude the ending longitude.
-     * @param results array containing results. First element will contain distance. Second element will contain
-     *                initial bearing (optional). Third element will contain ending bearing (optional).
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @param results        array containing results. First element will contain distance. Second element will contain
+     *                       initial bearing (optional). Third element will contain ending bearing (optional).
      * @throws IllegalArgumentException if results does not have at least 1 element.
      */
-    public static void distanceAndBearing(double startLatitude, double startLongitude, double endLatitude,
-            double endLongitude, double[] results) {
+    public static void distanceAndBearing(
+            final double startLatitude, final double startLongitude,
+            final double endLatitude, final double endLongitude, final double[] results) {
         if (results.length == 0) {
             throw new IllegalArgumentException();
         }
         //noinspection all
-        GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
+        final GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
         results[0] = data.getS12();
         if (results.length > 1) {
             results[1] = data.getAzi1();
@@ -253,43 +263,49 @@ public class LocationUtils {
 
     /**
      * Computes the approximate distance in meters between two locations.
-     * @param startLatitude the starting latitude.
+     *
+     * @param startLatitude  the starting latitude.
      * @param startLongitude the starting longitude.
-     * @param endLatitude the ending latitude.
-     * @param endLongitude the ending longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
      * @return distance in meters between two locations.
      */
-    public static double distanceBetweenMeters(double startLatitude, double startLongitude, double endLatitude,
-                                         double endLongitude) {
+    public static double distanceBetweenMeters(
+            final double startLatitude, final double startLongitude, final double endLatitude,
+            final double endLongitude) {
         //noinspection all
         return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).getS12();
     }
 
     /**
      * Computes the approximate distance between two locations.
-     * @param startLatitude the starting latitude.
+     *
+     * @param startLatitude  the starting latitude.
      * @param startLongitude the starting longitude.
-     * @param endLatitude the ending latitude.
-     * @param endLongitude the ending longitude.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
      * @return distance between two locations.
      */
-    public static Distance distanceBetween(double startLatitude, double startLongitude, double endLatitude,
-                                           double endLongitude) {
+    public static Distance distanceBetween(
+            final double startLatitude, final double startLongitude,
+            final double endLatitude, final double endLongitude) {
         return new Distance(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude),
                 DistanceUnit.METER);
     }
 
     /**
      * Computes the approximate distance between two locations.
-     * @param startLatitude the starting latitude.
+     *
+     * @param startLatitude  the starting latitude.
      * @param startLongitude the starting longitude.
-     * @param endLatitude the ending latitude.
-     * @param endLongitude the ending longitude.
-     * @param result instance where distance between two locations is stored.
+     * @param endLatitude    the ending latitude.
+     * @param endLongitude   the ending longitude.
+     * @param result         instance where distance between two locations is stored.
      * @return provided result instance.
      */
-    public static Distance distanceBetween(double startLatitude, double startLongitude, double endLatitude,
-                                           double endLongitude, Distance result) {
+    public static Distance distanceBetween(
+            final double startLatitude, final double startLongitude,
+            final double endLatitude, final double endLongitude, final Distance result) {
         result.setValue(distanceBetweenMeters(startLatitude, startLongitude, endLatitude, endLongitude));
         result.setUnit(DistanceUnit.METER);
         return result;
@@ -337,6 +353,7 @@ public class LocationUtils {
 
         /**
          * Gets starting latitude expressed in degrees.
+         *
          * @return starting latitude (degrees).
          */
         public double getStartLatitude() {
@@ -345,6 +362,7 @@ public class LocationUtils {
 
         /**
          * Gets starting longitude expressed in degrees.
+         *
          * @return starting longitude (degrees).
          */
         public double getStartLongitude() {
@@ -353,6 +371,7 @@ public class LocationUtils {
 
         /**
          * Gets ending latitude expressed in degrees.
+         *
          * @return ending latitude (degrees).
          */
         public double getEndLatitude() {
@@ -361,6 +380,7 @@ public class LocationUtils {
 
         /**
          * Gets ending longitude expressed in degrees.
+         *
          * @return ending longitude (degrees).
          */
         public double getEndLongitude() {
@@ -369,6 +389,7 @@ public class LocationUtils {
 
         /**
          * Gets distance expressed in meters.
+         *
          * @return distance (meters).
          */
         public double getDistanceMeters() {
@@ -377,6 +398,7 @@ public class LocationUtils {
 
         /**
          * Gets distance.
+         *
          * @return distance.
          */
         public Distance getDistance() {
@@ -385,10 +407,11 @@ public class LocationUtils {
 
         /**
          * Gets distance.
+         *
          * @param result instance where result value is stored in meters.
          * @return provided distance instance.
          */
-        public Distance getDistance(Distance result) {
+        public Distance getDistance(final Distance result) {
             result.setValue(mDistance);
             result.setUnit(DistanceUnit.METER);
             return result;
@@ -396,6 +419,7 @@ public class LocationUtils {
 
         /**
          * Gets initial bearing/azimuth expressed in degrees.
+         *
          * @return initial bearing/azimuth (degrees).
          */
         public double getInitialBearing() {
@@ -404,6 +428,7 @@ public class LocationUtils {
 
         /**
          * Gets final bearing/azimuth expressed in degrees.
+         *
          * @return final bearing/azimuth (degrees).
          */
         public double getFinalBearing() {

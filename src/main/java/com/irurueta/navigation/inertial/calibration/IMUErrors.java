@@ -1289,7 +1289,7 @@ public class IMUErrors implements Serializable, Cloneable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IMUErrors imuErrors = (IMUErrors) o;
+        final IMUErrors imuErrors = (IMUErrors) o;
         return Double.compare(imuErrors.mAccelerometerNoiseRootPSD, mAccelerometerNoiseRootPSD) == 0 &&
                 Double.compare(imuErrors.mGyroNoiseRootPSD, mGyroNoiseRootPSD) == 0 &&
                 Double.compare(imuErrors.mAccelerometerQuantizationLevel, mAccelerometerQuantizationLevel) == 0 &&

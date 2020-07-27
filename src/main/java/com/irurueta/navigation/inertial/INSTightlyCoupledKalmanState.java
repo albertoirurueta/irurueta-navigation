@@ -1740,7 +1740,8 @@ public class INSTightlyCoupledKalmanState implements Serializable, Cloneable {
      * @param y y coordinate of estimated ECEF user position.
      * @param z z coordinate of estimated ECEF user position.
      */
-    public void setPositionCoordinates(final Distance x, final Distance y, final Distance z) {
+    public void setPositionCoordinates(
+            final Distance x, final Distance y, final Distance z) {
         setDistanceX(x);
         setDistanceY(y);
         setDistanceZ(z);
@@ -1848,7 +1849,7 @@ public class INSTightlyCoupledKalmanState implements Serializable, Cloneable {
      * @param result instance where body to ECEF frame will be stored.
      * @return true if result was updated, false otherwise.
      */
-    public boolean getFrame(ECEFFrame result) {
+    public boolean getFrame(final ECEFFrame result) {
         if (mBodyToEcefCoordinateTransformationMatrix != null) {
             try {
                 result.setCoordinateTransformation(getC());
@@ -2312,14 +2313,14 @@ public class INSTightlyCoupledKalmanState implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        INSTightlyCoupledKalmanState other = (INSTightlyCoupledKalmanState) obj;
+        final INSTightlyCoupledKalmanState other = (INSTightlyCoupledKalmanState) obj;
         return equals(other);
     }
 

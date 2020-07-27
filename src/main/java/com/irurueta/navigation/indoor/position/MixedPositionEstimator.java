@@ -45,7 +45,7 @@ public abstract class MixedPositionEstimator<P extends Point<?>> extends Positio
      *
      * @param listener listener in charge of handling events.
      */
-    public MixedPositionEstimator(MixedPositionEstimatorListener<P> listener) {
+    public MixedPositionEstimator(final MixedPositionEstimatorListener<P> listener) {
         super(listener);
     }
 }

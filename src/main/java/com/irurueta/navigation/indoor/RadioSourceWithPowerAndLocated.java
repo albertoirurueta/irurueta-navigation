@@ -20,7 +20,9 @@ import com.irurueta.geometry.Point;
 /**
  * Interface defining any radio source (e.g. WiFi access point or
  * Bluetooth beacon) whose transmitted power and location are known.
+ *
  * @param <P> a {@link Point} type.
  */
 public interface RadioSourceWithPowerAndLocated<P extends Point<?>>
-        extends RadioSourceWithPower, RadioSourceLocated<P> { }
+        extends RadioSourceWithPower, RadioSourceLocated<P> {
+}

@@ -84,298 +84,325 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
     public PROSACRobustLateration3DSolver(
-            RobustLaterationSolverListener<Point3D> listener) {
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length of their length is smaller than required (4 points).
+     *                                  don't have the same length of their length is smaller than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(Point3D[] positions, double[] distances) {
+    public PROSACRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                          double[] distanceStandardDeviations) {
+    public PROSACRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation stats,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation stats,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                          double[] distanceStandardDeviations,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation stats,
-     *                 ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation stats,
+     *                  ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (4 points).
+     *                                  don't have the same length or their length is smaller than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(Point3D[] positions, double[] distances,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length or spheres array
-     * is less than required (4 points).
+     *                                  is less than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(Sphere[] spheres) {
+    public PROSACRobustLateration3DSolver(final Sphere[] spheres) {
         super(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
-     * than required (4 points) or don't have the same length.
+     *                                  than required (4 points) or don't have the same length.
      */
-    public PROSACRobustLateration3DSolver(Sphere[] spheres,
-                                          double[] distanceStandardDeviations) {
+    public PROSACRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events such as when estimation starts,
      *                 ends or its progress significantly changes.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
-     * is less than required (4 points).
+     *                                  is less than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(Sphere[] spheres,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final Sphere[] spheres, final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, listener);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if spheres is null, length of spheres array is less
-     * than required (4 points) or don't have the same length.
+     *                                  than required (4 points) or don't have the same length.
      */
-    public PROSACRobustLateration3DSolver(Sphere[] spheres,
-                                          double[] distanceStandardDeviations,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final Sphere[] spheres, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
+     *                      sample. The larger the score value the better
      *                      the quality of the sample.
      * @throws IllegalArgumentException if quality scores is null, length
-     * of quality scores is less than required minimum (4 samples).
+     *                                  of quality scores is less than required minimum (4 samples).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores) {
+    public PROSACRobustLateration3DSolver(final double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
+     *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param listener listener to be notified of events such as when estimation
-     *                 starts, ends or its progress significantly changes.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if quality scores is null, length
-     * of quality scores is less than required minimum (4 samples).
+     *                                  of quality scores is less than required minimum (4 samples).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
+     *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node to be
+     *                      estimated.
      * @throws IllegalArgumentException if either positions, distances or quality
-     * scores are null, don't have the same length of their length is smaller
-     * than required (4 points).
+     *                                  scores are null, don't have the same length of their length is smaller
+     *                                  than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Point3D[] positions, double[] distances) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances) {
         super(positions, distances);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances, quality scores or
-     * standard deviations are null, don't have the same length or their length is
-     * smaller than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is
+     *                                  smaller than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Point3D[] positions, double[] distances,
-                                          double[] distanceStandardDeviations) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances, final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length is smaller
-     * than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their length is smaller
+     *                                  than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Point3D[] positions, double[] distances,
-                                          double[] distanceStandardDeviations,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
+     *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when
-     *                 estimation starts, ends or its progress significantly changes.
+     * @param positions     known positions of static nodes.
+     * @param distances     euclidean distances from static nodes to mobile node.
+     * @param listener      listener to be notified of events such as when
+     *                      estimation starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances,
-     * quality scores or standard deviations are null, don't have the same
-     * length or their length is smaller than required (4 points).
+     *                                  quality scores or standard deviations are null, don't have the same
+     *                                  length or their length is smaller than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Point3D[] positions, double[] distances,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Point3D[] positions,
+            final double[] distances, final RobustLaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
+     *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param spheres spheres defining positions and distances.
+     * @param spheres       spheres defining positions and distances.
      * @throws IllegalArgumentException if either spheres or quality scores
-     * are null don't have the same length or their length is less than
-     * required (4 points).
+     *                                  are null don't have the same length or their length is less than
+     *                                  required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Sphere[] spheres) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres) {
         super(spheres);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either spheres, quality scores or
-     * standard deviations are null, don't have the same length or their
-     * length is less than required (4 points).
+     *                                  standard deviations are null, don't have the same length or their
+     *                                  length is less than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Sphere[] spheres, double[] distanceStandardDeviations) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres,
+            final double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
+     *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param spheres spheres defining positions and distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param spheres       spheres defining positions and distances.
+     * @param listener      listener to be notified of events such as when estimation starts,
+     *                      ends or its progress significantly changes.
      * @throws IllegalArgumentException if either spheres or quality scores
-     * are null, don't have the same length or their length is less than
-     * required (4 points).
+     *                                  are null, don't have the same length or their length is less than
+     *                                  required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Sphere[] spheres,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param qualityScores              quality scores corresponding to each provided
+     *                                   sample. The larger the score value the better
+     *                                   the quality of the sample.
+     * @param spheres                    spheres defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either spheres, quality scores
-     * or standard deviations are null, don't have the same length or their
-     * length is less than required (4 points).
+     *                                  or standard deviations are null, don't have the same length or their
+     *                                  length is less than required (4 points).
      */
-    public PROSACRobustLateration3DSolver(double[] qualityScores,
-                                          Sphere[] spheres, double[] distanceStandardDeviations,
-                                          RobustLaterationSolverListener<Point3D> listener) {
+    public PROSACRobustLateration3DSolver(
+            final double[] qualityScores, final Sphere[] spheres,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -384,6 +411,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -394,11 +422,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -412,6 +441,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * Returns quality scores corresponding to each pair of
      * positions and distances (i.e. sample).
      * The larger the score value the better the quality of the sample.
+     *
      * @return quality scores corresponding to each sample.
      */
     @Override
@@ -423,15 +453,16 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * Sets quality scores corresponding to each pair of positions and
      * distances (i.e. sample).
      * The larger the score value the better the quality of the sample.
+     *
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than minimum required samples.
-     * @throws LockedException if robust solver is locked because an
-     * estimation is already in progress.
+     *                                  is smaller than minimum required samples.
+     * @throws LockedException          if robust solver is locked because an
+     *                                  estimation is already in progress.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -441,6 +472,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Indicates whether solver is ready to find a solution.
+     *
      * @return true if solver is ready, false otherwise.
      */
     @Override
@@ -451,6 +483,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Indicates whether inliers must be computed and kept.
+     *
      * @return true if inliers must be computed and kept, false if inliers
      * only need to be computed but not kept.
      */
@@ -460,11 +493,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Specifies whether inliers must be computed and kept.
+     *
      * @param computeAndKeepInliers true if inliers must be computed and kept,
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -474,6 +508,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Indicates whether residuals must be computed and kept.
+     *
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
@@ -483,11 +518,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Specifies whether residuals must be computed and kept.
+     *
      * @param computeAndKeepResiduals true if residuals must be computed and kept,
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -497,11 +533,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Solves the lateration problem.
+     *
      * @return estimated position.
-     * @throws LockedException if instance is busy solving the lateration problem.
-     * @throws NotReadyException is solver is not ready.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     * @throws NotReadyException        is solver is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public Point3D solve() throws LockedException, NotReadyException,
@@ -513,7 +550,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
             throw new NotReadyException();
         }
 
-        PROSACRobustEstimator<Point3D> innerEstimator =
+        final PROSACRobustEstimator<Point3D> innerEstimator =
                 new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<Point3D>() {
                     @Override
                     public double[] getQualityScores() {
@@ -536,12 +573,13 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices, List<Point3D> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<Point3D> solutions) {
                         solvePreliminarSolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(Point3D currentEstimation, int i) {
+                    public double computeResidual(final Point3D currentEstimation, int i) {
                         return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
                     }
 
@@ -551,38 +589,39 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
                     }
 
                     @Override
-                    public void onEstimateStart(RobustEstimator<Point3D> estimator) {
+                    public void onEstimateStart(final RobustEstimator<Point3D> estimator) {
+                    }
+
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<Point3D> estimator) {
+                    }
+
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<Point3D> estimator, final int iteration) {
                         if (mListener != null) {
-                            mListener.onSolveStart(PROSACRobustLateration3DSolver.this);
+                            mListener.onSolveNextIteration(
+                                    PROSACRobustLateration3DSolver.this, iteration);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(RobustEstimator<Point3D> estimator) {
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<Point3D> estimator, final float progress) {
                         if (mListener != null) {
-                            mListener.onSolveEnd(PROSACRobustLateration3DSolver.this);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Point3D> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(PROSACRobustLateration3DSolver.this,
-                                    iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Point3D> estimator, float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(PROSACRobustLateration3DSolver.this,
-                                    progress);
+                            mListener.onSolveProgressChange(
+                                    PROSACRobustLateration3DSolver.this, progress);
                         }
                     }
                 });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onSolveStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -593,10 +632,17 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
             innerEstimator.setProgressDelta(mProgressDelta);
             Point3D result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
-            return attemptRefine(result);
-        } catch (com.irurueta.numerical.LockedException e) {
+            result = attemptRefine(result);
+
+            if (mListener != null) {
+                mListener.onSolveEnd(this);
+            }
+
+            return result;
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;
@@ -605,6 +651,7 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override
@@ -616,11 +663,12 @@ public class PROSACRobustLateration3DSolver extends RobustLateration3DSolver {
      * Sets quality scores corresponding to each provided sample.
      * This method is used internally and does not check whether instance is
      * locked or not.
+     *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than 3 samples.
+     *                                  is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores) {
+    private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();

@@ -34,17 +34,17 @@ public class PositionEstimationException extends IndoorException {
      *
      * @param message message indicating the cause of the exception.
      */
-    public PositionEstimationException(String message) {
+    public PositionEstimationException(final String message) {
         super(message);
     }
 
     /**
      * Constructor with message and cause.
      *
-     * @param message   message describing the cause of the exception.
-     * @param cause     instance containing the cause of the exception.
+     * @param message message describing the cause of the exception.
+     * @param cause   instance containing the cause of the exception.
      */
-    public PositionEstimationException(String message, Throwable cause) {
+    public PositionEstimationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -53,7 +53,7 @@ public class PositionEstimationException extends IndoorException {
      *
      * @param cause instance containing the cause of the exception.
      */
-    public PositionEstimationException(Throwable cause) {
+    public PositionEstimationException(final Throwable cause) {
         super(cause);
     }
 }

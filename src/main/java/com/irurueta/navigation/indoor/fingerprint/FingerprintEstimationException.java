@@ -35,7 +35,7 @@ public class FingerprintEstimationException extends IndoorException {
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
-    public FingerprintEstimationException(String message) {
+    public FingerprintEstimationException(final String message) {
         super(message);
     }
 
@@ -44,7 +44,7 @@ public class FingerprintEstimationException extends IndoorException {
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public FingerprintEstimationException(String message, Throwable cause) {
+    public FingerprintEstimationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -52,7 +52,7 @@ public class FingerprintEstimationException extends IndoorException {
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
-    public FingerprintEstimationException(Throwable cause) {
+    public FingerprintEstimationException(final Throwable cause) {
         super(cause);
     }
 }

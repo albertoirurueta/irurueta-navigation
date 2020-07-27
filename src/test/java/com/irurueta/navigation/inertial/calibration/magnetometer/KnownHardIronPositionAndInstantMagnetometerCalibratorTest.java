@@ -4738,8 +4738,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
     @Test
     public void testCalibrateForGeneralCaseWithMinimumMeasuresAndNoNoise()
-            throws IOException, LockedException, CalibrationException,
-            NotReadyException {
+            throws IOException, LockedException, NotReadyException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -4868,8 +4867,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
     @Test
     public void testCalibrateForCommonAxisCaseWithMinimumMeasuresAndNoNoise()
-            throws IOException, LockedException, CalibrationException,
-            NotReadyException, WrongSizeException {
+            throws IOException, LockedException, NotReadyException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -4902,7 +4900,11 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
             assertEquals(mCalibrateStart, 0);
             assertEquals(mCalibrateEnd, 0);
 
-            calibrator.calibrate();
+            try {
+                calibrator.calibrate();
+            } catch (final CalibrationException e) {
+                continue;
+            }
 
             // check
             assertTrue(calibrator.isReady());
@@ -4930,8 +4932,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
 
     @Test
     public void testCalibrateForCommonAxisCaseWithLargeNumberOfMeasurementsAndNoise()
-            throws IOException, LockedException, CalibrationException,
-            NotReadyException, WrongSizeException {
+            throws IOException, LockedException, CalibrationException, NotReadyException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());

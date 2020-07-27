@@ -38,41 +38,48 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required points.
+     *                                  don't have the same length or their length is smaller than required points.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver(P[] positions, double[] distances) {
+    public HomogeneousLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver(LaterationSolverListener<P> listener) {
+    public HomogeneousLinearLeastSquaresLaterationSolver(
+            final LaterationSolverListener<P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either position or distances are null,
-     * don't have the same length or their length is smaller than required points.
+     *                                  don't have the same length or their length is smaller than required points.
      */
-    public HomogeneousLinearLeastSquaresLaterationSolver(P[] positions, double[] distances,
-                                                         LaterationSolverListener<P> listener) {
+    public HomogeneousLinearLeastSquaresLaterationSolver(
+            final P[] positions, final double[] distances,
+            final LaterationSolverListener<P> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Solves the lateration problem.
+     *
      * @throws LaterationException if lateration fails.
-     * @throws NotReadyException if solver is not ready.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws NotReadyException   if solver is not ready.
+     * @throws LockedException     if instance is busy solving the lateration problem.
      */
     @Override
     @SuppressWarnings("Duplicates")
@@ -232,43 +239,43 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
                 mListener.onSolveStart(this);
             }
 
-            int numberOfPositions = mPositions.length;
-            int numberOfPositionsMinus1 = numberOfPositions - 1;
-            int dims = getNumberOfDimensions();
+            final int numberOfPositions = mPositions.length;
+            final int numberOfPositionsMinus1 = numberOfPositions - 1;
+            final int dims = getNumberOfDimensions();
 
-            double referenceDistance = mDistances[0];
-            double sqrRefDistance = referenceDistance * referenceDistance;
-            P refPosition = mPositions[0];
+            final double referenceDistance = mDistances[0];
+            final double sqrRefDistance = referenceDistance * referenceDistance;
+            final P refPosition = mPositions[0];
 
             double sqrRefNorm = 0.0;
             for (int j = 0; j < dims; j++) {
-                double coord = refPosition.getInhomogeneousCoordinate(j);
+                final double coord = refPosition.getInhomogeneousCoordinate(j);
                 sqrRefNorm += coord * coord;
             }
 
-            Matrix a = new Matrix(numberOfPositionsMinus1, dims + 1);
+            final Matrix a = new Matrix(numberOfPositionsMinus1, dims + 1);
             for (int i = 1, i2 = 0; i < numberOfPositions; i++, i2++) {
 
                 double sqrNorm = 0.0;
                 for (int j = 0; j < dims; j++) {
-                    double refCoord = refPosition.getInhomogeneousCoordinate(j);
-                    double coord = mPositions[i].getInhomogeneousCoordinate(j);
+                    final double refCoord = refPosition.getInhomogeneousCoordinate(j);
+                    final double coord = mPositions[i].getInhomogeneousCoordinate(j);
 
                     a.setElementAt(i2, j, 2.0 * (refCoord - coord));
 
                     sqrNorm += coord * coord;
                 }
 
-                double distance = mDistances[i];
-                double sqrDistance = distance * distance;
+                final double distance = mDistances[i];
+                final double sqrDistance = distance * distance;
                 a.setElementAt(i2, dims, sqrRefDistance - sqrDistance +
                         sqrNorm - sqrRefNorm);
             }
 
-            SingularValueDecomposer decomponer = new SingularValueDecomposer(a);
+            final SingularValueDecomposer decomponer = new SingularValueDecomposer(a);
             decomponer.decompose();
 
-            int nullity = decomponer.getNullity();
+            final int nullity = decomponer.getNullity();
             if (nullity > 1) {
                 // linear system of equations is degenerate (does not have enough rank),
                 // probably because there are dependencies or repeated data between
@@ -276,11 +283,11 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
                 throw new LaterationException();
             }
 
-            Matrix v = decomponer.getV();
-            double[] homogeneousEstimatedPositionCoordinates = v.getSubmatrixAsArray(
+            final Matrix v = decomponer.getV();
+            final double[] homogeneousEstimatedPositionCoordinates = v.getSubmatrixAsArray(
                     0, dims, dims, dims);
 
-            double w = homogeneousEstimatedPositionCoordinates[dims];
+            final double w = homogeneousEstimatedPositionCoordinates[dims];
             mEstimatedPositionCoordinates = new double[dims];
             for (int j = 0; j < dims; j++) {
                 mEstimatedPositionCoordinates[j] =
@@ -290,7 +297,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
             if (mListener != null) {
                 mListener.onSolveEnd(this);
             }
-        } catch (AlgebraException e) {
+        } catch (final AlgebraException e) {
             throw new LaterationException(e);
         } finally {
             mLocked = false;
@@ -299,6 +306,7 @@ public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Po
 
     /**
      * Gets lateration solver type.
+     *
      * @return lateration solver type.
      */
     @Override

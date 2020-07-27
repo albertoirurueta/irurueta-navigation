@@ -36,60 +36,70 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (4 points).
+     *                                  length is smaller than required (4 points).
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(LaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(
+            final LaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events raised by this instance.
+     * @param listener  listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (4 points).
+     *                                  length is smaller than required (4 points).
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(Point3D[] positions, double[] distances,
-                                                           LaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(
+            final Point3D[] positions, final double[] distances,
+            final LaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 4.
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(Sphere[] spheres) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(final Sphere[] spheres) {
         super();
         internalSetSpheres(spheres);
     }
 
     /**
      * Constructor.
-     * @param spheres spheres defining positions and distances.
+     *
+     * @param spheres  spheres defining positions and distances.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 4.
      */
-    public HomogeneousLinearLeastSquaresLateration3DSolver(Sphere[] spheres,
-                                                           LaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresLateration3DSolver(
+            final Sphere[] spheres,
+            final LaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
 
     /**
      * Gets spheres defined by provided positions and distances.
+     *
      * @return spheres defined by provided positions and distances.
      */
     public Sphere[] getSpheres() {
@@ -97,7 +107,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
             return null;
         }
 
-        Sphere[] result = new Sphere[mPositions.length];
+        final Sphere[] result = new Sphere[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
             result[i] = new Sphere(mPositions[i], mDistances[i]);
@@ -107,13 +117,14 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
 
     /**
      * Sets spheres defining positions and euclidean distances.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
-     * is less than 2.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     *                                  is less than 2.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws LockedException {
-        if(isLocked()) {
+    public void setSpheres(final Sphere[] spheres) throws LockedException {
+        if (isLocked()) {
             throw new LockedException();
         }
         internalSetSpheres(spheres);
@@ -121,6 +132,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
 
     /**
      * Gets number of dimensions of provided points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -131,6 +143,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
     /**
      * Minimum required number of positions and distances.
      * At least 4 positions and distances will be required to linearly solve a 3D problem.
+     *
      * @return minimum required number of positions and distances.
      */
     @Override
@@ -140,6 +153,7 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
@@ -148,26 +162,27 @@ public class HomogeneousLinearLeastSquaresLateration3DSolver extends
             return null;
         }
 
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
         getEstimatedPosition(position);
         return position;
     }
 
     /**
      * Internally sets spheres defining positions and euclidean distances.
+     *
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
-     * is less than 4.
+     *                                  is less than 4.
      */
-    private void internalSetSpheres(Sphere[] spheres) {
+    private void internalSetSpheres(final Sphere[] spheres) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
+        final Point3D[] positions = new Point3D[spheres.length];
+        final double[] distances = new double[spheres.length];
         for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
+            final Sphere sphere = spheres[i];
             positions[i] = sphere.getCenter();
             distances[i] = sphere.getRadius();
         }

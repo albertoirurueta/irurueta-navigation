@@ -62,20 +62,20 @@ package com.irurueta.navigation.geodesic;
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PolygonArea {
 
-    private Geodesic mEarth;
+    private final Geodesic mEarth;
 
     //full ellipsoid area
-    private double mArea0;
+    private final double mArea0;
 
     //assume polyline (don't close and skip area)
-    private boolean mPolyline;
+    private final boolean mPolyline;
 
-    private int mMask;
+    private final int mMask;
     private int mNum;
     private int mCrossings;
 
     private Accumulator mAreasum;
-    private Accumulator mPerimetersum;
+    private final Accumulator mPerimetersum;
 
     private double mLat0;
     private double mLon0;
@@ -84,11 +84,12 @@ public class PolygonArea {
 
     /**
      * Constructor for PolygonArea.
-     * @param earth the Geodesic object to use for geodesic calculations.
+     *
+     * @param earth    the Geodesic object to use for geodesic calculations.
      * @param polyline if true that treat the points as defining a polyline instead of a polygon.
      */
     @SuppressWarnings("WeakerAccess")
-    public PolygonArea(Geodesic earth, boolean polyline) {
+    public PolygonArea(final Geodesic earth, final boolean polyline) {
         mEarth = earth;
         mArea0 = mEarth.getEllipsoidArea();
         mPolyline = polyline;
@@ -119,16 +120,17 @@ public class PolygonArea {
     /**
      * Add a point to the polygon or polyline.
      * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;].
+     *
      * @param lat the latitude of the point (degrees).
      * @param lon the latitude of the point (degrees).
      */
-    public void addPoint(double lat, double lon) {
+    public void addPoint(final double lat, double lon) {
         lon = GeoMath.angNormalize(lon);
         if (mNum == 0) {
             mLat0 = mLat1 = lat;
             mLon0 = mLon1 = lon;
         } else {
-            GeodesicData g = mEarth.inverse(mLat1, mLon1, lat, lon, mMask);
+            final GeodesicData g = mEarth.inverse(mLat1, mLon1, lat, lon, mMask);
             mPerimetersum.add(g.getS12());
             if (!mPolyline) {
                 mAreasum.add(g.getAreaS12());
@@ -144,13 +146,14 @@ public class PolygonArea {
      * Add an edge to the polygon or polyline.
      * This does nothing if no points have been added yet. Use PolygonArea.getCurrentPoint to
      * determine the position of the new vertex.
+     *
      * @param azi azimuth at current point (degrees).
-     * @param s distance from current point to next point (meters).
+     * @param s   distance from current point to next point (meters).
      */
-    public void addEdge(double azi, double s) {
+    public void addEdge(final double azi, final double s) {
         //do nothing if mNum is zero
         if (mNum > 0) {
-            GeodesicData g = mEarth.direct(mLat1, mLon1, azi, s, mMask);
+            final GeodesicData g = mEarth.direct(mLat1, mLon1, azi, s, mMask);
             mPerimetersum.add(g.getS12());
             if (!mPolyline) {
                 mAreasum.add(g.getAreaS12());
@@ -165,7 +168,8 @@ public class PolygonArea {
     /**
      * Return the results so far.
      * Counter-clockwise traversal counts as a positive area.
-     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
+     *
+     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where
      * <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter of
      * the polygon or the length of the polyline (meters), and <i>area</i> is the
      * area of the polygon (meters<sup>2</sup>) or Double.NaN of <i>polyline</i>
@@ -178,17 +182,18 @@ public class PolygonArea {
     /**
      * Return the results so far.
      * More points can be added to the polygon after this call.
+     *
      * @param reverse if true then clockwise (instead of counter-clockwise) traversal counts as
      *                a positive area.
-     * @param sign if true then return a signed result for the area if the polygon is traversed
-     *             in the "wrong" direction instead of returning the area for the rest of the
-     *             earth.
-     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
+     * @param sign    if true then return a signed result for the area if the polygon is traversed
+     *                in the "wrong" direction instead of returning the area for the rest of the
+     *                earth.
+     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where
      * <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter of the polygon
      * or the length of the polyline (meters), and <i>area</i> is the area of the polygon
      * (meters<sup>2</sup>) or Double.NaN of <i>polyline</i> is true in the constructor.
      */
-    public PolygonResult compute(boolean reverse, boolean sign) {
+    public PolygonResult compute(final boolean reverse, final boolean sign) {
         if (mNum < 2) {
             return new PolygonResult(mNum, 0, mPolyline ? Double.NaN : 0);
         }
@@ -196,10 +201,10 @@ public class PolygonArea {
             return new PolygonResult(mNum, mPerimetersum.getSum(), Double.NaN);
         }
 
-        GeodesicData g = mEarth.inverse(mLat1, mLon1, mLat0, mLon0, mMask);
-        Accumulator tempsum = new Accumulator(mAreasum);
+        final GeodesicData g = mEarth.inverse(mLat1, mLon1, mLat0, mLon0, mMask);
+        final Accumulator tempsum = new Accumulator(mAreasum);
         tempsum.add(g.getAreaS12());
-        int crossings = mCrossings + transit(mLon1, mLon0);
+        final int crossings = mCrossings + transit(mLon1, mLon0);
         if ((crossings & 1) != 0) {
             tempsum.add((tempsum.getSum() < 0 ? 1 : -1) * mArea0 / 2);
         }
@@ -211,9 +216,9 @@ public class PolygonArea {
 
         //if sign put area in (-rea0/2, area0/2], else put area in [0, area0)
         if (sign) {
-            if (tempsum.getSum() > mArea0/2) {
+            if (tempsum.getSum() > mArea0 / 2) {
                 tempsum.add(-mArea0);
-            } else if (tempsum.getSum() <= -mArea0/2) {
+            } else if (tempsum.getSum() <= -mArea0 / 2) {
                 tempsum.add(+mArea0);
             }
         } else {
@@ -233,19 +238,21 @@ public class PolygonArea {
      * arithmetic is used to accumulate the data for the test point; thus the area and perimeter
      * returned are less accurate than if addPoint and compute are used.
      * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;].
-     * @param lat the latitude of the test point (degrees).
-     * @param lon the longitude of the test point (degrees).
+     *
+     * @param lat     the latitude of the test point (degrees).
+     * @param lon     the longitude of the test point (degrees).
      * @param reverse if true then clockwise (instead of counter-clockwise) traversal counts as
      *                a positive area.
-     * @param sign if true then return a signed result for the area if the polygon is traversed
-     *             in the "wrong" direction instead of returning the area for the rest of the
-     *             earth.
-     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where <i>num</i> is
+     * @param sign    if true then return a signed result for the area if the polygon is traversed
+     *                in the "wrong" direction instead of returning the area for the rest of the
+     *                earth.
+     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where <i>num</i> is
      * the number of vertices, <i>perimeter</i> is the perimeter of the polygon or the length
      * of the polyline (meters), and <i>area</i> is the area of the polygon (meters<sup>2</sup>)
      * or Double.NaN of <i>polyline</i> is true in the constructor.
      */
-    public PolygonResult testPoint(double lat, double lon, boolean reverse, boolean sign) {
+    public PolygonResult testPoint(
+            final double lat, final double lon, final boolean reverse, final boolean sign) {
         if (mNum == 0) {
             return new PolygonResult(1, 0, mPolyline ? Double.NaN : 0);
         }
@@ -253,9 +260,9 @@ public class PolygonArea {
         double perimeter = mPerimetersum.getSum();
         double tempsum = mPolyline ? 0 : mAreasum.getSum();
         int crossings = mCrossings;
-        int num = mNum + 1;
+        final int num = mNum + 1;
         for (int i = 0; i < (mPolyline ? 1 : 2); ++i) {
-            GeodesicData g = mEarth.inverse(i == 0 ? mLat1 : lat,
+            final GeodesicData g = mEarth.inverse(i == 0 ? mLat1 : lat,
                     i == 0 ? mLon1 : lon,
                     i != 0 ? mLat0 : lat,
                     i != 0 ? mLon0 : lon, mMask);
@@ -281,9 +288,9 @@ public class PolygonArea {
 
         //if sign put area in (-area0/2, area0/2], else put area in [0, area0)
         if (sign) {
-            if (tempsum > mArea0/2) {
+            if (tempsum > mArea0 / 2) {
                 tempsum -= mArea0;
-            } else if (tempsum <= -mArea0/2) {
+            } else if (tempsum <= -mArea0 / 2) {
                 tempsum += mArea0;
             }
         } else {
@@ -302,24 +309,26 @@ public class PolygonArea {
      * This lets you report a running result for the perimeter and area as the user moves the mouse
      * cursor. Ordinary floating point arithmetic is used to accumulate the data for the test point;
      * thus the area and perimeter returned are less accurate than if addPoint and compute are used.
-     * @param azi azimuth at current point (degrees).
-     * @param s distance from current point to final test point (meters).
+     *
+     * @param azi     azimuth at current point (degrees).
+     * @param s       distance from current point to final test point (meters).
      * @param reverse if true then clockwise (instead of counter-clockwise) traversal counts as a
      *                positive area.
-     * @param sign if true then return a signed result for the area if the polygon is traversed in
-     *             the "wrong" direction instead of returning the area for the rest of the earth.
-     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where <i>num</i> is the
+     * @param sign    if true then return a signed result for the area if the polygon is traversed in
+     *                the "wrong" direction instead of returning the area for the rest of the earth.
+     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where <i>num</i> is the
      * number of vertices, <i>perimeter</i> is the perimeter of the polygon or the length of the
      * polyline (meters), and <i>area</i> is the area of the polygon (meters<sup>2</sup>) or
      * Double.NaN of <i>polyline</i> is true in the constructor.
      */
-    public PolygonResult testEdge(double azi, double s, boolean reverse, boolean sign) {
+    public PolygonResult testEdge(
+            final double azi, final double s, final boolean reverse, final boolean sign) {
         //we don't have a starting point!
         if (mNum == 0) {
             return new PolygonResult(0, Double.NaN, Double.NaN);
         }
 
-        int num = mNum + 1;
+        final int num = mNum + 1;
         double perimeter = mPerimetersum.getSum() + s;
         if (mPolyline) {
             return new PolygonResult(num, perimeter, Double.NaN);
@@ -337,7 +346,7 @@ public class PolygonArea {
         crossings += transit(g.getLon2(), mLon0);
 
         if ((crossings & 1) != 0) {
-            tempsum += (tempsum < 0 ? 1 : -1) * mArea0/2;
+            tempsum += (tempsum < 0 ? 1 : -1) * mArea0 / 2;
         }
 
         //area is with the clockwise sense. If !reverse convert to counter-clockwise convention.
@@ -347,9 +356,9 @@ public class PolygonArea {
 
         //if sign put area in (-area0/2, area0/2], else put area in [0, area0)
         if (sign) {
-            if (tempsum > mArea0/2) {
+            if (tempsum > mArea0 / 2) {
                 tempsum -= mArea0;
-            } else if (tempsum <= -mArea0/2) {
+            } else if (tempsum <= -mArea0 / 2) {
                 tempsum += mArea0;
             }
         } else {
@@ -365,6 +374,7 @@ public class PolygonArea {
 
     /**
      * Gets the equatorial radius of the ellipsoid (meters).
+     *
      * @return <i>a</i> the equatorial radius of the ellipsoid (meters). This is the value inherited
      * from the Geodesic object used in the constructor.
      */
@@ -374,6 +384,7 @@ public class PolygonArea {
 
     /**
      * Gets the flattening of the ellipsoid.
+     *
      * @return <i>f</i> the flattening of the ellipsoid. This is the value inherited from the Geodesic
      * object used in the constructor.
      */
@@ -385,7 +396,8 @@ public class PolygonArea {
      * Report the previous vertex added to the polygon or polyline.
      * If no points have been added, then Double.NaN is returned. Otherwise, <i>lon</i> will be
      * in the range [&minus;180&deg;, 180&deg;].
-     * @return Pair(<i>lat</i>, <i>lon</i>), the current latitude and longitude.
+     *
+     * @return Pair(< i > lat < / i >, < i > lon < / i >), the current latitude and longitude.
      */
     public Pair getCurrentPoint() {
         return new Pair(mLat1, mLon1);
@@ -398,8 +410,8 @@ public class PolygonArea {
         lon1 = GeoMath.angNormalize(lon1);
         lon2 = GeoMath.angNormalize(lon2);
 
-        double lon12 = GeoMath.angDiff(lon1, lon2).getFirst();
-        if (lon1 <= 0 && lon2 > 0 && lon12 > 0 ) {
+        final double lon12 = GeoMath.angDiff(lon1, lon2).getFirst();
+        if (lon1 <= 0 && lon2 > 0 && lon12 > 0) {
             return 1;
         } else {
             return lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0;

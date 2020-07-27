@@ -23,6 +23,7 @@ import com.irurueta.navigation.NotReadyException;
  * Estimates position using WiFi signals indoor and the Weighted k-Nearest
  * Neighbours (WkNN) algorithm.
  * WkNN algorithm is based on https://github.com/ajnas/WiFiPS.
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
@@ -76,30 +77,33 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
     /**
      * Constructor.
      */
-    public WeightedKNearestNeighboursPositionSolver() { }
+    public WeightedKNearestNeighboursPositionSolver() {
+    }
 
     /**
      * Constructor.
      * Sets known located WiFi fingerprints and euclidean distances between WiFi
      * signal fingerprints.
+     *
      * @param fingerprints known located WiFi fingerprints.
-     * @param distances euclidean distances between WiFi signal fingerprints
-     *                  (expressed in dB's).
+     * @param distances    euclidean distances between WiFi signal fingerprints
+     *                     (expressed in dB's).
      * @throws IllegalArgumentException if either fingerprints or distances are null,
-     * don't have the same length or their length is smaller than 1.
+     *                                  don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances) {
+            final RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
+            final double[] distances) {
         internalSetFingerprintsAndDistances(fingerprints, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
     public WeightedKNearestNeighboursPositionSolver(
-            WeightedKNearestNeighboursPositionSolverListener<P> listener) {
+            final WeightedKNearestNeighboursPositionSolverListener<P> listener) {
         mListener = listener;
     }
 
@@ -107,22 +111,25 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
      * Constructor.
      * Sets known located WiFi fingerprints and euclidean distances between WiFi
      * signal fingerprints.
+     *
      * @param fingerprints known located WiFi fingerprints.
-     * @param distances euclidean distances between WiFi signal fingerprints
-     *                  (expressed in dB's).
-     * @param listener listener to be notified of events raised by this instance.
+     * @param distances    euclidean distances between WiFi signal fingerprints
+     *                     (expressed in dB's).
+     * @param listener     listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either fingerprints or distances are null,
-     * don't have the same length or their length is smaller than 1.
+     *                                  don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances, WeightedKNearestNeighboursPositionSolverListener<P> listener) {
+            final RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
+            final double[] distances,
+            final WeightedKNearestNeighboursPositionSolverListener<P> listener) {
         this(fingerprints, distances);
         mListener = listener;
     }
 
     /**
      * Gets listener to be notified of events raised by this instance.
+     *
      * @return listener to be notified of events raised by this instance.
      */
     public WeightedKNearestNeighboursPositionSolverListener<P> getListener() {
@@ -131,11 +138,12 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Sets listener to be notified of events raised by this instance.
+     *
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if instance is busy solving the position.
      */
     public void setListener(
-            WeightedKNearestNeighboursPositionSolverListener<P> listener)
+            final WeightedKNearestNeighboursPositionSolverListener<P> listener)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -145,6 +153,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Gets known located WiFi fingerprints.
+     *
      * @return known located WiFi fingerprints.
      */
     public RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] getFingerprints() {
@@ -154,6 +163,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
     /**
      * Gets euclidean distances between WiFi signal fingerprints
      * (expressed in dB's).
+     *
      * @return euclidean distances between WiFi signal fingerprints.
      */
     public double[] getDistances() {
@@ -162,6 +172,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Indicates whether solver is ready to find a solution.
+     *
      * @return true if solver is ready, false otherwise.
      */
     public boolean isReady() {
@@ -172,6 +183,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
     /**
      * Returns boolean indicating if estimator is locked because estimation is under
      * progress.
+     *
      * @return true if solver is locked, false otherwise.
      */
     public boolean isLocked() {
@@ -181,16 +193,17 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
     /**
      * Sets known located WiFi fingerprints and euclidean distances between WiFi
      * signal fingerprints.
+     *
      * @param fingerprints known located WiFi fingerprints.
-     * @param distances euclidean distances between WiFi signal fingerprints
-     *                  (expressed in dB's).
+     * @param distances    euclidean distances between WiFi signal fingerprints
+     *                     (expressed in dB's).
      * @throws IllegalArgumentException if either fingerprints or distances are null,
-     * don't have the same length or their length is smaller than 1.
-     * @throws LockedException if instance is busy solving the position.
+     *                                  don't have the same length or their length is smaller than 1.
+     * @throws LockedException          if instance is busy solving the position.
      */
     public void setFingerprintsAndDistances(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances) throws LockedException {
+            final RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
+            final double[] distances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -199,6 +212,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Gets minimum allowed distance between WiFi signal fingerprints.
+     *
      * @return minimum allowed distance between WiFi signal fingerprints.
      */
     public double getEpsilon() {
@@ -207,12 +221,13 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Sets minimum allowed distance between WiFi signal fingerprints.
+     *
      * @param epsilon minimum allowed distance between WiFi signal fingerprints.
      *                strengths.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if instance is busy solving the indoor problem.
+     * @throws LockedException          if instance is busy solving the indoor problem.
      */
-    public void setEpsilon(double epsilon) throws LockedException {
+    public void setEpsilon(final double epsilon) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -226,8 +241,9 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Estimates position.
+     *
      * @throws NotReadyException if solver is not ready.
-     * @throws LockedException if instance is busy solving position.
+     * @throws LockedException   if instance is busy solving position.
      */
     public void solve() throws NotReadyException, LockedException {
         if (!isReady()) {
@@ -244,18 +260,18 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
                 mListener.onSolveStart(this);
             }
 
-            int num = mFingerprints.length;
-            int dims = getNumberOfDimensions();
+            final int num = mFingerprints.length;
+            final int dims = getNumberOfDimensions();
             if (num == 1) {
                 //only one fingerprint available
                 mEstimatedPositionCoordinates = new double[dims];
                 for (int i = 0; i < dims; i++) {
-                    P p = mFingerprints[0].getPosition();
+                    final P p = mFingerprints[0].getPosition();
                     mEstimatedPositionCoordinates[i] = p.getInhomogeneousCoordinate(i);
                 }
             } else {
                 //multiple fingerprints available
-                double[] coords = new double[dims];
+                final double[] coords = new double[dims];
                 double sum = 0.0;
                 double w;
                 for (int i = 0; i < num; i++) {
@@ -263,7 +279,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
                     w = 1.0 / mDistances[i];
                     sum += w;
 
-                    P p = mFingerprints[i].getPosition();
+                    final P p = mFingerprints[i].getPosition();
                     for (int j = 0; j < dims; j++) {
                         coords[j] += w * p.getInhomogeneousCoordinate(j);
                     }
@@ -289,6 +305,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Gets estimated inhomogeneous position coordinates.
+     *
      * @return estimated inhomogeneous position coordinates.
      */
     public double[] getEstimatedPositionCoordinates() {
@@ -297,9 +314,10 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Gets estimated position and stores result into provided instance.
+     *
      * @param estimatedPosition instance where estimated position will be stored.
      */
-    public void getEstimatedPosition(P estimatedPosition) {
+    public void getEstimatedPosition(final P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
             for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
                 estimatedPosition.setInhomogeneousCoordinate(i,
@@ -310,12 +328,14 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     public abstract P getEstimatedPosition();
 
     /**
      * Gets number of dimensions of location points.
+     *
      * @return number of dimensions of location points.
      */
     public abstract int getNumberOfDimensions();
@@ -323,15 +343,16 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?
     /**
      * Sets known located WiFi fingerprints and euclidean distances between WiFi
      * signal fingerprints.
+     *
      * @param fingerprints known located WiFi fingerprints.
-     * @param distances euclidean distances between WiFi signal fingerprints
-     *                  (expressed in dB's).
+     * @param distances    euclidean distances between WiFi signal fingerprints
+     *                     (expressed in dB's).
      * @throws IllegalArgumentException if either fingerprints or distances are null,
-     * don't have the same length or their length is smaller than 1.
+     *                                  don't have the same length or their length is smaller than 1.
      */
     protected void internalSetFingerprintsAndDistances(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances) {
+            final RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
+            final double[] distances) {
         if (fingerprints == null || distances == null) {
             throw new IllegalArgumentException();
         }

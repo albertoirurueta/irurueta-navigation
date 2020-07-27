@@ -17,7 +17,7 @@ package com.irurueta.navigation.geodesic;
 
 /**
  * The results of gnomonic projection.
- *
+ * <p>
  * This is used to return the results for a gnomonic projection of a point
  * (<i>lat</i>, <i>lon</i>) given a center point of projection (<i>lat0</i>,
  * <i>lon0</i>). The returned GnomonicData objects always include the
@@ -81,18 +81,20 @@ public class GnomonicData {
      * Constructor initializing all the fields for gnomonic projection of a
      * point (<i>lat</i>, <i>lon</i>) given a center point of projection
      * (<i>lat0</i>, <i>lon0</i>).
+     *
      * @param lat0 latitude of center point of projection (degrees).
      * @param lon0 longitude of center point of projection (degrees).
-     * @param lat latitude of point (degrees).
-     * @param lon longitude of point (degrees).
-     * @param x easting of point (meters).
-     * @param y northing of point (meters).
-     * @param azi azimuth of geodesic at point (degrees).
-     * @param rk reciprocal of azimuthal scale at point.
+     * @param lat  latitude of point (degrees).
+     * @param lon  longitude of point (degrees).
+     * @param x    easting of point (meters).
+     * @param y    northing of point (meters).
+     * @param azi  azimuth of geodesic at point (degrees).
+     * @param rk   reciprocal of azimuthal scale at point.
      */
     @SuppressWarnings("WeakerAccess")
-    public GnomonicData(double lat0, double lon0, double lat, double lon,
-                        double x, double y, double azi, double rk) {
+    public GnomonicData(
+            final double lat0, final double lon0, final double lat, final double lon,
+            final double x, final double y, final double azi, final double rk) {
         this.lat0 = lat0;
         this.lon0 = lon0;
         this.lat = lat;
@@ -105,6 +107,7 @@ public class GnomonicData {
 
     /**
      * Gets latitude of center point of projection (degrees).
+     *
      * @return latitude of center point of projection.
      */
     public double getLat0() {
@@ -113,14 +116,16 @@ public class GnomonicData {
 
     /**
      * Sets latitude of center point of projection (degrees).
+     *
      * @param lat0 latitude of center point of projection.
      */
-    public void setLat0(double lat0) {
+    public void setLat0(final double lat0) {
         this.lat0 = lat0;
     }
 
     /**
      * Gets longitude of center point of projection (degrees).
+     *
      * @return longitude of center point of projection.
      */
     public double getLon0() {
@@ -129,14 +134,16 @@ public class GnomonicData {
 
     /**
      * Sets longitude of center point of projection (degrees).
+     *
      * @param lon0 longitude of center point of projection.
      */
-    public void setLon0(double lon0) {
+    public void setLon0(final double lon0) {
         this.lon0 = lon0;
     }
 
     /**
      * Gets latitude of point (degrees).
+     *
      * @return latitude of point.
      */
     public double getLat() {
@@ -145,14 +152,16 @@ public class GnomonicData {
 
     /**
      * Sets latitude of point (degrees).
+     *
      * @param lat latitude of point.
      */
-    public void setLat(double lat) {
+    public void setLat(final double lat) {
         this.lat = lat;
     }
 
     /**
      * Gets longitude of point (degrees).
+     *
      * @return longitude of point.
      */
     public double getLon() {
@@ -161,14 +170,16 @@ public class GnomonicData {
 
     /**
      * Sets longitude of point (degrees).
+     *
      * @param lon longitude of point.
      */
-    public void setLon(double lon) {
+    public void setLon(final double lon) {
         this.lon = lon;
     }
 
     /**
      * Gets easting of point (meters).
+     *
      * @return easting of point.
      */
     public double getX() {
@@ -177,14 +188,16 @@ public class GnomonicData {
 
     /**
      * Sets easting of point (meters).
+     *
      * @param x easting of point.
      */
-    public void setX(double x) {
+    public void setX(final double x) {
         this.x = x;
     }
 
     /**
      * Gets northing of point (meters).
+     *
      * @return northing of point.
      */
     public double getY() {
@@ -193,14 +206,16 @@ public class GnomonicData {
 
     /**
      * Sets northing of point (meters).
+     *
      * @param y northing of point.
      */
-    public void setY(double y) {
+    public void setY(final double y) {
         this.y = y;
     }
 
     /**
      * Gets azimuth of geodesic at point (degrees).
+     *
      * @return azimuth of geodesic at point.
      */
     public double getAzi() {
@@ -209,14 +224,16 @@ public class GnomonicData {
 
     /**
      * Sets azimuth of geodesic at point (degrees).
+     *
      * @param azi azimuth of geodesic at point.
      */
-    public void setAzi(double azi) {
+    public void setAzi(final double azi) {
         this.azi = azi;
     }
 
     /**
      * Gets reciprocal of azimuthal scale at point.
+     *
      * @return reciprocal of azimuthal scale at point.
      */
     public double getRk() {
@@ -225,9 +242,10 @@ public class GnomonicData {
 
     /**
      * Sets reciprocal of azimuthal scale at point.
+     *
      * @param rk reciprocal of azimuthal scale at point.
      */
-    public void setRk(double rk) {
+    public void setRk(final double rk) {
         this.rk = rk;
     }
 }

@@ -34,7 +34,7 @@ public interface SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S ex
      * @param estimator estimator raising the event.
      */
     void onEstimateStart(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
+            final SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
 
     /**
      * Called when estimation ends.
@@ -42,7 +42,7 @@ public interface SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S ex
      * @param estimator estimator raising the event.
      */
     void onEstimateEnd(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
+            final SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
 
     /**
      * Called when estimation progress significantly changes.
@@ -51,6 +51,6 @@ public interface SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S ex
      * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
     void onEstimateProgressChange(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator,
-            float progress);
+            final SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator,
+            final float progress);
 }

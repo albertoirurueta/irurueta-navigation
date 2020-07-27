@@ -91,7 +91,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      * @param listener listener in charge of handling events.
      */
     public NonLinearMixedPositionEstimator(
-            MixedPositionEstimatorListener<P> listener) {
+            final MixedPositionEstimatorListener<P> listener) {
         super(listener);
         init();
     }
@@ -101,7 +101,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      *
      * @param initialPosition initial position to start position estimation.
      */
-    public NonLinearMixedPositionEstimator(P initialPosition) {
+    public NonLinearMixedPositionEstimator(final P initialPosition) {
         this();
         mInitialPosition = initialPosition;
     }
@@ -109,11 +109,11 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start position estimation.
-     * @param listener          listener in charge of handling events.
+     * @param initialPosition initial position to start position estimation.
+     * @param listener        listener in charge of handling events.
      */
-    public NonLinearMixedPositionEstimator(P initialPosition,
-            MixedPositionEstimatorListener<P> listener) {
+    public NonLinearMixedPositionEstimator(
+            final P initialPosition, final MixedPositionEstimatorListener<P> listener) {
         this(listener);
         mInitialPosition = initialPosition;
     }
@@ -137,7 +137,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      * @param initialPosition initial position to start position estimation.
      * @throws LockedException if estimator is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(final P initialPosition) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -164,7 +164,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      * @throws LockedException if estimator is locked.
      */
     public void setRadioSourcePositionCovarianceUsed(
-            boolean useRadioSourcePositionCovariance) throws LockedException {
+            final boolean useRadioSourcePositionCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -190,7 +190,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      * @throws LockedException if estimator is locked.
      */
     public void setFallbackDistanceStandardDeviation(
-            double fallbackDistanceStandardDeviation) throws LockedException {
+            final double fallbackDistanceStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -243,9 +243,9 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      * Estimates position based on provided located radio sources and readings of such
      * radio sources at an unknown location.
      *
-     * @throws LockedException              if estimator is locked.
-     * @throws NotReadyException            if estimator is not ready.
-     * @throws PositionEstimationException  if estimation fails for some other reason.
+     * @throws LockedException             if estimator is locked.
+     * @throws NotReadyException           if estimator is not ready.
+     * @throws PositionEstimationException if estimation fails for some other reason.
      */
     @Override
     public void estimate() throws LockedException, NotReadyException,
@@ -256,7 +256,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
             mTrilaterationSolver.solve();
             mEstimatedPositionCoordinates =
                     mTrilaterationSolver.getEstimatedPositionCoordinates();
-        } catch (LaterationException e) {
+        } catch (final LaterationException e) {
             throw new PositionEstimationException(e);
         }
     }
@@ -294,11 +294,13 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
 
     /**
      * Internally sets located radio sources used for lateration.
+     *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
+    protected void internalSetSources(
+            final List<? extends RadioSourceLocated<P>> sources) {
         super.internalSetSources(sources);
         buildPositionsDistancesAndDistanceStandardDeviations();
     }
@@ -312,7 +314,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super.internalSetFingerprint(fingerprint);
         buildPositionsDistancesAndDistanceStandardDeviations();
     }
@@ -320,13 +322,14 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
     /**
      * Sets positions, distnaces and standard deviations of distances on internal
      * lateration solver.
-     * @param positions                     positions to be set.
-     * @param distances                     distances to be set.
-     * @param distanceStandardDeviations    standard deviations of distances to be set.
+     *
+     * @param positions                  positions to be set.
+     * @param distances                  distances to be set.
+     * @param distanceStandardDeviations standard deviations of distances to be set.
      */
     protected abstract void setPositionsDistancesAndDistanceStandardDeviations(
-            List<P> positions, List<Double> distances,
-            List<Double> distanceStandardDeviations);
+            final List<P> positions, final List<Double> distances,
+            final List<Double> distanceStandardDeviations);
 
     /**
      * Initializes lateration solver listener.
@@ -335,7 +338,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
     private void init() {
         mLaterationSolverListener = new LaterationSolverListener<P>() {
             @Override
-            public void onSolveStart(LaterationSolver<P> solver) {
+            public void onSolveStart(final LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateStart(
                             NonLinearMixedPositionEstimator.this);
@@ -343,7 +346,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
             }
 
             @Override
-            public void onSolveEnd(LaterationSolver<P> solver) {
+            public void onSolveEnd(final LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateEnd(
                             NonLinearMixedPositionEstimator.this);
@@ -362,7 +365,7 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
             return;
         }
 
-        int min = getMinRequiredSources();
+        final int min = getMinRequiredSources();
         if (mSources == null || mFingerprint == null ||
                 mSources.size() < min ||
                 mFingerprint.getReadings() == null ||
@@ -370,9 +373,9 @@ public abstract class NonLinearMixedPositionEstimator<P extends Point<?>> extend
             return;
         }
 
-        List<P> positions = new ArrayList<>();
-        List<Double> distances = new ArrayList<>();
-        List<Double> distanceStandardDeviations = new ArrayList<>();
+        final List<P> positions = new ArrayList<>();
+        final List<Double> distances = new ArrayList<>();
+        final List<Double> distanceStandardDeviations = new ArrayList<>();
         PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                 mSources, mFingerprint, mUseRadioSourcePositionCovariance,
                 mFallbackDistanceStandardDeviation, positions, distances,

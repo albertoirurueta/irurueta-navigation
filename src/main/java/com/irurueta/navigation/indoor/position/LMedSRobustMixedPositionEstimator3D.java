@@ -47,10 +47,10 @@ public class LMedSRobustMixedPositionEstimator3D extends
      *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -64,7 +64,7 @@ public class LMedSRobustMixedPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -73,15 +73,15 @@ public class LMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown
-     *                      location for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown
+     *                    location for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -94,7 +94,7 @@ public class LMedSRobustMixedPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -102,14 +102,14 @@ public class LMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -118,14 +118,14 @@ public class LMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown
-     *                      location for provided location radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing readings at an unknown
+     *                    location for provided location radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -134,17 +134,17 @@ public class LMedSRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown
-     *                      location for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown
+     *                    location for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     *                                  null or the number of provided sources is less than the required minimum.
      */
     public LMedSRobustMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustMixedPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -194,9 +194,9 @@ public class LMedSRobustMixedPositionEstimator3D extends
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         ((LMedSRobustLateration3DSolver) mLaterationSolver).
                 setStopThreshold(stopThreshold);
     }

@@ -108,7 +108,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -118,7 +118,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @param listener listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
     }
 
@@ -131,8 +131,8 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -140,14 +140,14 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -157,19 +157,21 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition) {
+    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -177,16 +179,16 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings          signal readings belonging to the same radio source.
-     * @param initialPosition   initial position to start the estimation of radio
-     *                          source position.
-     * @param listener          listener in charge of attending events raised by this instance.
+     * @param readings        signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -198,7 +200,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      *                                   (expressed in dBm's)
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerdBm) {
+            final Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
 
@@ -206,29 +208,29 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @throws IllegalArgumentException     if readings are not valid.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
@@ -236,17 +238,17 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's)
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's)
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -254,47 +256,49 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
      */
-    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   in charge of attending events raised by this instance.
      */
-    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -302,19 +306,19 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -322,19 +326,19 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -342,16 +346,16 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) {
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -359,18 +363,18 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
     /**
      * Constructor.
      *
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -379,21 +383,21 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Constructor.
      * Sets signal readings belonging to the same radio source.
      *
-     * @param readings                      signal readings belonging to the same radio source.
-     * @param initialPosition               initial position to start the estimation of radio
-     *                                      source position.
-     * @param initialTransmittedPowerdBm    initial transmitted power to start the
-     *                                      estimation of radio source transmitted power
-     *                                      (expressed in dBm's).
-     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
-     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param readings                   signal readings belonging to the same radio source.
+     * @param initialPosition            initial position to start the estimation of radio
+     *                                   source position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of radio source transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent    initial path loss exponent. A typical value is 2.0.
+     * @param listener                   listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition, final Double initialTransmittedPowerdBm,
+            final double initialPathLossExponent,
+            final RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -440,9 +444,9 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -457,10 +461,10 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
      *
-     * @throws LockedException if instance is busy during estimation.
-     * @throws NotReadyException if estimator is not ready.
+     * @throws LockedException          if instance is busy during estimation.
+     * @throws NotReadyException        if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public void estimate() throws LockedException, NotReadyException, RobustEstimatorException {
@@ -471,90 +475,92 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
             throw new NotReadyException();
         }
 
-        LMedSRobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> innerEstimator =
+        final LMedSRobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> innerEstimator =
                 new LMedSRobustEstimator<>(
                         new LMedSRobustEstimatorListener<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>>() {
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mReadings.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mReadings.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return Math.max(mPreliminarySubsetSize, getMinReadings());
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return Math.max(mPreliminarySubsetSize, getMinReadings());
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices,
-                            List<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> solutions) {
-                        solvePreliminarSolutions(samplesIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> solutions) {
+                                solvePreliminarSolutions(samplesIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(
-                            RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D> currentEstimation,
-                            int i) {
-                        return residual(currentEstimation, i);
-                    }
+                            @Override
+                            public double computeResidual(
+                                    final RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D> currentEstimation,
+                                    final int i) {
+                                return residual(currentEstimation, i);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return LMedSRobustRangingAndRssiRadioSourceEstimator2D.this.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return LMedSRobustRangingAndRssiRadioSourceEstimator2D.this.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(
-                            RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateStart(
-                                    LMedSRobustRangingAndRssiRadioSourceEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateEnd(
-                            RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateEnd(
-                                    LMedSRobustRangingAndRssiRadioSourceEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(
-                            RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator,
-                            int iteration) {
-                        if (mListener != null) {
-                            mListener.onEstimateNextIteration(
-                                    LMedSRobustRangingAndRssiRadioSourceEstimator2D.this, iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator,
+                                    final int iteration) {
+                                if (mListener != null) {
+                                    mListener.onEstimateNextIteration(
+                                            LMedSRobustRangingAndRssiRadioSourceEstimator2D.this, iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(
-                            RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator,
-                            float progress) {
-                        if (mListener != null) {
-                            mListener.onEstimateProgressChange(
-                                    LMedSRobustRangingAndRssiRadioSourceEstimator2D.this, progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D>> estimator,
+                                    final float progress) {
+                                if (mListener != null) {
+                                    mListener.onEstimateProgressChange(
+                                            LMedSRobustRangingAndRssiRadioSourceEstimator2D.this, progress);
+                                }
+                            }
+                        });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onEstimateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D> result = innerEstimator.estimate();
+            final RobustRangingAndRssiRadioSourceEstimator.Solution<Point2D> result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             attemptRefine(result);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onEstimateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;

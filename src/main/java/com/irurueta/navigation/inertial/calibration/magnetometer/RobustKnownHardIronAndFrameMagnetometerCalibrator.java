@@ -929,6 +929,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
 
     /**
      * Gets known hard-iron bias as a column matrix.
+     *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
@@ -944,8 +945,9 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
 
     /**
      * Sets known hard-iron bias.
+     *
      * @param hardIron magnetometer hard-iron bias to be set.
-     * @throws LockedException if calibrator is currently running.
+     * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     public void setHardIron(final Matrix hardIron) throws LockedException {
@@ -1356,7 +1358,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1381,7 +1383,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1412,7 +1414,7 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -1580,7 +1582,8 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1599,7 +1602,8 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -2284,7 +2288,8 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
             final RobustKnownHardIronAndFrameMagnetometerCalibratorListener listener) {
         return create(measurements, commonAxisUsed, listener,
                 DEFAULT_ROBUST_METHOD);
-    }    
+    }
+
     /**
      * Setups World Magnetic Model estimator.
      *
@@ -2305,8 +2310,9 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param preliminaryResult a preliminary result.
      * @return computed error.
      */
-    protected double computeError(final StandardDeviationFrameBodyMagneticFluxDensity measurement,
-                                  final Matrix preliminaryResult) {
+    protected double computeError(
+            final StandardDeviationFrameBodyMagneticFluxDensity measurement,
+            final Matrix preliminaryResult) {
         // The magnetometer model is:
         // mBmeas = ba + (I + Mm) * mBtrue
 
@@ -2381,13 +2387,14 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<Matrix> solutions) {
+    protected void computePreliminarySolutions(
+            final int[] samplesIndices,
+            final List<Matrix> solutions) {
 
         final List<StandardDeviationFrameBodyMagneticFluxDensity> measurements =
                 new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             measurements.add(mMeasurements.get(samplesIndex));
         }
 
@@ -2430,8 +2437,8 @@ public abstract class RobustKnownHardIronAndFrameMagnetometerCalibrator {
      */
     protected void attemptRefine(final Matrix preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationFrameBodyMagneticFluxDensity> inlierMeasurements =
                     new ArrayList<>();

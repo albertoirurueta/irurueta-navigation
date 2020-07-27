@@ -19,19 +19,22 @@ import com.irurueta.geometry.Point;
 
 /**
  * Listener to be notified of events such as when lateration solving starts or ends.
+ *
  * @param <P> a {@link Point} type.
  */
 public interface LaterationSolverListener<P extends Point<?>> {
 
     /**
      * Called when solving starts.
+     *
      * @param solver solver raising the event.
      */
-    void onSolveStart(LaterationSolver<P> solver);
+    void onSolveStart(final LaterationSolver<P> solver);
 
     /**
      * Called when solving ends.
+     *
      * @param solver solver raising the event.
      */
-    void onSolveEnd(LaterationSolver<P> solver);
+    void onSolveEnd(final LaterationSolver<P> solver);
 }

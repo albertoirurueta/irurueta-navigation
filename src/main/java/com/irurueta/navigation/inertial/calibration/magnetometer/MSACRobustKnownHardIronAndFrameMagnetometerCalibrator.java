@@ -257,19 +257,11 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<Matrix> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<Matrix> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    MSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -297,6 +289,11 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
 
             setupWmmEstimator();
@@ -309,11 +306,15 @@ public class MSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | IOException e) {
+        } catch (final RobustEstimatorException | IOException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

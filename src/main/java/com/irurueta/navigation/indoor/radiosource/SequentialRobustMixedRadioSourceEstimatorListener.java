@@ -28,21 +28,24 @@ public interface SequentialRobustMixedRadioSourceEstimatorListener<S extends Rad
 
     /**
      * Called when estimation starts.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(SequentialRobustMixedRadioSourceEstimator<S, P> estimator);
+    void onEstimateStart(final SequentialRobustMixedRadioSourceEstimator<S, P> estimator);
 
     /**
      * Called when estimation ends.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(SequentialRobustMixedRadioSourceEstimator<S, P> estimator);
+    void onEstimateEnd(final SequentialRobustMixedRadioSourceEstimator<S, P> estimator);
 
     /**
      * Called when estimation progress significantly changes.
+     *
      * @param estimator estimator raising the event.
-     * @param progress progress of estimation expressed as a value between 0.0 and 1.0.
+     * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onEstimateProgressChange(SequentialRobustMixedRadioSourceEstimator<S, P> estimator,
-                                  float progress);
+    void onEstimateProgressChange(final SequentialRobustMixedRadioSourceEstimator<S, P> estimator,
+                                  final float progress);
 }

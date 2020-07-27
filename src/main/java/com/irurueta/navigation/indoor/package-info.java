@@ -20,27 +20,27 @@
  * There are two kinds of radio sources:
  * - Beacons
  * - Wifi Access Points
- *
+ * <p>
  * All radio sources can be located (either in 2D or 3D), can have power measurements
  * (RSSI and pathloss exponent), or can be both located and have power measurements.
- *
+ * <p>
  * Radio sources and positions can be estimated by making signal readings.
  * There are two kinds of readings:
  * - RSSI
  * - Ranging
- *
+ * <p>
  * RSSI readings contain measurements of received signal power for a given radio source.
  * Ranging readings contains distance measurements for a given radio source.
- *
+ * <p>
  * Readings can also contains RSSI and ranging data at the same time, and can be
  * located (either in 2D or 3D).
- *
+ * <p>
  * One reading can only be associated to a single radio source.
- *
+ * <p>
  * Readings can be grouped into fingerprints.
  * A fingerprint is a set of readings belonging to different radio sources that where measured
  * at a given time on the same location.
- *
+ * <p>
  * Fingerprints can be used to estimate either radio sources or positions (in 2D or 3D).
  */
 package com.irurueta.navigation.indoor;

@@ -20,6 +20,7 @@ import com.irurueta.geometry.Point;
 
 /**
  * Data related to a WiFi access point whose location is known.
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -38,14 +39,16 @@ public abstract class WifiAccessPointLocated<P extends Point<?>>
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
+     *
+     * @param bssid     basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                  xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param position position where access point is located.
+     * @param position  position where access point is located.
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public WifiAccessPointLocated(String bssid, double frequency, P position) {
+    public WifiAccessPointLocated(
+            final String bssid, final double frequency, final P position) {
         super(bssid, frequency);
 
         if (position == null) {
@@ -57,16 +60,18 @@ public abstract class WifiAccessPointLocated<P extends Point<?>>
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
+     *
+     * @param bssid     basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                  xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param position position where access point is located.
+     * @param ssid      service set identifier (SSID) of this 802.11 network.
+     * @param position  position where access point is located.
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative.
+     *                                  frequency is negative.
      */
-    public WifiAccessPointLocated(String bssid, double frequency, String ssid,
-            P position) {
+    public WifiAccessPointLocated(
+            final String bssid, final double frequency, final String ssid,
+            final P position) {
         super(bssid, frequency, ssid);
 
         if (position == null) {
@@ -78,21 +83,23 @@ public abstract class WifiAccessPointLocated<P extends Point<?>>
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative, or covariance does not have proper size.
+     *                                  frequency is negative, or covariance does not have proper size.
      */
-    public WifiAccessPointLocated(String bssid, double frequency, P position,
-            Matrix positionCovariance) {
+    public WifiAccessPointLocated(
+            final String bssid, final double frequency, final P position,
+            final Matrix positionCovariance) {
         this(bssid, frequency, position);
 
         if (positionCovariance != null) {
-            int dims = position.getDimensions();
+            final int dims = position.getDimensions();
             if (positionCovariance.getRows() != dims ||
                     positionCovariance.getColumns() != dims) {
                 throw new IllegalArgumentException();
@@ -103,22 +110,24 @@ public abstract class WifiAccessPointLocated<P extends Point<?>>
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param ssid               service set identifier (SSID) of this 802.11 network.
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either BSSID or position are null or
-     * frequency is negative, or covariance does not have proper size.
+     *                                  frequency is negative, or covariance does not have proper size.
      */
-    public WifiAccessPointLocated(String bssid, double frequency, String ssid,
-            P position, Matrix positionCovariance) {
+    public WifiAccessPointLocated(
+            final String bssid, final double frequency, final String ssid,
+            final P position, final Matrix positionCovariance) {
         this(bssid, frequency, ssid, position);
 
         if (positionCovariance != null) {
-            int dims = position.getDimensions();
+            final int dims = position.getDimensions();
             if (positionCovariance.getRows() != dims ||
                     positionCovariance.getColumns() != dims) {
                 throw new IllegalArgumentException();
@@ -136,6 +145,7 @@ public abstract class WifiAccessPointLocated<P extends Point<?>>
 
     /**
      * Gets position where access point is located.
+     *
      * @return position where access point is located.
      */
     public P getPosition() {
@@ -144,6 +154,7 @@ public abstract class WifiAccessPointLocated<P extends Point<?>>
 
     /**
      * Gets covariance of inhomogeneous coordinates of current position (if available).
+     *
      * @return covariance of position or null.
      */
     public Matrix getPositionCovariance() {

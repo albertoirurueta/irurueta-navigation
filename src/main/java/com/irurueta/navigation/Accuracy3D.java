@@ -38,57 +38,62 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
 
     /**
      * Constructor.
+     *
      * @param covarianceMatrix covariance matrix to be set. Must be 3x3 and positive
      *                         definite.
-     * @throws IllegalArgumentException if provided matrix is not square (it must also
-     * be positive definite to be properly converted to an ellipsoid).
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also
+     *                                                     be positive definite to be properly converted to an ellipsoid).
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
-     * symmetric and positive definite.
+     *                                                     symmetric and positive definite.
      */
-    public Accuracy3D(Matrix covarianceMatrix)
+    public Accuracy3D(final Matrix covarianceMatrix)
             throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
     }
 
     /**
      * Constructor.
+     *
      * @param confidence confidence of provided accuracy of an estimated position.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
-    public Accuracy3D(double confidence) {
+    public Accuracy3D(final double confidence) {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(confidence);
     }
 
     /**
      * Constructor.
+     *
      * @param covarianceMatrix covariance matrix to be set. Must be 3x3 and positive
      *                         definite.
-     * @param confidence confidence of provided accuracy of an estimated position.
-     * @throws IllegalArgumentException if provided matrix is not square (it must also
-     * be positive definite to be properly converted to an ellipsoid), or if provided
-     * confidence value is not within 0 and 1.
+     * @param confidence       confidence of provided accuracy of an estimated position.
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also
+     *                                                     be positive definite to be properly converted to an ellipsoid), or if provided
+     *                                                     confidence value is not within 0 and 1.
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix it not
-     * symmetric and positive definite.
+     *                                                     symmetric and positive definite.
      */
-    public Accuracy3D(Matrix covarianceMatrix, double confidence)
+    public Accuracy3D(final Matrix covarianceMatrix, final double confidence)
             throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix, confidence);
     }
 
     /**
      * Constructor.
+     *
      * @param internalAccuracy internal accuracy to be set.
      */
-    Accuracy3D(com.irurueta.geometry.Accuracy3D internalAccuracy) {
+    Accuracy3D(final com.irurueta.geometry.Accuracy3D internalAccuracy) {
         super(internalAccuracy);
     }
 
     /**
      * Converts provided covariance matrix into a 3D ellipsoid taking into account current
      * confidence and standard deviation factor.
+     *
      * @return ellipsoid representing accuracy of covariance matrix with current confidence and
      * standard deviation factor.
-     * @throws NullPointerException if covariance matrix has not been provided yet.
+     * @throws NullPointerException           if covariance matrix has not been provided yet.
      * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
      */
     public Ellipsoid toEllipsoid() throws InvalidRotationMatrixException {
@@ -98,9 +103,10 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
     /**
      * Flattens accuracy representation to 2D by taking into account only x and y coordinates and
      * ignoring variance related to z coordinates.
+     *
      * @return flattened accuracy representation in 2D.
      * @throws NullPointerException if covariance matrix is not defined.
-     * @throws GeometryException if accuracy cannot be flattened.
+     * @throws GeometryException    if accuracy cannot be flattened.
      */
     public Accuracy2D flattenTo2D() throws GeometryException {
         return new Accuracy2D(mInternalAccuracy.flattenTo2D());
@@ -108,9 +114,10 @@ public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
 
     /**
      * Intersects ellipsoid representing this accuracy with horizontal xy plane.
+     *
      * @return intersected ellipse.
      * @throws NullPointerException if covariance matrix is not defined.
-     * @throws GeometryException if intersection cannot be computed.
+     * @throws GeometryException    if intersection cannot be computed.
      */
     public Ellipse intersectWithPlane() throws GeometryException {
         return mInternalAccuracy.intersectWithPlane();

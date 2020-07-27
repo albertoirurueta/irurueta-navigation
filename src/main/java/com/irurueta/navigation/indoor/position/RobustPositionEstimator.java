@@ -127,14 +127,15 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
     /**
      * Constructor.
      */
-    public RobustPositionEstimator() { }
+    public RobustPositionEstimator() {
+    }
 
     /**
      * Constructor.
      *
      * @param listener listener in charge of handling events.
      */
-    public RobustPositionEstimator(L listener) {
+    public RobustPositionEstimator(final L listener) {
         mListener = listener;
     }
 
@@ -156,7 +157,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                                  provided sources is less than the required
      *                                  minimum.
      */
-    public void setSources(List<? extends RadioSourceLocated<P>> sources)
+    public void setSources(final List<? extends RadioSourceLocated<P>> sources)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -169,7 +170,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * Gets fingerprint containing readings at an unknown location for provided located
      * radio sources.
      *
-     * @return  fingerprint containing readings at an unknown location for provided
+     * @return fingerprint containing readings at an unknown location for provided
      * located radio sources.
      */
     public Fingerprint<? extends RadioSource, ? extends R> getFingerprint() {
@@ -185,7 +186,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws LockedException if estimator is locked.
      */
     public void setFingerprint(
-            Fingerprint<? extends RadioSource, ? extends R> fingerprint)
+            final Fingerprint<? extends RadioSource, ? extends R> fingerprint)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -209,7 +210,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(L listener) throws LockedException {
+    public void setListener(final L listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -236,7 +237,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws LockedException if estimator is locked.
      */
     public void setRadioSourcePositionCovarianceUsed(
-            boolean useRadioSourcePositionCovariance) throws LockedException {
+            final boolean useRadioSourcePositionCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -263,7 +264,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                                 otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setEvenlyDistributeReadings(boolean evenlyDistributeReadings)
+    public void setEvenlyDistributeReadings(final boolean evenlyDistributeReadings)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -292,7 +293,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws LockedException if estimator is locked.
      */
     public void setFallbackDistanceStandardDeviation(
-            double fallbackDistanceStandardDeviation) throws LockedException {
+            final double fallbackDistanceStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -332,7 +333,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws IllegalArgumentException if progress delta is less than zero or greater
      *                                  than 1.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         mLaterationSolver.setProgressDelta(progressDelta);
     }
 
@@ -358,7 +359,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(final double confidence) throws LockedException {
         mLaterationSolver.setConfidence(confidence);
     }
 
@@ -382,7 +383,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided value is less than 1.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(final int maxIterations) throws LockedException {
         mLaterationSolver.setMaxIterations(maxIterations);
     }
 
@@ -405,7 +406,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                     robust estimator without further refining.
      * @throws LockedException if this instance is locked.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         mLaterationSolver.setResultRefined(refineResult);
     }
 
@@ -427,7 +428,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                       false otherwise.
      * @throws LockedException if this instance is locked.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         mLaterationSolver.setCovarianceKept(keepCovariance);
     }
 
@@ -450,7 +451,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @param initialPosition an initial position.
      * @throws LockedException if this instance is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(final P initialPosition) throws LockedException {
         mLaterationSolver.setInitialPosition(initialPosition);
     }
 
@@ -471,7 +472,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @param linearSolverUsed true if a linear solver is used, false otherwise.
      * @throws LockedException if this instance is locked.
      */
-    public void setLinearSolverUsed(boolean linearSolverUsed) throws LockedException {
+    public void setLinearSolverUsed(final boolean linearSolverUsed) throws LockedException {
         mLaterationSolver.setLinearSolverUsed(linearSolverUsed);
     }
 
@@ -495,7 +496,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                                   false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
+    public void setHomogeneousLinearSolverUsed(final boolean useHomogeneousLinearSolver)
             throws LockedException {
         mLaterationSolver.setHomogeneousLinearSolverUsed(useHomogeneousLinearSolver);
     }
@@ -526,7 +527,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                                   otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
+    public void setPreliminarySolutionRefined(final boolean preliminarySolutionRefined)
             throws LockedException {
         mLaterationSolver.setPreliminarySolutionRefined(preliminarySolutionRefined);
     }
@@ -605,8 +606,9 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws IllegalArgumentException if provided quality scores length is smaller
      *                                  than minimum required samples.
      */
-    public void setSourceQualityScores(double[] sourceQualityScores)
-            throws LockedException { }
+    public void setSourceQualityScores(final double[] sourceQualityScores)
+            throws LockedException {
+    }
 
     /**
      * Gets quality scores corresponding to each reading within provided fingerprint.
@@ -634,7 +636,8 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *                                  than minimum required samples.
      */
     public void setFingerprintReadingsQualityScores(
-            double[] fingerprintReadingsQualityScores) throws LockedException { }
+            final double[] fingerprintReadingsQualityScores) throws LockedException {
+    }
 
     /**
      * Gets size of subsets to be checked during robust estimation.
@@ -651,10 +654,10 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * This has to be at least {@link #getMinRequiredSources()}.
      *
      * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
-     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws LockedException          if instance is busy solving the lateration problem.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredSources()}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(final int preliminarySubsetSize) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -730,10 +733,10 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
     @SuppressWarnings("Duplicates")
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
+    protected void internalSetSources(final List<? extends RadioSourceLocated<P>> sources) {
         if (sources == null) {
             throw new IllegalArgumentException();
         }
@@ -756,7 +759,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends R> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends R> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }
@@ -770,15 +773,15 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
      * Sets positions, distances and standard deviations of distances on internal
      * lateration solver.
      *
-     * @param positions positions to be set.
-     * @param distances distances to be set.
+     * @param positions                  positions to be set.
+     * @param distances                  distances to be set.
      * @param distanceStandardDeviations standard deviations of distances to be set.
-     * @param distanceQualityScores distance quality scores or null if not required.
+     * @param distanceQualityScores      distance quality scores or null if not required.
      */
     protected abstract void setPositionsDistancesDistanceStandardDeviationsAndQualityScores(
-            List<P> positions, List<Double> distances,
-            List<Double> distanceStandardDeviations,
-            List<Double> distanceQualityScores);
+            final List<P> positions, List<Double> distances,
+            final List<Double> distanceStandardDeviations,
+            final List<Double> distanceQualityScores);
 
     /**
      * Builds positions, distances, standard deviation of distances and quality scores
@@ -790,7 +793,7 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
             return;
         }
 
-        int min = getPreliminarySubsetSize();
+        final int min = getPreliminarySubsetSize();
         if (mSources == null || mFingerprint == null ||
                 mSources.size() < min ||
                 mFingerprint.getReadings() == null ||
@@ -798,9 +801,9 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
             return;
         }
 
-        List<P> positions = new ArrayList<>();
-        List<Double> distances = new ArrayList<>();
-        List<Double> distanceStandardDeviations = new ArrayList<>();
+        final List<P> positions = new ArrayList<>();
+        final List<Double> distances = new ArrayList<>();
+        final List<Double> distanceStandardDeviations = new ArrayList<>();
 
         double[] sourceQualityScores = getSourceQualityScores();
         double[] fingerprintReadingsQualityScores =
@@ -816,11 +819,11 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
                         mFingerprint.getReadings().size()];
             }
 
-            ReadingSorter<P, R> sorter = new ReadingSorter<>(mSources, mFingerprint,
+            final ReadingSorter<P, R> sorter = new ReadingSorter<>(mSources, mFingerprint,
                     sourceQualityScores, fingerprintReadingsQualityScores);
             sorter.sort();
 
-            List<ReadingSorter.RadioSourceSourceWithQualityScore<P, R>> sortedSources =
+            final List<ReadingSorter.RadioSourceSourceWithQualityScore<P, R>> sortedSources =
                     sorter.getSortedSourcesAndReadings();
 
             int j = 0;
@@ -833,11 +836,12 @@ public abstract class RobustPositionEstimator<P extends Point<?>,
                     sourceQualityScores[sortedSource.position] = i;
                     i--;
 
-                    List<ReadingSorter.ReadingWithQualityScore<R>> sortedReadings =
+                    final List<ReadingSorter.ReadingWithQualityScore<R>> sortedReadings =
                             sortedSource.readingsWithQualityScores;
                     if (k < sortedReadings.size()) {
                         finished = false;
-                        ReadingSorter.ReadingWithQualityScore<R> sortedReading = sortedReadings.get(k);
+                        ReadingSorter.ReadingWithQualityScore<R> sortedReading =
+                                sortedReadings.get(k);
 
                         fingerprintReadingsQualityScores[sortedReading.position] = j;
                         j--;

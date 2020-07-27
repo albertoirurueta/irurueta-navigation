@@ -1776,7 +1776,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setListener(final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener)
+    public void setListener(
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1822,7 +1823,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      *                             or not for preliminary solutions.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setLinearCalibratorUsed(final boolean linearCalibratorUsed)
+    public void setLinearCalibratorUsed(
+            final boolean linearCalibratorUsed)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1853,7 +1855,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      *                                   initial linear solution, false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
+    public void setPreliminarySolutionRefined(
+            final boolean preliminarySolutionRefined)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1882,7 +1885,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta)
+            throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1915,7 +1919,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setConfidence(double confidence) throws LockedException {
+    public void setConfidence(final double confidence) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1945,7 +1949,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setMaxIterations(int maxIterations) throws LockedException {
+    public void setMaxIterations(final int maxIterations) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1981,7 +1985,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      *                     estimator without further refining.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(
+            final boolean refineResult) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2006,7 +2011,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      *                       false otherwise.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(
+            final boolean keepCovariance) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2039,7 +2045,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      *                                  is smaller than minimum required samples.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
     }
 
@@ -2208,7 +2214,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided value is less than {@link #MINIMUM_MEASUREMENTS}.
      */
-    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+    public void setPreliminarySubsetSize(
+            final int preliminarySubsetSize) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -2227,7 +2234,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Returns method being used for robust estimation.
@@ -5889,7 +5897,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
 
             return Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
 
-        } catch (WrongSizeException e) {
+        } catch (final WrongSizeException e) {
             return Double.MAX_VALUE;
         }
     }
@@ -5932,7 +5940,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
             }
 
             solutions.add(result);
-        } catch (LockedException | CalibrationException | NotReadyException e) {
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
         }
     }
@@ -5948,8 +5956,8 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
      */
     protected void attemptRefine(final Matrix preliminaryResult) {
         if (mRefineResult && mInliersData != null) {
-            BitSet inliers = mInliersData.getInliers();
-            int nSamples = mMeasurements.size();
+            final BitSet inliers = mInliersData.getInliers();
+            final int nSamples = mMeasurements.size();
 
             final List<StandardDeviationFrameBodyKinematics> inlierMeasurements =
                     new ArrayList<>();
@@ -5975,7 +5983,7 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
                     mEstimatedCovariance = null;
                 }
 
-            } catch (LockedException | CalibrationException | NotReadyException e) {
+            } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = null;
                 mEstimatedMa = preliminaryResult;
             }

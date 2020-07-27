@@ -33,7 +33,7 @@ public interface RadioSource extends Serializable {
      * @param obj radio source to be compared.
      * @return true if both radio sources are considered equal, false otherwise.
      */
-    boolean equals(Object obj);
+    boolean equals(final Object obj);
 
     /**
      * Gets radio source type, which can be either a WiFi Access point or a bluetooth Beacon.

@@ -22,12 +22,14 @@ package com.irurueta.navigation.indoor;
 public interface RadioSourceWithPower extends RadioSource {
     /**
      * Gets transmitted power expressed in dBm's.
+     *
      * @return transmitted power expressed in dBm's.
      */
     double getTransmittedPower();
 
     /**
      * Gets standard deviation of transmitted power value or null if unknown.
+     *
      * @return standard deviation of transmitted power value or null if unknown.
      */
     Double getTransmittedPowerStandardDeviation();
@@ -40,12 +42,14 @@ public interface RadioSourceWithPower extends RadioSource {
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
+     *
      * @return path loss exponent.
      */
     double getPathLossExponent();
 
     /**
      * Gets standard deviation of path loss exponent or null if unknown.
+     *
      * @return standard deviation of path loss exponent or null if unknown.
      */
     Double getPathLossExponentStandardDeviation();

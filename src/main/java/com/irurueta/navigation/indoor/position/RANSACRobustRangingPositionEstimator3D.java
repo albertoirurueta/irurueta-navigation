@@ -49,7 +49,7 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -63,7 +63,7 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -79,8 +79,8 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -93,7 +93,7 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            RobustRangingPositionEstimatorListener<Point3D> listener) {
+            final RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -107,8 +107,8 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustRangingPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -123,8 +123,8 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RobustRangingPositionEstimatorListener<Point3D> listener) {
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -141,9 +141,9 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * null or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRangingPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RobustRangingPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -173,7 +173,7 @@ public class RANSACRobustRangingPositionEstimator3D extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if this estimator is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
@@ -197,7 +197,7 @@ public class RANSACRobustRangingPositionEstimator3D extends
      *                              kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
@@ -221,7 +221,7 @@ public class RANSACRobustRangingPositionEstimator3D extends
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this estimator is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);

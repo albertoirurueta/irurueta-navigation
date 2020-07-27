@@ -752,7 +752,8 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -761,7 +762,8 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
         }
 
         final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
+                new RANSACRobustEstimator<>(
+                        new RANSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
                         return mThreshold;
@@ -801,17 +803,11 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(RANSACRobustEasyGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(RANSACRobustEasyGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -838,6 +834,10 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
         try {
             mRunning = true;
 
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             setupAccelerationFixer();
 
             mInliersData = null;
@@ -853,11 +853,15 @@ public class RANSACRobustEasyGyroscopeCalibrator extends RobustEasyGyroscopeCali
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | AlgebraException e) {
+        } catch (final RobustEstimatorException | AlgebraException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

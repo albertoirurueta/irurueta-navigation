@@ -27,196 +27,230 @@ public class WifiAccessPointWithPowerAndLocated3D extends
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
+     *
+     * @param bssid            basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                         xx:xx:xx:xx:xx:xx.
+     * @param frequency        frequency used by this Access Point (expressed in Hz).
      * @param transmittedPower transmitted power by this access point (expressed in dBm's).
-     * @param position position where access point is located.
+     * @param position         position where access point is located.
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower, final Point3D position) {
         super(bssid, frequency, transmittedPower, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
+     *
+     * @param bssid            basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                         xx:xx:xx:xx:xx:xx.
+     * @param frequency        frequency used by this Access Point (expressed in Hz).
+     * @param ssid             service set identifier (SSID) of this 802.11 network.
      * @param transmittedPower transmitted power by this access point (expressed in dBM's).
-     * @param position position where access point is located.
+     * @param position         position where access point is located.
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final double transmittedPower, final Point3D position) {
         super(bssid, frequency, ssid, transmittedPower, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBm's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param position position where access point is located.
+     * @param position                          position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final Point3D position) {
         super(bssid, frequency, transmittedPower,
                 transmittedPowerStandardDeviation, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param ssid                              service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBM's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param position position where access point is located.
+     * @param position                          position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final Point3D position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower   transmitted power by this access point (expressed in dBm's).
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower, final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param ssid               service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower   transmitted power by this access point (expressed in dBM's).
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final double transmittedPower, final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBm's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param position position where access point is located.
-     * @param positionCovariance covariance of inhomogeneous coordinates of current
-     *                           position (if available).
+     * @param position                          position where access point is located.
+     * @param positionCovariance                covariance of inhomogeneous coordinates of current
+     *                                          position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param ssid                              service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBM's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param position position where access point is located.
-     * @param positionCovariance covariance of inhomogeneous coordinates of current
-     *                           position (if available).
+     * @param position                          position where access point is located.
+     * @param positionCovariance                covariance of inhomogeneous coordinates of current
+     *                                          position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            String ssid, double transmittedPower,
-            Double transmittedPowerStandardDeviation, Point3D position,
-            Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final String ssid, final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
+     *
+     * @param bssid            basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                         xx:xx:xx:xx:xx:xx.
+     * @param frequency        frequency used by this Access Point (expressed in Hz).
      * @param transmittedPower transmitted power by this access point (expressed in dBm's).
      * @param pathLossExponent path loss exponent. By default this is 2.0.
-     * @param position position where access point is located.
+     * @param position         position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null or frequency is negative
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, double pathLossExponent, Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower,
+            final double pathLossExponent,
+            final Point3D position) {
         super(bssid, frequency, transmittedPower, pathLossExponent, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBm's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
-     * @param position position where access point is located.
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
+     * @param position                          position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent,
+            final Point3D position) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param ssid                              service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBM's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
-     * @param position position where access point is located.
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
+     * @param position                          position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            String ssid, double transmittedPower,
-            Double transmittedPowerStandardDeviation, double pathLossExponent,
-            Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final String ssid, final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent,
+            final Point3D position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 position);
@@ -224,64 +258,72 @@ public class WifiAccessPointWithPowerAndLocated3D extends
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
-     * @param position position where access point is located.
+     *
+     * @param bssid              basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                           xx:xx:xx:xx:xx:xx.
+     * @param frequency          frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower   transmitted power by this access point (expressed in dBm's).
+     * @param pathLossExponent   path loss exponent. By default this is 2.0.
+     * @param position           position where access point is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
-     * or covariance has invalid size.
+     *                                  or covariance has invalid size.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, double pathLossExponent, Point3D position,
-            Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower, final double pathLossExponent,
+            final Point3D position, final Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, pathLossExponent, position,
                 positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBm's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
-     * @param position position where access point is located.
-     * @param positionCovariance covariance of inhomogeneous coordinates of current
-     *                           position (if available).
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
+     * @param position                          position where access point is located.
+     * @param positionCovariance                covariance of inhomogeneous coordinates of current
+     *                                          position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower, final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent, final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, position, positionCovariance);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param ssid                              service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBM's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
-     * @param position position where access point is located.
-     * @param positionCovariance covariance of inhomogeneous coordinates of current
-     *                           position (if available).
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
+     * @param position                          position where access point is located.
+     * @param positionCovariance                covariance of inhomogeneous coordinates of current
+     *                                          position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * or transmitted power standard deviation is negative.
+     *                                  or transmitted power standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            String ssid, double transmittedPower,
-            Double transmittedPowerStandardDeviation, double pathLossExponent,
-            Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final String ssid, final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent, final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent, position,
                 positionCovariance);
@@ -289,47 +331,55 @@ public class WifiAccessPointWithPowerAndLocated3D extends
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBm's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null
      *                                          if unknown.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
      * @param pathLossExponentStandardDeviation standard deviation of path loss exponent or null if
      *                                          unknown.
-     * @param position position where access point is located.
+     * @param position                          position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
-     * or any standard deviation is negative.
+     *                                  or any standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent,
+            final Double pathLossExponentStandardDeviation,
+            final Point3D position) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation, position);
     }
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param ssid                              service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBM's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null
      *                                          if unknown.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
      * @param pathLossExponentStandardDeviation standard deviation of path loss exponent or null if
      *                                          unknown.
-     * @param position position where access point is located.
+     * @param position                          position where access point is located.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * or any standard deviation is negative.
+     *                                  or any standard deviation is negative.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent,
+            final Double pathLossExponentStandardDeviation,
+            final Point3D position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation, position);
@@ -337,25 +387,30 @@ public class WifiAccessPointWithPowerAndLocated3D extends
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBm's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null
      *                                          if unknown.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
      * @param pathLossExponentStandardDeviation standard deviation of path loss exponent or null if
      *                                          unknown.
-     * @param position position where access point is located.
-     * @param positionCovariance covariance of inhomogeneous coordinates of current
-     *                           position (if available).
+     * @param position                          position where access point is located.
+     * @param positionCovariance                covariance of inhomogeneous coordinates of current
+     *                                          position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * any standard deviation is negative or covariance has invalid size.
+     *                                  any standard deviation is negative or covariance has invalid size.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent,
+            final Double pathLossExponentStandardDeviation,
+            final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation, position,
                 positionCovariance);
@@ -363,26 +418,31 @@ public class WifiAccessPointWithPowerAndLocated3D extends
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
-     * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     *
+     * @param bssid                             basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                                          xx:xx:xx:xx:xx:xx.
+     * @param frequency                         frequency used by this Access Point (expressed in Hz).
+     * @param ssid                              service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower                  transmitted power by this access point (expressed in dBM's).
      * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null
      *                                          if unknown.
-     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param pathLossExponent                  path loss exponent. By default this is 2.0.
      * @param pathLossExponentStandardDeviation standard deviation of path loss exponent or null if
      *                                          unknown.
-     * @param position position where access point is located.
-     * @param positionCovariance covariance of inhomogeneous coordinates of current
-     *                           position (if available).
+     * @param position                          position where access point is located.
+     * @param positionCovariance                covariance of inhomogeneous coordinates of current
+     *                                          position (if available).
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
-     * any standard deviation is negative or covariance has invalid size.
+     *                                  any standard deviation is negative or covariance has invalid size.
      */
-    public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position, Matrix positionCovariance) {
+    public WifiAccessPointWithPowerAndLocated3D(
+            final String bssid, final double frequency, final String ssid,
+            final double transmittedPower,
+            final Double transmittedPowerStandardDeviation,
+            final double pathLossExponent,
+            final Double pathLossExponentStandardDeviation,
+            final Point3D position,
+            final Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation, position, positionCovariance);

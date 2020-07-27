@@ -1191,7 +1191,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
      *
      * @param result instance where result data will be stored.
      */
-    public void getAccelerometerBiasXAsAcceleration(final Acceleration result) {
+    public void getAccelerometerBiasXAsAcceleration(
+            final Acceleration result) {
         result.setValue(mAccelerometerBiasX);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
@@ -1231,7 +1232,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
      *
      * @param result instance where result data will be stored.
      */
-    public void getAccelerometerBiasYAsAcceleration(final Acceleration result) {
+    public void getAccelerometerBiasYAsAcceleration(
+            final Acceleration result) {
         result.setValue(mAccelerometerBiasY);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
@@ -1271,7 +1273,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
      *
      * @param result instance where result data will be stored.
      */
-    public void getAccelerometerBiasZAsAcceleration(final Acceleration result) {
+    public void getAccelerometerBiasZAsAcceleration(
+            final Acceleration result) {
         result.setValue(mAccelerometerBiasZ);
         result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }
@@ -1284,7 +1287,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
      * @param accelerometerBiasZ z-coordinate of accelerometer bias.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setAccelerometerBiasZ(final Acceleration accelerometerBiasZ)
+    public void setAccelerometerBiasZ(
+            final Acceleration accelerometerBiasZ)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2942,7 +2946,8 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Gets estimated gyroscope scale factors and cross coupling errors.
@@ -5848,7 +5853,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
                 initialGg, accelerometerBias, accelerometerMa, listener,
                 DEFAULT_ROBUST_METHOD);
     }
-    
+
     /**
      * Configures acceleration fixer
      *
@@ -5884,7 +5889,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
                     new BodyKinematicsSequence<>(sequence);
 
             // fix body kinematic measurements of provided sequence
-            int numItems = sequence.getItemsCount();
+            final int numItems = sequence.getItemsCount();
             final List<StandardDeviationTimedBodyKinematics> measuredItems = sequence.getSortedItems();
             final List<StandardDeviationTimedBodyKinematics> fixedItems = fixedSequence.getSortedItems();
             for (int j = 0; j < numItems; j++) {
@@ -5981,7 +5986,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
             }
 
             solutions.add(result);
-        } catch (LockedException | CalibrationException | NotReadyException e) {
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
         }
     }
@@ -6028,7 +6033,7 @@ public abstract class RobustKnownBiasEasyGyroscopeCalibrator {
                 mEstimatedGg = mInnerCalibrator.getEstimatedGg();
                 mEstimatedCovariance = mInnerCalibrator.getEstimatedCovariance();
 
-            } catch (LockedException | CalibrationException | NotReadyException e) {
+            } catch (final LockedException | CalibrationException | NotReadyException e) {
                 mEstimatedCovariance = preliminaryResult.mCovariance;
                 mEstimatedMg = preliminaryResult.mEstimatedMg;
                 mEstimatedGg = preliminaryResult.mEstimatedGg;

@@ -54,7 +54,7 @@ public class NonLinearRangingPositionEstimator2D extends
      *                                  minimum.
      */
     public NonLinearRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -63,12 +63,12 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public NonLinearRangingPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -77,15 +77,16 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
-    public NonLinearRangingPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+    public NonLinearRangingPositionEstimator2D(
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -98,7 +99,7 @@ public class NonLinearRangingPositionEstimator2D extends
      * @param listener listener in charge of handling events.
      */
     public NonLinearRangingPositionEstimator2D(
-            RangingPositionEstimatorListener<Point2D> listener) {
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -106,14 +107,15 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
-    public NonLinearRangingPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            RangingPositionEstimatorListener<Point2D> listener) {
+    public NonLinearRangingPositionEstimator2D(
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -122,14 +124,14 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public NonLinearRangingPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RangingPositionEstimatorListener<Point2D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -138,18 +140,18 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
     public NonLinearRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            RangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -161,7 +163,7 @@ public class NonLinearRangingPositionEstimator2D extends
      *
      * @param initialPosition initial position to start position estimation.
      */
-    public NonLinearRangingPositionEstimator2D(Point2D initialPosition) {
+    public NonLinearRangingPositionEstimator2D(final Point2D initialPosition) {
         super(initialPosition);
         init();
     }
@@ -169,15 +171,15 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for lateration.
-     * @param initialPosition   initial position to start position estimation.
+     * @param sources         located radio sources used for lateration.
+     * @param initialPosition initial position to start position estimation.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
     public NonLinearRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Point2D initialPosition) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Point2D initialPosition) {
         super(initialPosition);
         init();
         internalSetSources(sources);
@@ -186,14 +188,14 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint       fingerprint containing ranging readings at an unknown
-     *                          location for provided located radio sources.
-     * @param initialPosition   initial position to start position estimation.
+     * @param fingerprint     fingerprint containing ranging readings at an unknown
+     *                        location for provided located radio sources.
+     * @param initialPosition initial position to start position estimation.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public NonLinearRangingPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition) {
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final Point2D initialPosition) {
         super(initialPosition);
         init();
         internalSetFingerprint(fingerprint);
@@ -202,17 +204,18 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for lateration.
-     * @param fingerprint       fingerprint containing readings at an unknown location
-     *                          for provided located radio sources.
-     * @param initialPosition   initial position to start position estimation
+     * @param sources         located radio sources used for lateration.
+     * @param fingerprint     fingerprint containing readings at an unknown location
+     *                        for provided located radio sources.
+     * @param initialPosition initial position to start position estimation
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
-    public NonLinearRangingPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition) {
+    public NonLinearRangingPositionEstimator2D(
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final Point2D initialPosition) {
         super(initialPosition);
         init();
         internalSetSources(sources);
@@ -222,11 +225,12 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param initialPosition   initial position to start position estimation.
-     * @param listener          listener in charge of handling events.
+     * @param initialPosition initial position to start position estimation.
+     * @param listener        listener in charge of handling events.
      */
-    public NonLinearRangingPositionEstimator2D(Point2D initialPosition,
-            RangingPositionEstimatorListener<Point2D> listener) {
+    public NonLinearRangingPositionEstimator2D(
+            final Point2D initialPosition,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
     }
@@ -234,17 +238,17 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for lateration.
-     * @param initialPosition   initial position to start position estimation.
-     * @param listener          listener in charge of handling events.
+     * @param sources         located radio sources used for lateration.
+     * @param initialPosition initial position to start position estimation.
+     * @param listener        listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
     public NonLinearRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Point2D initialPosition,
-            RangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Point2D initialPosition,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
         internalSetSources(sources);
@@ -253,16 +257,16 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint       fingerprint containing readings at an unknown location
-     *                          for provided located radio sources.
-     * @param initialPosition   initial position to start position estimation.
-     * @param listener          listener in charge of handling events.
+     * @param fingerprint     fingerprint containing readings at an unknown location
+     *                        for provided located radio sources.
+     * @param initialPosition initial position to start position estimation.
+     * @param listener        listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public NonLinearRangingPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition,
-            RangingPositionEstimatorListener<Point2D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final Point2D initialPosition,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -271,20 +275,20 @@ public class NonLinearRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for lateration.
-     * @param fingerprint       fingerprint containing readings at an unknown location
-     *                          for provided located radio sources.
-     * @param initialPosition   initial position to start position estimation.
-     * @param listener          listener in charge of handling events.
+     * @param sources         located radio sources used for lateration.
+     * @param fingerprint     fingerprint containing readings at an unknown location
+     *                        for provided located radio sources.
+     * @param initialPosition initial position to start position estimation.
+     * @param listener        listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
     public NonLinearRangingPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition,
-            RangingPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            final Point2D initialPosition,
+            final RangingPositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
         internalSetSources(sources);
@@ -301,7 +305,7 @@ public class NonLinearRangingPositionEstimator2D extends
             return null;
         }
 
-        InhomogeneousPoint2D result = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D result = new InhomogeneousPoint2D();
         getEstimatedPosition(result);
         return result;
     }
@@ -310,22 +314,22 @@ public class NonLinearRangingPositionEstimator2D extends
      * Sets positions, distances and standard deviations of distances on internal
      * lateration solver.
      *
-     * @param positions positions to be set.
-     * @param distances distances to be set.
+     * @param positions                  positions to be set.
+     * @param distances                  distances to be set.
      * @param distanceStandardDeviations standard deviations of distances to be set.
      */
     @Override
     @SuppressWarnings("Duplicates")
     protected void setPositionsDistancesAndDistanceStandardDeviations(
-            List<Point2D> positions, List<Double> distances,
-            List<Double> distanceStandardDeviations) {
+            final List<Point2D> positions, final List<Double> distances,
+            final List<Double> distanceStandardDeviations) {
 
-        int size = positions.size();
+        final int size = positions.size();
         Point2D[] positionsArray = new InhomogeneousPoint2D[size];
         positionsArray = positions.toArray(positionsArray);
 
-        double[] distancesArray = new double[size];
-        double[] distanceStandardDeviationsArray = new double[size];
+        final double[] distancesArray = new double[size];
+        final double[] distanceStandardDeviationsArray = new double[size];
         for (int i = 0; i < size; i++) {
             distancesArray[i] = distances.get(i);
             distanceStandardDeviationsArray[i] = distanceStandardDeviations.get(i);
@@ -334,7 +338,7 @@ public class NonLinearRangingPositionEstimator2D extends
         try {
             mTrilaterationSolver.setPositionsDistancesAndStandardDeviations(
                     positionsArray, distancesArray, distanceStandardDeviationsArray);
-        } catch (LockedException e) {
+        } catch (final LockedException e) {
             throw new IllegalArgumentException(e);
         }
     }

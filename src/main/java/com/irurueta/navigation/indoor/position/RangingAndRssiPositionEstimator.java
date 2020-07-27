@@ -47,7 +47,7 @@ public abstract class RangingAndRssiPositionEstimator<
      * @param listener listener in charge of handling events.
      */
     public RangingAndRssiPositionEstimator(
-            RangingAndRssiPositionEstimatorListener<P> listener) {
+            final RangingAndRssiPositionEstimatorListener<P> listener) {
         super(listener);
     }
 }

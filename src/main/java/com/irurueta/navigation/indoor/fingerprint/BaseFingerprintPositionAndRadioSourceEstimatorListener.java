@@ -27,11 +27,11 @@ public interface BaseFingerprintPositionAndRadioSourceEstimatorListener<
      * Called when estimation starts.
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(E estimator);
+    void onEstimateStart(final E estimator);
 
     /**
      * Called when estimation ends.
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(E estimator);
+    void onEstimateEnd(final E estimator);
 }

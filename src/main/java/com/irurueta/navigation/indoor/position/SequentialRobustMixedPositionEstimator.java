@@ -31,7 +31,7 @@ import java.util.List;
  * Base class for robust position estimation, using RSSI readings first to obtain
  * an initial coarse position estimation, and then ranging readings to refine such
  * estimation.
- *
+ * <p>
  * This implementation is like SequentialRobustRangingAndRssiPositionEstimator but
  * allows mixing different kinds of readings (ranging, RSSI or ranging+RSSI).
  *
@@ -420,7 +420,8 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      */
-    public SequentialRobustMixedPositionEstimator() { }
+    public SequentialRobustMixedPositionEstimator() {
+    }
 
     /**
      * Constructor.
@@ -430,7 +431,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      *                                  provided sources is less than the required minimum.
      */
     public SequentialRobustMixedPositionEstimator(
-            List<? extends RadioSourceLocated<P>> sources) {
+            final List<? extends RadioSourceLocated<P>> sources) {
         internalSetSources(sources);
     }
 
@@ -442,23 +443,23 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public SequentialRobustMixedPositionEstimator(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         internalSetFingerprint(fingerprint);
     }
 
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing reagins at an unknown location
-     *                      for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing reagins at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
     public SequentialRobustMixedPositionEstimator(
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         internalSetSources(sources);
         internalSetFingerprint(fingerprint);
     }
@@ -469,22 +470,22 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @param listener listener in charge of handling events.
      */
     public SequentialRobustMixedPositionEstimator(
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
     public SequentialRobustMixedPositionEstimator(
-            List<? extends RadioSourceLocated<P>> sources,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+            final List<? extends RadioSourceLocated<P>> sources,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(sources);
         mListener = listener;
     }
@@ -492,14 +493,14 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public SequentialRobustMixedPositionEstimator(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(fingerprint);
         mListener = listener;
     }
@@ -507,18 +508,18 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location
-     *                      for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
     public SequentialRobustMixedPositionEstimator(
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(sources, fingerprint);
         mListener = listener;
     }
@@ -526,17 +527,18 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to
-     *                                          readings within provided fingerprint.
-     *                                          The larger the score the better the
-     *                                          quality of the reading.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to
+     *                                        readings within provided fingerprint.
+     *                                        The larger the score the better the
+     *                                        quality of the reading.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores) {
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
     }
@@ -544,22 +546,23 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param sources                         located radio sources used for
+     *                                        lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required minimum.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<P>> sources) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<P>> sources) {
         this(sources);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
@@ -568,22 +571,23 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param fingerprint                       fingerprint containing readings at an
-     *                                          unknown location for provided located
-     *                                          radio sources.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param fingerprint                     fingerprint containing readings at an
+     *                                        unknown location for provided located
+     *                                        radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(fingerprint);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
@@ -592,26 +596,27 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param fingerprint                       fingerprint containing readings at an
-     *                                          unknown location for provided located
-     *                                          radio sources.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param sources                         located radio sources used for
+     *                                        lateration.
+     * @param fingerprint                     fingerprint containing readings at an
+     *                                        unknown location for provided located
+     *                                        radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(sources, fingerprint);
         internalSetSourceQualityScores(sourceQualityScores);
         internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
@@ -620,19 +625,20 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param listener                        listener in charge of handling events.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(sourceQualityScores, fingerprintReadingQualityScores);
         mListener = listener;
     }
@@ -640,24 +646,25 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param sources                         located radio sources used for
+     *                                        lateration.
+     * @param listener                        listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required minimum.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<P>> sources,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<P>> sources,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(sourceQualityScores, fingerprintReadingQualityScores, sources);
         mListener = listener;
     }
@@ -665,24 +672,25 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to
-     *                                          readings within provided fingerprint.
-     *                                          The larger the score the better the
-     *                                          quality of the reading.
-     * @param fingerprint                       fingerprint containing readings at an
-     *                                          unknown location for provided located
-     *                                          radio sources.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to
+     *                                        readings within provided fingerprint.
+     *                                        The larger the score the better the
+     *                                        quality of the reading.
+     * @param fingerprint                     fingerprint containing readings at an
+     *                                        unknown location for provided located
+     *                                        radio sources.
+     * @param listener                        listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(sourceQualityScores, fingerprintReadingQualityScores, fingerprint);
         mListener = listener;
     }
@@ -690,28 +698,29 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Constructor.
      *
-     * @param sourceQualityScores               quality scores corresponding to each
-     *                                          provided located radio source. The
-     *                                          larger the score value the better the
-     *                                          quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
-     *                                          within provided fingerprint. The larger
-     *                                          the score the better the quality of the
-     *                                          reading.
-     * @param sources                           located radio sources used for
-     *                                          lateration.
-     * @param fingerprint                       fingerprint containing readings at an
-     *                                          unknown location for provided located radio
-     *                                          sources.
-     * @param listener                          listener in charge of handling events.
+     * @param sourceQualityScores             quality scores corresponding to each
+     *                                        provided located radio source. The
+     *                                        larger the score value the better the
+     *                                        quality of the radio source.
+     * @param fingerprintReadingQualityScores quality scores corresponding to readings
+     *                                        within provided fingerprint. The larger
+     *                                        the score the better the quality of the
+     *                                        reading.
+     * @param sources                         located radio sources used for
+     *                                        lateration.
+     * @param fingerprint                     fingerprint containing readings at an
+     *                                        unknown location for provided located radio
+     *                                        sources.
+     * @param listener                        listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
-     * or the number of provided sources is less than the required minimum.
+     *                                  or the number of provided sources is less than the required minimum.
      */
-    public SequentialRobustMixedPositionEstimator(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            SequentialRobustMixedPositionEstimatorListener<P> listener) {
+    public SequentialRobustMixedPositionEstimator(
+            final double[] sourceQualityScores,
+            final double[] fingerprintReadingQualityScores,
+            final List<? extends RadioSourceLocated<P>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final SequentialRobustMixedPositionEstimatorListener<P> listener) {
         this(sourceQualityScores, fingerprintReadingQualityScores, sources,
                 fingerprint);
         mListener = listener;
@@ -729,11 +738,11 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Sets robust method for robust position estimation using ranging data.
      *
-     * @param rangingRobustMethod   robust method used for robust position estimation
-     *                              using ranging data.
-     * @throws LockedException  if this instance is locked.
+     * @param rangingRobustMethod robust method used for robust position estimation
+     *                            using ranging data.
+     * @throws LockedException if this instance is locked.
      */
-    public void setRangingRobustMethod(RobustEstimatorMethod rangingRobustMethod)
+    public void setRangingRobustMethod(final RobustEstimatorMethod rangingRobustMethod)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -755,11 +764,11 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Sets robust method used for coarse robust position estimation using RSSI data.
      *
-     * @param rssiRobustMethod  robust method used for coarse robust position estimation
-     *                          using RSSI data.
-     * @throws LockedException  if this instance is locked.
+     * @param rssiRobustMethod robust method used for coarse robust position estimation
+     *                         using RSSI data.
+     * @throws LockedException if this instance is locked.
      */
-    public void setRssiRobustMethod(RobustEstimatorMethod rssiRobustMethod)
+    public void setRssiRobustMethod(final RobustEstimatorMethod rssiRobustMethod)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -771,6 +780,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Indicates whether located radio source position covariance is taken into account
      * (if available) to determine distance standard deviation for ranging measurements.
+     *
      * @return true to take into account radio source position covariance during ranging
      * position estimation, false otherwise.
      */
@@ -781,14 +791,15 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Specifies whether located radio source position covariance is taken into account
      * (if available) to determine distance standard deviation for ranging measurements.
-     * @param useRangingRadioSourcePositionCovariance   true to take into account radio
-     *                                                  source position covariance during
-     *                                                  ranging position estimation,
-     *                                                  false otherwise.
-     * @throws LockedException  if this instance is locked.
+     *
+     * @param useRangingRadioSourcePositionCovariance true to take into account radio
+     *                                                source position covariance during
+     *                                                ranging position estimation,
+     *                                                false otherwise.
+     * @throws LockedException if this instance is locked.
      */
     public void setRangingRadioSourcePositionCovarianceUsed(
-            boolean useRangingRadioSourcePositionCovariance) throws LockedException {
+            final boolean useRangingRadioSourcePositionCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -811,14 +822,15 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Specifies whether located radio source position covariance is taken into account
      * (if available) to determine distance standard deviation for RSSI measurements.
-     * @param useRssiRadioSourcePositionCovariance  true to take into account radio
-     *                                              source position covariance during
-     *                                              RSSI position estimation, false
-     *                                              otherwise.
+     *
+     * @param useRssiRadioSourcePositionCovariance true to take into account radio
+     *                                             source position covariance during
+     *                                             RSSI position estimation, false
+     *                                             otherwise.
      * @throws LockedException if this instance is locked.
      */
     public void setRssiRadioSourcePositionCovarianceUsed(
-            boolean useRssiRadioSourcePositionCovariance) throws LockedException {
+            final boolean useRssiRadioSourcePositionCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -841,13 +853,13 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Specifies whether ranging readings are evenly distributed among radio sources
      * taking into account quality scores of both radio sources and ranging readings.
      *
-     * @param evenlyDistributeRangingReadings   true if ranging readings are evenly
-     *                                          distributed among radio sources, false
-     *                                          otherwise.
+     * @param evenlyDistributeRangingReadings true if ranging readings are evenly
+     *                                        distributed among radio sources, false
+     *                                        otherwise.
      * @throws LockedException if this instance is locked.
      */
     public void setRangingReadingsEvenlyDistributed(
-            boolean evenlyDistributeRangingReadings) throws LockedException {
+            final boolean evenlyDistributeRangingReadings) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -877,7 +889,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws LockedException if this instance is locked.
      */
     public void setRssiFallbackDistanceStandardDeviation(
-            double rssiFallbackDistanceStandardDeviation) throws LockedException {
+            final double rssiFallbackDistanceStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -899,14 +911,14 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Sets distance standard deviation fallback value to use when none can be
      * determined from provided ranging measurements.
      *
-     * @param rangingFallbackDistanceStandardDeviation  distance standard deviation
-     *                                                  fallback value to use when none
-     *                                                  can be determined from provided
-     *                                                  ranging measurements.
+     * @param rangingFallbackDistanceStandardDeviation distance standard deviation
+     *                                                 fallback value to use when none
+     *                                                 can be determined from provided
+     *                                                 ranging measurements.
      * @throws LockedException if this instance is locked.
      */
     public void setRangingFallbackDistanceStandardDeviation(
-            double rangingFallbackDistanceStandardDeviation) throws LockedException {
+            final double rangingFallbackDistanceStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -929,12 +941,12 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Specifies whether RSSI readings are evenly distributed among radio sources
      * taking into account quality scores of both radio sources and RSSI readings.
      *
-     * @param evenlyDistributeRssiReadings  true if RSSI readings are evenly distributed
-     *                                      among radio sources, false otherwise.
+     * @param evenlyDistributeRssiReadings true if RSSI readings are evenly distributed
+     *                                     among radio sources, false otherwise.
      * @throws LockedException if this instance is locked.
      */
     public void setRssiReadingsEvenlyDistributed(
-            boolean evenlyDistributeRssiReadings) throws LockedException {
+            final boolean evenlyDistributeRssiReadings) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -960,10 +972,10 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @param progressDelta amount of progress variation before notifying a progress
      *                      change during estimation.
      * @throws IllegalArgumentException if progress delta is less than zero or
-     * greater than 1.
+     *                                  greater than 1.
      * @throws LockedException          if this instance is locked.
      */
-    public void setProgressDelta(float progressDelta) throws LockedException {
+    public void setProgressDelta(final float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -997,7 +1009,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if estimator is locked.
      */
-    public void setRangingConfidence(double rangingConfidence) throws LockedException {
+    public void setRangingConfidence(final double rangingConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1026,12 +1038,12 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * of confidence indicates the probability that the estimated result is correct.
      * Usually this value will be close to 1.0, but not exactly 1.0.
      *
-     * @param rssiConfidence    amount of confidence for robust position estimation as
-     *                          a value between 0.0 and 1.0.
+     * @param rssiConfidence amount of confidence for robust position estimation as
+     *                       a value between 0.0 and 1.0.
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException          if estimator is locked.
      */
-    public void setRssiConfidence(double rssiConfidence) throws LockedException {
+    public void setRssiConfidence(final double rssiConfidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1058,12 +1070,12 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * When the maximum number of iterations is exceeded, an approximate result might
      * be available for retrieval.
      *
-     * @param rangingMaxIterations  maximum allowed number of iterations to be set for
-     *                              position estimation.
+     * @param rangingMaxIterations maximum allowed number of iterations to be set for
+     *                             position estimation.
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if estimator is locked.
      */
-    public void setRangingMaxIterations(int rangingMaxIterations)
+    public void setRangingMaxIterations(final int rangingMaxIterations)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1095,7 +1107,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException          if estimator is locked.
      */
-    public void setRssiMaxIterations(int rssiMaxIterations) throws LockedException {
+    public void setRssiMaxIterations(final int rssiMaxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1120,7 +1132,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @param refineResult true if result is refined, false otherwise.
      * @throws LockedException if this instance is locked.
      */
-    public void setResultRefined(boolean refineResult) throws LockedException {
+    public void setResultRefined(final boolean refineResult) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1146,7 +1158,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      *                       false otherwise.
      * @throws LockedException if estimator is locked.
      */
-    public void setCovarianceKept(boolean keepCovariance) throws LockedException {
+    public void setCovarianceKept(final boolean keepCovariance) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1170,11 +1182,11 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * using ranging measurements.
      * The result obtained on each preliminary solution might be later refined.
      *
-     * @param useRangingLinearSolver    true if a linear solver is used for preliminary
-     *                                  solution estimation on ranging readings.
+     * @param useRangingLinearSolver true if a linear solver is used for preliminary
+     *                               solution estimation on ranging readings.
      * @throws LockedException if estimator is locked.
      */
-    public void setRangingLinearSolverUsed(boolean useRangingLinearSolver)
+    public void setRangingLinearSolverUsed(final boolean useRangingLinearSolver)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1199,11 +1211,11 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * using RSSI measurements.
      * The result obtained on each preliminary solution might be later refined.
      *
-     * @param useRssiLinearSolver   true if a linear solver is used for preliminary
-     *                              solution estimation on RSSI readings.
+     * @param useRssiLinearSolver true if a linear solver is used for preliminary
+     *                            solution estimation on RSSI readings.
      * @throws LockedException if estimator is locked.
      */
-    public void setRssiLinearSolverUsed(boolean useRssiLinearSolver)
+    public void setRssiLinearSolverUsed(final boolean useRssiLinearSolver)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1234,7 +1246,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws LockedException if estimator is locked.
      */
     public void setRangingHomogeneousLinearSolverUsed(
-            boolean useRangingHomogeneousLinearSolver) throws LockedException {
+            final boolean useRangingHomogeneousLinearSolver) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1258,13 +1270,13 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * preliminary solutions or an initial solution for preliminary solutions that
      * will be later refined on the RSSI coarse estimation.
      *
-     * @param useRssiHomogeneousLinearSolver    true to use an homogeneous linear
-     *                                          solver for preliminary solutions during
-     *                                          RSSI fine position estimation.
+     * @param useRssiHomogeneousLinearSolver true to use an homogeneous linear
+     *                                       solver for preliminary solutions during
+     *                                       RSSI fine position estimation.
      * @throws LockedException if estimator is locked.
      */
     public void setRssiHomogeneousLinearSolverUsed(
-            boolean useRssiHomogeneousLinearSolver) throws LockedException {
+            final boolean useRssiHomogeneousLinearSolver) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1298,7 +1310,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws LockedException if estimator is locked.
      */
     public void setRangingPreliminarySolutionRefined(
-            boolean refineRangingPreliminarySolutions) throws LockedException {
+            final boolean refineRangingPreliminarySolutions) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1326,13 +1338,13 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * linear solver will be used regardless of this value using an average solution
      * as the initial value ot be refined.
      *
-     * @param refineRssiPreliminarySolutions    true if preliminary RSSI solutions must
-     *                                          be refined after an initial linear
-     *                                          solution, false otherwise.
+     * @param refineRssiPreliminarySolutions true if preliminary RSSI solutions must
+     *                                       be refined after an initial linear
+     *                                       solution, false otherwise.
      * @throws LockedException if estimator is locked.
      */
     public void setRssiPreliminarySolutionRefined(
-            boolean refineRssiPreliminarySolutions) throws LockedException {
+            final boolean refineRssiPreliminarySolutions) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1351,12 +1363,12 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Sets size of subsets to be checked during ranging robust estimation.
      *
-     * @param rangingPreliminarySubsetSize  size of subsets to be checked during
-     *                                      ranging robust estimation.
-     * @throws LockedException  if estimator is locked.
+     * @param rangingPreliminarySubsetSize size of subsets to be checked during
+     *                                     ranging robust estimation.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredSources()}.
      */
-    public void setRangingPreliminarySubsetSize(int rangingPreliminarySubsetSize)
+    public void setRangingPreliminarySubsetSize(final int rangingPreliminarySubsetSize)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1382,10 +1394,10 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      *
      * @param rssiPreliminarySubsetSize size of subsets to be checked during
      *                                  RSSI robust estimation.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredSources()}.
      */
-    public void setRssiPreliminarySubsetSize(int rssiPreliminarySubsetSize)
+    public void setRssiPreliminarySubsetSize(final int rssiPreliminarySubsetSize)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1416,7 +1428,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @param rangingThreshold threshold for ranging estimation or null.
      * @throws LockedException if estimator is locked.
      */
-    public void setRangingThreshold(Double rangingThreshold) throws LockedException {
+    public void setRangingThreshold(final Double rangingThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1442,7 +1454,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @param rssiThreshold threshold for RSSI estimation or null.
      * @throws LockedException if estimator is locked.
      */
-    public void setRssiThreshold(Double rssiThreshold) throws LockedException {
+    public void setRssiThreshold(final Double rssiThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1461,14 +1473,14 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     /**
      * Sets located radio sources used for lateration.
      *
-     * @param sources   located radio sources used for lateration.
+     * @param sources located radio sources used for lateration.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
-    public void setSources(List<? extends RadioSourceLocated<P>> sources)
-            throws LockedException{
+    public void setSources(final List<? extends RadioSourceLocated<P>> sources)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1491,12 +1503,12 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Sets fingerprint containing readings at an unknown location for provided
      * located radio sources.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
      * @throws LockedException if estimator is locked.
      */
     public void setFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1524,7 +1536,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws IllegalArgumentException if provided quality scores length is smaller
      *                                  than minimum required samples.
      */
-    public void setSourceQualityScores(double[] sourceQualityScores)
+    public void setSourceQualityScores(final double[] sourceQualityScores)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1546,14 +1558,14 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Sets quality scores corresponding to each reading within provided fingerprint.
      * The larger the score value the better the quality of the reading.
      *
-     * @param fingerprintReadingsQualityScores  quality scores corresponding to each
-     *                                          reading within provided fingerprint.
+     * @param fingerprintReadingsQualityScores quality scores corresponding to each
+     *                                         reading within provided fingerprint.
      * @throws LockedException          if this instance is locked.
      * @throws IllegalArgumentException if provided quality scores length is smaller
      *                                  than minimum required samples.
      */
     public void setFingerprintReadingsQualityScores(
-            double[] fingerprintReadingsQualityScores) throws LockedException {
+            final double[] fingerprintReadingsQualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1576,7 +1588,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @throws LockedException if estimator is locked.
      */
     public void setListener(
-            SequentialRobustMixedPositionEstimatorListener<P> listener)
+            final SequentialRobustMixedPositionEstimatorListener<P> listener)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -1600,10 +1612,10 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * This is optional, but if provided, when no linear solvers are used, this is
      * taken into account. If linear solvers are used, this is ignored.
      *
-     * @param initialPosition   an initial position.
-     * @throws LockedException  if estimator is locked.
+     * @param initialPosition an initial position.
+     * @throws LockedException if estimator is locked.
      */
-    public void setInitialPosition(P initialPosition) throws LockedException {
+    public void setInitialPosition(final P initialPosition) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1628,7 +1640,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     public boolean isReady() {
         checkFingerprint(mFingerprint);
 
-        int numSources = mSources != null ? mSources.size() : 0;
+        final int numSources = mSources != null ? mSources.size() : 0;
         return numSources > getMinRequiredSources() &&
                 (mRssiEstimatorAvailable || mRangingEstimatorAvailable);
     }
@@ -1682,7 +1694,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
             try {
                 // estimate coarse position using RSSI data
                 coarsePosition = mRssiEstimator.estimate();
-            } catch (RobustEstimatorException e) {
+            } catch (final RobustEstimatorException e) {
                 coarsePosition = null;
             }
         }
@@ -1694,7 +1706,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
         }
 
         try {
-            P result = mRangingEstimator != null ?
+            final P result = mRangingEstimator != null ?
                     mRangingEstimator.estimate() : coarsePosition;
 
             if (mListener != null) {
@@ -1808,17 +1820,17 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     protected void setupRangingEstimator() throws LockedException {
         if (mFingerprint != null) {
             //builds separated ranging readings
-            List<? extends Reading<? extends RadioSource>> readings =
+            final List<? extends Reading<? extends RadioSource>> readings =
                     mFingerprint.getReadings();
 
-            List<RangingReading<RadioSource>> rangingReadings =
+            final List<RangingReading<RadioSource>> rangingReadings =
                     new ArrayList<>();
 
-            double[] fingerprintReadingsQualityScores =
+            final double[] fingerprintReadingsQualityScores =
                     new double[mNumRangingReadings];
             int i = 0;
             int j = 0;
-            for (Reading<? extends RadioSource> reading : readings) {
+            for (final Reading<? extends RadioSource> reading : readings) {
                 if (reading instanceof RangingReading) {
                     // noinspection unchecked
                     rangingReadings.add(
@@ -1837,7 +1849,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
                 j++;
             }
 
-            RangingFingerprint<RadioSource, RangingReading<RadioSource>> rangingFingerprint =
+            final RangingFingerprint<RadioSource, RangingReading<RadioSource>> rangingFingerprint =
                     new RangingFingerprint<>(rangingReadings);
 
             // set data and configuration on both internal estimators
@@ -1864,27 +1876,29 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
             mRangingEstimator.setListener(new RobustRangingPositionEstimatorListener<P>() {
                 @Override
                 public void onEstimateStart(
-                        RobustRangingPositionEstimator<P> estimator) {
+                        final RobustRangingPositionEstimator<P> estimator) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateEnd(
-                        RobustRangingPositionEstimator<P> estimator) {
+                        final RobustRangingPositionEstimator<P> estimator) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateNextIteration(
-                        RobustRangingPositionEstimator<P> estimator, int iteration) {
+                        final RobustRangingPositionEstimator<P> estimator,
+                        final int iteration) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateProgressChange(
-                        RobustRangingPositionEstimator<P> estimator, float progress) {
+                        final RobustRangingPositionEstimator<P> estimator,
+                        final float progress) {
                     if (mListener != null) {
-                        float p = mRssiEstimatorAvailable ?
+                        final float p = mRssiEstimatorAvailable ?
                                 0.5f + 0.5f * progress : progress;
                         mListener.onEstimateProgressChange(
                                 SequentialRobustMixedPositionEstimator.this,
@@ -1906,17 +1920,17 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
     protected void setupRssiEstimator() throws LockedException {
         if (mFingerprint != null) {
             //builds separated RSSI readings
-            List<? extends Reading<? extends RadioSource>> readings =
+            final List<? extends Reading<? extends RadioSource>> readings =
                     mFingerprint.getReadings();
 
-            List<RssiReading<RadioSource>> rssiReadings =
+            final List<RssiReading<RadioSource>> rssiReadings =
                     new ArrayList<>();
 
-            double[] fingerprintReadingsQualityScores =
+            final double[] fingerprintReadingsQualityScores =
                     new double[mNumRssiReadings];
             int i = 0;
             int j = 0;
-            for (Reading<? extends RadioSource> reading : readings) {
+            for (final Reading<? extends RadioSource> reading : readings) {
                 if (reading instanceof RssiReading) {
                     // noinspection unchecked
                     rssiReadings.add((RssiReading<RadioSource>) reading);
@@ -1934,7 +1948,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
                 j++;
             }
 
-            RssiFingerprint<RadioSource, RssiReading<RadioSource>> rssiFingerprint =
+            final RssiFingerprint<RadioSource, RssiReading<RadioSource>> rssiFingerprint =
                     new RssiFingerprint<>(rssiReadings);
 
             // set data and configuration on both internal estimators
@@ -1962,27 +1976,29 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
             mRssiEstimator.setListener(new RobustRssiPositionEstimatorListener<P>() {
                 @Override
                 public void onEstimateStart(
-                        RobustRssiPositionEstimator<P> estimator) {
+                        final RobustRssiPositionEstimator<P> estimator) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateEnd(
-                        RobustRssiPositionEstimator<P> estimator) {
+                        final RobustRssiPositionEstimator<P> estimator) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateNextIteration(
-                        RobustRssiPositionEstimator<P> estimator, int iteration) {
+                        final RobustRssiPositionEstimator<P> estimator,
+                        final int iteration) {
                     // not used
                 }
 
                 @Override
                 public void onEstimateProgressChange(
-                        RobustRssiPositionEstimator<P> estimator, float progress) {
+                        final RobustRssiPositionEstimator<P> estimator,
+                        final float progress) {
                     if (mListener != null) {
-                        float p = mRangingEstimatorAvailable ?
+                        final float p = mRangingEstimatorAvailable ?
                                 0.5f * progress : progress;
                         mListener.onEstimateProgressChange(
                                 SequentialRobustMixedPositionEstimator.this,
@@ -2001,9 +2017,9 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      *
      * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
-     * provided sources is less than the required minimum.
+     *                                  provided sources is less than the required minimum.
      */
-    private void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
+    private void internalSetSources(final List<? extends RadioSourceLocated<P>> sources) {
         if (sources == null) {
             throw new IllegalArgumentException();
         }
@@ -2023,7 +2039,8 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      *                    provided located radio sources.
      * @throws IllegalArgumentException if provided value is null.
      */
-    private void internalSetFingerprint(Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+    private void internalSetFingerprint(
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }
@@ -2035,11 +2052,12 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Sets quality scores corresponding to each provided located radio source.
      * This method is used internally and does not check whether instance is
      * locked or not.
+     *
      * @param sourceQualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length is
-     * smaller than 3 samples for 2D or 4 samples for 3D.
+     *                                  smaller than 3 samples for 2D or 4 samples for 3D.
      */
-    private void internalSetSourceQualityScores(double[] sourceQualityScores) {
+    private void internalSetSourceQualityScores(final double[] sourceQualityScores) {
         if (sourceQualityScores == null ||
                 sourceQualityScores.length < getMinRequiredSources()) {
             throw new IllegalArgumentException();
@@ -2053,12 +2071,13 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * fingerprint.
      * This method is used internally and does not check whether instance is locked
      * or not.
+     *
      * @param fingerprintReadingsQualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length is smaller
-     * than 3 samples for 2D or 4 samples for 3D.
+     *                                  than 3 samples for 2D or 4 samples for 3D.
      */
     private void internalSetFingerprintReadingsQualityScores(
-            double[] fingerprintReadingsQualityScores) {
+            final double[] fingerprintReadingsQualityScores) {
         if (fingerprintReadingsQualityScores == null ||
                 fingerprintReadingsQualityScores.length < getMinRequiredSources()) {
             throw new IllegalArgumentException();
@@ -2074,7 +2093,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @return a ranging reading containing only the ranging data of input reading.
      */
     private RangingReading<RadioSource> createRangingReading(
-            RangingAndRssiReading<? extends RadioSource> reading) {
+            final RangingAndRssiReading<? extends RadioSource> reading) {
         return new RangingReading<>(reading.getSource(),
                 reading.getDistance(),
                 reading.getDistanceStandardDeviation(),
@@ -2089,7 +2108,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @return an RSSI reading containing only the RSSI data of input reading.
      */
     private RssiReading<RadioSource> createRssiReading(
-            RangingAndRssiReading<? extends RadioSource> reading) {
+            final RangingAndRssiReading<? extends RadioSource> reading) {
         return new RssiReading<>(reading.getSource(), reading.getRssi(),
                 reading.getRssiStandardDeviation());
     }
@@ -2101,7 +2120,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * @param fingerprint fingerprint to be checked.
      */
     private void checkFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         checkReadings(fingerprint != null ? fingerprint.getReadings() : null);
     }
 
@@ -2109,9 +2128,10 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
      * Checks number of available ranging readings and number of available RSSI
      * readings. Also determines whether position must be estimated using ranging
      * data or RSSI data.
+     *
      * @param readings readings to be checked.
      */
-    private void checkReadings(List<? extends Reading<?>> readings) {
+    private void checkReadings(final List<? extends Reading<?>> readings) {
         mNumRssiReadings = 0;
         mNumRangingReadings = 0;
         mRangingEstimatorAvailable = mRssiEstimatorAvailable = false;
@@ -2120,7 +2140,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
             return;
         }
 
-        for (Reading<?> reading : readings) {
+        for (final Reading<?> reading : readings) {
             if (reading instanceof RangingReading) {
                 mNumRangingReadings++;
             } else if (reading instanceof RssiReading) {
@@ -2131,7 +2151,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>>
             }
         }
 
-        int min = getMinRequiredSources();
+        final int min = getMinRequiredSources();
         mRangingEstimatorAvailable = mNumRangingReadings >= min;
         mRssiEstimatorAvailable = mNumRssiReadings >= min;
     }

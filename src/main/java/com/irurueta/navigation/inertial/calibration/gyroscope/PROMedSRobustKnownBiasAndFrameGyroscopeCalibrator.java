@@ -1630,7 +1630,7 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1662,7 +1662,7 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1690,7 +1690,8 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1699,7 +1700,8 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
         }
 
         final PROMedSRobustEstimator<PreliminaryResult> innerEstimator =
-                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<PreliminaryResult>() {
+                new PROMedSRobustEstimator<>(
+                        new PROMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -1742,19 +1744,11 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -1782,6 +1776,11 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
@@ -1792,11 +1791,15 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

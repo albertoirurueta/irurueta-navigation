@@ -78,119 +78,132 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
     public RANSACRobustLateration2DSolver(
-            RobustLaterationSolverListener<Point2D> listener) {
+            final RobustLaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RANSACRobustLateration2DSolver(Point2D[] positions, double[] distances) {
+    public RANSACRobustLateration2DSolver(
+            final Point2D[] positions, final double[] distances) {
         super(positions, distances);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node to be
+     *                                   estimated.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RANSACRobustLateration2DSolver(Point2D[] positions, double[] distances,
-                                          double[] distanceStandardDeviations) {
+    public RANSACRobustLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node.
+     *
+     * @param positions                  known positions of static nodes.
+     * @param distances                  euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions, distances or
-     * standard deviations are null, don't have the same length or their length is smaller
-     * than required (3 points).
+     *                                  standard deviations are null, don't have the same length or their length is smaller
+     *                                  than required (3 points).
      */
-    public RANSACRobustLateration2DSolver(Point2D[] positions, double[] distances,
-                                          double[] distanceStandardDeviations,
-                                          RobustLaterationSolverListener<Point2D> listener) {
+    public RANSACRobustLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
 
     /**
      * Constructor.
+     *
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener  listener to be notified of events such as when estimation starts,
+     *                  ends or its progress significantly changes.
      * @throws IllegalArgumentException if either positions or distances are null,
-     * don't have the same length or their length is smaller than required (3 points).
+     *                                  don't have the same length or their length is smaller than required (3 points).
      */
-    public RANSACRobustLateration2DSolver(Point2D[] positions, double[] distances,
-                                          RobustLaterationSolverListener<Point2D> listener) {
+    public RANSACRobustLateration2DSolver(
+            final Point2D[] positions, final double[] distances,
+            final RobustLaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array
-     * is less than required (3 points).
+     *                                  is less than required (3 points).
      */
-    public RANSACRobustLateration2DSolver(Circle[] circles) {
+    public RANSACRobustLateration2DSolver(final Circle[] circles) {
         super(circles);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if circles is null, length of circles array is less
-     * than required (3 points) or don't have the same length.
+     *                                  than required (3 points) or don't have the same length.
      */
-    public RANSACRobustLateration2DSolver(Circle[] circles,
-                                          double[] distanceStandardDeviations) {
+    public RANSACRobustLateration2DSolver(
+            final Circle[] circles, final double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles  circles defining positions and distances.
      * @param listener listener to be notified of events such as when estimation starts,
      *                 ends or its progress significantly changes.
      * @throws IllegalArgumentException if circles is null or if length of circles array
-     * is less than required (3 points).
+     *                                  is less than required (3 points).
      */
-    public RANSACRobustLateration2DSolver(Circle[] circles,
-                                          RobustLaterationSolverListener<Point2D> listener) {
+    public RANSACRobustLateration2DSolver(
+            final Circle[] circles, final RobustLaterationSolverListener<Point2D> listener) {
         super(circles, listener);
     }
 
     /**
      * Constructor.
-     * @param circles circles defining positions and distances.
+     *
+     * @param circles                    circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
-     *                 ends or its progress significantly changes.
+     * @param listener                   listener to be notified of events such as when estimation starts,
+     *                                   ends or its progress significantly changes.
      * @throws IllegalArgumentException if circles is null, length of circles array is less
-     * than required (3 points) or don't have the same length.
+     *                                  than required (3 points) or don't have the same length.
      */
-    public RANSACRobustLateration2DSolver(Circle[] circles,
-                                          double[] distanceStandardDeviations,
-                                          RobustLaterationSolverListener<Point2D> listener) {
+    public RANSACRobustLateration2DSolver(
+            final Circle[] circles, final double[] distanceStandardDeviations,
+            final RobustLaterationSolverListener<Point2D> listener) {
         super(circles, distanceStandardDeviations, listener);
     }
 
@@ -198,6 +211,7 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -208,11 +222,12 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
-     * @throws LockedException if this solver is locked.
+     * @throws LockedException          if this solver is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -224,6 +239,7 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Indicates whether inliers must be computed and kept.
+     *
      * @return true if inliers must be computed and kept, false if inliers
      * only need to be computed but not kept.
      */
@@ -233,11 +249,12 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Specifies whether inliers must be computed and kept.
+     *
      * @param computeAndKeepInliers true if inliers must be computed and kept,
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -247,6 +264,7 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Indicates whether residuals must be computed and kept.
+     *
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
@@ -256,11 +274,12 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Specifies whether residuals must be computed and kept.
+     *
      * @param computeAndKeepResiduals true if residuals must be computed and kept,
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -270,11 +289,12 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Solves the lateration problem.
+     *
      * @return estimated position.
-     * @throws LockedException if instance is busy solving the lateration problem.
-     * @throws NotReadyException is solver is not ready.
+     * @throws LockedException          if instance is busy solving the lateration problem.
+     * @throws NotReadyException        is solver is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
-     * (i.e. numerical instability, no solution available, etc).
+     *                                  (i.e. numerical instability, no solution available, etc).
      */
     @Override
     public Point2D solve() throws LockedException, NotReadyException, RobustEstimatorException {
@@ -285,7 +305,7 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
             throw new NotReadyException();
         }
 
-        RANSACRobustEstimator<Point2D> innerEstimator =
+        final RANSACRobustEstimator<Point2D> innerEstimator =
                 new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<Point2D>() {
 
                     @Override
@@ -304,12 +324,14 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices, List<Point2D> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices, final List<Point2D> solutions) {
                         solvePreliminarSolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(Point2D currentEstimation, int i) {
+                    public double computeResidual(
+                            final Point2D currentEstimation, final int i) {
                         return Math.abs(currentEstimation.distanceTo(mPositions[i]) - mDistances[i]);
                     }
 
@@ -319,38 +341,39 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
                     }
 
                     @Override
-                    public void onEstimateStart(RobustEstimator<Point2D> estimator) {
+                    public void onEstimateStart(final RobustEstimator<Point2D> estimator) {
+                    }
+
+                    @Override
+                    public void onEstimateEnd(final RobustEstimator<Point2D> estimator) {
+                    }
+
+                    @Override
+                    public void onEstimateNextIteration(
+                            final RobustEstimator<Point2D> estimator, final int iteration) {
                         if (mListener != null) {
-                            mListener.onSolveStart(RANSACRobustLateration2DSolver.this);
+                            mListener.onSolveNextIteration(
+                                    RANSACRobustLateration2DSolver.this, iteration);
                         }
                     }
 
                     @Override
-                    public void onEstimateEnd(RobustEstimator<Point2D> estimator) {
+                    public void onEstimateProgressChange(
+                            final RobustEstimator<Point2D> estimator, final float progress) {
                         if (mListener != null) {
-                            mListener.onSolveEnd(RANSACRobustLateration2DSolver.this);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Point2D> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onSolveNextIteration(RANSACRobustLateration2DSolver.this,
-                                    iteration);
-                        }
-                    }
-
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Point2D> estimator, float progress) {
-                        if (mListener != null) {
-                            mListener.onSolveProgressChange(RANSACRobustLateration2DSolver.this,
-                                    progress);
+                            mListener.onSolveProgressChange(
+                                    RANSACRobustLateration2DSolver.this, progress);
                         }
                     }
                 });
 
         try {
             mLocked = true;
+
+            if (mListener != null) {
+                mListener.onSolveStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -361,10 +384,17 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
             innerEstimator.setProgressDelta(mProgressDelta);
             Point2D result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
-            return attemptRefine(result);
-        } catch (com.irurueta.numerical.LockedException e) {
+            result = attemptRefine(result);
+
+            if (mListener != null) {
+                mListener.onSolveEnd(this);
+            }
+
+            return result;
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
         } finally {
             mLocked = false;
@@ -373,6 +403,7 @@ public class RANSACRobustLateration2DSolver extends RobustLateration2DSolver {
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

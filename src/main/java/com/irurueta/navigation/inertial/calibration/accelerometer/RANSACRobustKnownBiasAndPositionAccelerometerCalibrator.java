@@ -127,7 +127,8 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      */
-    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(final boolean commonAxisUsed) {
+    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final boolean commonAxisUsed) {
         super(commonAxisUsed);
     }
 
@@ -149,7 +150,8 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @param bias known accelerometer bias.
      * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
-    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(final Matrix bias) {
+    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final Matrix bias) {
         super(bias);
     }
 
@@ -171,7 +173,8 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(final ECEFPosition position) {
+    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final ECEFPosition position) {
         super(position);
     }
 
@@ -491,7 +494,8 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *
      * @param position position where body kinematics measures have been taken.
      */
-    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(final NEDPosition position) {
+    public RANSACRobustKnownBiasAndPositionAccelerometerCalibrator(
+            final NEDPosition position) {
         super(position);
     }
 
@@ -825,7 +829,7 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -852,7 +856,7 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -877,7 +881,8 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(
+            final boolean computeAndKeepResiduals)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -905,75 +910,82 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
         mGravityNorm = computeGravityNorm();
 
         final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
+                new RANSACRobustEstimator<>(
+                        new RANSACRobustEstimatorListener<PreliminaryResult>() {
+                            @Override
+                            public double getThreshold() {
+                                return mThreshold;
+                            }
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mMeasurements.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mMeasurements.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return mPreliminarySubsetSize;
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return mPreliminarySubsetSize;
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                            final List<PreliminaryResult> solutions) {
-                        computePreliminarySolutions(samplesIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<PreliminaryResult> solutions) {
+                                computePreliminarySolutions(samplesIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
-                        return computeError(mMeasurements.get(i), currentEstimation);
-                    }
+                            @Override
+                            public double computeResidual(
+                                    final PreliminaryResult currentEstimation,
+                                    final int i) {
+                                return computeError(mMeasurements.get(i), currentEstimation);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.super.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.super.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator<PreliminaryResult> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator<PreliminaryResult> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
-                        if (mListener != null) {
-                            mListener.onCalibrateNextIteration(
-                                    RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.this, iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<PreliminaryResult> estimator,
+                                    final int iteration) {
+                                if (mListener != null) {
+                                    mListener.onCalibrateNextIteration(
+                                            RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.this,
+                                            iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
-                        if (mListener != null) {
-                            mListener.onCalibrateProgressChange(
-                                    RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.this, progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<PreliminaryResult> estimator,
+                                    final float progress) {
+                                if (mListener != null) {
+                                    mListener.onCalibrateProgressChange(
+                                            RANSACRobustKnownBiasAndPositionAccelerometerCalibrator.this,
+                                            progress);
+                                }
+                            }
+                        });
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -987,11 +999,15 @@ public class RANSACRobustKnownBiasAndPositionAccelerometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

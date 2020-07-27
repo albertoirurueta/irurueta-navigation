@@ -1967,7 +1967,8 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
      *                     with unknown orientations.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setMeasurements(final Collection<StandardDeviationBodyMagneticFluxDensity> measurements)
+    public void setMeasurements(
+            final Collection<StandardDeviationBodyMagneticFluxDensity> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -2479,7 +2480,8 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] point) throws EvaluationException {
+                    public double evaluate(final double[] point)
+                            throws EvaluationException {
                         return evaluateGeneral(point);
                     }
                 });
@@ -2520,8 +2522,9 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
                     }
 
                     @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
                             throws EvaluationException {
 
                         mBmeasX = point[0];
@@ -2636,7 +2639,8 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
                     @Override
-                    public double evaluate(double[] point) throws EvaluationException {
+                    public double evaluate(final double[] point)
+                            throws EvaluationException {
                         return evaluateCommonAxis(point);
                     }
                 });
@@ -2687,8 +2691,9 @@ public class KnownPositionAndInstantMagnetometerCalibrator {
                     }
 
                     @Override
-                    public double evaluate(final int i, final double[] point,
-                                           final double[] params, final double[] derivatives)
+                    public double evaluate(
+                            final int i, final double[] point,
+                            final double[] params, final double[] derivatives)
                             throws EvaluationException {
 
                         mBmeasX = point[0];

@@ -34,7 +34,7 @@ import com.irurueta.navigation.lateration.RobustLaterationSolverListener;
  */
 public abstract class RobustRangingAndRssiPositionEstimator<P extends Point<?>> extends
         RobustPositionEstimator<P, RangingAndRssiReading<? extends RadioSource>,
-        RobustRangingAndRssiPositionEstimatorListener<P>> {
+                RobustRangingAndRssiPositionEstimatorListener<P>> {
 
     /**
      * Constructor.
@@ -49,7 +49,7 @@ public abstract class RobustRangingAndRssiPositionEstimator<P extends Point<?>> 
      * @param listener listener in charge of handling events.
      */
     public RobustRangingAndRssiPositionEstimator(
-            RobustRangingAndRssiPositionEstimatorListener<P> listener) {
+            final RobustRangingAndRssiPositionEstimatorListener<P> listener) {
         super(listener);
         init();
     }
@@ -60,7 +60,7 @@ public abstract class RobustRangingAndRssiPositionEstimator<P extends Point<?>> 
     private void init() {
         mTrilaterationSolverListener = new RobustLaterationSolverListener<P>() {
             @Override
-            public void onSolveStart(RobustLaterationSolver<P> solver) {
+            public void onSolveStart(final RobustLaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateStart(
                             RobustRangingAndRssiPositionEstimator.this);
@@ -68,7 +68,7 @@ public abstract class RobustRangingAndRssiPositionEstimator<P extends Point<?>> 
             }
 
             @Override
-            public void onSolveEnd(RobustLaterationSolver<P> solver) {
+            public void onSolveEnd(final RobustLaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateEnd(
                             RobustRangingAndRssiPositionEstimator.this);
@@ -76,8 +76,8 @@ public abstract class RobustRangingAndRssiPositionEstimator<P extends Point<?>> 
             }
 
             @Override
-            public void onSolveNextIteration(RobustLaterationSolver<P> solver,
-                                             int iteration) {
+            public void onSolveNextIteration(final RobustLaterationSolver<P> solver,
+                                             final int iteration) {
                 if (mListener != null) {
                     mListener.onEstimateNextIteration(
                             RobustRangingAndRssiPositionEstimator.this,
@@ -86,8 +86,8 @@ public abstract class RobustRangingAndRssiPositionEstimator<P extends Point<?>> 
             }
 
             @Override
-            public void onSolveProgressChange(RobustLaterationSolver<P> solver,
-                                              float progress) {
+            public void onSolveProgressChange(final RobustLaterationSolver<P> solver,
+                                              final float progress) {
                 if (mListener != null) {
                     mListener.onEstimateProgressChange(
                             RobustRangingAndRssiPositionEstimator.this,

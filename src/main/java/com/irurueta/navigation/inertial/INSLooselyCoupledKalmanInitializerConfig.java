@@ -338,7 +338,8 @@ public class INSLooselyCoupledKalmanInitializerConfig implements Serializable, C
      *
      * @param result instance where initial gyroscope bias uncertainty will be stored.
      */
-    public void getInitialGyroscopeBiasUncertaintyAngularSpeed(AngularSpeed result) {
+    public void getInitialGyroscopeBiasUncertaintyAngularSpeed(
+            final AngularSpeed result) {
         result.setValue(mInitialGyroscopeBiasUncertainty);
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
@@ -467,7 +468,8 @@ public class INSLooselyCoupledKalmanInitializerConfig implements Serializable, C
             return false;
         }
 
-        INSLooselyCoupledKalmanInitializerConfig other = (INSLooselyCoupledKalmanInitializerConfig) obj;
+        final INSLooselyCoupledKalmanInitializerConfig other =
+                (INSLooselyCoupledKalmanInitializerConfig) obj;
         return equals(other);
     }
 

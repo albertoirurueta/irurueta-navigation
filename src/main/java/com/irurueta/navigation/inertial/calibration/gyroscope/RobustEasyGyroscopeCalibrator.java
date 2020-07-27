@@ -2984,7 +2984,8 @@ public abstract class RobustEasyGyroscopeCalibrator {
      * @throws NotReadyException    if calibrator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
-    public abstract void calibrate() throws LockedException, NotReadyException, CalibrationException;
+    public abstract void calibrate() throws LockedException, NotReadyException,
+            CalibrationException;
 
     /**
      * Gets array containing x,y,z components of estimated gyroscope biases
@@ -6094,7 +6095,7 @@ public abstract class RobustEasyGyroscopeCalibrator {
                     new BodyKinematicsSequence<>(sequence);
 
             // fix body kinematic measurements of provided sequence
-            int numItems = sequence.getItemsCount();
+            final int numItems = sequence.getItemsCount();
             final List<StandardDeviationTimedBodyKinematics> measuredItems = sequence.getSortedItems();
             final List<StandardDeviationTimedBodyKinematics> fixedItems = fixedSequence.getSortedItems();
             for (int j = 0; j < numItems; j++) {
@@ -6158,7 +6159,7 @@ public abstract class RobustEasyGyroscopeCalibrator {
         final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences =
                 new ArrayList<>();
 
-        for (int samplesIndex : samplesIndices) {
+        for (final int samplesIndex : samplesIndices) {
             sequences.add(mSequences.get(samplesIndex));
         }
 
@@ -6193,7 +6194,7 @@ public abstract class RobustEasyGyroscopeCalibrator {
             }
 
             solutions.add(result);
-        } catch (LockedException | CalibrationException | NotReadyException e) {
+        } catch (final LockedException | CalibrationException | NotReadyException e) {
             solutions.clear();
         }
     }

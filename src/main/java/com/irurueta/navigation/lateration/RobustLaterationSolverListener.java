@@ -20,33 +20,40 @@ import com.irurueta.geometry.Point;
 /**
  * Listener to be notified of events produced by a robust lateration solver when solving starts, ends or
  * when progress changes.
+ *
  * @param <P> a {@link Point} type.
  */
 public interface RobustLaterationSolverListener<P extends Point<?>> {
 
     /**
      * Called when solving starts.
+     *
      * @param solver solver raising the event.
      */
-    void onSolveStart(RobustLaterationSolver<P> solver);
+    void onSolveStart(final RobustLaterationSolver<P> solver);
 
     /**
      * Called when solving ends.
+     *
      * @param solver solver raising the event.
      */
-    void onSolveEnd(RobustLaterationSolver<P> solver);
+    void onSolveEnd(final RobustLaterationSolver<P> solver);
 
     /**
      * Called when solver iterates to refine a possible solution.
-     * @param solver solver raising the event.
+     *
+     * @param solver    solver raising the event.
      * @param iteration current iteration.
      */
-    void onSolveNextIteration(RobustLaterationSolver<P> solver, int iteration);
+    void onSolveNextIteration(final RobustLaterationSolver<P> solver,
+                              final int iteration);
 
     /**
      * Called when solving progress changes significantly.
-     * @param solver solver raising the event.
+     *
+     * @param solver   solver raising the event.
      * @param progress progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onSolveProgressChange(RobustLaterationSolver<P> solver, float progress);
+    void onSolveProgressChange(final RobustLaterationSolver<P> solver,
+                               final float progress);
 }

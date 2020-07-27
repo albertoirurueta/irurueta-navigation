@@ -19,6 +19,7 @@ package com.irurueta.navigation.indoor;
  * Contains a reading associated to a given radio source (e.e. WiFi access point or
  * bluetooth beacon) containing signal strength and distance to associated access
  * point.
+ *
  * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -63,12 +64,14 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
+     *
+     * @param source   radio source associated to this reading.
      * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
+     * @param rssi     received signal strength indicator in dBm.
      * @throws IllegalArgumentException if radio source data is null or distance is negative.
      */
-    public RangingAndRssiReading(S source, double distance, double rssi) {
+    public RangingAndRssiReading(
+            final S source, final double distance, final double rssi) {
         super(source);
 
         if (distance < 0.0) {
@@ -81,34 +84,41 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
-     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
+     * @param numAttemptedMeasurements  number of attempted measurements used in the RTT exchange.
      * @param numSuccessfulMeasurements number of successful measurements used to calculate the
      *                                  distance and standard deviation.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * number of attempted measures is less than 1 or number of successful measures is
-     * negative.
+     *                                  number of attempted measures is less than 1 or number of successful measures is
+     *                                  negative.
      */
-    public RangingAndRssiReading(S source, double distance, double rssi,
-            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+    public RangingAndRssiReading(
+            final S source, final double distance, final double rssi,
+            final int numAttemptedMeasurements, final int numSuccessfulMeasurements) {
         this(source, distance, rssi, null, null,
                 numAttemptedMeasurements, numSuccessfulMeasurements);
     }
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
      * @param distanceStandardDeviation standard deviation of distance, if available.
-     * @param rssiStandardDeviation standard deviation of RSSI, if available.
+     * @param rssiStandardDeviation     standard deviation of RSSI, if available.
      * @throws IllegalArgumentException if radio source data is null, distance is negative
-     * or any of the standard deviations is zero or negative.
+     *                                  or any of the standard deviations is zero or negative.
      */
-    public RangingAndRssiReading(S source, double distance, double rssi,
-            Double distanceStandardDeviation, Double rssiStandardDeviation) {
+    public RangingAndRssiReading(
+            final S source,
+            final double distance,
+            final double rssi,
+            final Double distanceStandardDeviation,
+            final Double rssiStandardDeviation) {
         this(source, distance, rssi);
 
         if (distanceStandardDeviation != null && distanceStandardDeviation <= 0.0) {
@@ -124,21 +134,27 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Constructor.
-     * @param source radio source associated to this reading.
-     * @param distance distance in meters to the radio source.
-     * @param rssi received signal strength indicator in dBm.
+     *
+     * @param source                    radio source associated to this reading.
+     * @param distance                  distance in meters to the radio source.
+     * @param rssi                      received signal strength indicator in dBm.
      * @param distanceStandardDeviation standard deviation of distance, if available.
-     * @param rssiStandardDeviation standard deviation of RSSI, if available.
-     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param rssiStandardDeviation     standard deviation of RSSI, if available.
+     * @param numAttemptedMeasurements  number of attempted measurements used in the RTT exchange.
      * @param numSuccessfulMeasurements number of successful measurements used to calculate the
      *                                  distance and standard deviation.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
-     * any of the standard deviations is zero or negative, number of attempted
-     * measures is less than 1 or number of successful measures is negative.
+     *                                  any of the standard deviations is zero or negative, number of attempted
+     *                                  measures is less than 1 or number of successful measures is negative.
      */
-    public RangingAndRssiReading(S source, double distance, double rssi,
-            Double distanceStandardDeviation, Double rssiStandardDeviation,
-            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+    public RangingAndRssiReading(
+            final S source,
+            final double distance,
+            final double rssi,
+            final Double distanceStandardDeviation,
+            final Double rssiStandardDeviation,
+            final int numAttemptedMeasurements,
+            final int numSuccessfulMeasurements) {
         this(source, distance, rssi, distanceStandardDeviation, rssiStandardDeviation);
 
         if (numAttemptedMeasurements < DEFAULT_NUM_MEASUREMENTS ||
@@ -159,6 +175,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Contains radio source reading type.
+     *
      * @return reading type.
      */
     @Override
@@ -168,6 +185,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Gets distance in meters to the radio source.
+     *
      * @return distance in mters to the radio source.
      */
     public double getDistance() {
@@ -176,6 +194,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Gets standard deviation of distance, if available.
+     *
      * @return standard deviation of distance or null.
      */
     public Double getDistanceStandardDeviation() {
@@ -184,6 +203,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Gets number of attempted measurements used in the RTT exchange.
+     *
      * @return number of attempted measurements used in the RTT exchange.
      */
     public int getNumAttemptedMeasurements() {
@@ -193,6 +213,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
     /**
      * Gets number of successful measurements used to calculate the distance and
      * standard deviation.
+     *
      * @return number of successful measurements used to calculate the distance and
      * standard deviation.
      */
@@ -203,6 +224,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
     /**
      * Gets received signal strength indicator of (of this 802.11 network for a WiFi access point or
      * of this bluetooth beacon), in dBm.
+     *
      * @return received signal strength indicator.
      */
     public double getRssi() {
@@ -211,6 +233,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**
      * Gets standard deviation of RSSI, if available.
+     *
      * @return standard deviation of RSSI, if available.
      */
     public Double getRssiStandardDeviation() {

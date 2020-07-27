@@ -1272,10 +1272,10 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements list of body kinematics measurements taken at a given position with
-     *                     different unknown orientations and containing the standard deviations
-     *                     of accelerometer and gyroscope measurements.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  list of body kinematics measurements taken at a given position with
+     *                      different unknown orientations and containing the standard deviations
+     *                      of accelerometer and gyroscope measurements.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 13 samples.
      */
@@ -1293,12 +1293,12 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
-     * @param position     position where body kinematics measures have been taken.
-     * @param measurements list of body kinematics measurements taken at a given position with
-     *                     different unknown orientations and containing the standard deviations
-     *                     of accelerometer and gyroscope measurements.
-     * @param listener     listener to be notified of events such as when estimation
-     *                     starts, ends or its progress significantly changes.
+     * @param position      position where body kinematics measures have been taken.
+     * @param measurements  list of body kinematics measurements taken at a given position with
+     *                      different unknown orientations and containing the standard deviations
+     *                      of accelerometer and gyroscope measurements.
+     * @param listener      listener to be notified of events such as when estimation
+     *                      starts, ends or its progress significantly changes.
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 13 samples.
      */
@@ -1747,7 +1747,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1780,7 +1780,7 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1841,13 +1841,15 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
                     }
 
                     @Override
-                    public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                            final List<PreliminaryResult> solutions) {
+                    public void estimatePreliminarSolutions(
+                            final int[] samplesIndices,
+                            final List<PreliminaryResult> solutions) {
                         computePreliminarySolutions(samplesIndices, solutions);
                     }
 
                     @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
+                    public double computeResidual(
+                            final PreliminaryResult currentEstimation, final int i) {
                         return computeError(mMeasurements.get(i), currentEstimation);
                     }
 
@@ -1857,42 +1859,45 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
                     }
 
                     @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    PROMedSRobustKnownPositionAccelerometerCalibrator.this);
-                        }
+                    public void onEstimateStart(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                     }
 
                     @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    PROMedSRobustKnownPositionAccelerometerCalibrator.this);
-                        }
+                    public void onEstimateEnd(
+                            final RobustEstimator<PreliminaryResult> estimator) {
                     }
 
                     @Override
                     public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final int iteration) {
                         if (mListener != null) {
                             mListener.onCalibrateNextIteration(
-                                    PROMedSRobustKnownPositionAccelerometerCalibrator.this, iteration);
+                                    PROMedSRobustKnownPositionAccelerometerCalibrator.this,
+                                    iteration);
                         }
                     }
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
+                            final RobustEstimator<PreliminaryResult> estimator,
+                            final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
-                                    PROMedSRobustKnownPositionAccelerometerCalibrator.this, progress);
+                                    PROMedSRobustKnownPositionAccelerometerCalibrator.this,
+                                    progress);
                         }
                     }
                 });
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setUseInlierThresholds(true);
             innerEstimator.setConfidence(mConfidence);
@@ -1903,11 +1908,15 @@ public class PROMedSRobustKnownPositionAccelerometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

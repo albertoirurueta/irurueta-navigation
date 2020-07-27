@@ -1319,7 +1319,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *
      * @param c body to ECEF coordinate transformation to be set.
      * @throws IllegalArgumentException if provided coordinate transformation is
-     * not null and is not a body to ECEF transformation.
+     *                                  not null and is not a body to ECEF transformation.
      */
     public void setC(final CoordinateTransformation c) {
         if (c == null) {
@@ -2035,14 +2035,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        INSLooselyCoupledKalmanState other = (INSLooselyCoupledKalmanState) obj;
+        final INSLooselyCoupledKalmanState other = (INSLooselyCoupledKalmanState) obj;
         return equals(other);
     }
 

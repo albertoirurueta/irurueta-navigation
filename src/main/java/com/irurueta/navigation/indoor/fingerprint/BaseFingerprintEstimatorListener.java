@@ -19,19 +19,22 @@ package com.irurueta.navigation.indoor.fingerprint;
 /**
  * Listener to be notified of events such as when estimation of position
  * using fingerprints starts or ends.
+ *
  * @param <E> a {@link BaseFingerprintPositionEstimator} type.
  */
 public interface BaseFingerprintEstimatorListener<E extends BaseFingerprintPositionEstimator<?, ?>> {
 
     /**
      * Called when estimation starts.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(E estimator);
+    void onEstimateStart(final E estimator);
 
     /**
      * Called when estimation ends.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(E estimator);
+    void onEstimateEnd(final E estimator);
 }

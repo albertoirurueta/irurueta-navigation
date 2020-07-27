@@ -55,7 +55,7 @@ public class LinearMixedPositionEstimator3D extends
      *                                  minimum.
      */
     public LinearMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -69,7 +69,7 @@ public class LinearMixedPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearMixedPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -86,8 +86,8 @@ public class LinearMixedPositionEstimator3D extends
      *                                  the required minimum.
      */
     public LinearMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -100,7 +100,7 @@ public class LinearMixedPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public LinearMixedPositionEstimator3D(
-            MixedPositionEstimatorListener<Point3D> listener) {
+            final MixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -115,8 +115,8 @@ public class LinearMixedPositionEstimator3D extends
      *                                  minimum.
      */
     public LinearMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            MixedPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final MixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -131,8 +131,8 @@ public class LinearMixedPositionEstimator3D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearMixedPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            MixedPositionEstimatorListener<Point3D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final MixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -150,9 +150,9 @@ public class LinearMixedPositionEstimator3D extends
      *                                  than the required minimum.
      */
     public LinearMixedPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            MixedPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            final MixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -169,7 +169,7 @@ public class LinearMixedPositionEstimator3D extends
             return null;
         }
 
-        InhomogeneousPoint3D result = new InhomogeneousPoint3D();
+        final InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         getEstimatedPosition(result);
         return result;
     }
@@ -182,13 +182,13 @@ public class LinearMixedPositionEstimator3D extends
      */
     @Override
     @SuppressWarnings("Duplicates")
-    protected void setPositionsAndDistances(List<Point3D> positions,
-                                            List<Double> distances) {
-        int size = positions.size();
+    protected void setPositionsAndDistances(
+            final List<Point3D> positions, final List<Double> distances) {
+        final int size = positions.size();
         Point3D[] positionsArray = new InhomogeneousPoint3D[size];
         positionsArray = positions.toArray(positionsArray);
 
-        double[] distancesArray = new double[size];
+        final double[] distancesArray = new double[size];
         for (int i = 0; i < size; i++) {
             distancesArray[i] = distances.get(i);
         }
@@ -198,7 +198,7 @@ public class LinearMixedPositionEstimator3D extends
                     distancesArray);
             mInhomogeneousTrilaterationSolver.setPositionsAndDistances(positionsArray,
                     distancesArray);
-        } catch (LockedException e) {
+        } catch (final LockedException e) {
             throw new IllegalArgumentException(e);
         }
     }

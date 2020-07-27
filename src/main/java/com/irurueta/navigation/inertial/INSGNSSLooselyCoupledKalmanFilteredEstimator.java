@@ -46,53 +46,57 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimator {
     /**
      * Internal estimator to compute least squares solution for GNSS measurements.
      */
-    private GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator
+    private final GNSSLeastSquaresPositionAndVelocityEstimator mLsEstimator
             = new GNSSLeastSquaresPositionAndVelocityEstimator();
 
     /**
      * Internal INS estimator to update kinematic measures and propagate
      * estimated state.
      */
-    private INSLooselyCoupledKalmanFilteredEstimator mInsEstimator =
+    private final INSLooselyCoupledKalmanFilteredEstimator mInsEstimator =
             new INSLooselyCoupledKalmanFilteredEstimator(
                     new INSLooselyCoupledKalmanFilteredEstimatorListener() {
-                @Override
-                public void onUpdateStart(INSLooselyCoupledKalmanFilteredEstimator estimator) {
-                    if (mListener != null) {
-                        mListener.onUpdateBodyKinematicsStart(
-                                INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
-                    }
-                }
+                        @Override
+                        public void onUpdateStart(
+                                final INSLooselyCoupledKalmanFilteredEstimator estimator) {
+                            if (mListener != null) {
+                                mListener.onUpdateBodyKinematicsStart(
+                                        INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
+                            }
+                        }
 
-                @Override
-                public void onUpdateEnd(INSLooselyCoupledKalmanFilteredEstimator estimator) {
-                    if (mListener != null) {
-                        mListener.onUpdateBodyKinematicsEnd(
-                                INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
-                    }
-                }
+                        @Override
+                        public void onUpdateEnd(
+                                final INSLooselyCoupledKalmanFilteredEstimator estimator) {
+                            if (mListener != null) {
+                                mListener.onUpdateBodyKinematicsEnd(
+                                        INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
+                            }
+                        }
 
-                @Override
-                public void onPropagateStart(INSLooselyCoupledKalmanFilteredEstimator estimator) {
-                    if (mListener != null) {
-                        mListener.onPropagateStart(
-                                INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
-                    }
-                }
+                        @Override
+                        public void onPropagateStart(
+                                final INSLooselyCoupledKalmanFilteredEstimator estimator) {
+                            if (mListener != null) {
+                                mListener.onPropagateStart(
+                                        INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
+                            }
+                        }
 
-                @Override
-                public void onPropagateEnd(INSLooselyCoupledKalmanFilteredEstimator estimator) {
-                    if (mListener != null) {
-                        mListener.onPropagateEnd(
-                                INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
-                    }
-                }
+                        @Override
+                        public void onPropagateEnd(
+                                final INSLooselyCoupledKalmanFilteredEstimator estimator) {
+                            if (mListener != null) {
+                                mListener.onPropagateEnd(
+                                        INSGNSSLooselyCoupledKalmanFilteredEstimator.this);
+                            }
+                        }
 
-                @Override
-                public void onReset(INSLooselyCoupledKalmanFilteredEstimator estimator) {
-
-                }
-            });
+                        @Override
+                        public void onReset(
+                                final INSLooselyCoupledKalmanFilteredEstimator estimator) {
+                        }
+                    });
 
     /**
      * Listener to notify events raised by this instance.
@@ -1762,7 +1766,7 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimator {
                     mInsEstimator.getKinematics(mKinematics);
                 }
 
-                if (result && mEstimation != null) {
+                if (mEstimation != null) {
                     initState();
                     mInsEstimator.getState(mState);
                 }
@@ -1858,7 +1862,7 @@ public class INSGNSSLooselyCoupledKalmanFilteredEstimator {
 
             return result;
 
-        } catch (INSException | NotReadyException e) {
+        } catch (final INSException | NotReadyException e) {
             throw new INSGNSSException(e);
         } finally {
             mRunning = false;

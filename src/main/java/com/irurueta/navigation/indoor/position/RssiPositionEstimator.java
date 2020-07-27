@@ -45,7 +45,7 @@ public abstract class RssiPositionEstimator<P extends Point<?>> extends Position
      *
      * @param listener listener in charge of handling events.
      */
-    public RssiPositionEstimator(RssiPositionEstimatorListener<P> listener) {
+    public RssiPositionEstimator(final RssiPositionEstimatorListener<P> listener) {
         super(listener);
     }
 }

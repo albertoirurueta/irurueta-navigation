@@ -40,12 +40,13 @@ public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
+     *
+     * @param bssid     basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                  xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPoint(String bssid, double frequency) {
+    public WifiAccessPoint(final String bssid, final double frequency) {
         if (bssid == null) {
             throw new IllegalArgumentException();
         }
@@ -60,13 +61,14 @@ public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**
      * Constructor.
-     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
-     *              xx:xx:xx:xx:xx:xx.
+     *
+     * @param bssid     basic service set identifier of this access point in the form of a six-byte MAC address:
+     *                  xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @param ssid service set identifier (SSID) of this 802.11 network.
+     * @param ssid      service set identifier (SSID) of this 802.11 network.
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPoint(String bssid, double frequency, String ssid) {
+    public WifiAccessPoint(final String bssid, final double frequency, final String ssid) {
         this(bssid, frequency);
         mSsid = ssid;
     }
@@ -74,11 +76,13 @@ public class WifiAccessPoint implements Serializable, RadioSource {
     /**
      * Empty constructor.
      */
-    protected WifiAccessPoint() { }
+    protected WifiAccessPoint() {
+    }
 
     /**
      * Gets the basic service set identifier of this access point in the form of a six-byte MAC address:
      * xx:xx:xx:xx:xx:xx.
+     *
      * @return the basic service set identifier.
      */
     public String getBssid() {
@@ -87,6 +91,7 @@ public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**
      * Gets frequency used by this Access Point (expressed in Hz).
+     *
      * @return frequency used by this Access Point (expressed in Hz).
      */
     @Override
@@ -96,6 +101,7 @@ public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**
      * Gets service set identifier (SSID) of this 802.11 network.
+     *
      * @return service set identifier (SSID).
      */
     public String getSsid() {
@@ -105,11 +111,12 @@ public class WifiAccessPoint implements Serializable, RadioSource {
     /**
      * Indicates whether two access points are considered to be equal or not.
      * Two access points are considered equal if they have the same BSSID.
+     *
      * @param obj other object to be compared.
      * @return true if both access points are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -121,12 +128,13 @@ public class WifiAccessPoint implements Serializable, RadioSource {
             return false;
         }
 
-        WifiAccessPoint other = (WifiAccessPoint)obj;
+        final WifiAccessPoint other = (WifiAccessPoint) obj;
         return mBssid.equals(other.mBssid);
     }
 
     /**
      * Returns hashcode associated to this access point.
+     *
      * @return hashcode associated to this access point.
      */
     @Override
@@ -136,6 +144,7 @@ public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**
      * Gets radio source type, which can be either a WiFi Access point or a bluetooth Beacon.
+     *
      * @return radio source type.
      */
     @Override

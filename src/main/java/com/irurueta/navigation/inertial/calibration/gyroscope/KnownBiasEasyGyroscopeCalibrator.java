@@ -3037,7 +3037,8 @@ public class KnownBiasEasyGyroscopeCalibrator {
         final Matrix bg = getBiasAsMatrix();
         mB = invInitialM.multiplyAndReturnNew(bg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
                 // Before and after normalized gravity versors
@@ -3197,7 +3198,8 @@ public class KnownBiasEasyGyroscopeCalibrator {
         final Matrix bg = getBiasAsMatrix();
         mB = invInitialM.multiplyAndReturnNew(bg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
                 // Before and after normalized gravity versors
@@ -3368,7 +3370,8 @@ public class KnownBiasEasyGyroscopeCalibrator {
         final Matrix bg = getBiasAsMatrix();
         mB = invInitialM.multiplyAndReturnNew(bg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
                 // Before and after normalized gravity versors
@@ -3498,7 +3501,8 @@ public class KnownBiasEasyGyroscopeCalibrator {
         final Matrix bg = getBiasAsMatrix();
         mB = invInitialM.multiplyAndReturnNew(bg);
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
                 // Before and after normalized gravity versors
@@ -3594,7 +3598,7 @@ public class KnownBiasEasyGyroscopeCalibrator {
         mAccelerationFixer.setCrossCouplingErrors(ma);
 
         int i = 0;
-        for (BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
+        for (final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence : mSequences) {
             // sequence mean accelerometer samples of previous static
             // period will need to be fixed using accelerometer calibration
             // parameters
@@ -3639,11 +3643,11 @@ public class KnownBiasEasyGyroscopeCalibrator {
      */
     private static double computeAverageAngularRateStandardDeviation(
             final BodyKinematicsSequence<StandardDeviationTimedBodyKinematics> sequence) {
-        List<StandardDeviationTimedBodyKinematics> items = sequence.getSortedItems();
+        final List<StandardDeviationTimedBodyKinematics> items = sequence.getSortedItems();
         final double size = items.size();
 
         double result = 0.0;
-        for (StandardDeviationTimedBodyKinematics item : items) {
+        for (final StandardDeviationTimedBodyKinematics item : items) {
             result += item.getAngularRateStandardDeviation() / size;
         }
 
@@ -3982,7 +3986,7 @@ public class KnownBiasEasyGyroscopeCalibrator {
             mG.setElementAt(2, 2, g33);
 
             // fix kinematics
-            int numItems = measuredSequence.getItemsCount();
+            final int numItems = measuredSequence.getItemsCount();
             final List<StandardDeviationTimedBodyKinematics> measuredItems = measuredSequence.getSortedItems();
             final List<StandardDeviationTimedBodyKinematics> fixedItems = fixedSequence.getSortedItems();
             for (int j = 0; j < numItems; j++) {

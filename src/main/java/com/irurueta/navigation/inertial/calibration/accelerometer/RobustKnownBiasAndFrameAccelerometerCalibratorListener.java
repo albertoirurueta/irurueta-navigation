@@ -42,8 +42,9 @@ public interface RobustKnownBiasAndFrameAccelerometerCalibratorListener {
      * @param calibrator calibrator raising the event.
      * @param iteration  current iteration.
      */
-    void onCalibrateNextIteration(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator,
-                                  final int iteration);
+    void onCalibrateNextIteration(
+            final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator,
+            final int iteration);
 
     /**
      * Called when calibration progress changes significantly.
@@ -51,6 +52,7 @@ public interface RobustKnownBiasAndFrameAccelerometerCalibratorListener {
      * @param calibrator calibrator raising the event.
      * @param progress   progress of calibration expressed as a value between 0.0 and 1.0.
      */
-    void onCalibrateProgressChange(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator,
-                                   final float progress);
+    void onCalibrateProgressChange(
+            final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator,
+            final float progress);
 }

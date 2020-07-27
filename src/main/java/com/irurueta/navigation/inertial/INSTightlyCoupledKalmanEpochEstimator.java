@@ -409,7 +409,7 @@ public class INSTightlyCoupledKalmanEpochEstimator {
 
         // Correct attitude, velocity, and position using (14.7-9)
 
-        Matrix estCbeNew = Matrix.identity(CoordinateTransformation.ROWS,
+        final Matrix estCbeNew = Matrix.identity(CoordinateTransformation.ROWS,
                 CoordinateTransformation.COLS);
 
         xEstPropagated.getSubmatrix(0, 0,

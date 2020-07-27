@@ -64,14 +64,15 @@ public abstract class PositionEstimator<P extends Point<?>,
     /**
      * Constructor.
      */
-    public PositionEstimator() { }
+    public PositionEstimator() {
+    }
 
     /**
      * Constructor.
      *
      * @param listener listener in charge of handling events.
      */
-    public PositionEstimator(L listener) {
+    public PositionEstimator(final L listener) {
         mListener = listener;
     }
 
@@ -92,7 +93,7 @@ public abstract class PositionEstimator<P extends Point<?>,
      * @throws IllegalArgumentException if provided value is null or the number of provided
      *                                  sources is less than the required minimum.
      */
-    public void setSources(List<? extends RadioSourceLocated<P>> sources)
+    public void setSources(final List<? extends RadioSourceLocated<P>> sources)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -105,8 +106,8 @@ public abstract class PositionEstimator<P extends Point<?>,
      * Gets fingerprint containing readings at an unknown location for provided located
      * radio sources.
      *
-     * @return  fingerprint containing readings at an unknown location for provided
-     *          located radio sources.
+     * @return fingerprint containing readings at an unknown location for provided
+     * located radio sources.
      */
     public Fingerprint<? extends RadioSource, ? extends R> getFingerprint() {
         return mFingerprint;
@@ -115,12 +116,13 @@ public abstract class PositionEstimator<P extends Point<?>,
     /**
      * Sets fingerprint containing readings at an unknown location for provided located
      * radio sources.
+     *
      * @param fingerprint fingerprint containing readings at an unknown location for
      *                    provided located radio sources.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null.
      */
-    public void setFingerprint(Fingerprint<? extends RadioSource, ? extends R> fingerprint)
+    public void setFingerprint(final Fingerprint<? extends RadioSource, ? extends R> fingerprint)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -144,7 +146,7 @@ public abstract class PositionEstimator<P extends Point<?>,
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(L listener) throws LockedException {
+    public void setListener(final L listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -166,7 +168,7 @@ public abstract class PositionEstimator<P extends Point<?>,
      * @param estimatedPosition instance where estimated estimated position will be
      *                          stored.
      */
-    public void getEstimatedPosition(P estimatedPosition) {
+    public void getEstimatedPosition(final P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
             for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
                 estimatedPosition.setInhomogeneousCoordinate(i,
@@ -178,8 +180,8 @@ public abstract class PositionEstimator<P extends Point<?>,
     /**
      * Gets minimum required number of located radio sources to perform lateration.
      *
-     * @return  minimum required number of located radio sources to perform
-     *          lateration.
+     * @return minimum required number of located radio sources to perform
+     * lateration.
      */
     public abstract int getMinRequiredSources();
 
@@ -202,9 +204,9 @@ public abstract class PositionEstimator<P extends Point<?>,
      * Estimates position based on provided located radio sources and readings of such
      * radio sources at an unknown location.
      *
-     * @throws LockedException              if estimator is locked.
-     * @throws NotReadyException            if estimator is not ready.
-     * @throws PositionEstimationException  if estimation fails for some other reason.
+     * @throws LockedException             if estimator is locked.
+     * @throws NotReadyException           if estimator is not ready.
+     * @throws PositionEstimationException if estimation fails for some other reason.
      */
     public abstract void estimate() throws LockedException, NotReadyException, PositionEstimationException;
 
@@ -234,13 +236,13 @@ public abstract class PositionEstimator<P extends Point<?>,
     /**
      * Internally sets located radio sources used for lateration.
      *
-     * @param sources                   located radio sources used for lateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
     @SuppressWarnings("Duplicates")
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
+    protected void internalSetSources(final List<? extends RadioSourceLocated<P>> sources) {
         if (sources == null) {
             throw new IllegalArgumentException();
         }
@@ -255,12 +257,13 @@ public abstract class PositionEstimator<P extends Point<?>,
     /**
      * Internally sets fingerprint containing readings at an unknown location for
      * provided located radio sources.
+     *
      * @param fingerprint fingerprint containing readings at an unknown location for
      *                    provided located radio sources.
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends R> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends R> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }

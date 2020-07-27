@@ -31,6 +31,7 @@ import java.util.List;
  * These kind of estimators can be used to determine the position of a given device by
  * getting RSSI readings at an unknown location of different radio sources and comparing
  * those readings with other located ones.
+ *
  * @param <P> a {@link Point} type.
  * @param <L> a {@link BaseFingerprintEstimatorListener} type.
  */
@@ -66,7 +67,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
      * fingerprints
      */
     protected RssiFingerprint<? extends RadioSource,
-                ? extends RssiReading<? extends RadioSource>> mFingerprint;
+            ? extends RssiReading<? extends RadioSource>> mFingerprint;
 
     /**
      * Minimum number of nearest fingerprints to search.
@@ -116,58 +117,62 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
     /**
      * Constructor.
      */
-    public BaseFingerprintPositionEstimator() { }
+    public BaseFingerprintPositionEstimator() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
-    public BaseFingerprintPositionEstimator(L listener) {
+    public BaseFingerprintPositionEstimator(final L listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required. For 3D position
-     * estimation 3 located total readings are required among all fingerprints).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required. For 3D position
+     *                                  estimation 3 located total readings are required among all fingerprints).
      */
     public BaseFingerprintPositionEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint) {
         internalSetLocatedFingerprints(locatedFingerprints);
         internalSetFingerprint(fingerprint);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required. For 3D position
-     * estimation 3 located total readings are required among all fingerprints).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required. For 3D position
+     *                                  estimation 3 located total readings are required among all fingerprints).
      */
     public BaseFingerprintPositionEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            L listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final L listener) {
         this(listener);
         internalSetLocatedFingerprints(locatedFingerprints);
         internalSetFingerprint(fingerprint);
@@ -175,6 +180,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Gets located fingerprints containing RSSI readings.
+     *
      * @return located fingerprints containing RSSI readings.
      */
     public List<? extends RssiFingerprintLocated<? extends RadioSource,
@@ -184,18 +190,20 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Sets located fingerprints containing RSSI readings.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null or there are not enough
-     * fingerprints or readings within provided fingerprints (for 2D position estimation at
-     * least 2 readings are required in a single fingerprint, or at least 2 fingerprints
-     * at different locations containing a single reading are required. For 3D position
-     * estimation 3 reading in a single fingerprint, or 3 fingerprints containing a single
-     * reading or any combination resulting in at least 3 readings at different locations
-     * are required).
+     *                                  fingerprints or readings within provided fingerprints (for 2D position estimation at
+     *                                  least 2 readings are required in a single fingerprint, or at least 2 fingerprints
+     *                                  at different locations containing a single reading are required. For 3D position
+     *                                  estimation 3 reading in a single fingerprint, or 3 fingerprints containing a single
+     *                                  reading or any combination resulting in at least 3 readings at different locations
+     *                                  are required).
      */
-    public void setLocatedFingerprints(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints)
+    public void setLocatedFingerprints(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -207,22 +215,25 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
     /**
      * Gets fingerprint containing readings at an unknown location for provided located
      * fingerprints.
+     *
      * @return fingerprint containing readings at an unknown location for provided located
      * fingerprints.
      */
     public RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>>
-            getFingerprint() {
+    getFingerprint() {
         return mFingerprint;
     }
 
     /**
      * Sets fingerprint containing readings at an unknown location for provided located fingerprints.
+     *
      * @param fingerprint fingerprint containing readings at an unknown location for provided located fingerprints.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null.
      */
-    public void setFingerprint(RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint)
+    public void setFingerprint(
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -233,6 +244,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Get minimum number of nearest fingerprints to search.
+     *
      * @return minimum number of nearest fingerprints.
      */
     public int getMinNearestFingerprints() {
@@ -241,6 +253,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Gets maximum number of nearest fingerprints to search.
+     *
      * @return maximum number of nearest fingerprints.
      */
     public int getMaxNearestFingerprints() {
@@ -249,14 +262,16 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Sets minimum and maximum number of nearest fingerprints to search.
+     *
      * @param minNearestFingerprints minimum number of nearest fingerprints.
      * @param maxNearestFingerprints maximum number of nearest fingerprints.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if minimum value is larger than maximum value (as
-     * long as it has a limit defined), or if minimum value is less than 1.
+     *                                  long as it has a limit defined), or if minimum value is less than 1.
      */
-    public void setMinMaxNearestFingerprints(int minNearestFingerprints,
-            int maxNearestFingerprints) throws LockedException {
+    public void setMinMaxNearestFingerprints(
+            final int minNearestFingerprints, final int maxNearestFingerprints)
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -274,6 +289,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
+     *
      * @return path loss exponent to be used by default.
      */
     public double getPathLossExponent() {
@@ -289,10 +305,11 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
      * - Urban Area: 2.7 to 3.5
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
+     *
      * @param pathLossExponent path loss exponent to be used by default.
      * @throws LockedException if estimator is locked.
      */
-    public void setPathLossExponent(double pathLossExponent) throws LockedException {
+    public void setPathLossExponent(final double pathLossExponent) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -301,6 +318,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Gets listener to be notified of events raised by this instance.
+     *
      * @return listener to be notified of events raised by this instance.
      */
     public L getListener() {
@@ -309,10 +327,11 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Sets listener to be notified of events raised by this instance.
+     *
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(L listener) throws LockedException {
+    public void setListener(final L listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -321,6 +340,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Gets estimated inhomogeneous position coordinates.
+     *
      * @return estimated inhomogeneous position coordinates.
      */
     public double[] getEstimatedPositionCoordinates() {
@@ -329,9 +349,10 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Gets estimated estimated position and stores result into provided instance.
+     *
      * @param estimatedPosition instance where estimated estimated position will be stored.
      */
-    public void getEstimatedPosition(P estimatedPosition) {
+    public void getEstimatedPosition(final P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
             for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
                 estimatedPosition.setInhomogeneousCoordinate(i,
@@ -344,6 +365,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
      * Gets nearest found located fingerprints based on their RSSI readings respect to provided fingerprint.
      * These are the fingerprints that are probably located close to the unknown location to be estimated,
      * however their location is approximate due to errors on RSSI readings.
+     *
      * @return nearest located fingerprints based on their RSSI readings or null if estimation has not been done yet.
      */
     public List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>> getNearestFingerprints() {
@@ -353,6 +375,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
     /**
      * Returns boolean indicating whether this estimator is locked because an estimation
      * is already in progress.
+     *
      * @return true if estimator is locked, false otherwise.
      */
     public boolean isLocked() {
@@ -361,12 +384,14 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Gets number of dimensions of points.
+     *
      * @return number of dimensions of points.
      */
     public abstract int getNumberOfDimensions();
 
     /**
      * Indicates whether estimator is ready to find a solution.
+     *
      * @return true if estimator is ready, false otherwise.
      */
     public abstract boolean isReady();
@@ -374,25 +399,29 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
     /**
      * Starts estimation based on provided located radio sources and readings of such radio sources at
      * an unknown location.
-     * @throws LockedException if estimator is locked.
-     * @throws NotReadyException if estimator is not ready.
+     *
+     * @throws LockedException                if estimator is locked.
+     * @throws NotReadyException              if estimator is not ready.
      * @throws FingerprintEstimationException if estimation fails for some other reason.
      */
     public abstract void estimate() throws LockedException, NotReadyException, FingerprintEstimationException;
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     public abstract P getEstimatedPosition();
 
     /**
      * Gets total number of readings contained within provided fingerprints.
+     *
      * @param locatedFingerprints fingerprints to be checked.
      * @return total number of readings contained within provided fingerprints.
      */
-    int totalReadings(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints) {
+    int totalReadings(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints) {
         if (locatedFingerprints == null) {
             return 0;
         }
@@ -400,7 +429,7 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
         int totalReadings = 0;
         for (RssiFingerprintLocated<? extends RadioSource,
                 ? extends RssiReading<? extends RadioSource>, P> fingerprint : locatedFingerprints) {
-            List<? extends RssiReading<? extends RadioSource>> readings =
+            final List<? extends RssiReading<? extends RadioSource>> readings =
                     fingerprint.getReadings();
             if (readings != null) {
                 totalReadings += readings.size();
@@ -411,16 +440,18 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Internally sets located fingerprints containing RSSI readings.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
      * @throws IllegalArgumentException if provided value is null or there are not enough
-     * fingerprints or readings within provided fingerprints (for 2D position estimation at
-     * least 2 located total readings are required among all fingerprints, for example
-     * 2 readings are required in a single fingerprint, or at least 2 fingerprints
-     * at different locations containing a single reading are required. For 3D position
-     * estimation 3 located total readings are required among all fingerprints).
+     *                                  fingerprints or readings within provided fingerprints (for 2D position estimation at
+     *                                  least 2 located total readings are required among all fingerprints, for example
+     *                                  2 readings are required in a single fingerprint, or at least 2 fingerprints
+     *                                  at different locations containing a single reading are required. For 3D position
+     *                                  estimation 3 located total readings are required among all fingerprints).
      */
-    private void internalSetLocatedFingerprints(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints) {
+    private void internalSetLocatedFingerprints(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints) {
 
         if (totalReadings(locatedFingerprints) < getNumberOfDimensions()) {
             throw new IllegalArgumentException();
@@ -431,11 +462,12 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Internally sets fingerprint containing readings at an unknown location for provided located fingerprints.
+     *
      * @param fingerprint fingerprint containing readings at an unknown location for provided located fingerprints.
      * @throws IllegalArgumentException if provided value is null.
      */
     private void internalSetFingerprint(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }
@@ -445,14 +477,15 @@ public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
 
     /**
      * Sets minimum and maximum number of nearest fingerprints to search.
+     *
      * @param minNearestFingerprints minimum number of nearest fingerprints.
      * @param maxNearestFingerprints maximum number of nearest fingerprints.
      * @throws IllegalArgumentException if minimum value is larger than maximum value (as
-     * long as it has a limit defined), or if minimum value is less than 1.
+     *                                  long as it has a limit defined), or if minimum value is less than 1.
      */
     @SuppressWarnings("Duplicates")
-    private void internalSetMinMaxNearestFingerprints(int minNearestFingerprints,
-            int maxNearestFingerprints) {
+    private void internalSetMinMaxNearestFingerprints(
+            final int minNearestFingerprints, final int maxNearestFingerprints) {
         if (minNearestFingerprints < 1 ||
                 (maxNearestFingerprints >= 0 && minNearestFingerprints > maxNearestFingerprints)) {
             throw new IllegalArgumentException();

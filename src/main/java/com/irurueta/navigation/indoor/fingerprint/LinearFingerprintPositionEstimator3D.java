@@ -34,61 +34,66 @@ public class LinearFingerprintPositionEstimator3D extends
     /**
      * Constructor.
      */
-    public LinearFingerprintPositionEstimator3D() { }
+    public LinearFingerprintPositionEstimator3D() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public LinearFingerprintPositionEstimator3D(
-            FingerprintPositionEstimatorListener<Point3D> listener) {
+            final FingerprintPositionEstimatorListener<Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 3D position estimation 3 located
-     * total readings are required among all fingerprints).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 3D position estimation 3 located
+     *                                  total readings are required among all fingerprints).
      */
     public LinearFingerprintPositionEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
                     ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+            final RssiFingerprint<? extends RadioSource,
                     ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+            final List<? extends RadioSourceLocated<Point3D>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 3D position estimation 3 located
-     * total readings are required among all fingerprints).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 3D position estimation 3 located
+     *                                  total readings are required among all fingerprints).
      */
     public LinearFingerprintPositionEstimator3D(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
                     ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+            final RssiFingerprint<? extends RadioSource,
                     ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            FingerprintPositionEstimatorListener<Point3D> listener) {
+            final List<? extends RadioSourceLocated<Point3D>> sources,
+            final FingerprintPositionEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
     /**
      * Gets number of dimensions of points.
+     *
      * @return number of dimensions of points.
      */
     @Override
@@ -98,6 +103,7 @@ public class LinearFingerprintPositionEstimator3D extends
 
     /**
      * Gets estimated position or null if not available yet.
+     *
      * @return estimated position or null.
      */
     @Override
@@ -106,7 +112,7 @@ public class LinearFingerprintPositionEstimator3D extends
             return null;
         }
 
-        Point3D result = new InhomogeneousPoint3D();
+        final Point3D result = new InhomogeneousPoint3D();
         getEstimatedPosition(result);
         return result;
     }

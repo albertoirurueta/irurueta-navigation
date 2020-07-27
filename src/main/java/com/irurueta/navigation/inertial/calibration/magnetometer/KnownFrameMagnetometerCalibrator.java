@@ -25,7 +25,7 @@ import java.util.Collection;
  * cross coupling and scaling factors.
  *
  * @param <T> a {@link FrameBodyMagneticFluxDensity} containing measures used
- *           by the calibrator.
+ *            by the calibrator.
  * @param <L> a listener type.
  */
 public interface KnownFrameMagnetometerCalibrator<T extends FrameBodyMagneticFluxDensity,

@@ -3221,7 +3221,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -3275,7 +3276,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * is not yet available).
      */
     @Override
-    public boolean getEstimatedBiases(double[] result) {
+    public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
                     0, mEstimatedBiases.length);
@@ -3306,7 +3307,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @throws WrongSizeException if provided result instance has invalid size.
      */
     @Override
-    public boolean getEstimatedBiasesAsMatrix(Matrix result)
+    public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
             result.fromArray(mEstimatedBiases);
@@ -3368,7 +3369,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @return true if result was updated, false if estimation is not available.
      */
     @Override
-    public boolean getEstimatedBiasAngularSpeedX(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedX(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3397,7 +3398,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @return true if result was updated, false if estimation is not available.
      */
     @Override
-    public boolean getEstimatedBiasAngularSpeedY(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedY(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3426,7 +3427,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
      * @return true if result was updated, false if estimation is not available.
      */
     @Override
-    public boolean getEstimatedBiasAngularSpeedZ(AngularSpeed result) {
+    public boolean getEstimatedBiasAngularSpeedZ(final AngularSpeed result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
             result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
@@ -3675,7 +3676,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         //                                                                                                                                              [g32]
         //                                                                                                                                              [g33]
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiVariateFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
                 // Input points are true angular rate + specific force coordinates
@@ -3705,7 +3707,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 initial[8] = mInitialMyz;
 
                 final double[] buffer = mInitialGg.getBuffer();
-                int num = buffer.length;
+                final int num = buffer.length;
                 System.arraycopy(buffer, 0, initial, 9, num);
 
                 return initial;
@@ -4012,7 +4014,8 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
         //                                                                                                                                                             [g32]
         //                                                                                                                                                             [g33]
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiVariateFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
                 // Input points are true angular rate + specific force coordinates
@@ -4045,7 +4048,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibrator implements
                 initial[11] = mInitialMzy;
 
                 final double[] buffer = mInitialGg.getBuffer();
-                int num = buffer.length;
+                final int num = buffer.length;
                 System.arraycopy(buffer, 0, initial, 12, num);
 
                 return initial;

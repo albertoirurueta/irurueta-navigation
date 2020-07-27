@@ -50,89 +50,98 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
+     *
      * @param readings radio signal ranging readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RangingRadioSourceEstimator2D(
-            RangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final RangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            RangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final RangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
-    public RangingRadioSourceEstimator2D(Point2D initialPosition) {
+    public RangingRadioSourceEstimator2D(final Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
+     *
+     * @param readings        radio signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener        listener in charge of attending events raised by this instance.
      */
-    public RangingRadioSourceEstimator2D(Point2D initialPosition,
-            RangingRadioSourceEstimatorListener<S, Point2D> listener) {
+    public RangingRadioSourceEstimator2D(
+            final Point2D initialPosition,
+            final RangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param readings radio signal ranging readings belonging to the same radio source.
+     *
+     * @param readings        radio signal ranging readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio source
      *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener        listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition,
-            RangingRadioSourceEstimatorListener<S, Point2D> listener) {
+            final List<? extends RangingReadingLocated<S, Point2D>> readings,
+            final Point2D initialPosition,
+            final RangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
     /**
      * Gets minimum required number of readings to estimate position of radio source,
      * which is 3 readings.
+     *
      * @return minimum required number of readings.
      */
     @Override
@@ -143,6 +152,7 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
     /**
      * Gets number of dimensions of position points.
      * This is always 2.
+     *
      * @return number of dimensions of position points.
      */
     @Override
@@ -152,6 +162,7 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
 
     /**
      * Gets estimated radio source 2D position.
+     *
      * @return estimated radio source 2D position.
      */
     @Override
@@ -160,38 +171,39 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
             return null;
         }
 
-        InhomogeneousPoint2D result = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D result = new InhomogeneousPoint2D();
         getEstimatedPosition(result);
         return result;
     }
 
     /**
      * Gets estimated located radio source.
+     *
      * @return estimated located radio source or null.
      */
     @Override
     @SuppressWarnings("unchecked")
     public RadioSourceLocated<Point2D> getEstimatedRadioSource() {
-        List<? extends RangingReadingLocated<S, Point2D>> readings = getReadings();
+        final List<? extends RangingReadingLocated<S, Point2D>> readings = getReadings();
         if (readings == null || readings.isEmpty()) {
             return null;
         }
-        S source = readings.get(0).getSource();
+        final S source = readings.get(0).getSource();
 
-        Point2D estimatedPosition = getEstimatedPosition();
+        final Point2D estimatedPosition = getEstimatedPosition();
         if (estimatedPosition == null) {
             return null;
         }
 
-        Matrix estimatedPositionCovariance = getEstimatedPositionCovariance();
+        final Matrix estimatedPositionCovariance = getEstimatedPositionCovariance();
 
         if (source instanceof WifiAccessPoint) {
-            WifiAccessPoint accessPoint = (WifiAccessPoint)source;
+            final WifiAccessPoint accessPoint = (WifiAccessPoint) source;
             return new WifiAccessPointLocated2D(accessPoint.getBssid(),
                     accessPoint.getFrequency(), accessPoint.getSsid(),
                     estimatedPosition, estimatedPositionCovariance);
         } else if (source instanceof Beacon) {
-            Beacon beacon = (Beacon)source;
+            final Beacon beacon = (Beacon) source;
             return new BeaconLocated2D(beacon.getIdentifiers(),
                     beacon.getTransmittedPower(), beacon.getFrequency(),
                     beacon.getBluetoothAddress(), beacon.getBeaconTypeCode(),
@@ -245,22 +257,23 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
     /**
      * Sets positions, distances and standard deviations of distances on internal
      * lateration solver.
-     * @param positions positions to be set.
-     * @param distances distances to be set.
+     *
+     * @param positions                  positions to be set.
+     * @param distances                  distances to be set.
      * @param distanceStandardDeviations standard deviations of distances to be set or
      *                                   null.
      * @throws LockedException if solvers are locked.
      */
     @Override
     protected void setPositionsDistancesAndDistanceStandardDeviations(
-            List<Point2D> positions, List<Double> distances,
-            List<Double> distanceStandardDeviations) throws LockedException {
-        int size = positions.size();
+            final List<Point2D> positions, final List<Double> distances,
+            final List<Double> distanceStandardDeviations) throws LockedException {
+        final int size = positions.size();
         Point2D[] positionsArray = new InhomogeneousPoint2D[size];
         positionsArray = positions.toArray(positionsArray);
 
-        double[] distancesArray = new double[size];
-        double[] distanceStandardDeviationsArray = new double[size];
+        final double[] distancesArray = new double[size];
+        final double[] distanceStandardDeviationsArray = new double[size];
         for (int i = 0; i < size; i++) {
             distancesArray[i] = distances.get(i);
             distanceStandardDeviationsArray[i] = distanceStandardDeviations.get(i);

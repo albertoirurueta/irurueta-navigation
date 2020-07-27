@@ -629,7 +629,8 @@ public class KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibrator implements
      * @throws LockedException if calibrator is currently running.
      */
     @Override
-    public void setMeasurements(final Collection<? extends FrameBodyKinematics> measurements)
+    public void setMeasurements(
+            final Collection<? extends FrameBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -891,7 +892,8 @@ public class KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibrator implements
      * @throws LockedException if calibrator is currently running.
      */
     @Override
-    public void setBiasCoordinates(final double biasX, final double biasY, final double biasZ)
+    public void setBiasCoordinates(
+            final double biasX, final double biasY, final double biasZ)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();

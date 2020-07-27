@@ -121,15 +121,15 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
      * @param bias      gyroscope known bias. This must be 3x1 and is
      *                  expressed in radians per second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
@@ -144,17 +144,17 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
      * @param bias      gyroscope known bias. This must be 3x1 and is
      *                  expressed in radians per second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
-     * @param listener    listener to handle events raised by this
-     *                    calibrator.
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
+     * @param listener  listener to handle events raised by this
+     *                  calibrator.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
@@ -170,15 +170,15 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
      * @param bias      gyroscope known bias. This must have length 3 and is
      *                  expressed in radians per second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
@@ -193,17 +193,17 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
     /**
      * Constructor.
      *
-     * @param sequences   collection of sequences containing timestamped body
-     *                    kinematics measurements.
+     * @param sequences collection of sequences containing timestamped body
+     *                  kinematics measurements.
      * @param bias      gyroscope known bias. This must have length 3 and is
      *                  expressed in radians per second (rad/s).
-     * @param initialMg   initial gyroscope scale factors and cross coupling
-     *                    errors matrix. Must be 3x3.
-     * @param initialGg   initial gyroscope G-dependent cross biases
-     *                    introduced on the gyroscope by the specific forces
-     *                    sensed by the accelerometer. Must be 3x3.
-     * @param listener    listener to handle events raised by this
-     *                    calibrator.
+     * @param initialMg initial gyroscope scale factors and cross coupling
+     *                  errors matrix. Must be 3x3.
+     * @param initialGg initial gyroscope G-dependent cross biases
+     *                  introduced on the gyroscope by the specific forces
+     *                  sensed by the accelerometer. Must be 3x3.
+     * @param listener  listener to handle events raised by this
+     *                  calibrator.
      * @throws IllegalArgumentException if any of the provided values does
      *                                  not have proper size.
      */
@@ -221,8 +221,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must have length 3 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -253,8 +253,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must have length 3 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -288,8 +288,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must be 3x1 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -319,8 +319,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must be 3x1 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -359,8 +359,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -391,8 +391,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -426,8 +426,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -458,8 +458,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -493,8 +493,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -535,8 +535,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -580,8 +580,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -622,8 +622,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -679,8 +679,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                      the quality of the sequence.
      * @param sequences     collection of sequences containing timestamped body
      *                      kinematics measurements.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias          gyroscope known bias. This must be 3x1 and is
+     *                      expressed in radians per second (rad/s).
      * @param initialMg     initial gyroscope scale factors and cross coupling
      *                      errors matrix. Must be 3x3.
      * @param initialGg     initial gyroscope G-dependent cross biases
@@ -709,8 +709,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                      the quality of the sequence.
      * @param sequences     collection of sequences containing timestamped body
      *                      kinematics measurements.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias          gyroscope known bias. This must be 3x1 and is
+     *                      expressed in radians per second (rad/s).
      * @param initialMg     initial gyroscope scale factors and cross coupling
      *                      errors matrix. Must be 3x3.
      * @param initialGg     initial gyroscope G-dependent cross biases
@@ -742,8 +742,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                      the quality of the sequence.
      * @param sequences     collection of sequences containing timestamped body
      *                      kinematics measurements.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias          gyroscope known bias. This must have length 3 and is
+     *                      expressed in radians per second (rad/s).
      * @param initialMg     initial gyroscope scale factors and cross coupling
      *                      errors matrix. Must be 3x3.
      * @param initialGg     initial gyroscope G-dependent cross biases
@@ -772,8 +772,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                      the quality of the sequence.
      * @param sequences     collection of sequences containing timestamped body
      *                      kinematics measurements.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias          gyroscope known bias. This must have length 3 and is
+     *                      expressed in radians per second (rad/s).
      * @param initialMg     initial gyroscope scale factors and cross coupling
      *                      errors matrix. Must be 3x3.
      * @param initialGg     initial gyroscope G-dependent cross biases
@@ -805,8 +805,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                          the quality of the sequence.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must have length 3 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -844,8 +844,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                          the quality of the sequence.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must have length 3 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -886,8 +886,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                          the quality of the sequence.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must be 3x1 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -924,8 +924,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      *                          the quality of the sequence.
      * @param sequences         collection of sequences containing timestamped body
      *                          kinematics measurements.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias              gyroscope known bias. This must be 3x1 and is
+     *                          expressed in radians per second (rad/s).
      * @param initialMg         initial gyroscope scale factors and cross coupling
      *                          errors matrix. Must be 3x3.
      * @param initialGg         initial gyroscope G-dependent cross biases
@@ -971,8 +971,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1010,8 +1010,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1052,8 +1052,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1091,8 +1091,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1133,8 +1133,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1182,8 +1182,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must have length 3 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must have length 3 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1234,8 +1234,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1283,8 +1283,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @param estimateGDependentCrossBiases true if G-dependent cross biases
      *                                      will be estimated, false
      *                                      otherwise.
-     * @param bias      gyroscope known bias. This must be 3x1 and is
-     *                  expressed in radians per second (rad/s).
+     * @param bias                          gyroscope known bias. This must be 3x1 and is
+     *                                      expressed in radians per second (rad/s).
      * @param initialMg                     initial gyroscope scale factors and cross coupling
      *                                      errors matrix. Must be 3x3.
      * @param initialGg                     initial gyroscope G-dependent cross biases
@@ -1365,7 +1365,7 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setStopThreshold(double stopThreshold) throws LockedException {
+    public void setStopThreshold(final double stopThreshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1397,7 +1397,7 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -1425,7 +1425,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -1434,7 +1435,8 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
         }
 
         final PROMedSRobustEstimator<PreliminaryResult> innerEstimator =
-                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<PreliminaryResult>() {
+                new PROMedSRobustEstimator<>(
+                        new PROMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -1477,19 +1479,11 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    PROMedSRobustKnownBiasEasyGyroscopeCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -1518,6 +1512,10 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
         try {
             mRunning = true;
 
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             setupAccelerationFixer();
 
             mInliersData = null;
@@ -1530,11 +1528,15 @@ public class PROMedSRobustKnownBiasEasyGyroscopeCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | AlgebraException e) {
+        } catch (final RobustEstimatorException | AlgebraException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

@@ -99,6 +99,7 @@ public class GeodesicData {
 
     /**
      * Gets latitude of point 1 (degrees).
+     *
      * @return latitude of point 1.
      */
     public double getLat1() {
@@ -107,14 +108,16 @@ public class GeodesicData {
 
     /**
      * Sets latitude of point 1 (degrees).
+     *
      * @param lat1 latitude of point 1.
      */
-    public void setLat1(double lat1) {
+    public void setLat1(final double lat1) {
         this.lat1 = lat1;
     }
 
     /**
      * Gets longitude of point 1 (degrees).
+     *
      * @return longitude of point 1.
      */
     public double getLon1() {
@@ -123,14 +126,16 @@ public class GeodesicData {
 
     /**
      * Sets longitude of point 1 (degrees).
+     *
      * @param lon1 longitude of point 1.
      */
-    public void setLon1(double lon1) {
+    public void setLon1(final double lon1) {
         this.lon1 = lon1;
     }
 
     /**
      * Gets azimuth at point 1 (degrees).
+     *
      * @return azimuth at point 1.
      */
     public double getAzi1() {
@@ -139,14 +144,16 @@ public class GeodesicData {
 
     /**
      * Sets azimuth at point 1 (degrees).
+     *
      * @param azi1 azimuth at point 1.
      */
-    public void setAzi1(double azi1) {
+    public void setAzi1(final double azi1) {
         this.azi1 = azi1;
     }
 
     /**
      * Gets latitude of point 2 (degrees).
+     *
      * @return latitude of point 2.
      */
     public double getLat2() {
@@ -155,14 +162,16 @@ public class GeodesicData {
 
     /**
      * Sets latitude of point 2 (degrees).
+     *
      * @param lat2 latitude of point 2.
      */
-    public void setLat2(double lat2) {
+    public void setLat2(final double lat2) {
         this.lat2 = lat2;
     }
 
     /**
      * Gets longitude of point 2 (degrees).
+     *
      * @return longitude of point 2.
      */
     public double getLon2() {
@@ -171,14 +180,16 @@ public class GeodesicData {
 
     /**
      * Sets longitude of point 2 (degrees).
+     *
      * @param lon2 longitude of point 2.
      */
-    public void setLon2(double lon2) {
+    public void setLon2(final double lon2) {
         this.lon2 = lon2;
     }
 
     /**
      * Gets azimuth at point 2 (degrees).
+     *
      * @return azimuth at point 2.
      */
     public double getAzi2() {
@@ -187,14 +198,16 @@ public class GeodesicData {
 
     /**
      * Sets azimuth at point 2 (degrees).
+     *
      * @param azi2 azimuth at point 2.
      */
-    public void setAzi2(double azi2) {
+    public void setAzi2(final double azi2) {
         this.azi2 = azi2;
     }
 
     /**
      * Gets distance between point 1 and point 2 (meters).
+     *
      * @return distance between point 1 and point 2.
      */
     public double getS12() {
@@ -203,14 +216,16 @@ public class GeodesicData {
 
     /**
      * Sets distance between point 1 and point 2 (meters).
+     *
      * @param s12 distance between point 1 and point 2.
      */
-    public void setS12(double s12) {
+    public void setS12(final double s12) {
         this.s12 = s12;
     }
 
     /**
      * Gets arc length on the auxiliary sphere between point 1 and point 2 (degrees).
+     *
      * @return arc length on the auxiliary sphere between point 1 and point 2.
      */
     public double getA12() {
@@ -219,14 +234,16 @@ public class GeodesicData {
 
     /**
      * Sets arc length on the auxiliary sphere between point 1 and point 2 (degrees).
+     *
      * @param a12 arc length on the auxiliary sphere between point 1 and point 2.
      */
-    public void setA12(double a12) {
+    public void setA12(final double a12) {
         this.a12 = a12;
     }
 
     /**
      * Gets reduced length of geodesic (meters).
+     *
      * @return reduced length of geodesic.
      */
     public double getM12() {
@@ -235,14 +252,16 @@ public class GeodesicData {
 
     /**
      * Sets reduced length of geodesic (meters).
+     *
      * @param m12 reduced length of geodesic.
      */
-    public void setM12(double m12) {
+    public void setM12(final double m12) {
         this.m12 = m12;
     }
 
     /**
      * Gets geodesic scale of point 2 relative to point 1 (dimensionless).
+     *
      * @return geodesic scale of point 2 relative to point 1.
      */
     public double getScaleM12() {
@@ -251,14 +270,16 @@ public class GeodesicData {
 
     /**
      * Sets geodesic scale of point 2 relative to point 1 (dimensionless).
+     *
      * @param scaleM12 geodesic scale of point 2 relative to point 1.
      */
-    public void setScaleM12(double scaleM12) {
+    public void setScaleM12(final double scaleM12) {
         this.scaleM12 = scaleM12;
     }
 
     /**
      * Gets geodesic scale of point 1 relative to point 2 (dimensionless).
+     *
      * @return geodesic scale of point 1 relative to point 2.
      */
     public double getScaleM21() {
@@ -267,14 +288,16 @@ public class GeodesicData {
 
     /**
      * Sets geodesic scale of point 1 relative to point 2 (dimensionless).
+     *
      * @param scaleM21 geodesic scale of point 1 relative to point 2.
      */
-    public void setScaleM21(double scaleM21) {
+    public void setScaleM21(final double scaleM21) {
         this.scaleM21 = scaleM21;
     }
 
     /**
      * Gets area under the geodesic (meter<sup>2</sup>).
+     *
      * @return area under the geodesic.
      */
     public double getAreaS12() {
@@ -283,9 +306,10 @@ public class GeodesicData {
 
     /**
      * Sets area under the geodesic (meter<sup>2</sup>).
+     *
      * @param areaS12 area under the geodesic.
      */
-    public void setAreaS12(double areaS12) {
+    public void setAreaS12(final double areaS12) {
         this.areaS12 = areaS12;
     }
 }

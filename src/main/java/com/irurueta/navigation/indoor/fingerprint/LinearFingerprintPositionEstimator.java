@@ -32,6 +32,7 @@ import java.util.List;
  * This implementation uses a first-order Taylor approximation over provided located
  * fingerprints to determine an approximate position for a non-located fingerprint and
  * solves the problem in a linear way.
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -41,68 +42,75 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
     /**
      * Constructor.
      */
-    public LinearFingerprintPositionEstimator() { }
+    public LinearFingerprintPositionEstimator() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public LinearFingerprintPositionEstimator(
-            FingerprintPositionEstimatorListener<P> listener) {
+            final FingerprintPositionEstimatorListener<P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required. For 3D position
-     * estimation 3 located total readings are required among all fingerprints).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required. For 3D position
+     *                                  estimation 3 located total readings are required among all fingerprints).
      */
-    public LinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                              RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                              List<? extends RadioSourceLocated<P>> sources) {
+    public LinearFingerprintPositionEstimator(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<P>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param sources located radio sources.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param sources             located radio sources.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
-     * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required. For 3D position
-     * estimation 3 located total readings are required among all fingerprints).
+     *                                  located fingerprints value is null or there are not enough fingerprints or
+     *                                  readings within provided fingerprints (for 2D position estimation at least 2
+     *                                  located total readings are required among all fingerprints, for example 2
+     *                                  readings are required in a single fingerprint, or at least 2 fingerprints at
+     *                                  different locations containing a single reading are required. For 3D position
+     *                                  estimation 3 located total readings are required among all fingerprints).
      */
-    public LinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                              RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                              List<? extends RadioSourceLocated<P>> sources,
-                                              FingerprintPositionEstimatorListener<P> listener) {
+    public LinearFingerprintPositionEstimator(
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final List<? extends RadioSourceLocated<P>> sources,
+            final FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
     /**
      * Estimates position based on provided located radio sources and readings of such radio sources at
      * an unknown location.
-     * @throws LockedException if estimator is locked.
-     * @throws NotReadyException if estimator is not ready.
+     *
+     * @throws LockedException                if estimator is locked.
+     * @throws NotReadyException              if estimator is not ready.
      * @throws FingerprintEstimationException if estimation fails for some other reason.
      */
     @Override
@@ -130,19 +138,19 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
                 //noinspection unchecked
                 noMeanfinder = new RadioSourceNoMeanKNearestFinder<>(
                         (Collection<? extends RssiFingerprintLocated<RadioSource,
-                                RssiReading<RadioSource>, P>>)mLocatedFingerprints);
+                                RssiReading<RadioSource>, P>>) mLocatedFingerprints);
             } else {
                 //noinspection unchecked
                 finder = new RadioSourceKNearestFinder<>(
                         (Collection<? extends RssiFingerprintLocated<RadioSource,
-                                RssiReading<RadioSource>, P>>)mLocatedFingerprints);
+                                RssiReading<RadioSource>, P>>) mLocatedFingerprints);
             }
 
             mEstimatedPositionCoordinates = null;
             mNearestFingerprints = null;
 
-            int dims = getNumberOfDimensions();
-            int max = mMaxNearestFingerprints < 0 ?
+            final int dims = getNumberOfDimensions();
+            final int max = mMaxNearestFingerprints < 0 ?
                     mLocatedFingerprints.size() :
                     Math.min(mMaxNearestFingerprints, mLocatedFingerprints.size());
             for (int k = mMinNearestFingerprints; k <= max; k++) {
@@ -378,18 +386,18 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
 
 
                 //build system of equations
-                int totalReadings = totalReadings(mNearestFingerprints);
+                final int totalReadings = totalReadings(mNearestFingerprints);
 
                 try {
-                    double ln10 = Math.log(10.0);
+                    final double ln10 = Math.log(10.0);
                     int row = 0;
-                    Matrix a = new Matrix(totalReadings, dims);
-                    double[] b = new double[totalReadings];
+                    final Matrix a = new Matrix(totalReadings, dims);
+                    final double[] b = new double[totalReadings];
                     for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
                             mNearestFingerprints) {
 
-                        P fingerprintPosition = locatedFingerprint.getPosition();
-                        List<RssiReading<RadioSource>> locatedReadings =
+                        final P fingerprintPosition = locatedFingerprint.getPosition();
+                        final List<RssiReading<RadioSource>> locatedReadings =
                                 locatedFingerprint.getReadings();
                         if (locatedReadings == null) {
                             continue;
@@ -403,36 +411,36 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
 
 
                         for (RssiReading<RadioSource> locatedReading : locatedReadings) {
-                            RadioSource source = locatedReading.getSource();
+                            final RadioSource source = locatedReading.getSource();
 
                             //find within the list of located sources the source of
                             //current located fingerprint reading.
                             //Radio sources are compared by their id
                             //regardless of them being located or not
-                            @SuppressWarnings("SuspiciousMethodCalls")
-                            int pos = mSources.indexOf(source);
+                            @SuppressWarnings("SuspiciousMethodCalls") final int pos = mSources.indexOf(source);
                             if (pos < 0) {
                                 continue;
                             }
 
-                            RadioSourceLocated<P> locatedSource = mSources.get(pos);
+                            final RadioSourceLocated<P> locatedSource = mSources.get(pos);
                             double pathLossExponent = mPathLossExponent;
                             if (mUseSourcesPathLossExponentWhenAvailable &&
                                     locatedSource instanceof RadioSourceWithPower) {
-                                pathLossExponent = ((RadioSourceWithPower)locatedSource).
+                                pathLossExponent = ((RadioSourceWithPower) locatedSource).
                                         getPathLossExponent();
                             }
 
-                            double tmp = 10.0 * pathLossExponent / ln10;
+                            final double tmp = 10.0 * pathLossExponent / ln10;
 
-                            P sourcePosition = locatedSource.getPosition();
-                            double locatedRssi = locatedReading.getRssi();
-                            double sqrDistance = fingerprintPosition.sqrDistanceTo(sourcePosition);
+                            final P sourcePosition = locatedSource.getPosition();
+                            final double locatedRssi = locatedReading.getRssi();
+                            final double sqrDistance = fingerprintPosition.sqrDistanceTo(
+                                    sourcePosition);
                             if (mRemoveMeansFromFingerprintReadings) {
                                 meanRssi = mFingerprint.getMeanRssi();
                             }
 
-                            List<? extends RssiReading<? extends RadioSource>> readings =
+                            final List<? extends RssiReading<? extends RadioSource>> readings =
                                     mFingerprint.getReadings();
                             for (RssiReading<? extends RadioSource> reading : readings) {
                                 if (reading.getSource() == null ||
@@ -442,7 +450,7 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
 
                                 //only take into account reading for matching sources on located and
                                 //non-located readings
-                                double rssi = reading.getRssi();
+                                final double rssi = reading.getRssi();
 
                                 //ideally if there was no bias betweeen devices RSSI measures, we should compute:
                                 //double diffRssi = locatedRssi - rssi;
@@ -459,9 +467,11 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
 
                                 b[row] = diffRssi;
                                 for (int i = 0; i < dims; i++) {
-                                    double fingerprintCoord = fingerprintPosition.getInhomogeneousCoordinate(i);
-                                    double sourceCoord = sourcePosition.getInhomogeneousCoordinate(i);
-                                    double diffCoord = fingerprintCoord - sourceCoord;
+                                    final double fingerprintCoord = fingerprintPosition
+                                            .getInhomogeneousCoordinate(i);
+                                    final double sourceCoord = sourcePosition
+                                            .getInhomogeneousCoordinate(i);
+                                    final double diffCoord = fingerprintCoord - sourceCoord;
 
                                     a.setElementAt(row, i, tmp * diffCoord / sqrDistance);
 
@@ -476,7 +486,7 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> ext
 
                     //a solution was found so we exit loop
                     break;
-                } catch (AlgebraException e) {
+                } catch (final AlgebraException e) {
                     //solution could not be found with current data
                     //Iterate to use additional nearby fingerprints
                     mEstimatedPositionCoordinates = null;

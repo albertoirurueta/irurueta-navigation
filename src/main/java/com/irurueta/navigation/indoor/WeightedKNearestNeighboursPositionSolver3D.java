@@ -38,24 +38,26 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
      * Constructor.
      * Sets known located WiFi fingerprints and euclidean distances between WiFi
      * signal fingerprints.
+     *
      * @param fingerprints known located WiFi fingerprints.
-     * @param distances euclidean distances between WiFi signal fingerprints
-     *                  (expressed in dB's).
+     * @param distances    euclidean distances between WiFi signal fingerprints
+     *                     (expressed in dB's).
      * @throws IllegalArgumentException if either fingerprints or distances are null,
-     * don't have the same length or their length is smaller than 1.
+     *                                  don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
-            double[] distances) {
+            final RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
+            final double[] distances) {
         super(fingerprints, distances);
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener to be notified of events raised by this instance.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            WeightedKNearestNeighboursPositionSolverListener<Point3D> listener) {
+            final WeightedKNearestNeighboursPositionSolverListener<Point3D> listener) {
         super(listener);
     }
 
@@ -63,21 +65,24 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
      * Constructor.
      * Sets known located WiFi fingerprints and euclidean distances between WiFi
      * signal fingerprints.
+     *
      * @param fingerprints known located WiFi fingerprints.
-     * @param distances euclidean distances between WiFi signal fingerprints
-     *                  (expressed in dB's).
-     * @param listener listener to be notified of events raised by this instance.
+     * @param distances    euclidean distances between WiFi signal fingerprints
+     *                     (expressed in dB's).
+     * @param listener     listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either fingerprints or distances are null,
-     * don't have the same length or their length is smaller than 1.
+     *                                  don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
-            double[] distances, WeightedKNearestNeighboursPositionSolverListener<Point3D> listener) {
+            final RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
+            final double[] distances,
+            final WeightedKNearestNeighboursPositionSolverListener<Point3D> listener) {
         super(fingerprints, distances, listener);
     }
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
@@ -86,13 +91,14 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
             return null;
         }
 
-        Point3D result = new InhomogeneousPoint3D();
+        final Point3D result = new InhomogeneousPoint3D();
         getEstimatedPosition(result);
         return result;
     }
 
     /**
      * Gets number of dimensions of location points.
+     *
      * @return number of dimensions of location points.
      */
     @Override

@@ -70,14 +70,16 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
     /**
      * Empty constructor to prevent deserialization issues.
      */
-    protected BeaconIdentifier() { }
+    protected BeaconIdentifier() {
+    }
 
     /**
      * Creates a nw instance of a beacon identifier.
+     *
      * @param value value to use.
      * @throws NullPointerException if provided value is null.
      */
-    protected BeaconIdentifier(byte[] value) {
+    protected BeaconIdentifier(final byte[] value) {
         if (value == null) {
             throw new NullPointerException(
                     "Identifiers cannot be constructed from null pointers but \"value\" is null.");
@@ -89,9 +91,9 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
     /**
      * Takes the passed string and tries to figure out what format it is in.
      * Then turns the string into plain bytes and constructs an identifier.
-     *
+     * <p>
      * This method parses UUIDs without dashes for compatibility (although this is not a standard behaviour).
-     *
+     * <p>
      * Allowed formats:
      * <ul>
      *   <li>UUID: 2F234454-CF6D-4A0F-ADF2-F4911BA9FFA6 (16 bytes)</li>
@@ -101,23 +103,25 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      *
      * @param stringValue string to be parsed.
      * @return an identifier representinf the specified value.
-     * @throws NullPointerException if string value is null.
+     * @throws NullPointerException     if string value is null.
      * @throws IllegalArgumentException if parsing fails for some other reason (invalid format, etc).
      * @see <a href="https://www.ietf.org/rfc/rfc4122.txt">RFC 4122 on UUIDs</a>
      */
-    public static BeaconIdentifier parse(String stringValue) {
+    public static BeaconIdentifier parse(final String stringValue) {
         return parse(stringValue, -1);
     }
 
     /**
      * Variant of the parse method that allows specifying the byte length of the identifier.
-     * @param stringValue value to be parsed.
+     *
+     * @param stringValue       value to be parsed.
      * @param desiredByteLength requested number of bytes to hold the identifier or -1 if not specified.
      * @return the parsed identifier.
-     * @throws NullPointerException if string value is null.
+     * @throws NullPointerException     if string value is null.
      * @throws IllegalArgumentException if parsing fails for some other reason (invalid format, etc).
      */
-    public static BeaconIdentifier parse(String stringValue, int desiredByteLength) {
+    public static BeaconIdentifier parse(
+            final String stringValue, final int desiredByteLength) {
         if (stringValue == null) {
             throw new NullPointerException(
                     "Identifiers cannot be constructed from null pointers but \"stringValue\" is null.");
@@ -153,16 +157,18 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Creates an identifier backed by an array of length desiredByteLength.
-     * @param longValue a long to put into the identifier.
+     *
+     * @param longValue         a long to put into the identifier.
      * @param desiredByteLength how many bytes to make the identifier.
      * @return the parsed identifier.
      * @throws IllegalArgumentException if desired number of bytes is negative.
      */
-    public static BeaconIdentifier fromLong(long longValue, int desiredByteLength) {
+    public static BeaconIdentifier fromLong(
+            long longValue, final int desiredByteLength) {
         if (desiredByteLength < 0) {
             throw new IllegalArgumentException("identifier length must be > 0");
         }
-        byte[] newValue = new byte[desiredByteLength];
+        final byte[] newValue = new byte[desiredByteLength];
         for (int i = desiredByteLength - 1; i >= 0; i--) {
             newValue[i] = (byte) (longValue & 0xff);
             longValue = longValue >> 8;
@@ -172,17 +178,18 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Creates an identifier backed by a two byte array (big endia).
+     *
      * @param intValue an integer between 0 and 65535 (inclusive).
      * @return an identifier with the specified value.
      * @throws IllegalArgumentException if provided value is out of valid range (from 0 to 65535).
      */
-    public static BeaconIdentifier fromInt(int intValue) {
+    public static BeaconIdentifier fromInt(final int intValue) {
         if (intValue < 0 || intValue > MAX_INTEGER) {
             throw new IllegalArgumentException(
                     "Identifiers can only be constructed from integers between 0 and " + MAX_INTEGER + " (inclusive).");
         }
 
-        byte[] newValue = new byte[2];
+        final byte[] newValue = new byte[2];
 
         newValue[0] = (byte) (intValue >> 8);
         newValue[1] = (byte) (intValue);
@@ -192,16 +199,19 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Creates an identifier from the specified byte array.
-     * @param bytes array to copy from.
-     * @param start the start index, inclusive.
-     * @param end the end index, exclusive.
+     *
+     * @param bytes        array to copy from.
+     * @param start        the start index, inclusive.
+     * @param end          the end index, exclusive.
      * @param littleEndian whether the bytes are ordered in little endian.
      * @return a new identifier.
-     * @throws NullPointerException if bytes is null.
+     * @throws NullPointerException           if bytes is null.
      * @throws ArrayIndexOutOfBoundsException if start or end are outside the bounds of the array.
-     * @throws IllegalArgumentException start is larger than end.
+     * @throws IllegalArgumentException       start is larger than end.
      */
-    public static BeaconIdentifier fromBytes(byte[] bytes, int start, int end, boolean littleEndian) {
+    public static BeaconIdentifier fromBytes(
+            final byte[] bytes, final int start, final int end,
+            final boolean littleEndian) {
         if (bytes == null) {
             throw new NullPointerException(
                     "Identifiers cannot be constructed from null pointers but \"bytes\" is null.");
@@ -216,7 +226,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
             throw new IllegalArgumentException("start > end");
         }
 
-        byte[] byteRange = Arrays.copyOfRange(bytes, start, end);
+        final byte[] byteRange = Arrays.copyOfRange(bytes, start, end);
         if (littleEndian) {
             reverseArray(byteRange);
         }
@@ -227,11 +237,12 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * Transforms a {@link UUID} into an identifier.
      * No mangling with strings, only the underlying bytes of the
      * UUID are used so this is fast and stable.
+     *
      * @param uuid UUID to create identifier from.
      * @return a new identifier.
      */
-    public static BeaconIdentifier fromUuid(UUID uuid) {
-        ByteBuffer buf = ByteBuffer.allocate(16);
+    public static BeaconIdentifier fromUuid(final UUID uuid) {
+        final ByteBuffer buf = ByteBuffer.allocate(16);
         buf.putLong(uuid.getMostSignificantBits());
         buf.putLong(uuid.getLeastSignificantBits());
         return new BeaconIdentifier(buf.array());
@@ -242,6 +253,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * <ul><li>When the value is 2 bytes long: decimal, for example 6536.
      * <li>When the value is 16 bytes long: uuid, for example 2f234454-cf6d-4a0f-adf2-f4911ba9ffa6
      * <li>Else: hexadecimal prefixed with <code>0x</code>, for example 0x0012ab</ul>
+     *
      * @return string representation of the current value.
      */
     @Override
@@ -263,6 +275,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Represents the value as an <code>int</code>.
+     *
      * @return value represented as int.
      * @throws UnsupportedOperationException when value length is longer than 2.
      */
@@ -285,15 +298,16 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Converts identifier to a byte array.
+     *
      * @param bigEndian true if bytes are MSB first.
      * @return a new byte array with a copy of the value.
      */
-    public byte[] toByteArrayOfSpecifiedEndianness(boolean bigEndian) {
+    public byte[] toByteArrayOfSpecifiedEndianness(final boolean bigEndian) {
         if (mValue == null) {
             return null;
         }
 
-        byte[] copy = Arrays.copyOf(mValue, mValue.length);
+        final byte[] copy = Arrays.copyOf(mValue, mValue.length);
 
         if (!bigEndian) {
             reverseArray(copy);
@@ -304,6 +318,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Returns the byte length of this identifier.
+     *
      * @return length of identifier.
      */
     public int getByteCount() {
@@ -313,6 +328,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
     /**
      * Represents the vlaue as a hexadecimal String. The String is prefixed with <code>0x</code>. For example
      * 0x0034ab.
+     *
      * @return value as hexadecimal String.
      */
     public String toHexString() {
@@ -333,6 +349,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Gives you the identifier as a UUID if possible.
+     *
      * @return the identifier as a UUID.
      * @throws UnsupportedOperationException if conversion to UUID fails.
      */
@@ -344,13 +361,14 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
         if (mValue.length != 16) {
             throw new UnsupportedOperationException("Only Identifiers backed by a byte array with length of exactly 16 can be UUIDs.");
         }
-        LongBuffer buf = ByteBuffer.wrap(mValue).asLongBuffer();
+        final LongBuffer buf = ByteBuffer.wrap(mValue).asLongBuffer();
         return new UUID(buf.get(), buf.get());
     }
 
     /**
      * Gives you the byte array backing this identifier. Note that identifiers are immutable,
      * so changing that the returned array will not result in a changed identifier.
+     *
      * @return a deep copy of the data backing this identifier.
      */
     public byte[] toByteArray() {
@@ -359,6 +377,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Computes hash code for this instance.
+     *
      * @return this instance hash code.
      */
     @Override
@@ -369,15 +388,16 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
     /**
      * Returns whether both identifiers contain equal value.
      * This is the case when the value is the same and has the same length.
+     *
      * @param that object to compare to.
      * @return whether that equals this.
      */
     @Override
-    public boolean equals(Object that) {
+    public boolean equals(final Object that) {
         if (!(that instanceof BeaconIdentifier)) {
             return false;
         }
-        BeaconIdentifier thatIdentifier = (BeaconIdentifier) that;
+        final BeaconIdentifier thatIdentifier = (BeaconIdentifier) that;
         return Arrays.equals(mValue, thatIdentifier.mValue);
     }
 
@@ -385,13 +405,14 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * Compares two identifiers.
      * When the identifiers don't have the same length, the identifier having the shortest
      * array is considered smaller than the other.
+     *
      * @param that the other identifier.
      * @return 0 if both identifiers are equal. Otherwise returns -1 or 1 depending on
      * which is bigger than th other.
      * @see Comparable#compareTo(Object)
      */
     @Override
-    public int compareTo(BeaconIdentifier that) {
+    public int compareTo(final BeaconIdentifier that) {
         if (mValue.length != that.mValue.length) {
             return mValue.length < that.mValue.length ? -1 : 1;
         }
@@ -405,12 +426,13 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Reverses provided array.
+     *
      * @param bytes array to be reversed.
      */
-    private static void reverseArray(byte[] bytes) {
+    private static void reverseArray(final byte[] bytes) {
         for (int i = 0; i < bytes.length / 2; i++) {
-            int mirroredIndex = bytes.length - i - 1;
-            byte tmp = bytes[i];
+            final int mirroredIndex = bytes.length - i - 1;
+            final byte tmp = bytes[i];
             bytes[i] = bytes[mirroredIndex];
             bytes[mirroredIndex] = tmp;
         }
@@ -418,11 +440,13 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
     /**
      * Parses a string containing a beacon identifier in hexadecimal format.
-     * @param identifierString string to be parsed.
+     *
+     * @param identifierString  string to be parsed.
      * @param desiredByteLength length of byte array to create to hold provided value.
      * @return the parsed identifier.
      */
-    private static BeaconIdentifier parseHex(String identifierString, int desiredByteLength) {
+    private static BeaconIdentifier parseHex(
+            final String identifierString, final int desiredByteLength) {
         String str = identifierString.length() % 2 == 0 ? "" : "0";
         str += identifierString.toUpperCase();
         int len = str.length();
@@ -432,8 +456,8 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
             len = str.length();
         }
         if (desiredByteLength > 0 && desiredByteLength > len / 2) {
-            int extraCharsToAdd = desiredByteLength * 2 - len;
-            StringBuilder sb = new StringBuilder();
+            final int extraCharsToAdd = desiredByteLength * 2 - len;
+            final StringBuilder sb = new StringBuilder();
             while (sb.length() < extraCharsToAdd) {
                 sb.append("0");
             }
@@ -441,9 +465,9 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
             len = str.length();
         }
 
-        byte[] result = new byte[len / 2];
+        final byte[] result = new byte[len / 2];
         for (int i = 0; i < result.length; i++) {
-            result[i] = (byte)(Integer.parseInt(str.substring(i * 2, i * 2 + 2), 16) & 0xFF);
+            result[i] = (byte) (Integer.parseInt(str.substring(i * 2, i * 2 + 2), 16) & 0xFF);
         }
         return new BeaconIdentifier(result);
     }

@@ -168,7 +168,8 @@ public class ECIGravitationEstimator {
      *               along ECI-frame axes.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravitation(final double x, final double y, final double z, final ECIGravitation result) {
+    public static void estimateGravitation(
+            final double x, final double y, final double z, final ECIGravitation result) {
 
         // Calculate distance from center of the Earth
         final double magR = Math.sqrt(x * x + y * y + z * z);

@@ -7494,11 +7494,11 @@ public class KnownPositionAccelerometerCalibrator {
 
         final GradientEstimator gradientEstimator = new GradientEstimator(
                 new MultiDimensionFunctionEvaluatorListener() {
-            @Override
-            public double evaluate(double[] point) throws EvaluationException {
-                return evaluateGeneral(point);
-            }
-        });
+                    @Override
+                    public double evaluate(double[] point) throws EvaluationException {
+                        return evaluateGeneral(point);
+                    }
+                });
 
         final Matrix initialM = Matrix.identity(BodyKinematics.COMPONENTS, BodyKinematics.COMPONENTS);
         initialM.add(getInitialMa());
@@ -7509,44 +7509,44 @@ public class KnownPositionAccelerometerCalibrator {
 
         mFitter.setFunctionEvaluator(
                 new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Input points are measured specific force coordinates
-                return BodyKinematics.COMPONENTS;
-            }
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Input points are measured specific force coordinates
+                        return BodyKinematics.COMPONENTS;
+                    }
 
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[GENERAL_UNKNOWNS];
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial = new double[GENERAL_UNKNOWNS];
 
-                // biases b
-                for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
-                    initial[i] = initialB.getElementAtIndex(i);
-                }
+                        // biases b
+                        for (int i = 0; i < BodyKinematics.COMPONENTS; i++) {
+                            initial[i] = initialB.getElementAtIndex(i);
+                        }
 
-                // cross coupling errors M
-                final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
-                for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
-                    initial[j] = initialM.getElementAtIndex(i);
-                }
+                        // cross coupling errors M
+                        final int num = BodyKinematics.COMPONENTS * BodyKinematics.COMPONENTS;
+                        for (int i = 0, j = BodyKinematics.COMPONENTS; i < num; i++, j++) {
+                            initial[j] = initialM.getElementAtIndex(i);
+                        }
 
-                return initial;
-            }
+                        return initial;
+                    }
 
-            @Override
-            public double evaluate(final int i, final double[] point,
-                                   final double[] params, final double[] derivatives)
-                    throws EvaluationException {
+                    @Override
+                    public double evaluate(final int i, final double[] point,
+                                           final double[] params, final double[] derivatives)
+                            throws EvaluationException {
 
-                mFmeasX = point[0];
-                mFmeasY = point[1];
-                mFmeasZ = point[2];
+                        mFmeasX = point[0];
+                        mFmeasY = point[1];
+                        mFmeasZ = point[2];
 
-                gradientEstimator.gradient(params, derivatives);
+                        gradientEstimator.gradient(params, derivatives);
 
-                return evaluateGeneral(params);
-            }
-        });
+                        return evaluateGeneral(params);
+                    }
+                });
 
         setInputData();
 
@@ -7857,9 +7857,9 @@ public class KnownPositionAccelerometerCalibrator {
      * This method is internally executed during gradient estimation and
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
-     * @param bx x-coordinate of bias.
-     * @param by y-coordinate of bias.
-     * @param bz z-coordinate of bias.
+     * @param bx  x-coordinate of bias.
+     * @param by  y-coordinate of bias.
+     * @param bz  z-coordinate of bias.
      * @param m11 element 1,1 of cross-coupling error matrix.
      * @param m21 element 2,1 of cross-coupling error matrix.
      * @param m31 element 3,1 of cross-coupling error matrix.

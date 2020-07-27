@@ -192,7 +192,7 @@ public interface UnknownBiasNonLinearGyroscopeCalibrator
      * Array values are expressed in radians per second (rad/s).
      *
      * @param initialBias initial bias to find a solution.
-     * @throws LockedException if calibrator is currently running.
+     * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided array does not have length 3.
      */
     void setInitialBias(final double[] initialBias) throws LockedException;
@@ -216,7 +216,7 @@ public interface UnknownBiasNonLinearGyroscopeCalibrator
      * Sets initial bias to be used to find a solution as an array.
      *
      * @param initialBias initial bias to find a solution.
-     * @throws LockedException if calibrator is currently running.
+     * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     void setInitialBias(final Matrix initialBias) throws LockedException;

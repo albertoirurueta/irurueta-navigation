@@ -20,19 +20,22 @@ import com.irurueta.geometry.Point;
 /**
  * Listener to be notified of events such as when position estimation
  * starts or ends.
+ *
  * @param <P> a {@link Point} type.
  */
 public interface WeightedKNearestNeighboursPositionSolverListener<P extends Point<?>> {
 
     /**
      * Called when solving starts.
+     *
      * @param solver solver raising the event.
      */
-    void onSolveStart(WeightedKNearestNeighboursPositionSolver<P> solver);
+    void onSolveStart(final WeightedKNearestNeighboursPositionSolver<P> solver);
 
     /**
      * Called when solving ends.
+     *
      * @param solver solver raising the event.
      */
-    void onSolveEnd(WeightedKNearestNeighboursPositionSolver<P> solver);
+    void onSolveEnd(final WeightedKNearestNeighboursPositionSolver<P> solver);
 }

@@ -36,20 +36,22 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
 
     /**
      * Constructor.
+     *
      * @param covarianceMatrix covariance matrix to be set. Must be 2x2 and positive
      *                         definite.
-     * @throws IllegalArgumentException if provided matrix is not square (it must also be
-     * positive definite to be properly converted to an ellipse).
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
+     *                                                     positive definite to be properly converted to an ellipse).
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
-     * symmetric and positive definite.
+     *                                                     symmetric and positive definite.
      */
-    public Accuracy2D(Matrix covarianceMatrix)
+    public Accuracy2D(final Matrix covarianceMatrix)
             throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);
     }
 
     /**
      * Constructor.
+     *
      * @param confidence confidence of provided accuracy of an estimated position.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
@@ -59,34 +61,37 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
 
     /**
      * Constructor.
+     *
      * @param covarianceMatrix covariance matrix to be set. Must be 2x2 and positive
      *                         definite.
-     * @param confidence confidence of provided accuracy of an estimated position.
-     * @throws IllegalArgumentException if provided matrix is not square (it must also be
-     * positive definite to be properly converted to an ellipse), or if provided
-     * confidence value is not within 0 and 1.
+     * @param confidence       confidence of provided accuracy of an estimated position.
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
+     *                                                     positive definite to be properly converted to an ellipse), or if provided
+     *                                                     confidence value is not within 0 and 1.
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
-     * symmetric and positive definite.
+     *                                                     symmetric and positive definite.
      */
-    public Accuracy2D(Matrix covarianceMatrix, double confidence)
+    public Accuracy2D(final Matrix covarianceMatrix, final double confidence)
             throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);
     }
 
     /**
      * Constructor.
+     *
      * @param internalAccuracy internal accuracy to be set.
      */
-    Accuracy2D(com.irurueta.geometry.Accuracy2D internalAccuracy) {
+    Accuracy2D(final com.irurueta.geometry.Accuracy2D internalAccuracy) {
         super(internalAccuracy);
     }
 
     /**
      * Converts provided covariance matrix into a 2D ellipse taking into account current
      * confidence and standard deviation factor.
+     *
      * @return ellipse representing accuracy of covariance matrix with current confidence and
      * standard deviation factor.
-     * @throws NullPointerException if covariance matrix has not been provided yet.
+     * @throws NullPointerException           if covariance matrix has not been provided yet.
      * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
      */
     public Ellipse toEllipse() throws InvalidRotationMatrixException {

@@ -38,12 +38,13 @@ public class PolygonResult {
 
     /**
      * Constructor.
-     * @param num the number of vertices in the polygon.
+     *
+     * @param num       the number of vertices in the polygon.
      * @param perimeter the perimeter of the polygon or the length of the polyline (meters).
-     * @param area the area of the polygon (meters<sup>2</sup>).
+     * @param area      the area of the polygon (meters<sup>2</sup>).
      */
     @SuppressWarnings("WeakerAccess")
-    public PolygonResult(int num, double perimeter, double area) {
+    public PolygonResult(final int num, final double perimeter, final double area) {
         this.num = num;
         this.perimeter = perimeter;
         this.area = area;
@@ -51,6 +52,7 @@ public class PolygonResult {
 
     /**
      * Gets the number of vertices in the polygon.
+     *
      * @return number of vertices in the polygon.
      */
     public int getNum() {
@@ -59,14 +61,16 @@ public class PolygonResult {
 
     /**
      * Sets the number of vertices in the polygon.
+     *
      * @param num number of vertices in the polygon.
      */
-    public void setNum(int num) {
+    public void setNum(final int num) {
         this.num = num;
     }
 
     /**
      * Gets the perimeter of the polygon or the length of the polyline (meters).
+     *
      * @return the perimeter of the polygon or the length of the polyline.
      */
     public double getPerimeter() {
@@ -75,14 +79,16 @@ public class PolygonResult {
 
     /**
      * Sets the perimeter of the polygon or the length of the polyline (meters).
+     *
      * @param perimeter the perimeter of the polygon or the length of the polyline.
      */
-    public void setPerimeter(double perimeter) {
+    public void setPerimeter(final double perimeter) {
         this.perimeter = perimeter;
     }
 
     /**
      * Gets the area of the polygon (meters<sup>2</sup>).
+     *
      * @return area of the polygon.
      */
     public double getArea() {
@@ -91,6 +97,7 @@ public class PolygonResult {
 
     /**
      * Sets the area of the polygon (meters<sup>2</sup>).
+     *
      * @param area area of the polygon.
      */
     public void setArea(double area) {

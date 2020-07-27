@@ -3391,6 +3391,7 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator im
 
     /**
      * Gets known hard-iron bias as a column matrix.
+     *
      * @param result instance where result data will be copied to.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
@@ -3407,8 +3408,9 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator im
 
     /**
      * Sets known hard-iron bias.
+     *
      * @param hardIron magnetometer hard-iron bias to be set.
-     * @throws LockedException if calibrator is currently running.
+     * @throws LockedException          if calibrator is currently running.
      * @throws IllegalArgumentException if provided matrix is not 3x1.
      */
     @Override
@@ -3922,103 +3924,106 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator im
         //                                                       [mxz]
         //                                                       [myz]
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Input points are true magnetic flux density coordinates
-                return BodyMagneticFluxDensity.COMPONENTS;
-            }
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiVariateFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Input points are true magnetic flux density coordinates
+                        return BodyMagneticFluxDensity.COMPONENTS;
+                    }
 
-            @Override
-            public int getNumberOfVariables() {
-                // The multivariate function returns the components of measured magnetic flux density
-                return BodyMagneticFluxDensity.COMPONENTS;
-            }
+                    @Override
+                    public int getNumberOfVariables() {
+                        // The multivariate function returns the components of measured magnetic flux density
+                        return BodyMagneticFluxDensity.COMPONENTS;
+                    }
 
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial = new double[COMMON_Z_AXIS_UNKNOWNS];
 
-                initial[0] = mInitialSx;
-                initial[1] = mInitialSy;
-                initial[2] = mInitialSz;
+                        initial[0] = mInitialSx;
+                        initial[1] = mInitialSy;
+                        initial[2] = mInitialSz;
 
-                initial[3] = mInitialMxy;
-                initial[4] = mInitialMxz;
-                initial[5] = mInitialMyz;
+                        initial[3] = mInitialMxy;
+                        initial[4] = mInitialMxz;
+                        initial[5] = mInitialMyz;
 
-                return initial;
-            }
+                        return initial;
+                    }
 
-            @Override
-            public void evaluate(int i, double[] point, double[] result, double[] params, Matrix jacobian) {
-                // We know that:
-                //  mBmeasx = bx + mBtruex + sx * mBtruex + mxy * mBtruey + mxz * mBtruez
-                //  mBmeasy = by + mBtruey + sy * mBtruey + myz * mBtruez
-                //  mBmeasz = bz + mBtruez + sz * mBtruez
+                    @Override
+                    public void evaluate(
+                            final int i, final double[] point, final double[] result,
+                            final double[] params, final Matrix jacobian) {
+                        // We know that:
+                        //  mBmeasx = bx + mBtruex + sx * mBtruex + mxy * mBtruey + mxz * mBtruez
+                        //  mBmeasy = by + mBtruey + sy * mBtruey + myz * mBtruez
+                        //  mBmeasz = bz + mBtruez + sz * mBtruez
 
-                // Hence, the derivatives respect the parameters sx, sy, sz,
-                // mxy, mxz, myz
+                        // Hence, the derivatives respect the parameters sx, sy, sz,
+                        // mxy, mxz, myz
 
-                // d(fmeasx)/d(sx) = mBtruex
-                // d(fmeasx)/d(sy) = 0.0
-                // d(fmeasx)/d(sz) = 0.0
-                // d(fmeasx)/d(mxy) = mBtruey
-                // d(fmeasx)/d(mxz) = mBtruez
-                // d(fmeasx)/d(myz) = 0.0
+                        // d(fmeasx)/d(sx) = mBtruex
+                        // d(fmeasx)/d(sy) = 0.0
+                        // d(fmeasx)/d(sz) = 0.0
+                        // d(fmeasx)/d(mxy) = mBtruey
+                        // d(fmeasx)/d(mxz) = mBtruez
+                        // d(fmeasx)/d(myz) = 0.0
 
-                // d(fmeasy)/d(sx) = 0.0
-                // d(fmeasy)/d(sy) = mBtruey
-                // d(fmeasy)/d(sz) = 0.0
-                // d(fmeasy)/d(mxy) = 0.0
-                // d(fmeasy)/d(mxz) = 0.0
-                // d(fmeasy)/d(myz) = mBtruez
+                        // d(fmeasy)/d(sx) = 0.0
+                        // d(fmeasy)/d(sy) = mBtruey
+                        // d(fmeasy)/d(sz) = 0.0
+                        // d(fmeasy)/d(mxy) = 0.0
+                        // d(fmeasy)/d(mxz) = 0.0
+                        // d(fmeasy)/d(myz) = mBtruez
 
-                // d(fmeasz)/d(sx) = 0.0
-                // d(fmeasz)/d(sy) = 0.0
-                // d(fmeasz)/d(sz) = mBtruez
-                // d(fmeasz)/d(mxy) = 0.0
-                // d(fmeasz)/d(mxz) = 0.0
-                // d(fmeasz)/d(myz) = 0.0
+                        // d(fmeasz)/d(sx) = 0.0
+                        // d(fmeasz)/d(sy) = 0.0
+                        // d(fmeasz)/d(sz) = mBtruez
+                        // d(fmeasz)/d(mxy) = 0.0
+                        // d(fmeasz)/d(mxz) = 0.0
+                        // d(fmeasz)/d(myz) = 0.0
 
-                final double sx = params[0];
-                final double sy = params[1];
-                final double sz = params[2];
+                        final double sx = params[0];
+                        final double sy = params[1];
+                        final double sz = params[2];
 
-                final double mxy = params[3];
-                final double mxz = params[4];
-                final double myz = params[5];
+                        final double mxy = params[3];
+                        final double mxz = params[4];
+                        final double myz = params[5];
 
-                final double btruex = point[0];
-                final double btruey = point[1];
-                final double btruez = point[2];
+                        final double btruex = point[0];
+                        final double btruey = point[1];
+                        final double btruez = point[2];
 
-                result[0] = mHardIronX + btruex + sx * btruex + mxy * btruey + mxz * btruez;
-                result[1] = mHardIronY + btruey + sy * btruey + myz * btruez;
-                result[2] = mHardIronZ + btruez + sz * btruez;
+                        result[0] = mHardIronX + btruex + sx * btruex + mxy * btruey + mxz * btruez;
+                        result[1] = mHardIronY + btruey + sy * btruey + myz * btruez;
+                        result[2] = mHardIronZ + btruez + sz * btruez;
 
-                jacobian.setElementAt(0, 0, btruex);
-                jacobian.setElementAt(0, 1, 0.0);
-                jacobian.setElementAt(0, 2, 0.0);
-                jacobian.setElementAt(0, 3, btruey);
-                jacobian.setElementAt(0, 4, btruez);
-                jacobian.setElementAt(0, 5, 0.0);
+                        jacobian.setElementAt(0, 0, btruex);
+                        jacobian.setElementAt(0, 1, 0.0);
+                        jacobian.setElementAt(0, 2, 0.0);
+                        jacobian.setElementAt(0, 3, btruey);
+                        jacobian.setElementAt(0, 4, btruez);
+                        jacobian.setElementAt(0, 5, 0.0);
 
-                jacobian.setElementAt(1, 0, 0.0);
-                jacobian.setElementAt(1, 1, btruey);
-                jacobian.setElementAt(1, 2, 0.0);
-                jacobian.setElementAt(1, 3, 0.0);
-                jacobian.setElementAt(1, 4, 0.0);
-                jacobian.setElementAt(1, 5, btruez);
+                        jacobian.setElementAt(1, 0, 0.0);
+                        jacobian.setElementAt(1, 1, btruey);
+                        jacobian.setElementAt(1, 2, 0.0);
+                        jacobian.setElementAt(1, 3, 0.0);
+                        jacobian.setElementAt(1, 4, 0.0);
+                        jacobian.setElementAt(1, 5, btruez);
 
-                jacobian.setElementAt(2, 0, 0.0);
-                jacobian.setElementAt(2, 1, 0.0);
-                jacobian.setElementAt(2, 2, btruez);
-                jacobian.setElementAt(2, 3, 0.0);
-                jacobian.setElementAt(2, 4, 0.0);
-                jacobian.setElementAt(2, 5, 0.0);
-            }
-        });
+                        jacobian.setElementAt(2, 0, 0.0);
+                        jacobian.setElementAt(2, 1, 0.0);
+                        jacobian.setElementAt(2, 2, btruez);
+                        jacobian.setElementAt(2, 3, 0.0);
+                        jacobian.setElementAt(2, 4, 0.0);
+                        jacobian.setElementAt(2, 5, 0.0);
+                    }
+                });
 
         setInputData();
 
@@ -4103,129 +4108,131 @@ public class KnownHardIronAndFrameMagnetometerNonLinearLeastSquaresCalibrator im
         //                                                                                  [mzx]
         //                                                                                  [mzy]
 
-        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiVariateFunctionEvaluator() {
-            @Override
-            public int getNumberOfDimensions() {
-                // Input points are true magnetic flux density coordinates
-                return BodyMagneticFluxDensity.COMPONENTS;
-            }
+        mFitter.setFunctionEvaluator(
+                new LevenbergMarquardtMultiVariateFunctionEvaluator() {
+                    @Override
+                    public int getNumberOfDimensions() {
+                        // Input points are true magnetic flux density coordinates
+                        return BodyMagneticFluxDensity.COMPONENTS;
+                    }
 
-            @Override
-            public int getNumberOfVariables() {
-                // The multivariate function returns the components of measured magnetic flux density
-                return BodyMagneticFluxDensity.COMPONENTS;
-            }
+                    @Override
+                    public int getNumberOfVariables() {
+                        // The multivariate function returns the components of measured magnetic flux density
+                        return BodyMagneticFluxDensity.COMPONENTS;
+                    }
 
-            @Override
-            public double[] createInitialParametersArray() {
-                final double[] initial = new double[GENERAL_UNKNOWNS];
+                    @Override
+                    public double[] createInitialParametersArray() {
+                        final double[] initial = new double[GENERAL_UNKNOWNS];
 
-                initial[0] = mInitialSx;
-                initial[1] = mInitialSy;
-                initial[2] = mInitialSz;
+                        initial[0] = mInitialSx;
+                        initial[1] = mInitialSy;
+                        initial[2] = mInitialSz;
 
-                initial[3] = mInitialMxy;
-                initial[4] = mInitialMxz;
-                initial[5] = mInitialMyx;
-                initial[6] = mInitialMyz;
-                initial[7] = mInitialMzx;
-                initial[8] = mInitialMzy;
+                        initial[3] = mInitialMxy;
+                        initial[4] = mInitialMxz;
+                        initial[5] = mInitialMyx;
+                        initial[6] = mInitialMyz;
+                        initial[7] = mInitialMzx;
+                        initial[8] = mInitialMzy;
 
-                return initial;
-            }
+                        return initial;
+                    }
 
-            @Override
-            public void evaluate(final int i, final double[] point,
-                                 final double[] result, final double[] params,
-                                 final Matrix jacobian) {
-                // We know that:
-                //  mBmeasx = bx + mBtruex + sx * mBtruex + mxy * mBtruey + mxz * mBtruez
-                //  mBmeasy = by + myx * mBtruex + mBtruey + sy * mBtruey + myz * mBtruez
-                //  mBmeasz = bz + mzx * mBtruex + mzy * mBtruey + mBtruez + sz * mBtruez
+                    @Override
+                    public void evaluate(
+                            final int i, final double[] point,
+                            final double[] result, final double[] params,
+                            final Matrix jacobian) {
+                        // We know that:
+                        //  mBmeasx = bx + mBtruex + sx * mBtruex + mxy * mBtruey + mxz * mBtruez
+                        //  mBmeasy = by + myx * mBtruex + mBtruey + sy * mBtruey + myz * mBtruez
+                        //  mBmeasz = bz + mzx * mBtruex + mzy * mBtruey + mBtruez + sz * mBtruez
 
-                // Hence, the derivatives respect the parameters sx, sy, sz,
-                // mxy, mxz, myx, myz, mzx and mzy is:
+                        // Hence, the derivatives respect the parameters sx, sy, sz,
+                        // mxy, mxz, myx, myz, mzx and mzy is:
 
-                // d(fmeasx)/d(sx) = mBtruex
-                // d(fmeasx)/d(sy) = 0.0
-                // d(fmeasx)/d(sz) = 0.0
-                // d(fmeasx)/d(mxy) = mBtruey
-                // d(fmeasx)/d(mxz) = mBtruez
-                // d(fmeasx)/d(myx) = 0.0
-                // d(fmeasx)/d(myz) = 0.0
-                // d(fmeasx)/d(mzx) = 0.0
-                // d(fmeasx)/d(mzy) = 0.0
+                        // d(fmeasx)/d(sx) = mBtruex
+                        // d(fmeasx)/d(sy) = 0.0
+                        // d(fmeasx)/d(sz) = 0.0
+                        // d(fmeasx)/d(mxy) = mBtruey
+                        // d(fmeasx)/d(mxz) = mBtruez
+                        // d(fmeasx)/d(myx) = 0.0
+                        // d(fmeasx)/d(myz) = 0.0
+                        // d(fmeasx)/d(mzx) = 0.0
+                        // d(fmeasx)/d(mzy) = 0.0
 
-                // d(fmeasy)/d(sx) = 0.0
-                // d(fmeasy)/d(sy) = mBtruey
-                // d(fmeasy)/d(sz) = 0.0
-                // d(fmeasy)/d(mxy) = 0.0
-                // d(fmeasy)/d(mxz) = 0.0
-                // d(fmeasy)/d(myx) = mBtruex
-                // d(fmeasy)/d(myz) = mBtruez
-                // d(fmeasy)/d(mzx) = 0.0
-                // d(fmeasy)/d(mzy) = 0.0
+                        // d(fmeasy)/d(sx) = 0.0
+                        // d(fmeasy)/d(sy) = mBtruey
+                        // d(fmeasy)/d(sz) = 0.0
+                        // d(fmeasy)/d(mxy) = 0.0
+                        // d(fmeasy)/d(mxz) = 0.0
+                        // d(fmeasy)/d(myx) = mBtruex
+                        // d(fmeasy)/d(myz) = mBtruez
+                        // d(fmeasy)/d(mzx) = 0.0
+                        // d(fmeasy)/d(mzy) = 0.0
 
-                // d(fmeasz)/d(sx) = 0.0
-                // d(fmeasz)/d(sy) = 0.0
-                // d(fmeasz)/d(sz) = mBtruez
-                // d(fmeasz)/d(mxy) = 0.0
-                // d(fmeasz)/d(mxz) = 0.0
-                // d(fmeasz)/d(myx) = 0.0
-                // d(fmeasz)/d(myz) = 0.0
-                // d(fmeasz)/d(mzx) = mBtruex
-                // d(fmeasz)/d(mzy) = mBtruey
+                        // d(fmeasz)/d(sx) = 0.0
+                        // d(fmeasz)/d(sy) = 0.0
+                        // d(fmeasz)/d(sz) = mBtruez
+                        // d(fmeasz)/d(mxy) = 0.0
+                        // d(fmeasz)/d(mxz) = 0.0
+                        // d(fmeasz)/d(myx) = 0.0
+                        // d(fmeasz)/d(myz) = 0.0
+                        // d(fmeasz)/d(mzx) = mBtruex
+                        // d(fmeasz)/d(mzy) = mBtruey
 
-                final double sx = params[0];
-                final double sy = params[1];
-                final double sz = params[2];
+                        final double sx = params[0];
+                        final double sy = params[1];
+                        final double sz = params[2];
 
-                final double mxy = params[3];
-                final double mxz = params[4];
-                final double myx = params[5];
-                final double myz = params[6];
-                final double mzx = params[7];
-                final double mzy = params[8];
+                        final double mxy = params[3];
+                        final double mxz = params[4];
+                        final double myx = params[5];
+                        final double myz = params[6];
+                        final double mzx = params[7];
+                        final double mzy = params[8];
 
-                final double btruex = point[0];
-                final double btruey = point[1];
-                final double btruez = point[2];
+                        final double btruex = point[0];
+                        final double btruey = point[1];
+                        final double btruez = point[2];
 
-                result[0] = mHardIronX + btruex + sx * btruex + mxy * btruey + mxz * btruez;
-                result[1] = mHardIronY + myx * btruex + btruey + sy * btruey + myz * btruez;
-                result[2] = mHardIronZ + mzx * btruex + mzy * btruey + btruez + sz * btruez;
+                        result[0] = mHardIronX + btruex + sx * btruex + mxy * btruey + mxz * btruez;
+                        result[1] = mHardIronY + myx * btruex + btruey + sy * btruey + myz * btruez;
+                        result[2] = mHardIronZ + mzx * btruex + mzy * btruey + btruez + sz * btruez;
 
-                jacobian.setElementAt(0, 0, btruex);
-                jacobian.setElementAt(0, 1, 0.0);
-                jacobian.setElementAt(0, 2, 0.0);
-                jacobian.setElementAt(0, 3, btruey);
-                jacobian.setElementAt(0, 4, btruez);
-                jacobian.setElementAt(0, 5, 0.0);
-                jacobian.setElementAt(0, 6, 0.0);
-                jacobian.setElementAt(0, 7, 0.0);
-                jacobian.setElementAt(0, 8, 0.0);
+                        jacobian.setElementAt(0, 0, btruex);
+                        jacobian.setElementAt(0, 1, 0.0);
+                        jacobian.setElementAt(0, 2, 0.0);
+                        jacobian.setElementAt(0, 3, btruey);
+                        jacobian.setElementAt(0, 4, btruez);
+                        jacobian.setElementAt(0, 5, 0.0);
+                        jacobian.setElementAt(0, 6, 0.0);
+                        jacobian.setElementAt(0, 7, 0.0);
+                        jacobian.setElementAt(0, 8, 0.0);
 
-                jacobian.setElementAt(1, 0, 0.0);
-                jacobian.setElementAt(1, 1, btruey);
-                jacobian.setElementAt(1, 2, 0.0);
-                jacobian.setElementAt(1, 3, 0.0);
-                jacobian.setElementAt(1, 4, 0.0);
-                jacobian.setElementAt(1, 5, btruex);
-                jacobian.setElementAt(1, 6, btruez);
-                jacobian.setElementAt(1, 7, 0.0);
-                jacobian.setElementAt(1, 8, 0.0);
+                        jacobian.setElementAt(1, 0, 0.0);
+                        jacobian.setElementAt(1, 1, btruey);
+                        jacobian.setElementAt(1, 2, 0.0);
+                        jacobian.setElementAt(1, 3, 0.0);
+                        jacobian.setElementAt(1, 4, 0.0);
+                        jacobian.setElementAt(1, 5, btruex);
+                        jacobian.setElementAt(1, 6, btruez);
+                        jacobian.setElementAt(1, 7, 0.0);
+                        jacobian.setElementAt(1, 8, 0.0);
 
-                jacobian.setElementAt(2, 0, 0.0);
-                jacobian.setElementAt(2, 1, 0.0);
-                jacobian.setElementAt(2, 2, btruez);
-                jacobian.setElementAt(2, 3, 0.0);
-                jacobian.setElementAt(2, 4, 0.0);
-                jacobian.setElementAt(2, 5, 0.0);
-                jacobian.setElementAt(2, 6, 0.0);
-                jacobian.setElementAt(2, 7, btruex);
-                jacobian.setElementAt(2, 8, btruey);
-            }
-        });
+                        jacobian.setElementAt(2, 0, 0.0);
+                        jacobian.setElementAt(2, 1, 0.0);
+                        jacobian.setElementAt(2, 2, btruez);
+                        jacobian.setElementAt(2, 3, 0.0);
+                        jacobian.setElementAt(2, 4, 0.0);
+                        jacobian.setElementAt(2, 5, 0.0);
+                        jacobian.setElementAt(2, 6, 0.0);
+                        jacobian.setElementAt(2, 7, btruex);
+                        jacobian.setElementAt(2, 8, btruey);
+                    }
+                });
 
         setInputData();
 

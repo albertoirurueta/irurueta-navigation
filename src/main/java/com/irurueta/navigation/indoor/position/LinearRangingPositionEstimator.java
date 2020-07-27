@@ -76,7 +76,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
      *
      * @param listener listener in charge of handling events.
      */
-    public LinearRangingPositionEstimator(RangingPositionEstimatorListener<P> listener) {
+    public LinearRangingPositionEstimator(final RangingPositionEstimatorListener<P> listener) {
         super(listener);
         init();
     }
@@ -84,8 +84,8 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
     /**
      * Indicates whether an homogeneous linear solver is used to estimate position.
      *
-     * @return  true if homogeneous linear solver is used, false if an inhomogeneous
-     *          linear one is used instead.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous
+     * linear one is used instead.
      */
     public boolean isHomogeneousLinearSolverUsed() {
         return mUseHomogeneousLinearSolver;
@@ -98,7 +98,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
      *                                   if an inhomogeneous linear one is used instead.
      * @throws LockedException if estimator is locked.
      */
-    public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
+    public void setHomogeneousLinearSolverUsed(final boolean useHomogeneousLinearSolver)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -114,13 +114,14 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
      */
     @Override
     public int getMinRequiredSources() {
-        return mUseHomogeneousLinearSolver?
+        return mUseHomogeneousLinearSolver ?
                 mHomogeneousTrilaterationSolver.getMinRequiredPositionsAndDistances() :
                 mInhomogeneousTrilaterationSolver.getMinRequiredPositionsAndDistances();
     }
 
     /**
      * Indicates whether estimator is ready to find a solution.
+     *
      * @return true if estimator is ready, false otherwise.
      */
     @Override
@@ -131,6 +132,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
 
     /**
      * Returns boolean indicating whether this estimator is locked because an estimation is already in progress.
+     *
      * @return true if estimator is locked, false otherwise.
      */
     @Override
@@ -142,8 +144,9 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
     /**
      * Estimates position based on provided located radio sources and RSSI readings of
      * such radio sources at an unknown location.
-     * @throws LockedException if estimator is locked.
-     * @throws NotReadyException if estimator is not ready.
+     *
+     * @throws LockedException             if estimator is locked.
+     * @throws NotReadyException           if estimator is not ready.
      * @throws PositionEstimationException if estimation fails for some other reason.
      */
     @SuppressWarnings("Duplicates")
@@ -160,7 +163,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
                 mEstimatedPositionCoordinates =
                         mInhomogeneousTrilaterationSolver.getEstimatedPositionCoordinates();
             }
-        } catch (LaterationException e) {
+        } catch (final LaterationException e) {
             throw new PositionEstimationException(e);
         }
     }
@@ -199,7 +202,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
      *                                  provided sources is less than the required
      *                                  minimum.
      */
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
+    protected void internalSetSources(final List<? extends RadioSourceLocated<P>> sources) {
         super.internalSetSources(sources);
         buildPositionsAndDistances();
     }
@@ -213,7 +216,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super.internalSetFingerprint(fingerprint);
         buildPositionsAndDistances();
     }
@@ -224,8 +227,8 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
      * @param positions positions to be set.
      * @param distances distances to be set.
      */
-    protected abstract void setPositionsAndDistances(List<P> positions,
-                                                     List<Double> distances);
+    protected abstract void setPositionsAndDistances(
+            final List<P> positions, final List<Double> distances);
 
     /**
      * Initializes lateration solver listener.
@@ -234,14 +237,14 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
     private void init() {
         mLaterationSolverListener = new LaterationSolverListener<P>() {
             @Override
-            public void onSolveStart(LaterationSolver<P> solver) {
+            public void onSolveStart(final LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateStart(LinearRangingPositionEstimator.this);
                 }
             }
 
             @Override
-            public void onSolveEnd(LaterationSolver<P> solver) {
+            public void onSolveEnd(final LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateEnd(LinearRangingPositionEstimator.this);
                 }
@@ -259,7 +262,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
             return;
         }
 
-        int min = getMinRequiredSources();
+        final int min = getMinRequiredSources();
         if (mSources == null || mFingerprint == null ||
                 mSources.size() < min ||
                 mFingerprint.getReadings() == null ||
@@ -267,8 +270,8 @@ public abstract class LinearRangingPositionEstimator<P extends Point<P>> extends
             return;
         }
 
-        List<P> positions = new ArrayList<>();
-        List<Double> distances = new ArrayList<>();
+        final List<P> positions = new ArrayList<>();
+        final List<Double> distances = new ArrayList<>();
         PositionEstimatorHelper.buildPositionsAndDistances(
                 mSources, mFingerprint, positions, distances);
 

@@ -216,7 +216,7 @@ public class RANSACRobustKnownFrameGyroscopeCalibrator extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -243,7 +243,8 @@ public class RANSACRobustKnownFrameGyroscopeCalibrator extends
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(
+            final boolean computeAndKeepInliers)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -268,7 +269,8 @@ public class RANSACRobustKnownFrameGyroscopeCalibrator extends
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(
+            final boolean computeAndKeepResiduals)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -285,7 +287,8 @@ public class RANSACRobustKnownFrameGyroscopeCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -294,73 +297,81 @@ public class RANSACRobustKnownFrameGyroscopeCalibrator extends
         }
 
         final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
+                new RANSACRobustEstimator<>(
+                        new RANSACRobustEstimatorListener<PreliminaryResult>() {
+                            @Override
+                            public double getThreshold() {
+                                return mThreshold;
+                            }
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mMeasurements.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mMeasurements.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return mPreliminarySubsetSize;
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return mPreliminarySubsetSize;
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(final int[] samplesIndices,
-                                                            final List<PreliminaryResult> solutions) {
-                        computePreliminarySolutions(samplesIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(
+                                    final int[] samplesIndices,
+                                    final List<PreliminaryResult> solutions) {
+                                computePreliminarySolutions(samplesIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(final PreliminaryResult currentEstimation, final int i) {
-                        return computeError(mMeasurements.get(i), currentEstimation);
-                    }
+                            @Override
+                            public double computeResidual(
+                                    final PreliminaryResult currentEstimation, final int i) {
+                                return computeError(mMeasurements.get(i), currentEstimation);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return RANSACRobustKnownFrameGyroscopeCalibrator.super.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return RANSACRobustKnownFrameGyroscopeCalibrator.super.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(RANSACRobustKnownFrameGyroscopeCalibrator.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(
+                                    final RobustEstimator<PreliminaryResult> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateEnd(final RobustEstimator<PreliminaryResult> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(RANSACRobustKnownFrameGyroscopeCalibrator.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(
+                                    final RobustEstimator<PreliminaryResult> estimator) {
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(
-                            final RobustEstimator<PreliminaryResult> estimator, final int iteration) {
-                        if (mListener != null) {
-                            mListener.onCalibrateNextIteration(
-                                    RANSACRobustKnownFrameGyroscopeCalibrator.this, iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(
+                                    final RobustEstimator<PreliminaryResult> estimator,
+                                    final int iteration) {
+                                if (mListener != null) {
+                                    mListener.onCalibrateNextIteration(
+                                            RANSACRobustKnownFrameGyroscopeCalibrator.this,
+                                            iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(
-                            final RobustEstimator<PreliminaryResult> estimator, final float progress) {
-                        if (mListener != null) {
-                            mListener.onCalibrateProgressChange(
-                                    RANSACRobustKnownFrameGyroscopeCalibrator.this, progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(
+                                    final RobustEstimator<PreliminaryResult> estimator,
+                                    final float progress) {
+                                if (mListener != null) {
+                                    mListener.onCalibrateProgressChange(
+                                            RANSACRobustKnownFrameGyroscopeCalibrator.this,
+                                            progress);
+                                }
+                            }
+                        });
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
             innerEstimator.setComputeAndKeepInliersEnabled(
                     mComputeAndKeepInliers || mRefineResult);
@@ -374,11 +385,15 @@ public class RANSACRobustKnownFrameGyroscopeCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException e) {
+        } catch (final RobustEstimatorException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

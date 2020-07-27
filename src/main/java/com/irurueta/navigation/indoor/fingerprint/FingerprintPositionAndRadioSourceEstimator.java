@@ -30,6 +30,7 @@ import java.util.List;
  * All implementations of this class estimate the position of a new fingerprint
  * and the position of all radio sources associated to fingerprints whose location
  * is known.
+ *
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -49,48 +50,52 @@ public abstract class FingerprintPositionAndRadioSourceEstimator<P extends Point
     /**
      * Constructor.
      */
-    public FingerprintPositionAndRadioSourceEstimator() { }
+    public FingerprintPositionAndRadioSourceEstimator() {
+    }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public FingerprintPositionAndRadioSourceEstimator(
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public FingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super(locatedFingerprints, fingerprint);
     }
 
     /**
      * Constructor.
+     *
      * @param locatedFingerprints located fingerprints containing RSSI readings.
-     * @param fingerprint fingerprint containing readings at an unknown location
-     *                    for provided located fingerprints.
-     * @param listener listener in charge of handling events.
+     * @param fingerprint         fingerprint containing readings at an unknown location
+     *                            for provided located fingerprints.
+     * @param listener            listener in charge of handling events.
      * @throws IllegalArgumentException if either non located fingerprint or located
-     * fingerprints are null.
+     *                                  fingerprints are null.
      */
     public FingerprintPositionAndRadioSourceEstimator(
-            List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>> fingerprint,
-            FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
+            final List<? extends RssiFingerprintLocated<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
+            final RssiFingerprint<? extends RadioSource,
+                    ? extends RssiReading<? extends RadioSource>> fingerprint,
+            final FingerprintPositionAndRadioSourceEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, listener);
     }
 
@@ -102,6 +107,7 @@ public abstract class FingerprintPositionAndRadioSourceEstimator<P extends Point
      * locations.
      * By default mean effects are removed to remove possible bias effects due to
      * readings measured by different devices with different hardware.
+     *
      * @return indicates which fingerprint finder is used.
      */
     public boolean getUseNoMeanNearestFingerprintFinder() {
@@ -116,11 +122,12 @@ public abstract class FingerprintPositionAndRadioSourceEstimator<P extends Point
      * locations.
      * By default mean effects are removed to remove possible bias effects due to
      * readings measured by different devices with different hardware.
+     *
      * @param useNoMeanNearestFingerprintFinder indicates which fingerprint finder is used.
      * @throws LockedException if estimator is locked.
      */
     public void setUseNoMeanNearestFingerprintFinder(
-            boolean useNoMeanNearestFingerprintFinder) throws LockedException {
+            final boolean useNoMeanNearestFingerprintFinder) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

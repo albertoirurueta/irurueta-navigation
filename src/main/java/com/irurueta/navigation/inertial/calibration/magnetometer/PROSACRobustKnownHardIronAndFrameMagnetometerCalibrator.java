@@ -376,7 +376,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException          if calibrator is currently running.
      */
-    public void setThreshold(double threshold) throws LockedException {
+    public void setThreshold(final double threshold) throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -407,7 +407,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
      * @throws LockedException          if calibrator is currently running.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
+    public void setQualityScores(final double[] qualityScores)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -443,7 +443,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+    public void setComputeAndKeepInliersEnabled(final boolean computeAndKeepInliers)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -468,7 +468,7 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if calibrator is currently running.
      */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+    public void setComputeAndKeepResidualsEnabled(final boolean computeAndKeepResiduals)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -485,7 +485,8 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
     @Override
-    public void calibrate() throws LockedException, NotReadyException, CalibrationException {
+    public void calibrate() throws LockedException, NotReadyException,
+            CalibrationException {
         if (mRunning) {
             throw new LockedException();
         }
@@ -494,7 +495,8 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
         }
 
         final PROSACRobustEstimator<Matrix> innerEstimator =
-                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<Matrix>() {
+                new PROSACRobustEstimator<>(
+                        new PROSACRobustEstimatorListener<Matrix>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -537,19 +539,11 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
                     @Override
                     public void onEstimateStart(
                             final RobustEstimator<Matrix> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateStart(
-                                    PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
                     public void onEstimateEnd(
                             final RobustEstimator<Matrix> estimator) {
-                        if (mListener != null) {
-                            mListener.onCalibrateEnd(
-                                    PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this);
-                        }
                     }
 
                     @Override
@@ -565,7 +559,8 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
 
                     @Override
                     public void onEstimateProgressChange(
-                            final RobustEstimator<Matrix> estimator, final float progress) {
+                            final RobustEstimator<Matrix> estimator,
+                            final float progress) {
                         if (mListener != null) {
                             mListener.onCalibrateProgressChange(
                                     PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator.this,
@@ -576,6 +571,11 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
 
         try {
             mRunning = true;
+
+            if (mListener != null) {
+                mListener.onCalibrateStart(this);
+            }
+
             mInliersData = null;
 
             setupWmmEstimator();
@@ -592,11 +592,15 @@ public class PROSACRobustKnownHardIronAndFrameMagnetometerCalibrator extends
 
             attemptRefine(preliminaryResult);
 
-        } catch (com.irurueta.numerical.LockedException e) {
+            if (mListener != null) {
+                mListener.onCalibrateEnd(this);
+            }
+
+        } catch (final com.irurueta.numerical.LockedException e) {
             throw new LockedException(e);
-        } catch (com.irurueta.numerical.NotReadyException e) {
+        } catch (final com.irurueta.numerical.NotReadyException e) {
             throw new NotReadyException(e);
-        } catch (RobustEstimatorException | IOException e) {
+        } catch (final RobustEstimatorException | IOException e) {
             throw new CalibrationException(e);
         } finally {
             mRunning = false;

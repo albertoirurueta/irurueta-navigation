@@ -25,6 +25,7 @@ import com.irurueta.units.DistanceUnit;
  * expressed in the distance unit of such matrix.
  * This class contains utility methods to convert covariance matrices into geometric figures
  * with the requested confidence.
+ *
  * @param <A> type of internal accuracy.
  */
 @SuppressWarnings("WeakerAccess")
@@ -38,18 +39,21 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     /**
      * Constructor.
      */
-    public Accuracy() { }
+    public Accuracy() {
+    }
 
     /**
      * Constructor.
+     *
      * @param internalAccuracy internal accuracy to be set.
      */
-    Accuracy(A internalAccuracy) {
+    Accuracy(final A internalAccuracy) {
         mInternalAccuracy = internalAccuracy;
     }
 
     /**
      * Gets covariance matrix representing the accuracy of an estimated point or measure.
+     *
      * @return covariance matrix representing the accuracy of an estimated point or measure.
      */
     public Matrix getCovarianceMatrix() {
@@ -58,15 +62,16 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Sets covariance matrix representing the accuracy of an estimated point or measure.
+     *
      * @param covarianceMatrix covariance matrix representing the accuracy of an estimated
      *                         point or measure.
-     * @throws IllegalArgumentException if provided matrix is not square (it must also be
-     * positive definite to be properly converted to a geometric figure - e.g. an ellipse
-     * or an ellipsoid).
+     * @throws IllegalArgumentException                    if provided matrix is not square (it must also be
+     *                                                     positive definite to be properly converted to a geometric figure - e.g. an ellipse
+     *                                                     or an ellipsoid).
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not symmetric
-     * and positive definite.
+     *                                                     and positive definite.
      */
-    public void setCovarianceMatrix(Matrix covarianceMatrix)
+    public void setCovarianceMatrix(final Matrix covarianceMatrix)
             throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy.setCovarianceMatrix(covarianceMatrix);
     }
@@ -77,6 +82,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * a geometric figure of size equal to 2 times the standard deviation. Assuming a
      * Gaussian distribution this is equivalent to providing a 95.44% confidence on provided
      * accuracy.
+     *
      * @return standard deviation factor.
      */
     public double getStandardDeviationFactor() {
@@ -89,10 +95,11 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * a geometric figure of size equal to 2 times the standard deviation. Assuming a
      * Gaussian distribution this is equivalent to providing a 95.44% confidence on provided
      * accuracy.
+     *
      * @param standardDeviationFactor standard deviation factor to be set.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setStandardDeviationFactor(double standardDeviationFactor) {
+    public void setStandardDeviationFactor(final double standardDeviationFactor) {
         mInternalAccuracy.setStandardDeviationFactor(standardDeviationFactor);
     }
 
@@ -100,6 +107,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * Gets confidence of provided accuracy of estimated point or measure.
      * This is expressed as a value between 0 and 1, where 1 indicates a 100% confidence
      * that the real point or measure is within provided accuracy.
+     *
      * @return confidence of provided accuracy of estimated point or measure.
      */
     public double getConfidence() {
@@ -110,16 +118,18 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * Sets confidence of provided accuracy of estimated point or measure.
      * This is expressed as a value between 0 and 1, where 1 indicates a 100% confidence
      * that the real point or measure is within provided accuracy.
+     *
      * @param confidence confidence of provided accuracy of estimated point or measure.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
-    public void setConfidence(double confidence) {
+    public void setConfidence(final double confidence) {
         mInternalAccuracy.setConfidence(confidence);
     }
 
     /**
      * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D).
      * This value is represented by the smallest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
      * @return smallest accuracy in any direction.
      */
     public Distance getSmallestAccuracy() {
@@ -130,6 +140,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D)
      * expressed in meters.
      * This value is represented by the smallest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
      * @return smallest accuracy in any direction expressed in meters.
      */
     public double getSmallestAccuracyMeters() {
@@ -139,6 +150,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     /**
      * Gets largest (worse) accuracy in any direction (i.e either 2D or 3D).
      * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
      * @return largest accuracy in any direction.
      */
     public Distance getLargestAccuracy() {
@@ -149,6 +161,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * Gets largest (worse) accuracy in any direction (i.e. either 2D or 3D)
      * expressed in meters.
      * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
+     *
      * @return largest accuracy in any direction expressed in meters.
      */
     public double getLargestAccuracyMeters() {
@@ -159,6 +172,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * Gets average accuracy among all directions.
      * This value is equal to the average value of all semi axes representing the ellipse or ellipsoid of
      * accuracy.
+     *
      * @return average accuracy among all directions.
      */
     public Distance getAverageAccuracy() {
@@ -169,6 +183,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * Gets average accuracy among all directions expressed in meters.
      * This value is equal to the average value of all semi axes representing the ellipse or ellipsoid of
      * accuracy.
+     *
      * @return average accuracy among all directions expressed in meters.
      */
     public double getAverageAccuracyMeters() {
@@ -178,6 +193,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     /**
      * Gets number of dimensions.
      * This is equal to 2 for 2D, and 3 for 3D.
+     *
      * @return number of dimensions.
      */
     public int getNumberOfDimensions() {

@@ -33,7 +33,7 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public class LinearRangingAndRssiPositionEstimator2D extends
-        LinearRangingAndRssiPositionEstimator<Point2D>  {
+        LinearRangingAndRssiPositionEstimator<Point2D> {
 
     /**
      * Constructor.
@@ -52,7 +52,7 @@ public class LinearRangingAndRssiPositionEstimator2D extends
      *                                  minimum.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            final List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -66,7 +66,7 @@ public class LinearRangingAndRssiPositionEstimator2D extends
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
+            final Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -75,16 +75,16 @@ public class LinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing ranging readings at an unknown location
-     *                      for provided located radio sources.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      *                                  or the number of provided sources is less than
      *                                  the required minimum.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -97,7 +97,7 @@ public class LinearRangingAndRssiPositionEstimator2D extends
      * @param listener listener in charge of handling events.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            RangingAndRssiPositionEstimatorListener<Point2D> listener) {
+            final RangingAndRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -105,15 +105,15 @@ public class LinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for lateration.
-     * @param listener  listener in charge of handling events.
+     * @param sources  located radio sources used for lateration.
+     * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RangingAndRssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final RangingAndRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -122,14 +122,14 @@ public class LinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing ranging readings at an unknown
-     *                      location for provided location radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param fingerprint fingerprint containing ranging readings at an unknown
+     *                    location for provided location radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
-            RangingAndRssiPositionEstimatorListener<Point2D> listener) {
+            final Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
+            final RangingAndRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -138,18 +138,18 @@ public class LinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for lateration.
-     * @param fingerprint   fingerprint containing ranging readings at an unknown
-     *                      location for provided located radio sources.
-     * @param listener      listener in charge of handling events.
+     * @param sources     located radio sources used for lateration.
+     * @param fingerprint fingerprint containing ranging readings at an unknown
+     *                    location for provided located radio sources.
+     * @param listener    listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      *                                  null or the number of provided sources is less
      *                                  than the required minimum.
      */
     public LinearRangingAndRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
-            RangingAndRssiPositionEstimatorListener<Point2D> listener) {
+            final List<? extends RadioSourceLocated<Point2D>> sources,
+            final Fingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
+            final RangingAndRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -158,34 +158,36 @@ public class LinearRangingAndRssiPositionEstimator2D extends
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     @Override
     public Point2D getEstimatedPosition() {
-        if(mEstimatedPositionCoordinates == null) {
+        if (mEstimatedPositionCoordinates == null) {
             return null;
         }
 
-        InhomogeneousPoint2D result = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D result = new InhomogeneousPoint2D();
         getEstimatedPosition(result);
         return result;
     }
 
     /**
      * Sets positions and distances on internal lateration solver.
+     *
      * @param positions positions to be set.
      * @param distances distances to be set.
      * @throws IllegalArgumentException if something fails.
      */
     @Override
     @SuppressWarnings("Duplicates")
-    protected void setPositionsAndDistances(List<Point2D> positions,
-                                            List<Double> distances) {
-        int size = positions.size();
+    protected void setPositionsAndDistances(
+            final List<Point2D> positions, final List<Double> distances) {
+        final int size = positions.size();
         Point2D[] positionsArray = new InhomogeneousPoint2D[size];
         positionsArray = positions.toArray(positionsArray);
 
-        double[] distancesArray = new double[size];
+        final double[] distancesArray = new double[size];
         for (int i = 0; i < size; i++) {
             distancesArray[i] = distances.get(i);
         }
@@ -193,7 +195,7 @@ public class LinearRangingAndRssiPositionEstimator2D extends
         try {
             mHomogeneousTrilaterationSolver.setPositionsAndDistances(positionsArray, distancesArray);
             mInhomogeneousTrilaterationSolver.setPositionsAndDistances(positionsArray, distancesArray);
-        } catch (LockedException e) {
+        } catch (final LockedException e) {
             throw new IllegalArgumentException(e);
         }
     }

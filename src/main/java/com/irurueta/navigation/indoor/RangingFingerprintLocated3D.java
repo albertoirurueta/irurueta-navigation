@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Contains 3D located ranging readings from several radio sources.
+ *
  * @param <S> a {@link RadioSource} type.
  * @param <R> a {@link RssiReading} type.
  */
@@ -31,24 +32,28 @@ public class RangingFingerprintLocated3D<S extends RadioSource,
 
     /**
      * Constructor.
+     *
      * @param readings non-located ranging readings defining the fingerprint.
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public RangingFingerprintLocated3D(List<R> readings, Point3D position) {
+    public RangingFingerprintLocated3D(
+            final List<R> readings, final Point3D position) {
         super(readings, position);
     }
 
     /**
      * Constructor.
-     * @param readings non-located ranging readings defining the fingerprint.
-     * @param position position where readings were made.
+     *
+     * @param readings           non-located ranging readings defining the fingerprint.
+     * @param position           position where readings were made.
      * @param positionCovariance 3x3 covariance of inhomogeneous coordinates of
      *                           current position (if available).
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public RangingFingerprintLocated3D(List<R> readings, Point3D position,
-            Matrix positionCovariance) {
+    public RangingFingerprintLocated3D(
+            final List<R> readings, final Point3D position,
+            final Matrix positionCovariance) {
         super(readings, position, positionCovariance);
     }
 
