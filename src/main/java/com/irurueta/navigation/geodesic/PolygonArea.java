@@ -169,7 +169,7 @@ public class PolygonArea {
      * Return the results so far.
      * Counter-clockwise traversal counts as a positive area.
      *
-     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where
+     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
      * <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter of
      * the polygon or the length of the polyline (meters), and <i>area</i> is the
      * area of the polygon (meters<sup>2</sup>) or Double.NaN of <i>polyline</i>
@@ -188,7 +188,7 @@ public class PolygonArea {
      * @param sign    if true then return a signed result for the area if the polygon is traversed
      *                in the "wrong" direction instead of returning the area for the rest of the
      *                earth.
-     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where
+     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
      * <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter of the polygon
      * or the length of the polyline (meters), and <i>area</i> is the area of the polygon
      * (meters<sup>2</sup>) or Double.NaN of <i>polyline</i> is true in the constructor.
@@ -246,7 +246,7 @@ public class PolygonArea {
      * @param sign    if true then return a signed result for the area if the polygon is traversed
      *                in the "wrong" direction instead of returning the area for the rest of the
      *                earth.
-     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where <i>num</i> is
+     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where <i>num</i> is
      * the number of vertices, <i>perimeter</i> is the perimeter of the polygon or the length
      * of the polyline (meters), and <i>area</i> is the area of the polygon (meters<sup>2</sup>)
      * or Double.NaN of <i>polyline</i> is true in the constructor.
@@ -316,7 +316,7 @@ public class PolygonArea {
      *                positive area.
      * @param sign    if true then return a signed result for the area if the polygon is traversed in
      *                the "wrong" direction instead of returning the area for the rest of the earth.
-     * @return PolygonResult(< i > num < / i >, < i > perimeter < / i >, < i > area < / i >) where <i>num</i> is the
+     * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where <i>num</i> is the
      * number of vertices, <i>perimeter</i> is the perimeter of the polygon or the length of the
      * polyline (meters), and <i>area</i> is the area of the polygon (meters<sup>2</sup>) or
      * Double.NaN of <i>polyline</i> is true in the constructor.

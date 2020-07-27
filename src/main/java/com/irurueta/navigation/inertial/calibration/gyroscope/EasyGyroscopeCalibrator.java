@@ -3838,6 +3838,8 @@ public class EasyGyroscopeCalibrator {
 
     /**
      * Sets input data into Levenberg-Marquardt fitter.
+     *
+     * @throws AlgebraException if there are numerical instabilities.
      */
     private void setInputData() throws AlgebraException {
 
@@ -4182,6 +4184,9 @@ public class EasyGyroscopeCalibrator {
      * Levenberg-Marquardt fitting needed for calibration computation.
      *
      * @param i   row position.
+     * @param bx  x coordinate of bias.
+     * @param by  y coordinate of bias.
+     * @param bz  z coordinate of bias.
      * @param m11 element 1,1 of cross-coupling error matrix.
      * @param m21 element 2,1 of cross-coupling error matrix.
      * @param m31 element 3,1 of cross-coupling error matrix.
