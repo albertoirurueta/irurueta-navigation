@@ -397,7 +397,7 @@ public class PolygonArea {
      * If no points have been added, then Double.NaN is returned. Otherwise, <i>lon</i> will be
      * in the range [&minus;180&deg;, 180&deg;].
      *
-     * @return Pair(< i > lat < / i >, < i > lon < / i >), the current latitude and longitude.
+     * @return Pair(<i>lat</i>, <i>lon</i>), the current latitude and longitude.
      */
     public Pair getCurrentPoint() {
         return new Pair(mLat1, mLon1);
