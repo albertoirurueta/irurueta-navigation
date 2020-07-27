@@ -62,7 +62,7 @@ public class GeoMath {
      *
      * @param x the first argument.
      * @param y the second argument.
-     * @return sqrt(< i > x < / i > < sup > 2 < / sup > + < i > y < / i > < sup > 2 < / sup >).
+     * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      */
     public static double hypot(double x, double y) {
         x = Math.abs(x);
@@ -87,7 +87,7 @@ public class GeoMath {
      * </p>
      *
      * @param x the argument.
-     * @return log(1 + < i > x < / i >).
+     * @return log(1 + <i>x</i>).
      */
     public static double log1p(final double x) {
         final double y = 1 + x;
@@ -104,7 +104,7 @@ public class GeoMath {
      * In addition, the odd parity of the function is enforced.
      *
      * @param x the argument.
-     * @return atanh(< i > x < / i >).
+     * @return atanh(<i>x</i>).
      */
     public static double atanh(final double x) {
         double y = Math.abs(x); //Enforce odd parity
@@ -158,7 +158,7 @@ public class GeoMath {
      *
      * @param u the first number in the sum.
      * @param v the second number in the sum.
-     * @return Pair(< i > s < / i >, < i > t < / i >) with <i>s</i> = round(<i>u</i> +
+     * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = round(<i>u</i> +
      * <i>v</i>) and <i>t</i> = <i>u</i> + <i>v</i> - <i>s</i>.
      */
     public static Pair sum(final double u, final double v) {
@@ -250,7 +250,7 @@ public class GeoMath {
      *
      * @param x the first angle in degrees.
      * @param y the second angle in degrees.
-     * @return Pair(< i > d < / i >, < i > e < / i >) with <i>d</i> being the rounded difference and <i>e</i> being the error.
+     * @return Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded difference and <i>e</i> being the error.
      */
     public static Pair angDiff(final double x, final double y) {
         final double d;
@@ -270,7 +270,7 @@ public class GeoMath {
      * sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
      *
      * @param x in degrees.
-     * @return Pair(< i > s < / i >, < i > t < / i >) with <i>s</i> = sin(<i>x</i> and <i>c</i> = cos(<i>x</i>).
+     * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i> and <i>c</i> = cos(<i>x</i>).
      */
     public static Pair sincosd(final double x) {
         //In order to minimize round-off errors, this function exactly reduces the argument to the range [-45, 45]
@@ -320,7 +320,7 @@ public class GeoMath {
      *
      * @param y the sine of the angle.
      * @param x the cosine of the angle.
-     * @return atan2(< i > y < / i >, < i > x < / i >) in degrees.
+     * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      */
     public static double atan2d(double y, double x) {
         //In order to minimize round-off errors, this function rearranges the arguments so that result of atan2 is in
