@@ -23,23 +23,28 @@ import static org.junit.Assert.*;
 
 public class GeodesicDataTest {
 
-    public GeodesicDataTest() { }
+    public GeodesicDataTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default values
         assertEquals(data.getLat1(), Double.NaN, 0.0);
@@ -58,13 +63,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetsetLat1() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getLat1(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setLat1(value);
 
         //check
@@ -73,13 +78,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetLon1() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getLon1(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setLon1(value);
 
         //check
@@ -88,13 +93,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetAzi1() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getAzi1(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setAzi1(value);
 
         //check
@@ -103,13 +108,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetLat2() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getLat2(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setLat2(value);
 
         //check
@@ -118,13 +123,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetLon2() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getLon2(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setLon2(value);
 
         //check
@@ -133,13 +138,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetAzi2() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getAzi2(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setAzi2(value);
 
         //check
@@ -148,13 +153,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetS12() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getS12(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setS12(value);
 
         //check
@@ -163,13 +168,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetA12() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getA12(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setA12(value);
 
         //check
@@ -178,13 +183,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetM12() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getM12(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setM12(value);
 
         //check
@@ -193,13 +198,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetScaleM12() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getScaleM12(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setScaleM12(value);
 
         //check
@@ -208,13 +213,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetScaleM21() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getScaleM21(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setScaleM21(value);
 
         //check
@@ -223,13 +228,13 @@ public class GeodesicDataTest {
 
     @Test
     public void testGetSetAreaS12() {
-        GeodesicData data = new GeodesicData();
+        final GeodesicData data = new GeodesicData();
 
         //check default value
         assertEquals(data.getAreaS12(), Double.NaN, 0.0);
 
         //set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         data.setAreaS12(value);
 
         //check

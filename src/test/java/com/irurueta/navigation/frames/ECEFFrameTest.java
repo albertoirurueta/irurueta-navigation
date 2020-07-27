@@ -136,7 +136,8 @@ public class ECEFFrameTest {
             frame = new ECEFFrame(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -667,7 +668,8 @@ public class ECEFFrameTest {
             frame = new ECEFFrame(x, y, z, new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -700,7 +702,8 @@ public class ECEFFrameTest {
             frame = new ECEFFrame(ecefPosition, new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -733,7 +736,8 @@ public class ECEFFrameTest {
             frame = new ECEFFrame(position, new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -765,9 +769,10 @@ public class ECEFFrameTest {
         try {
             frame = new ECEFFrame(positionX, positionY, positionZ,
                     new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -799,9 +804,10 @@ public class ECEFFrameTest {
         try {
             frame = new ECEFFrame(x, y, z, vx, vy, vz,
                     new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -835,7 +841,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -869,7 +876,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -903,7 +911,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -937,7 +946,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -971,7 +981,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1005,7 +1016,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1039,7 +1051,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1073,7 +1086,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1107,7 +1121,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1142,7 +1157,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1178,7 +1194,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1213,7 +1230,8 @@ public class ECEFFrameTest {
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1788,7 +1806,8 @@ public class ECEFFrameTest {
             frame.setCoordinateTransformation(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
     }
 
     @Test
@@ -1982,12 +2001,12 @@ public class ECEFFrameTest {
         final ECEFFrame frame3 = new ECEFFrame();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(frame1.equals((Object)frame1));
+        assertTrue(frame1.equals((Object) frame1));
         assertTrue(frame1.equals(frame1));
         assertTrue(frame1.equals(frame2));
         assertFalse(frame1.equals(frame3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(frame1.equals((Object)null));
+        assertFalse(frame1.equals((Object) null));
         assertFalse(frame1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(frame1.equals(new Object()));

@@ -691,12 +691,12 @@ public class CoordinateTransformationTest {
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(c1.equals((Object)c1));
+        assertTrue(c1.equals((Object) c1));
         assertTrue(c1.equals(c1));
         assertTrue(c1.equals(c2));
         assertFalse(c1.equals(c3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(c1.equals((Object)null));
+        assertFalse(c1.equals((Object) null));
         assertFalse(c1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(c1.equals(new Object()));
