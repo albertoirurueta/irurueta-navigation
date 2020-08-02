@@ -60,49 +60,49 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsAndDistancesRssiReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
@@ -124,45 +124,45 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsAndDistancesRangingReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
                 readings.add(new RangingReading<>(accessPoint, distance));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
@@ -185,49 +185,49 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsAndDistancesRangingAndRssiReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RangingAndRssiReading<>(accessPoint, distance, rssi));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
@@ -252,48 +252,48 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsAndDistancesNonRadioSourceWithPower() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointLocated2D locatedAccessPoint =
+                final WifiAccessPointLocated2D locatedAccessPoint =
                         new WifiAccessPointLocated2D(bssid, FREQUENCY,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
@@ -305,29 +305,29 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRssiReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -336,23 +336,23 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -380,28 +380,28 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -410,20 +410,20 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
                 readings.add(new RangingReading<>(accessPoint, distance,
                         FALLBACK_DISTANCE_STANDARD_DEVIATION));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -451,29 +451,29 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingAndRssiReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -482,11 +482,11 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RangingAndRssiReading<>(accessPoint, distance, rssi,
@@ -494,12 +494,12 @@ public class PositionEstimatorHelperTest {
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -532,50 +532,50 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsNoRadioSourceWithPower() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointLocated2D locatedAccessPoint =
+                final WifiAccessPointLocated2D locatedAccessPoint =
                         new WifiAccessPointLocated2D(bssid,
                                 FREQUENCY, accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -590,28 +590,28 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsForceIllegalArgumentException() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+        final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-        InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+        final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
-        double pathLossExponent = randomizer.nextDouble(
+        final double pathLossExponent = randomizer.nextDouble(
                 MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-        List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-        List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+        final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+        final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
         for (int i = 0; i < numSources; i++) {
-            InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
 
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            String bssid = String.valueOf(i);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+            final String bssid = String.valueOf(i);
 
-            WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+            final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                     new WifiAccessPointWithPowerAndLocated2D(bssid,
                             FREQUENCY, transmittedPowerdBm,
                             Math.sqrt(TX_POWER_VARIANCE),
@@ -620,59 +620,60 @@ public class PositionEstimatorHelperTest {
                             accessPointPosition);
             sources.add(locatedAccessPoint);
 
-            WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-            double distance = position.distanceTo(accessPointPosition);
+            final double distance = position.distanceTo(accessPointPosition);
 
-            double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+            final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                     distance, pathLossExponent));
 
             readings.add(new RssiReading<>(accessPoint, rssi,
                     Math.sqrt(RX_POWER_VARIANCE)));
         }
 
-        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+        final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>(readings);
 
-        List<Point2D> positions = new ArrayList<>();
-        List<Double> distances = new ArrayList<>();
-        List<Double> distanceStandardDeviations = new ArrayList<>();
+        final List<Point2D> positions = new ArrayList<>();
+        final List<Double> distances = new ArrayList<>();
+        final List<Double> distanceStandardDeviations = new ArrayList<>();
         try {
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     -FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRssiReadingsWithPositionCovariance() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                Matrix positionCovariance = Matrix.diagonal(
+                final Matrix positionCovariance = Matrix.diagonal(
                         new double[]{POSITION_VARIANCE, POSITION_VARIANCE});
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -681,23 +682,23 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition, positionCovariance);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -725,30 +726,30 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingReadingsWithPositionCovariance() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                Matrix positionCovariance = Matrix.diagonal(
+                final Matrix positionCovariance = Matrix.diagonal(
                         new double[]{POSITION_VARIANCE, POSITION_VARIANCE});
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -757,20 +758,20 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition, positionCovariance);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
                 readings.add(new RangingReading<>(accessPoint, distance,
                         FALLBACK_DISTANCE_STANDARD_DEVIATION));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -798,50 +799,50 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRssiReadingsNoVariances() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -870,46 +871,46 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingReadingsNoVariances() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
                 readings.add(new RangingReading<>(accessPoint, distance));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -938,31 +939,31 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesAndDistancesStandardDeviationsInvalidPositionCovariance() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                Matrix positionCovariance = Matrix.diagonal(
+                final Matrix positionCovariance = Matrix.diagonal(
                         new double[]{Double.NaN, Double.NaN});
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -971,23 +972,23 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition, positionCovariance);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     sources, fingerprint, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
@@ -1015,30 +1016,30 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesDistanceStandardDeviationsAndSourcesQualityScoresReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourcesQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourcesQualityScores = new double[numSources];
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -1048,11 +1049,11 @@ public class PositionEstimatorHelperTest {
                 sources.add(locatedAccessPoint);
                 sourcesQualityScores[i] = randomizer.nextDouble();
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
@@ -1064,13 +1065,13 @@ public class PositionEstimatorHelperTest {
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+            final Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
                     new Fingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
-            List<Double> distanceQualityScores = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Double> distanceQualityScores = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
                     sources, fingerprint, sourcesQualityScores, null,
                     true,
@@ -1103,10 +1104,10 @@ public class PositionEstimatorHelperTest {
                 assertTrue(distances.get(j + 3) > 0.0);
                 assertEquals(distances.get(j), distances.get(j + 1), ABSOLUTE_ERROR);
                 assertEquals(distances.get(j + 1),
-                        ((RangingReading<WifiAccessPoint>)readings.get(3 * i + 1)).getDistance(),
+                        ((RangingReading<WifiAccessPoint>) readings.get(3 * i + 1)).getDistance(),
                         0.0);
                 assertEquals(distances.get(j + 2),
-                        ((RangingAndRssiReading<WifiAccessPoint>)readings.get(3 * i + 2)).getDistance(),
+                        ((RangingAndRssiReading<WifiAccessPoint>) readings.get(3 * i + 2)).getDistance(),
                         0.0);
                 assertEquals(distances.get(j), distances.get(j + 3), ABSOLUTE_ERROR);
 
@@ -1125,30 +1126,30 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesDistanceStandardDeviationsAndReadingsQualityScoresReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] readingsQualityScores = new double[3 * numSources];
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] readingsQualityScores = new double[3 * numSources];
             for (int i = 0, j = 0; i < numSources; i++, j += 3) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -1157,11 +1158,11 @@ public class PositionEstimatorHelperTest {
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
@@ -1176,13 +1177,13 @@ public class PositionEstimatorHelperTest {
                 readingsQualityScores[j + 2] = randomizer.nextDouble();
             }
 
-            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+            final Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
                     new Fingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
-            List<Double> distanceQualityScores = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Double> distanceQualityScores = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
                     sources, fingerprint, null, readingsQualityScores,
                     true,
@@ -1215,10 +1216,10 @@ public class PositionEstimatorHelperTest {
                 assertTrue(distances.get(j + 3) > 0.0);
                 assertEquals(distances.get(j), distances.get(j + 1), ABSOLUTE_ERROR);
                 assertEquals(distances.get(j + 1),
-                        ((RangingReading<WifiAccessPoint>)readings.get(3 * i + 1)).getDistance(),
+                        ((RangingReading<WifiAccessPoint>) readings.get(3 * i + 1)).getDistance(),
                         0.0);
                 assertEquals(distances.get(j + 2),
-                        ((RangingAndRssiReading<WifiAccessPoint>)readings.get(3 * i + 2)).getDistance(),
+                        ((RangingAndRssiReading<WifiAccessPoint>) readings.get(3 * i + 2)).getDistance(),
                         0.0);
                 assertEquals(distances.get(j), distances.get(j + 3), ABSOLUTE_ERROR);
 
@@ -1241,31 +1242,31 @@ public class PositionEstimatorHelperTest {
 
     @Test
     public void testBuildPositionsDistancesDistanceStandardDeviationsSourcesAndReadingsQualityScoresReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourcesQualityScores = new double[numSources];
-            double[] readingsQualityScores = new double[3 * numSources];
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourcesQualityScores = new double[numSources];
+            final double[] readingsQualityScores = new double[3 * numSources];
             for (int i = 0, j = 0; i < numSources; i++, j += 3) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -1275,11 +1276,11 @@ public class PositionEstimatorHelperTest {
                 sources.add(locatedAccessPoint);
                 sourcesQualityScores[i] = randomizer.nextDouble();
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
@@ -1294,13 +1295,13 @@ public class PositionEstimatorHelperTest {
                 readingsQualityScores[j + 2] = randomizer.nextDouble();
             }
 
-            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+            final Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
                     new Fingerprint<>(readings);
 
-            List<Point2D> positions = new ArrayList<>();
-            List<Double> distances = new ArrayList<>();
-            List<Double> distanceStandardDeviations = new ArrayList<>();
-            List<Double> distanceQualityScores = new ArrayList<>();
+            final List<Point2D> positions = new ArrayList<>();
+            final List<Double> distances = new ArrayList<>();
+            final List<Double> distanceStandardDeviations = new ArrayList<>();
+            final List<Double> distanceQualityScores = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
                     sources, fingerprint, sourcesQualityScores, readingsQualityScores,
                     true,
@@ -1333,10 +1334,10 @@ public class PositionEstimatorHelperTest {
                 assertTrue(distances.get(j + 3) > 0.0);
                 assertEquals(distances.get(j), distances.get(j + 1), ABSOLUTE_ERROR);
                 assertEquals(distances.get(j + 1),
-                        ((RangingReading<WifiAccessPoint>)readings.get(3 * i + 1)).getDistance(),
+                        ((RangingReading<WifiAccessPoint>) readings.get(3 * i + 1)).getDistance(),
                         0.0);
                 assertEquals(distances.get(j + 2),
-                        ((RangingAndRssiReading<WifiAccessPoint>)readings.get(3 * i + 2)).getDistance(),
+                        ((RangingAndRssiReading<WifiAccessPoint>) readings.get(3 * i + 2)).getDistance(),
                         0.0);
                 assertEquals(distances.get(j), distances.get(j + 3), ABSOLUTE_ERROR);
 
@@ -1349,7 +1350,7 @@ public class PositionEstimatorHelperTest {
                         distanceQualityScores.get(j), 0.0);
                 assertEquals(sourcesQualityScores[i] + readingsQualityScores[k + 1],
                         distanceQualityScores.get(j + 1), 0.0);
-                assertEquals(sourcesQualityScores[i] + + readingsQualityScores[k + 2],
+                assertEquals(sourcesQualityScores[i] + +readingsQualityScores[k + 2],
                         distanceQualityScores.get(j + 2), 0.0);
                 assertEquals(sourcesQualityScores[i] + readingsQualityScores[k + 2],
                         distanceQualityScores.get(j + 3), 0.0);
@@ -1357,13 +1358,13 @@ public class PositionEstimatorHelperTest {
         }
     }
 
-    private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double pathLossExponent) {
+    private double receivedPower(final double equivalentTransmittedPower,
+                                 final double distance, final double pathLossExponent) {
         // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }

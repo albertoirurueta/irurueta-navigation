@@ -81,7 +81,7 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         assertNull(estimator.getCovariance());
 
         // constructor with sources
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
@@ -111,19 +111,21 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
-                    (List<WifiAccessPointLocated2D>)null);
+                    (List<WifiAccessPointLocated2D>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // constructor with fingerprint
-        RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+        final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                 new RangingAndRssiFingerprint<>();
         estimator = new NonLinearRangingAndRssiPositionEstimator2D(fingerprint);
 
@@ -152,7 +154,8 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -184,17 +187,20 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(null,
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(sources,
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -250,12 +256,14 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     (List<WifiAccessPointLocated2D>) null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -289,7 +297,8 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -322,24 +331,27 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     null, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(sources,
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // constructor with initial position
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
         estimator = new NonLinearRangingAndRssiPositionEstimator2D(initialPosition);
 
         // check default values
@@ -389,16 +401,18 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
-                    (List<WifiAccessPointLocated2D>)null,
+                    (List<WifiAccessPointLocated2D>) null,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(),
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -432,7 +446,8 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -465,18 +480,21 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(null,
                     fingerprint, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(), fingerprint,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(sources,
                     null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -531,16 +549,18 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
-                    (List<WifiAccessPointLocated2D>)null,
+                    (List<WifiAccessPointLocated2D>) null,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(),
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -574,7 +594,8 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -607,31 +628,34 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(null,
                     fingerprint, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(
                     new ArrayList<WifiAccessPointLocated2D>(), fingerprint,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRangingAndRssiPositionEstimator2D(sources,
                     null, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
 
         // check default value
         assertNull(estimator.getInitialPosition());
 
         // set new value
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
         estimator.setInitialPosition(initialPosition);
 
         // check
@@ -640,7 +664,7 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
 
     @Test
     public void testIsSetRadioSourcePositionCovarianceUsed() throws LockedException {
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
 
         // check default value
@@ -655,7 +679,7 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
 
     @Test
     public void testGetSetFallbackDistanceStandardDeviation() throws LockedException {
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
 
         // check default value
@@ -673,14 +697,14 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
 
     @Test
     public void testGetSetSources() throws LockedException {
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
 
         // check default value
         assertNull(estimator.getSources());
 
         // set new value
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
@@ -695,23 +719,25 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         try {
             estimator.setSources(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setSources(new ArrayList<WifiAccessPointLocated2D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
 
         // check default value
         assertNull(estimator.getFingerprint());
 
         // set new value
-        RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+        final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                 new RangingAndRssiFingerprint<>();
         estimator.setFingerprint(fingerprint);
 
@@ -722,12 +748,13 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         try {
             estimator.setFingerprint(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
 
         // check default size
@@ -743,51 +770,51 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
     @Test
     public void testEstimateNoError() throws LockedException, NotReadyException,
             PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RangingAndRssiReading<>(accessPoint, distance, rssi));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
 
-            NonLinearRangingAndRssiPositionEstimator2D estimator =
+            final NonLinearRangingAndRssiPositionEstimator2D estimator =
                     new NonLinearRangingAndRssiPositionEstimator2D(sources, fingerprint,
                             this);
 
@@ -812,7 +839,7 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            final Point2D estimatedPosition = estimator.getEstimatedPosition();
             if (!position.equals(estimatedPosition, 10.0 * ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -826,62 +853,63 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         assertTrue(numValid > 0);
 
         // force NotReadyException
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateNoErrorWithInitialPosition() throws LockedException,
             NotReadyException, PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                final InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated2D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RangingAndRssiReading<>(accessPoint, distance, rssi));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
 
-            NonLinearRangingAndRssiPositionEstimator2D estimator =
+            final NonLinearRangingAndRssiPositionEstimator2D estimator =
                     new NonLinearRangingAndRssiPositionEstimator2D(sources, fingerprint,
                             position, this);
 
@@ -906,7 +934,7 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            final Point2D estimatedPosition = estimator.getEstimatedPosition();
             if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -920,22 +948,23 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         assertTrue(numValid > 0);
 
         // force NotReadyException
-        NonLinearRangingAndRssiPositionEstimator2D estimator =
+        final NonLinearRangingAndRssiPositionEstimator2D estimator =
                 new NonLinearRangingAndRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Override
-    public void onEstimateStart(RangingAndRssiPositionEstimator<Point2D> estimator) {
+    public void onEstimateStart(final RangingAndRssiPositionEstimator<Point2D> estimator) {
         estimateStart++;
         checkLocked((NonLinearRangingAndRssiPositionEstimator2D) estimator);
     }
 
     @Override
-    public void onEstimateEnd(RangingAndRssiPositionEstimator<Point2D> estimator) {
+    public void onEstimateEnd(final RangingAndRssiPositionEstimator<Point2D> estimator) {
         estimateEnd++;
         checkLocked((NonLinearRangingAndRssiPositionEstimator2D) estimator);
     }
@@ -944,43 +973,48 @@ public class NonLinearRangingAndRssiPositionEstimator2DTest implements
         estimateStart = estimateEnd = 0;
     }
 
-    private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double pathLossExponent) {
+    private double receivedPower(final double equivalentTransmittedPower,
+                                 final double distance, final double pathLossExponent) {
         // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(NonLinearRangingAndRssiPositionEstimator2D estimator) {
+    private void checkLocked(final NonLinearRangingAndRssiPositionEstimator2D estimator) {
         try {
             estimator.setInitialPosition(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRadioSourcePositionCovarianceUsed(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setSources(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setFingerprint(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.estimate();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
     }
