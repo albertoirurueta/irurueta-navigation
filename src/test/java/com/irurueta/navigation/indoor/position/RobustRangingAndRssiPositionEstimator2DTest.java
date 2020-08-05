@@ -17,7 +17,10 @@ package com.irurueta.navigation.indoor.position;
 
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.RangingAndRssiFingerprint;
+import com.irurueta.navigation.indoor.RangingAndRssiReading;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated2D;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import org.junit.Test;
 
@@ -38,7 +41,7 @@ public class RobustRangingAndRssiPositionEstimator2DTest implements
         // RANSAC
         RobustRangingAndRssiPositionEstimator2D estimator =
                 RobustRangingAndRssiPositionEstimator2D.create(
-                RobustEstimatorMethod.RANSAC);
+                        RobustEstimatorMethod.RANSAC);
 
         // check
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiPositionEstimator2D);
@@ -73,7 +76,7 @@ public class RobustRangingAndRssiPositionEstimator2DTest implements
 
 
         // create with sources and method
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
@@ -121,7 +124,7 @@ public class RobustRangingAndRssiPositionEstimator2DTest implements
 
 
         // create with fingerprint and method
-        RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+        final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                 new RangingAndRssiFingerprint<>();
 
         // RANSAC
@@ -406,8 +409,8 @@ public class RobustRangingAndRssiPositionEstimator2DTest implements
 
 
         // create with quality scores and method
-        double[] sourceQualityScores = new double[3];
-        double[] fingerprintReadingQualityScores = new double[3];
+        final double[] sourceQualityScores = new double[3];
+        final double[] fingerprintReadingQualityScores = new double[3];
 
         // RANSAC
         estimator = RobustRangingAndRssiPositionEstimator2D.create(sourceQualityScores,
@@ -1072,19 +1075,23 @@ public class RobustRangingAndRssiPositionEstimator2DTest implements
 
     @Override
     public void onEstimateStart(
-            RobustRangingAndRssiPositionEstimator<Point2D> estimator) { }
+            final RobustRangingAndRssiPositionEstimator<Point2D> estimator) {
+    }
 
     @Override
     public void onEstimateEnd(
-            RobustRangingAndRssiPositionEstimator<Point2D> estimator) { }
+            final RobustRangingAndRssiPositionEstimator<Point2D> estimator) {
+    }
 
     @Override
     public void onEstimateNextIteration(
-            RobustRangingAndRssiPositionEstimator<Point2D> estimator,
-            int iteration) { }
+            final RobustRangingAndRssiPositionEstimator<Point2D> estimator,
+            final int iteration) {
+    }
 
     @Override
     public void onEstimateProgressChange(
-            RobustRangingAndRssiPositionEstimator<Point2D> estimator,
-            float progress) { }
+            final RobustRangingAndRssiPositionEstimator<Point2D> estimator,
+            final float progress) {
+    }
 }

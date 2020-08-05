@@ -21,7 +21,14 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.RadioSource;
+import com.irurueta.navigation.indoor.RadioSourceLocated;
+import com.irurueta.navigation.indoor.RangingAndRssiFingerprint;
+import com.irurueta.navigation.indoor.RangingAndRssiReading;
+import com.irurueta.navigation.indoor.Utils;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated3D;
+import com.irurueta.navigation.indoor.WifiAccessPointWithPowerAndLocated3D;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -177,7 +184,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
 
         // test constructor with sources
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -276,17 +283,19 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     (List<? extends RadioSourceLocated<Point3D>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // test constructor with fingerprint
-        RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+        final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                 new RangingAndRssiFingerprint<>();
         estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                 fingerprint);
@@ -383,7 +392,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -483,17 +493,20 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(null,
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(sources,
                     (RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -684,12 +697,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     (List<? extends RadioSourceLocated<Point3D>>) null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -790,7 +805,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -890,23 +906,26 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(null,
                     fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(sources,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // test constructor with quality scores
-        double[] sourceQualityScores = new double[4];
-        double[] fingerprintReadingsQualityScores = new double[4];
+        final double[] sourceQualityScores = new double[4];
+        final double[] fingerprintReadingsQualityScores = new double[4];
         estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                 sourceQualityScores, fingerprintReadingsQualityScores);
 
@@ -1003,22 +1022,26 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     null, fingerprintReadingsQualityScores);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1121,35 +1144,41 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     sources);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     sources);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores, sources);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], sources);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     (List<? extends RadioSourceLocated<Point3D>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1252,29 +1281,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1377,44 +1411,51 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     sources, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     sources, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores, sources,
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], sources, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
 
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     null, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     sources,
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1516,24 +1557,28 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1636,37 +1681,43 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     sources, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     sources, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores, sources,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], sources, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     (List<? extends RadioSourceLocated<Point3D>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1769,31 +1820,36 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores, fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     (RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -1896,51 +1952,58 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                     null, fingerprintReadingsQualityScores,
                     sources, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, null,
                     sources, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     new double[1], fingerprintReadingsQualityScores, sources,
                     fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, new double[1], sources, fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
 
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     null, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new SequentialRobustRangingAndRssiPositionEstimator3D(
                     sourceQualityScores, fingerprintReadingsQualityScores,
                     sources, null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
     }
 
     @Test
     public void testGetSetRangingRobustMethod() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -1958,7 +2021,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRssiRobustMethod() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -1977,7 +2040,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     @Test
     public void testIsSetRangingRadioSourcePositionCovarianceUsed()
             throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -1997,7 +2060,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     public void testIsSetRssiRadioSourcePositionCovarianceUsed()
             throws LockedException {
 
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2015,7 +2078,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRangingReadingEvenlyDistributed() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2034,7 +2097,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     @Test
     public void testGetSetRssiFallbackDistanceStandardDeviation()
             throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2043,7 +2106,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
 
         // set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         estimator.setRssiFallbackDistanceStandardDeviation(value);
 
         // check
@@ -2054,7 +2117,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     @Test
     public void testGetSetRangingFallbackDistanceStandardDeviation()
             throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2063,7 +2126,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
 
         // set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         estimator.setRangingFallbackDistanceStandardDeviation(value);
 
         // check
@@ -2073,7 +2136,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRssiReadingsEvenlyDistributed() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2091,7 +2154,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2108,7 +2171,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRangingConfidence() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2125,7 +2188,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRssiConfidence() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2142,7 +2205,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRangingMaxIterations() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2158,7 +2221,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRssiMaxIterations() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2174,7 +2237,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2191,7 +2254,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2209,7 +2272,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRangingLinearSolverUsed() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2227,7 +2290,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRssiLinearSolverUsed() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2245,7 +2308,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRangingHomogeneousLinearSolverUsed() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2263,7 +2326,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRssiHomogeneousLinearSolverUsed() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2281,7 +2344,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRangingPreliminarySolutionRefined() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2299,7 +2362,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRssiPreliminarySolutionRefined() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2317,7 +2380,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRangingPreliminarySubsetSize() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         assertEquals(estimator.getRangingPreliminarySubsetSize(),
@@ -2333,12 +2396,13 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         try {
             estimator.setRangingPreliminarySubsetSize(3);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetRssiPreliminarySubsetSize() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         assertEquals(estimator.getRssiPreliminarySubsetSize(),
@@ -2354,19 +2418,20 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         try {
             estimator.setRssiPreliminarySubsetSize(3);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetRangingThreshold() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getRangingThreshold());
 
         // set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         estimator.setRangingThreshold(value);
 
         // check
@@ -2375,14 +2440,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetRssiThreshold() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getRssiThreshold());
 
         // set new value
-        double value = new Random().nextDouble();
+        final double value = new Random().nextDouble();
         estimator.setRssiThreshold(value);
 
         // check
@@ -2391,14 +2456,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetSources() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getSources());
 
         // set new value
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -2412,23 +2477,25 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         try {
             estimator.setSources(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setSources(new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getFingerprint());
 
         // set new value
-        RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+        final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                 new RangingAndRssiFingerprint<>();
         estimator.setFingerprint(fingerprint);
 
@@ -2438,14 +2505,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetSourceQualityScores() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getSourceQualityScores());
 
         // set new value
-        double[] value = new double[4];
+        final double[] value = new double[4];
         estimator.setSourceQualityScores(value);
 
         // check
@@ -2455,20 +2522,21 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         try {
             estimator.setSourceQualityScores(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetFingerprintReadingsQualityScores()
             throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getFingerprintReadingsQualityScores());
 
         // set new value
-        double[] value = new double[4];
+        final double[] value = new double[4];
         estimator.setFingerprintReadingsQualityScores(value);
 
         // check
@@ -2478,12 +2546,13 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         try {
             estimator.setFingerprintReadingsQualityScores(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
@@ -2498,14 +2567,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getInitialPosition());
 
         // set new value
-        Point3D p = Point3D.create();
+        final Point3D p = Point3D.create();
         estimator.setInitialPosition(p);
 
         // check
@@ -2515,8 +2584,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     @Test
     public void testEstimate() throws LockedException, NotReadyException,
             RobustEstimatorException, NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -2525,34 +2594,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -2561,14 +2630,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -2594,10 +2663,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(sourceQualityScores,
                             fingerprintReadingsQualityScores, sources, fingerprint, this);
             estimator.setResultRefined(true);
@@ -2615,7 +2684,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateEnd, 0);
             assertEquals(estimateProgressChange, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -2626,15 +2695,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getDistances());
 
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2642,7 +2711,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -2654,7 +2723,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2666,20 +2735,21 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateMultipleReadingsPerSource() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -2688,34 +2758,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[NUM_READINGS * numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[NUM_READINGS * numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -2724,10 +2794,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double distance = position.distanceTo(accessPointPosition);
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
@@ -2764,10 +2834,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 }
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(sourceQualityScores,
                             fingerprintReadingsQualityScores, sources, fingerprint,
                             this);
@@ -2785,7 +2855,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -2795,15 +2865,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2811,7 +2881,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -2823,7 +2893,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2835,22 +2905,23 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInlierError() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
-        GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
+        final GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
@@ -2859,35 +2930,35 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             double inlierError;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -2896,14 +2967,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -2931,10 +3002,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores,
                             sources, fingerprint, this);
@@ -2952,7 +3023,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -2962,15 +3033,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2978,7 +3049,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
@@ -2990,7 +3061,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3002,21 +3073,22 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateMultipleReadingsPerSourceWithInlierError() throws LockedException,
             NotReadyException, RobustEstimatorException, NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
-        GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
+        final GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
@@ -3025,35 +3097,35 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[NUM_READINGS * numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[NUM_READINGS * numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             double inlierError;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -3062,10 +3134,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double distance = position.distanceTo(accessPointPosition);
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
@@ -3104,10 +3176,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 }
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores,
                             sources, fingerprint, this);
@@ -3125,7 +3197,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -3135,15 +3207,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3151,7 +3223,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
@@ -3163,7 +3235,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3175,20 +3247,21 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateLinearSolverUsedHomogeneousAndPreliminaryRefined()
             throws LockedException, NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -3197,34 +3270,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -3233,14 +3306,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -3266,10 +3339,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores, sources,
                             fingerprint, this);
@@ -3293,7 +3366,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -3303,15 +3376,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3319,7 +3392,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -3331,7 +3404,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3347,8 +3420,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     public void testEstimateLinearSolverUsedInhomogeneousAndPreliminaryRefined()
             throws LockedException, NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -3357,34 +3430,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -3393,14 +3466,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -3426,10 +3499,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores, sources,
                             fingerprint, this);
@@ -3453,7 +3526,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -3463,15 +3536,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3479,7 +3552,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -3491,7 +3564,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3507,8 +3580,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     public void testEstimatePreliminaryNotRefined() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -3517,34 +3590,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -3553,14 +3626,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -3586,10 +3659,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores, sources,
                             fingerprint, this);
@@ -3611,7 +3684,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -3621,15 +3694,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3637,7 +3710,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -3649,7 +3722,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3665,8 +3738,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     public void testEstimateLinearDisabled() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -3675,34 +3748,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -3711,14 +3784,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -3744,10 +3817,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores, sources,
                             fingerprint, this);
@@ -3769,7 +3842,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -3779,15 +3852,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3795,7 +3868,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -3807,7 +3880,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3824,8 +3897,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -3834,34 +3907,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -3870,14 +3943,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -3903,10 +3976,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores, sources,
                             fingerprint, this);
@@ -3928,7 +4001,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -3938,15 +4011,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3954,7 +4027,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -3966,7 +4039,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3983,8 +4056,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -3993,34 +4066,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -4029,14 +4102,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -4062,10 +4135,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(
                             sourceQualityScores, fingerprintReadingsQualityScores, sources,
                             fingerprint, this);
@@ -4088,7 +4161,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -4098,15 +4171,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getPositions());
             assertNotNull(estimator.getDistances());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -4114,7 +4187,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -4126,7 +4199,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -4141,8 +4214,8 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
     @Test
     public void testEstimateLargerPrelminiarySubsetSize() throws LockedException, NotReadyException,
             RobustEstimatorException, NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -4151,34 +4224,34 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] sourceQualityScores = new double[numSources];
-            double[] fingerprintReadingsQualityScores = new double[numSources];
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final double[] sourceQualityScores = new double[numSources];
+            final double[] fingerprintReadingsQualityScores = new double[numSources];
             double errorRssi1;
             double errorRanging1;
             double errorRssi2;
             double errorRanging2;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
@@ -4187,14 +4260,14 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     errorRssi1 = errorRandomizer.nextDouble();
                     errorRanging1 = errorRandomizer.nextDouble();
@@ -4220,10 +4293,10 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                         Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+            final RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
                     new RangingAndRssiFingerprint<>(readings);
 
-            SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+            final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                     new SequentialRobustRangingAndRssiPositionEstimator3D(sourceQualityScores,
                             fingerprintReadingsQualityScores, sources, fingerprint, this);
             estimator.setResultRefined(true);
@@ -4243,7 +4316,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertEquals(estimateEnd, 0);
             assertEquals(estimateProgressChange, 0);
 
-            Point3D p = estimator.estimate();
+            final Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -4254,15 +4327,15 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             assertNotNull(estimator.getDistances());
 
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            final Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -4270,7 +4343,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
             positionAccuracy = accuracy.getAverageAccuracy();
             positionAccuracyConfidence = accuracy.getConfidence();
 
-            double positionDistance = position.distanceTo(estimatedPosition);
+            final double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -4282,7 +4355,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
 
         assertTrue(numValidPosition > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -4294,176 +4367,208 @@ public class SequentialRobustRangingAndRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        SequentialRobustRangingAndRssiPositionEstimator3D estimator =
+        final SequentialRobustRangingAndRssiPositionEstimator3D estimator =
                 new SequentialRobustRangingAndRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Override
     public void onEstimateStart(
-            SequentialRobustRangingAndRssiPositionEstimator<Point3D> estimator) {
+            final SequentialRobustRangingAndRssiPositionEstimator<Point3D> estimator) {
         estimateStart++;
-        checkLocked((SequentialRobustRangingAndRssiPositionEstimator3D)estimator);
+        checkLocked((SequentialRobustRangingAndRssiPositionEstimator3D) estimator);
     }
 
     @Override
     public void onEstimateEnd(
-            SequentialRobustRangingAndRssiPositionEstimator<Point3D> estimator) {
+            final SequentialRobustRangingAndRssiPositionEstimator<Point3D> estimator) {
         estimateEnd++;
-        checkLocked((SequentialRobustRangingAndRssiPositionEstimator3D)estimator);
+        checkLocked((SequentialRobustRangingAndRssiPositionEstimator3D) estimator);
     }
 
     @Override
     public void onEstimateProgressChange(
-            SequentialRobustRangingAndRssiPositionEstimator<Point3D> estimator,
-            float progress) {
+            final SequentialRobustRangingAndRssiPositionEstimator<Point3D> estimator,
+            final float progress) {
         estimateProgressChange++;
-        checkLocked((SequentialRobustRangingAndRssiPositionEstimator3D)estimator);
+        checkLocked((SequentialRobustRangingAndRssiPositionEstimator3D) estimator);
     }
 
     private void reset() {
         estimateStart = estimateEnd = estimateProgressChange = 0;
     }
 
-    private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double pathLossExponent) {
+    private double receivedPower(final double equivalentTransmittedPower,
+                                 final double distance, final double pathLossExponent) {
         // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY),
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY),
                 pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(SequentialRobustRangingAndRssiPositionEstimator3D estimator) {
+    private void checkLocked(final SequentialRobustRangingAndRssiPositionEstimator3D estimator) {
         try {
             estimator.setRangingRobustMethod(RobustEstimatorMethod.PROMedS);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiRobustMethod(RobustEstimatorMethod.PROMedS);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingRadioSourcePositionCovarianceUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiRadioSourcePositionCovarianceUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingReadingsEvenlyDistributed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiFallbackDistanceStandardDeviation(1.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingFallbackDistanceStandardDeviation(1.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiReadingsEvenlyDistributed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setProgressDelta(0.5f);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingConfidence(0.9);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiConfidence(0.9);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingMaxIterations(100);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiMaxIterations(100);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setResultRefined(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setCovarianceKept(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingLinearSolverUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiLinearSolverUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingHomogeneousLinearSolverUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiHomogeneousLinearSolverUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingPreliminarySolutionRefined(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiPreliminarySolutionRefined(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingPreliminarySubsetSize(4);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiPreliminarySubsetSize(4);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRangingThreshold(1.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRssiThreshold(1.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setSources(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setFingerprint(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setSourceQualityScores(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setFingerprintReadingsQualityScores(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setInitialPosition(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
     }
 }

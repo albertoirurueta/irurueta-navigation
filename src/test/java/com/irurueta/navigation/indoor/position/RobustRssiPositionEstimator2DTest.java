@@ -17,7 +17,10 @@ package com.irurueta.navigation.indoor.position;
 
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.RssiFingerprint;
+import com.irurueta.navigation.indoor.RssiReading;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated2D;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import org.junit.Test;
 
@@ -73,7 +76,7 @@ public class RobustRssiPositionEstimator2DTest implements
 
 
         // create with sources and method
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
@@ -406,8 +409,8 @@ public class RobustRssiPositionEstimator2DTest implements
 
 
         // create with quality scores and method
-        double[] sourceQualityScores = new double[3];
-        double[] fingerprintReadingQualityScores = new double[3];
+        final double[] sourceQualityScores = new double[3];
+        final double[] fingerprintReadingQualityScores = new double[3];
 
         // RANSAC
         estimator = RobustRssiPositionEstimator2D.create(sourceQualityScores,
@@ -1072,19 +1075,23 @@ public class RobustRssiPositionEstimator2DTest implements
 
     @Override
     public void onEstimateStart(
-            RobustRssiPositionEstimator<Point2D> estimator) { }
+            final RobustRssiPositionEstimator<Point2D> estimator) {
+    }
 
     @Override
     public void onEstimateEnd(
-            RobustRssiPositionEstimator<Point2D> estimator) { }
+            final RobustRssiPositionEstimator<Point2D> estimator) {
+    }
 
     @Override
     public void onEstimateNextIteration(
-            RobustRssiPositionEstimator<Point2D> estimator,
-            int iteration) { }
+            final RobustRssiPositionEstimator<Point2D> estimator,
+            final int iteration) {
+    }
 
     @Override
     public void onEstimateProgressChange(
-            RobustRssiPositionEstimator<Point2D> estimator,
-            float progress) { }
+            final RobustRssiPositionEstimator<Point2D> estimator,
+            final float progress) {
+    }
 }

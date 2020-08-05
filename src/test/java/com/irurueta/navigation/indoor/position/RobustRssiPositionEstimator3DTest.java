@@ -17,7 +17,10 @@ package com.irurueta.navigation.indoor.position;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.RssiFingerprint;
+import com.irurueta.navigation.indoor.RssiReading;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated3D;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import org.junit.Test;
 
@@ -73,7 +76,7 @@ public class RobustRssiPositionEstimator3DTest implements
 
 
         // create with sources and method
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -121,7 +124,7 @@ public class RobustRssiPositionEstimator3DTest implements
 
 
         // create with fingerprint and method
-        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+        final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
 
         // RANSAC
@@ -406,8 +409,8 @@ public class RobustRssiPositionEstimator3DTest implements
 
 
         // create with quality scores and method
-        double[] sourceQualityScores = new double[4];
-        double[] fingerprintReadingQualityScores = new double[4];
+        final double[] sourceQualityScores = new double[4];
+        final double[] fingerprintReadingQualityScores = new double[4];
 
         // RANSAC
         estimator = RobustRssiPositionEstimator3D.create(sourceQualityScores,
@@ -1072,19 +1075,23 @@ public class RobustRssiPositionEstimator3DTest implements
 
     @Override
     public void onEstimateStart(
-            RobustRssiPositionEstimator<Point3D> estimator) { }
+            final RobustRssiPositionEstimator<Point3D> estimator) {
+    }
 
     @Override
     public void onEstimateEnd(
-            RobustRssiPositionEstimator<Point3D> estimator) { }
+            final RobustRssiPositionEstimator<Point3D> estimator) {
+    }
 
     @Override
     public void onEstimateNextIteration(
-            RobustRssiPositionEstimator<Point3D> estimator,
-            int iteration) { }
+            final RobustRssiPositionEstimator<Point3D> estimator,
+            final int iteration) {
+    }
 
     @Override
     public void onEstimateProgressChange(
-            RobustRssiPositionEstimator<Point3D> estimator,
-            float progress) { }
+            final RobustRssiPositionEstimator<Point3D> estimator,
+            final float progress) {
+    }
 }
