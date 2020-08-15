@@ -23,16 +23,30 @@ import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.Beacon;
+import com.irurueta.navigation.indoor.BeaconIdentifier;
+import com.irurueta.navigation.indoor.BeaconLocated2D;
+import com.irurueta.navigation.indoor.RangingReadingLocated;
+import com.irurueta.navigation.indoor.RangingReadingLocated2D;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated2D;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,23 +84,28 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
     private int estimateNextIteration;
     private int estimateProgressChange;
 
-    public RANSACRobustRangingRadioSourceEstimator2DTest() { }
+    public RANSACRobustRangingRadioSourceEstimator2DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         // test empty constructor
         RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
@@ -133,10 +152,10 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
 
         // test constructor with readings
-        List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             readings.add(new RangingReadingLocated2D<>(accessPoint, 0.0,
@@ -188,14 +207,16 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         estimator = null;
         try {
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
-                    (List<RangingReadingLocated2D<WifiAccessPoint>>)null);
+                    (List<RangingReadingLocated2D<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
                     new ArrayList<RangingReadingLocated2D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -288,21 +309,23 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         estimator = null;
         try {
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
-                    (List<RangingReadingLocated2D<WifiAccessPoint>>)null,
+                    (List<RangingReadingLocated2D<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
                     new ArrayList<RangingReadingLocated2D<WifiAccessPoint>>(),
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // test constructor with initial position
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(initialPosition);
@@ -395,13 +418,15 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
                     null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
                     new ArrayList<RangingReadingLocated2D<WifiAccessPoint>>(),
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -498,19 +523,21 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
                     null, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RANSACRobustRangingRadioSourceEstimator2D<>(
                     new ArrayList<RangingReadingLocated2D<WifiAccessPoint>>(),
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
     }
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -528,12 +555,13 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         try {
             estimator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -551,7 +579,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -569,16 +597,16 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
         assertNull(estimator.getInitialPosition());
 
         // set new value
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator.setInitialPosition(initialPosition);
@@ -589,7 +617,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetUseReadingPositionCovariance() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -607,7 +635,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -625,16 +653,18 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         try {
             estimator.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setProgressDelta(2.0f);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -652,16 +682,18 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         try {
             estimator.setConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setConfidence(2.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -678,12 +710,13 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         try {
             estimator.setMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -701,7 +734,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -719,18 +752,18 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testAreValidReadings() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             readings.add(new RangingReadingLocated2D<>(accessPoint, 0.0, position));
         }
 
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         assertTrue(estimator.areValidReadings(readings));
@@ -740,23 +773,22 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 new ArrayList<RangingReadingLocated<WifiAccessPoint, Point2D>>()));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testGetSetReadings() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             readings.add(new RangingReadingLocated2D<>(accessPoint,
                     0.0, position));
         }
 
-        RANSACRobustRangingRadioSourceEstimator2D estimator =
-                new RANSACRobustRangingRadioSourceEstimator2D();
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // initial value
         assertNull(estimator.getReadings());
@@ -773,17 +805,19 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         try {
             estimator.setReadings(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setReadings(
                     new ArrayList<RangingReadingLocated2D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -798,7 +832,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -813,7 +847,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -829,12 +863,13 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         try {
             estimator.setPreliminarySubsetSize(2);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
 
         // check default value
@@ -850,29 +885,29 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
     @Test
     public void testEstimateNoInlierErrorNoRefinement() throws LockedException,
             NotReadyException, RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
         double positionError = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -888,7 +923,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             this);
 
@@ -919,8 +954,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNull(estimator.getCovariance());
             assertNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -951,20 +986,21 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateNoInlierErrorWithRefinement() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -972,22 +1008,22 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1003,7 +1039,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             this);
 
@@ -1034,8 +1070,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1045,11 +1081,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1076,7 +1112,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1091,22 +1127,23 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInlierErrorWithRefinement() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
-        GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
+        final GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
@@ -1114,22 +1151,22 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1147,7 +1184,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         Math.abs(distance + error), readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             this);
 
@@ -1176,8 +1213,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1187,11 +1224,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1218,7 +1255,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1233,20 +1270,21 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateNoInlierErrorWithInitialPositionAndRefinement() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -1254,22 +1292,22 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1285,7 +1323,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             accessPointPosition, this);
 
@@ -1314,8 +1352,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1325,11 +1363,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1356,7 +1394,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1371,20 +1409,21 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateBeacon() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -1392,24 +1431,24 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            BeaconIdentifier identifier = BeaconIdentifier.fromUuid(UUID.randomUUID());
-            Beacon beacon = new Beacon(Collections.singletonList(identifier),
+            final BeaconIdentifier identifier = BeaconIdentifier.fromUuid(UUID.randomUUID());
+            final Beacon beacon = new Beacon(Collections.singletonList(identifier),
                     TRANSMITTED_POWER_DBM, FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<Beacon>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<Beacon>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1425,7 +1464,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<Beacon> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<Beacon> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings);
 
             estimator.setResultRefined(true);
@@ -1445,8 +1484,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            BeaconLocated2D estimatedBeacon =
-                    (BeaconLocated2D)estimator.getEstimatedRadioSource();
+            final BeaconLocated2D estimatedBeacon =
+                    (BeaconLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedBeacon.getIdentifiers(), beacon.getIdentifiers());
             assertEquals(estimatedBeacon.getTransmittedPower(),
@@ -1457,11 +1496,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedBeacon.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1485,7 +1524,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1500,20 +1539,21 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithStandardDeviationsAndPositionCovariance()
             throws LockedException, NotReadyException, RobustEstimatorException,
             AlgebraException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -1521,23 +1561,23 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings =
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings =
                     new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1549,7 +1589,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                     error = 0.0;
                 }
 
-                Matrix positionCovariance = Matrix.diagonal(new double[]{
+                final Matrix positionCovariance = Matrix.diagonal(new double[]{
                         INLIER_ERROR_STD * INLIER_ERROR_STD,
                         INLIER_ERROR_STD * INLIER_ERROR_STD});
 
@@ -1558,7 +1598,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         INLIER_ERROR_STD, positionCovariance));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(
                             readings, this);
             estimator.setUseReadingPositionCovariances(true);
@@ -1588,8 +1628,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1599,11 +1639,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1630,7 +1670,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1645,20 +1685,21 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        LMedSRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final LMedSRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new LMedSRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateHomogeneousLinearSolver() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -1666,22 +1707,22 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1697,7 +1738,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             this);
 
@@ -1729,8 +1770,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1740,11 +1781,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1771,7 +1812,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1790,8 +1831,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
     public void testEstimateInhomogeneousLinearSolver() throws LockedException,
             NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
@@ -1799,22 +1840,22 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1830,7 +1871,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             this);
 
@@ -1862,8 +1903,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1873,11 +1914,11 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1904,7 +1945,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
         assertTrue(numValidPosition > 0);
 
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1922,29 +1963,29 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
     @Test
     public void testEstimateLargerPreliminarySubsetSize() throws LockedException,
             NotReadyException, RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
         double positionError = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
                 double error;
@@ -1960,7 +2001,7 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                         distance + error, readingsPositions[i]));
             }
 
-            RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RANSACRobustRangingRadioSourceEstimator2D<>(readings,
                             this);
 
@@ -1993,8 +2034,8 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
             assertNull(estimator.getCovariance());
             assertNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointLocated2D estimatedAccessPoint =
-                    (WifiAccessPointLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2025,102 +2066,121 @@ public class RANSACRobustRangingRadioSourceEstimator2DTest implements
                 positionError);
 
         // force NotReadyException
-        RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RANSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Override
-    public void onEstimateStart(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    public void onEstimateStart(
+            final RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         estimateStart++;
-        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>) estimator);
     }
 
     @Override
-    public void onEstimateEnd(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    public void onEstimateEnd(
+            final RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         estimateEnd++;
-        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>) estimator);
     }
 
     @Override
-    public void onEstimateNextIteration(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
-                                        int iteration) {
+    public void onEstimateNextIteration(
+            final RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
+            final int iteration) {
         estimateNextIteration++;
-        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>) estimator);
     }
 
     @Override
-    public void onEstimateProgressChange(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
-                                         float progress) {
+    public void onEstimateProgressChange(
+            final RobustRangingRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
+            final float progress) {
         estimateProgressChange++;
-        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint>) estimator);
     }
 
     private void reset() {
         estimateStart = estimateEnd = estimateNextIteration = estimateProgressChange = 0;
     }
 
-    private void checkLocked(RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator) {
+    private void checkLocked(
+            final RANSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator) {
         try {
             estimator.setPreliminarySubsetSize(3);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setThreshold(0.5);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setComputeAndKeepInliersEnabled(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setComputeAndKeepResidualsEnabled(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setInitialPosition(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setProgressDelta(0.5f);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setConfidence(0.8);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setMaxIterations(10);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setResultRefined(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setCovarianceKept(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setReadings(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setHomogeneousLinearSolverUsed(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.estimate();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
     }

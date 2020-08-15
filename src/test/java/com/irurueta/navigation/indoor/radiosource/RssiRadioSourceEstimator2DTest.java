@@ -21,14 +21,31 @@ import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.Beacon;
+import com.irurueta.navigation.indoor.BeaconIdentifier;
+import com.irurueta.navigation.indoor.BeaconWithPowerAndLocated2D;
+import com.irurueta.navigation.indoor.IndoorException;
+import com.irurueta.navigation.indoor.RssiReadingLocated;
+import com.irurueta.navigation.indoor.RssiReadingLocated2D;
+import com.irurueta.navigation.indoor.Utils;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointWithPowerAndLocated2D;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,29 +88,34 @@ public class RssiRadioSourceEstimator2DTest implements
     private int estimateStart;
     private int estimateEnd;
 
-    public RssiRadioSourceEstimator2DTest() { }
+    public RssiRadioSourceEstimator2DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        //test empty constructor
+        // test empty constructor
         RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -125,11 +147,11 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        // test constructor with readings
+        final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0, position));
@@ -137,7 +159,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
         estimator = new RssiRadioSourceEstimator2D<>(readings);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -169,25 +191,27 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null);
+                    (List<RssiReadingLocated2D<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with listener
+        // test constructor with listener
         estimator = new RssiRadioSourceEstimator2D<>(this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -220,11 +244,11 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings and listener
+        // test constructor with readings and listener
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -256,28 +280,30 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, this);
+                    (List<RssiReadingLocated2D<WifiAccessPoint>>) null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with initial position
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        // test constructor with initial position
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator = new RssiRadioSourceEstimator2D<>(initialPosition);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -310,11 +336,11 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings and initial position
+        // test constructor with readings and initial position
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 initialPosition);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -345,26 +371,28 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with initial position and listener
+        // test constructor with initial position and listener
         estimator = new RssiRadioSourceEstimator2D<>(initialPosition,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -397,11 +425,11 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings, initial position and listener
+        // test constructor with readings, initial position and listener
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 initialPosition, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -433,27 +461,29 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     null, initialPosition,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power
+        // test constructor with initial transmitted power
         estimator = new RssiRadioSourceEstimator2D<>(MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -487,11 +517,11 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings and initial transmitted power
+        // test constructor with readings and initial transmitted power
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -524,26 +554,28 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, MAX_RSSI);
+                    (List<RssiReadingLocated2D<WifiAccessPoint>>) null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power and listener
+        // test constructor with initial transmitted power and listener
         estimator = new RssiRadioSourceEstimator2D<>(MAX_RSSI,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -577,11 +609,11 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings, initial transmitted power and listener
+        // test constructor with readings, initial transmitted power and listener
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -614,29 +646,31 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, MAX_RSSI,
+                    (List<RssiReadingLocated2D<WifiAccessPoint>>) null, MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position and
-        //initial transmitted power
+        // test constructor with readings, initial position and
+        // initial transmitted power
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -668,27 +702,29 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     null, initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new RssiRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -722,12 +758,12 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with initial position, initial transmitted power and
-        //listener
+        // test constructor with initial position, initial transmitted power and
+        // listener
         estimator = new RssiRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -761,12 +797,12 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and listener
+        // test constructor with readings, initial position, initial
+        // transmitted power and listener
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -799,28 +835,30 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     null, initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and initial path loss exponent
+        // test constructor with readings, initial position, initial
+        // transmitted power and initial path loss exponent
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -851,28 +889,30 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     null, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new RssiRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -905,13 +945,13 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with initial position, initial transmitted power and
-        //listener
+        // test constructor with initial position, initial transmitted power and
+        // listener
         estimator = new RssiRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -944,13 +984,13 @@ public class RssiRadioSourceEstimator2DTest implements
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and listener
+        // test constructor with readings, initial position, initial
+        // transmitted power and listener
         estimator = new RssiRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
@@ -982,241 +1022,244 @@ public class RssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     null, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new RssiRadioSourceEstimator2D<>(
                     new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
     }
 
     @Test
     public void testGetMinReadings() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getMinReadings(), 4);
 
-        //position only
+        // position only
         estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 3);
 
 
-        //transmitted power only
+        // transmitted power only
         estimator.setPositionEstimationEnabled(false);
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 2);
 
 
-        //pathloss only
+        // pathloss only
         estimator.setPositionEstimationEnabled(false);
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 2);
 
 
-        //position and transmitted power
+        // position and transmitted power
         estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 4);
 
 
-        //position and pathloss
+        // position and pathloss
         estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 4);
 
 
-        //transmitted power and pathloss
+        // transmitted power and pathloss
         estimator.setPositionEstimationEnabled(false);
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 3);
 
 
-        //position, transmitted power and patloss
+        // position, transmitted power and patloss
         estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 5);
     }
 
     @Test
     public void testGetSetInitialTransmittedPowerdBm() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPowerdBm());
 
-        //set new value
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        double value = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double value = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
         estimator.setInitialTransmittedPowerdBm(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), value, 0.0);
     }
 
     @Test
     public void testGetSetInitialTransmittedPower() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPower());
 
-        //set new value
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        double value = Utils.dBmToPower(
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double value = Utils.dBmToPower(
                 randomizer.nextDouble(MIN_RSSI, MAX_RSSI));
         estimator.setInitialTransmittedPower(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPower(), value,
                 ABSOLUTE_ERROR);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setInitialTransmittedPower(-1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
 
-        //set null value
+        // set null value
         estimator.setInitialTransmittedPower(null);
 
-        //check
+        // check
         assertNull(estimator.getInitialTransmittedPower());
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialPosition());
 
-        //set new value
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator.setInitialPosition(initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
     }
 
     @Test
     public void testGetSetInitialPathLossExponent() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
 
-        //set new value
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        double value = randomizer.nextDouble(
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double value = randomizer.nextDouble(
                 MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
         estimator.setInitialPathLossExponent(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialPathLossExponent(),
                 value, 0.0);
     }
 
     @Test
     public void testIsSetTransmittedPowerEstimationEnabled() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertTrue(estimator.isTransmittedPowerEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setTransmittedPowerEstimationEnabled(false);
 
-        //check
+        // check
         assertFalse(estimator.isTransmittedPowerEstimationEnabled());
     }
 
     @Test
     public void testIsSetPositionEstimationEnabled() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertTrue(estimator.isPositionEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setPositionEstimationEnabled(false);
 
-        //check
+        // check
         assertFalse(estimator.isPositionEstimationEnabled());
     }
 
     @Test
     public void testIsSetPathLossEstimationEnabled() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertFalse(estimator.isPathLossEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertTrue(estimator.isPathLossEstimationEnabled());
     }
 
     @Test
     public void testAreValidReadings() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0, position));
         }
 
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(true);
@@ -1231,19 +1274,19 @@ public class RssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetReadings() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 3; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0,
                     position));
         }
 
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(false);
@@ -1251,36 +1294,37 @@ public class RssiRadioSourceEstimator2DTest implements
         estimator.setPathLossEstimationEnabled(false);
         estimator.setInitialPathLossExponent(MAX_PATH_LOSS_EXPONENT);
 
-        //initial value
+        // initial value
         assertNull(estimator.getReadings());
         assertFalse(estimator.isReady());
 
-        //set new value
+        // set new value
         estimator.setReadings(readings);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator.isReady());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setReadings(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getListener());
 
-        //set new value
+        // set new value
         estimator.setListener(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
     }
 
@@ -1288,36 +1332,36 @@ public class RssiRadioSourceEstimator2DTest implements
     public void testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT));
@@ -1326,7 +1370,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -1349,19 +1393,19 @@ public class RssiRadioSourceEstimator2DTest implements
 
             try {
                 estimator.estimate();
-            } catch (IndoorException e) {
+            } catch (final IndoorException e) {
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1378,14 +1422,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1421,15 +1465,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1447,49 +1489,50 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialPositionWithoutError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT));
@@ -1498,13 +1541,13 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             initialPosition, this);
             estimator.setPositionEstimationEnabled(true);
@@ -1527,15 +1570,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1552,14 +1595,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1595,16 +1638,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1622,49 +1662,50 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialTransmittedPowerWithoutError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT));
@@ -1673,12 +1714,12 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
-            double initialTransmittedPowerdBm = transmittedPowerdBm +
+            final double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             initialTransmittedPowerdBm, this);
             estimator.setPositionEstimationEnabled(true);
@@ -1701,15 +1742,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1726,14 +1767,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1769,16 +1810,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1796,49 +1834,50 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialPositionAndInitialTransmittedPowerWithoutError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT));
@@ -1847,15 +1886,15 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
-            double initialTransmittedPowerdBm = transmittedPowerdBm +
+            final double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             initialPosition, initialTransmittedPowerdBm,
                             this);
@@ -1879,15 +1918,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -1904,14 +1943,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -1947,16 +1986,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -1974,52 +2010,53 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double error = errorRandomizer.nextDouble();
-                double rssi = powerTodBm(receivedPower(
+                final double error = errorRandomizer.nextDouble();
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT)) + error;
@@ -2028,7 +2065,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -2051,15 +2088,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2076,14 +2113,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2117,16 +2154,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2145,52 +2179,53 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialPositionAndWithError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double error = errorRandomizer.nextDouble();
-                double rssi = powerTodBm(receivedPower(
+                final double error = errorRandomizer.nextDouble();
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT)) + error;
@@ -2199,11 +2234,11 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             initialPosition, this);
             estimator.setPositionEstimationEnabled(true);
@@ -2226,15 +2261,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2251,14 +2286,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2292,16 +2327,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2319,52 +2351,53 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialTransmittedPowerAndWithError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double error = errorRandomizer.nextDouble();
-                double rssi = powerTodBm(receivedPower(
+                final double error = errorRandomizer.nextDouble();
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT)) + error;
@@ -2373,10 +2406,10 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            double initialTransmittedPowerdBm = transmittedPowerdBm +
+            final double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             initialTransmittedPowerdBm, this);
             estimator.setPositionEstimationEnabled(true);
@@ -2399,15 +2432,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2424,14 +2457,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2465,16 +2498,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2492,52 +2522,53 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialPositionAndInitialTransmittedPowerAndWithError() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
-            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double error = errorRandomizer.nextDouble();
-                double rssi = powerTodBm(receivedPower(
+                final double error = errorRandomizer.nextDouble();
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT)) + error;
@@ -2546,13 +2577,13 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
-            double initialTransmittedPowerdBm = transmittedPowerdBm +
+            final double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             initialPosition, initialTransmittedPowerdBm, this);
             estimator.setPositionEstimationEnabled(true);
@@ -2575,15 +2606,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2600,14 +2631,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2641,16 +2672,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2668,21 +2696,21 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionTransmittedPowerAndPathLossEstimationEnabled()
             throws LockedException, NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0,
-                numValid = 0;
+        int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double pathLossError = 0.0;
@@ -2691,32 +2719,32 @@ public class RssiRadioSourceEstimator2DTest implements
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -2725,7 +2753,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -2748,7 +2776,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2757,8 +2785,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2776,19 +2804,19 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
                 continue;
             }
             assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -2835,17 +2863,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -2867,21 +2892,21 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionTransmittedPowerAndPathLossEstimationEnabledWithInitialValues()
             throws LockedException, NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0,
-                numValid = 0;
+        int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double pathLossError = 0.0;
@@ -2890,32 +2915,32 @@ public class RssiRadioSourceEstimator2DTest implements
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -2924,7 +2949,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -2950,7 +2975,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2959,8 +2984,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -2978,19 +3003,19 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
                 continue;
             }
             assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3037,17 +3062,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3069,20 +3091,21 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithInitialPathLoss()
             throws LockedException, NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double pathLossError = 0.0;
@@ -3091,32 +3114,32 @@ public class RssiRadioSourceEstimator2DTest implements
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -3125,7 +3148,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -3149,15 +3172,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3174,14 +3197,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3218,16 +3241,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3249,52 +3269,53 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateBeacon() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        int numValidPosition = 0, numValidPower = 0;
         double positionError = 0.0;
         double powerError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D beaconPosition =
+            final InhomogeneousPoint2D beaconPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
 
-            BeaconIdentifier identifier = BeaconIdentifier.fromUuid(UUID.randomUUID());
-            Beacon beacon = new Beacon(Collections.singletonList(identifier),
+            final BeaconIdentifier identifier = BeaconIdentifier.fromUuid(UUID.randomUUID());
+            final Beacon beacon = new Beacon(Collections.singletonList(identifier),
                     transmittedPowerdBm, FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<Beacon>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<Beacon>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         beaconPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         beacon.getFrequency(),
                         MAX_PATH_LOSS_EXPONENT));
@@ -3303,7 +3324,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<Beacon> estimator =
+            final RssiRadioSourceEstimator2D<Beacon> estimator =
                     new RssiRadioSourceEstimator2D<>(readings);
             estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
@@ -3323,15 +3344,15 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
 
-            BeaconWithPowerAndLocated2D estimatedBeacon =
-                    (BeaconWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final BeaconWithPowerAndLocated2D estimatedBeacon =
+                    (BeaconWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedBeacon.getIdentifiers(), beacon.getIdentifiers());
             assertEquals(estimatedBeacon.getTransmittedPower(),
@@ -3347,14 +3368,14 @@ public class RssiRadioSourceEstimator2DTest implements
                     estimator.getEstimatedPositionCovariance());
             assertNull(estimatedBeacon.getPathLossExponentStandardDeviation());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3388,16 +3409,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertArrayEquals(estimator.getEstimatedPosition().asArray(),
                     estimator.getEstimatedPositionCoordinates(), 0.0);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3415,50 +3433,51 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<Beacon> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<Beacon> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionOnly() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValid = 0;
+        int numValidPosition = 0;
         double positionError;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -3467,7 +3486,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -3492,7 +3511,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3501,8 +3520,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3522,11 +3541,11 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3549,15 +3568,12 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3568,50 +3584,51 @@ public class RssiRadioSourceEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionOnlyWithInitialPosition() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValid = 0;
+        int numValidPosition = 0;
         double positionError;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -3620,7 +3637,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -3646,7 +3663,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3655,8 +3672,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3676,11 +3693,11 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3703,15 +3720,12 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3722,50 +3736,51 @@ public class RssiRadioSourceEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionOnlyRepeated() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValid = 0;
+        int numValidPosition = 0;
         double positionError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -3774,7 +3789,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -3799,10 +3814,10 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //repeat again so that position covariance matrix is reused
+            // repeat again so that position covariance matrix is reused
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3811,8 +3826,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3832,11 +3847,11 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -3859,15 +3874,12 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 2);
             assertEquals(estimateEnd, 2);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -3881,48 +3893,49 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateTransmittedPowerOnly() throws LockedException,
             NotReadyException, IndoorException {
-        int numValidPower = 0, numValid = 0;
+        int numValidPower = 0;
         double powerError = 0.0;
         double powerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -3931,7 +3944,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(false);
@@ -3956,7 +3969,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3965,8 +3978,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3982,7 +3995,7 @@ public class RssiRadioSourceEstimator2DTest implements
                     Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
                 continue;
             }
@@ -4005,60 +4018,59 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
         LOGGER.log(Level.INFO, "Power error: {0} dB",
                 powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateTransmittedPowerOnlyWithInitialTransmittedPower() throws LockedException,
             NotReadyException, IndoorException {
-        int numValidPower = 0, numValid = 0;
+        int numValidPower = 0;
         double powerError = 0.0;
         double powerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4067,7 +4079,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(false);
@@ -4093,7 +4105,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4102,8 +4114,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4119,7 +4131,7 @@ public class RssiRadioSourceEstimator2DTest implements
                     Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
                 continue;
             }
@@ -4142,60 +4154,59 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
 
         LOGGER.log(Level.INFO, "Power error: {0} dB",
                 powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePathlossOnly() throws LockedException,
             NotReadyException, IndoorException {
-        int numValidPathLoss = 0, numValid = 0;
+        int numValidPathLoss = 0;
         double pathLossError = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4204,7 +4215,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(false);
@@ -4229,7 +4240,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4238,8 +4249,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4257,7 +4268,7 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPathLossExponentStandardDeviation(),
                     Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
 
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
             pathLossStd = Math.sqrt(pathLossVariance);
@@ -4275,60 +4286,59 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
         LOGGER.log(Level.INFO, "Path loss error: {0}",
                 pathLossError);
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePathlossOnlyWithInitialPathloss() throws LockedException,
             NotReadyException, IndoorException {
-        int numValidPathLoss = 0, numValid = 0;
+        int numValidPathLoss = 0;
         double pathLossError = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4337,7 +4347,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(false);
@@ -4363,7 +4373,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4372,8 +4382,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4391,7 +4401,7 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPathLossExponentStandardDeviation(),
                     Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
 
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
             pathLossStd = Math.sqrt(pathLossVariance);
@@ -4409,64 +4419,63 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
         LOGGER.log(Level.INFO, "Path loss error: {0}",
                 pathLossError);
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionAndPathloss() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPathLoss = 0, numValid = 0;
+        int numValidPosition = 0, numValidPathLoss = 0;
         double positionError = 0.0;
         double pathLossError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4475,7 +4484,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -4499,7 +4508,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4508,8 +4517,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4528,14 +4537,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -4569,15 +4578,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -4595,52 +4602,53 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimatePositionAndPathlossWithInitialValues() throws LockedException,
             NotReadyException, IndoorException, AlgebraException {
 
-        int numValidPosition = 0, numValidPathLoss = 0, numValid = 0;
+        int numValidPosition = 0, numValidPathLoss = 0;
         double positionError = 0.0;
         double pathLossError = 0.0;
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4649,7 +4657,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i], ERROR_STD));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(true);
@@ -4675,7 +4683,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4684,8 +4692,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4704,14 +4712,14 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            final Accuracy2D accuracyStd = new Accuracy2D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            final Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             positionStd = accuracyStd.getAverageAccuracy();
@@ -4745,16 +4753,13 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
-
-        NumberFormat format = NumberFormat.getPercentInstance();
+        final NumberFormat format = NumberFormat.getPercentInstance();
         String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
@@ -4772,51 +4777,52 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateTransmittedPowerAndPathLoss() throws LockedException,
             NotReadyException, IndoorException {
 
-        int numValidPower = 0, numValidPathLoss = 0, numValid = 0;
+        int numValidPower = 0, numValidPathLoss = 0;
         double powerError = 0.0;
         double pathLossError = 0.0;
         double powerStd = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4825,7 +4831,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(false);
@@ -4849,7 +4855,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4858,8 +4864,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4876,12 +4882,12 @@ public class RssiRadioSourceEstimator2DTest implements
                     Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
             assertNull(estimatedAccessPoint.getPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
                 continue;
             }
             assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
             powerStd = Math.sqrt(powerVariance);
@@ -4912,13 +4918,11 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPower > 0);
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
         LOGGER.log(Level.INFO, "Power error: {0} dB",
                 powerError);
@@ -4929,51 +4933,52 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateTransmittedPowerAndPathLossWithInitialValues() throws LockedException,
             NotReadyException, IndoorException {
 
-        int numValidPower = 0, numValidPathLoss = 0, numValid = 0;
+        int numValidPower = 0, numValidPathLoss = 0;
         double powerError = 0.0;
         double pathLossError = 0.0;
         double powerStd = 0.0;
         double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
+            final InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+            final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            final double transmittedPower = dBmToPower(transmittedPowerdBm);
+            final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            int numReadings = randomizer.nextInt(
+            final int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            final Point2D[] readingsPositions = new Point2D[numReadings];
+            final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double distance = readingsPositions[i].distanceTo(
+                final double distance = readingsPositions[i].distanceTo(
                         accessPointPosition);
 
-                double rssi = powerTodBm(receivedPower(
+                final double rssi = powerTodBm(receivedPower(
                         transmittedPower, distance,
                         accessPoint.getFrequency(),
                         pathLossExponent));
@@ -4982,7 +4987,7 @@ public class RssiRadioSourceEstimator2DTest implements
                         readingsPositions[i]));
             }
 
-            RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+            final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator2D<>(readings,
                             this);
             estimator.setPositionEstimationEnabled(false);
@@ -5008,7 +5013,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5017,8 +5022,8 @@ public class RssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            final WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D) estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -5035,12 +5040,12 @@ public class RssiRadioSourceEstimator2DTest implements
                     Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
             assertNull(estimatedAccessPoint.getPositionCovariance());
 
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            final double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
                 continue;
             }
             assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
+            final double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
             powerStd = Math.sqrt(powerVariance);
@@ -5071,13 +5076,11 @@ public class RssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
         assertTrue(numValidPower > 0);
         assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
 
         LOGGER.log(Level.INFO, "Power error: {0} dB",
                 powerError);
@@ -5088,27 +5091,28 @@ public class RssiRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        // force NotReadyException
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateFingerprintingException() throws LockedException,
             NotReadyException {
 
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-        int numReadings = randomizer.nextInt(
+        final int numReadings = randomizer.nextInt(
                 MIN_READINGS, MAX_READINGS);
-        Point2D[] readingsPositions = new Point2D[numReadings];
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final Point2D[] readingsPositions = new Point2D[numReadings];
+        final List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
         for (int i = 0; i < numReadings; i++) {
             readingsPositions[i] = new InhomogeneousPoint2D(
                     0.0, 0.0);
@@ -5117,7 +5121,7 @@ public class RssiRadioSourceEstimator2DTest implements
                     readingsPositions[i]));
         }
 
-        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+        final RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>(readings,
                         this);
 
@@ -5136,17 +5140,20 @@ public class RssiRadioSourceEstimator2DTest implements
         try {
             estimator.estimate();
             fail("IndoorException expected but not thrown");
-        } catch (IndoorException ignore) { }
+        } catch (final IndoorException ignore) {
+        }
     }
 
     @Override
-    public void onEstimateStart(RssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    public void onEstimateStart(
+            final RssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         estimateStart++;
         checkLocked(estimator);
     }
 
     @Override
-    public void onEstimateEnd(RssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    public void onEstimateEnd(
+            final RssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         estimateEnd++;
         checkLocked(estimator);
     }
@@ -5155,59 +5162,70 @@ public class RssiRadioSourceEstimator2DTest implements
         estimateStart = estimateEnd = 0;
     }
 
-    private double receivedPower(double equivalentTransmittedPower,
-            double distance, double frequency, double pathLossExponent) {
+    private double receivedPower(
+            final double equivalentTransmittedPower,
+            final double distance, final double frequency, final double pathLossExponent) {
         //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(RssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    private void checkLocked(
+            final RssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         try {
             estimator.setInitialTransmittedPowerdBm(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setInitialTransmittedPower(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setTransmittedPowerEstimationEnabled(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setInitialPosition(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setPositionEstimationEnabled(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setInitialPathLossExponent(2.0);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setPathLossEstimationEnabled(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setReadings(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.estimate();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
     }
