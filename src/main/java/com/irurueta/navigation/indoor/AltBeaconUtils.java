@@ -59,7 +59,7 @@ public class AltBeaconUtils {
     /**
      * Constructor to prevent instantiation of utility class.
      */
-    AltBeaconUtils() {
+    private AltBeaconUtils() {
     }
 
     /**

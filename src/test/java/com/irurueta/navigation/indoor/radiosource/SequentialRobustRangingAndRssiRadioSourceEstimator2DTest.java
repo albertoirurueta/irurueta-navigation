@@ -6934,7 +6934,6 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
 
-            numValid++;
             break;
         }
 
