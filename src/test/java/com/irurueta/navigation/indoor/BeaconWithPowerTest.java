@@ -16,7 +16,11 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,26 +30,31 @@ import static org.junit.Assert.*;
 
 public class BeaconWithPowerTest {
 
-    public BeaconWithPowerTest() { }
+    public BeaconWithPowerTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        //test empty constructor
+        // test empty constructor
         BeaconWithPower b = new BeaconWithPower();
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -64,11 +73,11 @@ public class BeaconWithPowerTest {
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
 
-        //test constructor with identifiers and transmitted power
-        List<BeaconIdentifier> identifiers = new ArrayList<>();
+        // test constructor with identifiers and transmitted power
+        final List<BeaconIdentifier> identifiers = new ArrayList<>();
         b = new BeaconWithPower(identifiers, -50.0);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -86,21 +95,22 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data
+        // test constructor with all data
         b = new BeaconWithPower(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name");
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -118,23 +128,24 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0,
                     "address", 1,
                     2, 3, "name");
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power and
-        //transmitted power standard deviation
+        // test constructor with identifiers, transmitted power and
+        // transmitted power standard deviation
         b = new BeaconWithPower(identifiers, -50.0,
                 Double.valueOf(1.0));
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -172,28 +183,30 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0,
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0,
                     Double.valueOf(-1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data and transmitted power standard deviation
+        // test constructor with all data and transmitted power standard deviation
         b = new BeaconWithPower(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name",
                 Double.valueOf(1.0));
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -217,7 +230,7 @@ public class BeaconWithPowerTest {
                 3, "name",
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -236,7 +249,7 @@ public class BeaconWithPowerTest {
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0,
@@ -244,23 +257,25 @@ public class BeaconWithPowerTest {
                     2, 3, "name",
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0,
                     "address", 1,
                     2, 3, "name",
                     Double.valueOf(-1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data and frequency
+        // test constructor with all data and frequency
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 "address", 1, 2,
                 3, "name");
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -278,29 +293,31 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
                     "address", 1,
                     2, 3, "name");
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, -5.0e9,
                     "address", 1,
                     2, 3, "name");
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power,
-        //transmitted power standard deviation and frequency
+        // test constructor with identifiers, transmitted power,
+        // transmitted power standard deviation and frequency
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 Double.valueOf(1.0));
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -322,7 +339,7 @@ public class BeaconWithPowerTest {
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -340,33 +357,36 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, -5.0e9,
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     Double.valueOf(-1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data and transmitted power standard deviation
+        // test constructor with all data and transmitted power standard deviation
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 "address", 1, 2,
                 3, "name",
                 Double.valueOf(1.0));
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -390,7 +410,7 @@ public class BeaconWithPowerTest {
                 3, "name",
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -408,7 +428,7 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
@@ -416,28 +436,31 @@ public class BeaconWithPowerTest {
                     2, 3, "name",
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, -5.0e9,
                     "address", 1,
                     2, 3, "name",
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     "address", 1,
                     2, 3, "name",
                     Double.valueOf(-1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power and path loss
+        // test constructor with identifiers, transmitted power and path loss
         b = new BeaconWithPower(identifiers, -50.0, 1.6);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -454,21 +477,22 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 1.6);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, all data and path loss
+        // test constructor with identifiers, all data and path loss
         b = new BeaconWithPower(identifiers, -50.0, "address",
                 1, 2, 3, "name",
                 1.6);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -485,22 +509,23 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, "address",
                     1, 2, 3, "name",
                     1.6);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, tx power std and path loss
+        // test constructor with identifiers, transmitted power, tx power std and path loss
         b = new BeaconWithPower(identifiers, -50.0, Double.valueOf(1.0),
                 1.6);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -521,7 +546,7 @@ public class BeaconWithPowerTest {
         b = new BeaconWithPower(identifiers, -50.0, null,
                 1.6);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -538,27 +563,29 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, Double.valueOf(1.0),
                     1.6);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, Double.valueOf(-1.0),
                     1.6);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data and path loss
+        // test constructor with all data and path loss
         b = new BeaconWithPower(identifiers, -50.0, "address",
                 1, 2, 3, "name",
                 1.6, 1.0);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -579,7 +606,7 @@ public class BeaconWithPowerTest {
                 1, 2, 3, "name",
                 1.6, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -596,29 +623,31 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, "address",
                     1, 2, 3, "name",
                     1.6, 1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, "address",
                     1, 2, 3, "name",
                     1.6, -1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, frequency and path loss
+        // test constructor with all data, frequency and path loss
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 "address", 1, 2, 3,
                 "name", 1.6);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -635,22 +664,23 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", 1.6);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, frequency, path loss and tx power std
+        // test constructor with identifiers, tx power, frequency, path loss and tx power std
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9, 1.6,
                 Double.valueOf(1.0));
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -670,7 +700,7 @@ public class BeaconWithPowerTest {
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9, 1.6,
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -687,27 +717,29 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9, 1.6,
                     Double.valueOf(1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9, 1.6,
                     Double.valueOf(-1.0));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, frequency and path loss
+        // test constructor with all data, frequency and path loss
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 "address", 1, 2, 3,
                 "name", 1.6, 1.0);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -728,7 +760,7 @@ public class BeaconWithPowerTest {
                 "address", 1, 2, 3,
                 "name", 1.6, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -745,28 +777,30 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", 1.6, 1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", 1.6, -1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power and std deviation, path loss and std deviation
+        // test constructor with identifiers, transmitted power and std deviation, path loss and std deviation
         b = new BeaconWithPower(identifiers, -50.0, Double.valueOf(1.0),
                 1.6, Double.valueOf(0.1));
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -783,33 +817,36 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(0.1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, Double.valueOf(-1.0),
                     1.6, Double.valueOf(0.1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(-0.1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, path loss and std deviations
+        // test constructor with all data, path loss and std deviations
         b = new BeaconWithPower(identifiers, -50.0,
                 "address", 1, 2, 3,
                 "name", 1.6, 1.0,
                 0.1);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -826,7 +863,7 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0,
@@ -834,29 +871,32 @@ public class BeaconWithPowerTest {
                     "name", 1.6, 1.0,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0,
                     "address", 1, 2, 3,
                     "name", 1.6, -1.0,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0,
                     "address", 1, 2, 3,
                     "name", 1.6, 1.0,
                     -0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, frequency, path loss and std deviations
+        // test constructor with identifiers, tx power, frequency, path loss and std deviations
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 1.6, 1.0, 0.1);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -873,27 +913,30 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
                     1.6, 1.0, 0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     1.6, -1.0, 0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     1.6, 1.0, -0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, frequency, path loss and std deviations
+        // test constructor with all data, frequency, path loss and std deviations
         b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                 "address", 1, 2, 3,
                 "name", 1.6, 1.0,
@@ -915,7 +958,7 @@ public class BeaconWithPowerTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPower(null, -50.0, 5.0e9,
@@ -923,71 +966,74 @@ public class BeaconWithPowerTest {
                     "name", 1.6, 1.0,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", 1.6, -1.0,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPower(identifiers, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", 1.6, 1.0,
                     -0.1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
     }
 
     @Test
     public void testEquals() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        long value1 = randomizer.nextLong();
-        BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
+        final long value1 = randomizer.nextLong();
+        final BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
                 Long.SIZE / Byte.SIZE);
 
-        long value2 = randomizer.nextLong();
-        BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
+        final long value2 = randomizer.nextLong();
+        final BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
                 Long.SIZE / Byte.SIZE);
 
-        long value3 = randomizer.nextLong();
-        BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
+        final long value3 = randomizer.nextLong();
+        final BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers1 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers1 = new ArrayList<>();
         identifiers1.add(id1);
         identifiers1.add(id2);
         identifiers1.add(id3);
 
-        long value4 = value1 + 1;
-        BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
+        final long value4 = value1 + 1;
+        final BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
                 Long.SIZE / Byte.SIZE);
 
-        long value5 = value2 + 1;
-        BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
+        final long value5 = value2 + 1;
+        final BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
                 Long.SIZE / Byte.SIZE);
 
-        long value6 = value3 + 1;
-        BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
+        final long value6 = value3 + 1;
+        final BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers2 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers2 = new ArrayList<>();
         identifiers2.add(id4);
         identifiers2.add(id5);
         identifiers2.add(id6);
 
 
-        BeaconWithPower b1 = new BeaconWithPower(identifiers1,
+        final BeaconWithPower b1 = new BeaconWithPower(identifiers1,
                 -60.0, 1.0);
-        BeaconWithPower b2 = new BeaconWithPower(identifiers1,
+        final BeaconWithPower b2 = new BeaconWithPower(identifiers1,
                 -50.0, 1.0);
-        BeaconWithPower b3 = new BeaconWithPower(identifiers2,
+        final BeaconWithPower b3 = new BeaconWithPower(identifiers2,
                 -60.0, 1.0);
 
-        //check
+        // check
         assertEquals(b1, b1);
         assertEquals(b1, b2);
         assertNotEquals(b1, b3);

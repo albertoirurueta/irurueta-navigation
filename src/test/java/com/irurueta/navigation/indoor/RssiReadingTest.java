@@ -15,7 +15,11 @@
  */
 package com.irurueta.navigation.indoor;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -23,84 +27,92 @@ public class RssiReadingTest {
 
     private static final double FREQUENCY = 2.4e9;
 
-    public RssiReadingTest() { }
+    public RssiReadingTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        //test empty constructor
+        // test empty constructor
         RssiReading<WifiAccessPoint> reading = new RssiReading<>();
 
-        //check
+        // check
         assertNull(reading.getSource());
         assertEquals(reading.getRssi(), 0.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
         assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
 
-        //test constructor with access point and RSSI
-        WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
+        // test constructor with access point and RSSI
+        final WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
         reading = new RssiReading<>(ap, -50.0);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
         assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         reading = null;
         try {
             reading = new RssiReading<>(null, -50.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
-        //test constructor with access point, RSSI and RSSI standard deviation
+        // test constructor with access point, RSSI and RSSI standard deviation
         reading = new RssiReading<>(ap, -50.0, 5.5);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertEquals(reading.getRssiStandardDeviation(), 5.5, 0.0);
         assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         reading = null;
         try {
             reading = new RssiReading<>(null, -50.0,
                     5.5);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RssiReading<>(ap, -50.0, 0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
     }
 
     @Test
     public void testHasSameAccessPoint() {
-        WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
+        final WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        RssiReading<WifiAccessPoint> reading1 = new RssiReading<>(ap1, -50.0);
-        RssiReading<WifiAccessPoint> reading2 = new RssiReading<>(ap1, -50.0);
-        RssiReading<WifiAccessPoint> reading3 = new RssiReading<>(ap2, -50.0);
+        final RssiReading<WifiAccessPoint> reading1 = new RssiReading<>(ap1, -50.0);
+        final RssiReading<WifiAccessPoint> reading2 = new RssiReading<>(ap1, -50.0);
+        final RssiReading<WifiAccessPoint> reading3 = new RssiReading<>(ap2, -50.0);
 
-        //check
+        // check
         assertTrue(reading1.hasSameSource(reading1));
         assertTrue(reading1.hasSameSource(reading2));
         assertFalse(reading1.hasSameSource(reading3));

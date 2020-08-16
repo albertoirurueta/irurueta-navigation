@@ -601,7 +601,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -662,7 +662,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -723,7 +723,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -784,7 +784,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -843,7 +843,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -902,7 +902,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -961,7 +961,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1020,7 +1020,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1088,7 +1088,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1149,7 +1149,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1210,7 +1210,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1272,7 +1272,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1332,7 +1332,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1393,7 +1393,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1454,7 +1454,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1515,7 +1515,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
         calibrator.getBiasZAsAcceleration(acceleration);
         assertEquals(acceleration, new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND));
-        bias1 = new double[]{ biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);

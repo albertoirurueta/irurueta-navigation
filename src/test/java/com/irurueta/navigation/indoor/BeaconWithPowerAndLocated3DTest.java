@@ -19,7 +19,11 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,26 +33,31 @@ import static org.junit.Assert.*;
 
 public class BeaconWithPowerAndLocated3DTest {
 
-    public BeaconWithPowerAndLocated3DTest() { }
+    public BeaconWithPowerAndLocated3DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() throws AlgebraException {
-        //test empty constructor
+        // test empty constructor
         BeaconWithPowerAndLocated3D b = new BeaconWithPowerAndLocated3D();
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -69,13 +78,13 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
 
-        //test constructor with identifiers, transmitted power and position
-        List<BeaconIdentifier> identifiers = new ArrayList<>();
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        // test constructor with identifiers, transmitted power and position
+        final List<BeaconIdentifier> identifiers = new ArrayList<>();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -95,27 +104,29 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data and position
+        // test constructor with all data and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -143,23 +154,25 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
                     1, 2, 3,
                     "name", null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, transmitted
-        //power standard deviation and position
+        // test constructor with identifiers, transmitted power, transmitted
+        // power standard deviation and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 Double.valueOf(1.0), position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -183,7 +196,7 @@ public class BeaconWithPowerAndLocated3DTest {
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 null, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -203,37 +216,40 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, Double.valueOf(1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(-1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, transmitted power standard deviation
-        //and position
+        // test constructor with all data, transmitted power standard deviation
+        // and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", Double.valueOf(1.0),
                 position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -259,7 +275,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 3, "name", null,
                 position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -279,7 +295,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -288,7 +304,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -296,7 +313,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(-1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -304,17 +322,18 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, position and
-        //position covariance
-        Matrix cov = new Matrix(3, 3);
+        // test constructor with identifiers, transmitted power, position and
+        // position covariance
+        final Matrix cov = new Matrix(3, 3);
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -337,7 +356,7 @@ public class BeaconWithPowerAndLocated3DTest {
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 position, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -357,32 +376,35 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position and position covariance
+        // test constructor with all data, position and position covariance
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -402,7 +424,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -410,30 +432,33 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
                     1, 2, 3,
                     "name", null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     "address", 1,
                     2, 3, "name",
                     position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, transmitted
-        //power standard deviation, position and position covariance
+        // test constructor with identifiers, transmitted power, transmitted
+        // power standard deviation, position and position covariance
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 Double.valueOf(1.0), position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -457,7 +482,7 @@ public class BeaconWithPowerAndLocated3DTest {
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 null, position, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -477,43 +502,47 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, Double.valueOf(1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(-1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     1.0, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, transmitted power standard deviation,
-        //position and position covariance
+        // test constructor with all data, transmitted power standard deviation,
+        // position and position covariance
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", Double.valueOf(1.0),
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -539,7 +568,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 3, "name", null,
                 position, null);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -559,7 +588,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -568,7 +597,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -576,7 +606,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(-1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -584,23 +615,25 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     "address", 1, 2,
                     3, "name", Double.valueOf(1.0),
                     position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position and frequency
+        // test constructor with all data, position and frequency
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0, 5.0e9,
                 "address", 1, 2,
                 3, "name", position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -620,7 +653,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -628,30 +661,33 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
                     1, 2, 3,
                     "name", position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
                     1, 2, 3,
                     "name", null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, transmitted
-        //power standard deviation and position
+        // test constructor with identifiers, transmitted power, transmitted
+        // power standard deviation and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0, 5.0e9,
                 Double.valueOf(1.0), position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -675,7 +711,7 @@ public class BeaconWithPowerAndLocated3DTest {
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0, 5.0e9,
                 null, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -695,43 +731,47 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, 5.0e9, Double.valueOf(1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, Double.valueOf(1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, Double.valueOf(-1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, Double.valueOf(1.0),
                     null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, transmitted power standard deviation
-        //and position
+        // test constructor with all data, transmitted power standard deviation
+        // and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0, 5.0e9,
                 "address", 1, 2,
                 3, "name", Double.valueOf(1.0),
                 position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -757,7 +797,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 3, "name", null,
                 position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -777,7 +817,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -786,7 +826,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
@@ -794,7 +835,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -802,7 +844,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(-1.0),
                     position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -810,16 +853,17 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position and position covariance
+        // test constructor with all data, position and position covariance
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, "address", 1, 2,
                 3, "name", position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -839,7 +883,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -847,37 +891,41 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
                     1, 2, 3,
                     "name", position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
                     1, 2, 3,
                     "name", null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1,
                     2, 3, "name",
                     position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, transmitted
-        //power standard deviation, position and position covariance
+        // test constructor with identifiers, transmitted power, transmitted
+        // power standard deviation, position and position covariance
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, Double.valueOf(1.0), position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -902,7 +950,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 5.0e9, null, position,
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -922,49 +970,54 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, 5.0e9, Double.valueOf(1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, Double.valueOf(1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, Double.valueOf(-1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, Double.valueOf(1.0),
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, Double.valueOf(1.0), position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, transmitted power standard deviation,
-        //position and position covariance
+        // test constructor with all data, transmitted power standard deviation,
+        // position and position covariance
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, "address", 1, 2,
                 3, "name", Double.valueOf(1.0),
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -990,7 +1043,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 3, "name", null,
                 position, null);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1010,7 +1063,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1019,7 +1072,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
@@ -1027,7 +1081,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -1035,7 +1090,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(-1.0),
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -1043,22 +1099,24 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", Double.valueOf(1.0),
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1, 2,
                     3, "name", Double.valueOf(1.0),
                     position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, path loss and position
+        // test constructor with identifiers, tx power, path loss and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 1.6, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1077,27 +1135,29 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, 1.6, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 1.6, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, pathloss and position
+        // test constructor with all data, pathloss and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", 1.6, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1116,7 +1176,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1124,22 +1184,24 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", 1.6, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
                     1, 2, 3,
                     "name", 1.6, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, std dev, path loss and position
+        // test constructor with identifiers, tx power, std dev, path loss and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 Double.valueOf(1.0), 1.6, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1163,7 +1225,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null, 1.6,
                 position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1182,36 +1244,39 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, Double.valueOf(1.0),
                     1.6, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(-1.0),
                     1.6, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     1.6, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, tx power, std, position and pathloss
+        // test constructor with all data, tx power, std, position and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", 1.6,
                 1.0, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1236,7 +1301,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 3, "name", 1.6,
                 null, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1255,7 +1320,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1264,7 +1329,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -1272,7 +1338,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     -1.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -1280,16 +1347,17 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx, power, position, position covariance
+        // test constructor with identifiers, tx, power, position, position covariance
         // and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 1.6, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1311,7 +1379,7 @@ public class BeaconWithPowerAndLocated3DTest {
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 1.6, position, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1330,34 +1398,37 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, 1.6, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 1.6, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     1.6, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position, position covariance and pathloss
+        // test constructor with all data, position, position covariance and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", 1.6,
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1376,7 +1447,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1384,30 +1455,33 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", 1.6, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
                     1, 2, 3,
                     "name", 1.6, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     "address", 1,
                     2, 3, "name",
                     1.6, position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, tx power std deviation,
+        // test constructor with identifiers, tx power, tx power std deviation,
         // position, position covariance and path loss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 Double.valueOf(1.0), 1.6, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1431,7 +1505,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null, 1.6,
                 position, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1450,43 +1524,47 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, Double.valueOf(1.0),
                     1.6, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(-1.0),
                     1.6, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     1.6, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     Double.valueOf(1.0), 1.6, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, tx power std deviation, position,
-        //position covariance and pathloss
+        // test constructor with all data, tx power std deviation, position,
+        // position covariance and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", 1.6,
                 1.0, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1512,7 +1590,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null, position,
                 null);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1531,7 +1609,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1540,7 +1618,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -1548,7 +1627,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     -1.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -1556,7 +1636,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     "address", 1, 2,
@@ -1564,17 +1645,18 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position, frequency and pathloss
+        // test constructor with all data, position, frequency and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0, 5.0e9,
                 "address", 1, 2,
                 3, "name", 1.6,
                 position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1593,7 +1675,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1601,31 +1683,34 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", 1.6, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
                     1, 2, 3,
                     "name", 1.6, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
                     1, 2, 3,
                     "name", 1.6, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, tx power std deviation,
-        //position and pathloss
+        // test constructor with identifiers, tx power, tx power std deviation,
+        // position and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, 1.6, Double.valueOf(1.0),
                 position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1649,7 +1734,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 5.0e9, 1.6,
                 null, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1668,43 +1753,47 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, 5.0e9, 1.6,
                     Double.valueOf(1.0), position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, 1.6,
                     Double.valueOf(1.0), position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     Double.valueOf(-1.0), position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     Double.valueOf(1.0), null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, tx power std deviation, position and
-        //pathloss
+        // test constructor with all data, tx power std deviation, position and
+        // pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0, 5.0e9,
                 "address", 1, 2,
                 3, "name", 1.6,
                 1.0, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1729,7 +1818,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 3, "name", 1.6,
                 null, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1748,7 +1837,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1757,7 +1846,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
@@ -1765,7 +1855,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -1773,7 +1864,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     -1.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -1781,17 +1873,18 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position, position covariance and path loss
+        // test constructor with all data, position, position covariance and path loss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, "address", 1, 2,
                 3, "name", 1.6,
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1810,7 +1903,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1818,21 +1911,24 @@ public class BeaconWithPowerAndLocated3DTest {
                     1, 2, 3,
                     "name", 1.6, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
                     1, 2, 3,
                     "name", 1.6, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
                     1, 2, 3,
                     "name", 1.6, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1,
@@ -1840,17 +1936,18 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.6, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, tx power std deviation,
-        //position, position covariance and pathloss
+        // test constructor with identifiers, tx power, tx power std deviation,
+        // position, position covariance and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, 1.6, Double.valueOf(1.0),
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1875,7 +1972,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null, position,
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1894,49 +1991,54 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, 5.0e9, 1.6,
                     Double.valueOf(1.0), position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, 1.6,
                     Double.valueOf(1.0), position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     Double.valueOf(-1.0), position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     Double.valueOf(1.0), null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, 1.6, Double.valueOf(1.0),
                     position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, tx power std deviation, position,
-        //position covariance and pathloss
+        // test constructor with all data, tx power std deviation, position,
+        // position covariance and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, "address", 1, 2,
                 3, "name", 1.6,
                 1.0, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1962,7 +2064,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null, position,
                 null);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -1981,7 +2083,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -1990,7 +2092,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, "address",
@@ -1998,7 +2101,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -2006,7 +2110,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     -1.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, "address",
@@ -2014,7 +2119,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     "name", 1.6,
                     1.0, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1, 2,
@@ -2022,17 +2128,18 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, path loss, path loss
+        // test constructor with identifiers, tx power, path loss, path loss
         // std deviation and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 Double.valueOf(1.0), 1.6,
                 Double.valueOf(0.1), position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2053,44 +2160,48 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(0.1), position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(-1.0),
                     1.6, Double.valueOf(0.1), position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(-0.1), position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(0.1), null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, path loss, path loss std deviation and
-        //position
+        // test constructor with all data, path loss, path loss std deviation and
+        // position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", 1.6,
                 1.0,
                 0.1, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2109,7 +2220,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -2119,7 +2230,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -2128,7 +2240,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     -1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -2137,7 +2250,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     -0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -2146,17 +2260,18 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, std dev, path loss,
-        //path loss std deviation and position
+        // test constructor with identifiers, tx power, std dev, path loss,
+        // path loss std deviation and position
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 Double.valueOf(1.0), 1.6, Double.valueOf(0.1),
                 position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2180,7 +2295,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null, 1.6,
                 null, position, cov);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2199,45 +2314,49 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
                     -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(0.1), position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(-1.0),
                     1.6, Double.valueOf(0.1), position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(0.1), null,
                     cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, Double.valueOf(1.0),
                     1.6, Double.valueOf(0.1), position,
-                    new Matrix(1,1));
+                    new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, tx power, stds, position and pathloss
+        // test constructor with all data, tx power, stds, position and pathloss
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 "address", 1, 2,
                 3, "name", 1.6,
                 1.0,
                 0.1, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2263,7 +2382,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 null,
                 null, position, cov);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2282,7 +2401,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -2292,7 +2411,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -2301,7 +2421,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     -1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -2310,7 +2431,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     -0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, "address",
@@ -2319,18 +2441,19 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx, power, position, path loss and
-        //pathloss std deviation
+        // test constructor with identifiers, tx, power, position, path loss and
+        // pathloss std deviation
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, 1.6,
                 1.0,
                 0.1, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2349,7 +2472,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentexception
+        // force IllegalArgumentexception
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null,
@@ -2357,39 +2480,44 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, -5.0e9, 1.6,
                     1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     -1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     1.0,
                     -0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers,
                     -50.0, 5.0e9, 1.6,
                     1.0,
                     0.1, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position, path loss and pathloss std
+        // test constructor with all data, position, path loss and pathloss std
         // deviation
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, "address", 1, 2,
@@ -2397,7 +2525,7 @@ public class BeaconWithPowerAndLocated3DTest {
                 1.0,
                 0.1, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2416,7 +2544,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null, -50.0,
@@ -2425,7 +2553,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     -5.0e9, "address", 1, 2,
@@ -2433,7 +2562,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1, 2,
@@ -2441,7 +2571,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     -1.0,
                     0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1, 2,
@@ -2449,7 +2580,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     -0.1, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1, 2,
@@ -2457,18 +2589,19 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, tx power, tx power std deviation,
-        //position, position covariance, pathloss and pathloss std deviation
+        // test constructor with identifiers, tx power, tx power std deviation,
+        // position, position covariance, pathloss and pathloss std deviation
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, 1.6,
                 1.0,
                 0.1, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2488,7 +2621,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null, -50.0,
@@ -2496,47 +2629,52 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     -5.0e9, 1.6,
                     1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, 1.6,
                     -1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, 1.6,
                     1.0,
                     -0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, 1.6,
                     1.0,
                     0.1, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, tx power std deviation, position,
-        //position covariance, pathloss and pathloss std deviation
+        // test constructor with all data, tx power std deviation, position,
+        // position covariance, pathloss and pathloss std deviation
         b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                 5.0e9, "address", 1,
                 2, 3, "name",
                 1.6, 1.0,
                 0.1, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -2556,7 +2694,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconWithPowerAndLocated3D(null, -50.0,
@@ -2565,7 +2703,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.6, 1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     -5.0e9, "address", 1,
@@ -2573,7 +2712,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.6, 1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1,
@@ -2581,7 +2721,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.6, -1.0,
                     0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1,
@@ -2589,7 +2730,8 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.6, 1.0,
                     -0.1, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconWithPowerAndLocated3D(identifiers, -50.0,
                     5.0e9, "address", 1,
@@ -2597,58 +2739,59 @@ public class BeaconWithPowerAndLocated3DTest {
                     1.6, 1.0,
                     0.1, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
     }
 
     @Test
     public void testEquals() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        long value1 = randomizer.nextLong();
-        BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
+        final long value1 = randomizer.nextLong();
+        final BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
                 Long.SIZE / Byte.SIZE);
 
-        long value2 = randomizer.nextLong();
-        BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
+        final long value2 = randomizer.nextLong();
+        final BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
                 Long.SIZE / Byte.SIZE);
 
-        long value3 = randomizer.nextLong();
-        BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
+        final long value3 = randomizer.nextLong();
+        final BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers1 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers1 = new ArrayList<>();
         identifiers1.add(id1);
         identifiers1.add(id2);
         identifiers1.add(id3);
 
-        long value4 = value1 + 1;
-        BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
+        final long value4 = value1 + 1;
+        final BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
                 Long.SIZE / Byte.SIZE);
 
-        long value5 = value2 + 1;
-        BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
+        final long value5 = value2 + 1;
+        final BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
                 Long.SIZE / Byte.SIZE);
 
-        long value6 = value3 + 1;
-        BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
+        final long value6 = value3 + 1;
+        final BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers2 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers2 = new ArrayList<>();
         identifiers2.add(id4);
         identifiers2.add(id5);
         identifiers2.add(id6);
 
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
 
-        BeaconWithPowerAndLocated3D b1 = new BeaconWithPowerAndLocated3D(
+        final BeaconWithPowerAndLocated3D b1 = new BeaconWithPowerAndLocated3D(
                 identifiers1, -60.0, position);
-        BeaconWithPowerAndLocated3D b2 = new BeaconWithPowerAndLocated3D(
+        final BeaconWithPowerAndLocated3D b2 = new BeaconWithPowerAndLocated3D(
                 identifiers1, -50.0, position);
-        BeaconWithPowerAndLocated3D b3 = new BeaconWithPowerAndLocated3D(
+        final BeaconWithPowerAndLocated3D b3 = new BeaconWithPowerAndLocated3D(
                 identifiers2, -60.0, position);
 
-        //check
+        // check
         assertEquals(b1, b1);
         assertEquals(b1, b2);
         assertNotEquals(b1, b3);
