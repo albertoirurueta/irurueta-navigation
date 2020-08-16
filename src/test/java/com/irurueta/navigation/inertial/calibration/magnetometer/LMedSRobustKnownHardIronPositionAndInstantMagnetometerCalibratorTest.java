@@ -5980,7 +5980,7 @@ public class LMedSRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTes
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator) {

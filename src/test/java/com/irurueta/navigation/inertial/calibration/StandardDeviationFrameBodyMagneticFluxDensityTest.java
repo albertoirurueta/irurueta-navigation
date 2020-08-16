@@ -1599,7 +1599,7 @@ public class StandardDeviationFrameBodyMagneticFluxDensityTest {
         assertTrue(frameBodyMagneticFluxDensity1.equals(frameBodyMagneticFluxDensity2));
         assertFalse(frameBodyMagneticFluxDensity1.equals(frameBodyMagneticFluxDensity3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(frameBodyMagneticFluxDensity1.equals((Object)null));
+        assertFalse(frameBodyMagneticFluxDensity1.equals((Object) null));
         assertFalse(frameBodyMagneticFluxDensity1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(frameBodyMagneticFluxDensity1.equals(new Object()));

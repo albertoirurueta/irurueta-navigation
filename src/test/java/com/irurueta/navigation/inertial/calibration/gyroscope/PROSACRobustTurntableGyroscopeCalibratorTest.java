@@ -16807,7 +16807,7 @@ public class PROSACRobustTurntableGyroscopeCalibratorTest implements
                     nedPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch(final IllegalArgumentException ignore) {
+        } catch (final IllegalArgumentException ignore) {
         }
         try {
             calibrator = new PROSACRobustTurntableGyroscopeCalibrator(

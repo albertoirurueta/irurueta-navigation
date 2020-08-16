@@ -377,12 +377,12 @@ public class NEDVelocityTest {
         final NEDVelocity velocity3 = new NEDVelocity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(velocity1.equals((Object)velocity1));
+        assertTrue(velocity1.equals((Object) velocity1));
         assertTrue(velocity1.equals(velocity1));
         assertTrue(velocity1.equals(velocity2));
         assertFalse(velocity1.equals(velocity3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(velocity1.equals((Object)null));
+        assertFalse(velocity1.equals((Object) null));
         assertFalse(velocity1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(velocity1.equals(new Object()));

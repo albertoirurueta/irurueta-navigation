@@ -13025,11 +13025,10 @@ public class LMedSRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
     }
-    
+
     private void assertEstimatedResult(
             final Matrix mg, final Matrix gg,
-            final LMedSRobustKnownBiasTurntableGyroscopeCalibrator calibrator)
-            throws WrongSizeException {
+            final LMedSRobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
 
         assertEquals(mg.getElementAt(0, 0), calibrator.getEstimatedSx(),
                 0.0);

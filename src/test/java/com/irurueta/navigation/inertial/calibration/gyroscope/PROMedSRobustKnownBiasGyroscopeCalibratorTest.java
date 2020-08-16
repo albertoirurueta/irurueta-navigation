@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
         RobustKnownBiasEasyGyroscopeCalibratorListener {
@@ -11091,7 +11090,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -11355,7 +11354,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -11619,7 +11618,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -11890,7 +11889,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12166,7 +12165,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12438,7 +12437,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12712,7 +12711,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12988,7 +12987,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -13147,7 +13146,7 @@ public class PROMedSRobustKnownBiasGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasEasyGyroscopeCalibrator calibrator) {

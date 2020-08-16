@@ -9109,7 +9109,7 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
         } catch (final IllegalArgumentException ignore) {
         }
     }
-    
+
     @Test
     public void testGetSetBiasX() throws LockedException {
         final PROMedSRobustKnownBiasAndFrameGyroscopeCalibrator calibrator =
@@ -10804,7 +10804,7 @@ public class PROMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator) {

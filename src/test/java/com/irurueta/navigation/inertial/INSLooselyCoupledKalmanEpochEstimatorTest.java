@@ -713,8 +713,8 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
                 2, 2,
                 phiMatrix.getSubmatrix(0, 0,
                         2, 2).subtractAndReturnNew(
-                                omegaIe.multiplyByScalarAndReturnNew(
-                                        TIME_INTERVAL_SECONDS)));
+                        omegaIe.multiplyByScalarAndReturnNew(
+                                TIME_INTERVAL_SECONDS)));
 
         final Matrix estCbeOld = previousState.getBodyToEcefCoordinateTransformationMatrix();
         phiMatrix.setSubmatrix(0, 12,
@@ -733,8 +733,8 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
                 5, 5,
                 phiMatrix.getSubmatrix(3, 3,
                         5, 5).subtractAndReturnNew(
-                                omegaIe.multiplyByScalarAndReturnNew(
-                                        2.0 * TIME_INTERVAL_SECONDS)));
+                        omegaIe.multiplyByScalarAndReturnNew(
+                                2.0 * TIME_INTERVAL_SECONDS)));
 
         final double sinPrevLat = Math.sin(previousLatitude);
         final double cosPrevLat = Math.cos(previousLatitude);
@@ -744,8 +744,8 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
         final double geocentricRadius = Constants.EARTH_EQUATORIAL_RADIUS_WGS84
                 / Math.sqrt(1.0 - Math.pow(Constants.EARTH_ECCENTRICITY * sinPrevLat, 2.0))
                 * Math.sqrt(cosPrevLat2
-                        + Math.pow(1.0 - Constants.EARTH_ECCENTRICITY * Constants.EARTH_ECCENTRICITY, 2.0)
-                        * sinPrevLat2);
+                + Math.pow(1.0 - Constants.EARTH_ECCENTRICITY * Constants.EARTH_ECCENTRICITY, 2.0)
+                * sinPrevLat2);
 
         final double prevX = previousState.getX();
         final double prevY = previousState.getY();

@@ -32,8 +32,8 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.ECEFtoECIFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
-import com.irurueta.navigation.inertial.ECIGravitation;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.ECIGravitation;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
@@ -697,7 +697,7 @@ public class ECIKinematicsEstimatorTest {
 
         final BodyKinematics k = ECIKinematicsEstimator
                 .estimateKinematicsAndReturnNew(0.0, c, oldC,
-                vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
+                        vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         assertEquals(k.getFx(), 0.0, 0.0);
         assertEquals(k.getFy(), 0.0, 0.0);
@@ -870,11 +870,11 @@ public class ECIKinematicsEstimatorTest {
     }
 
     private BodyKinematics estimateKinematics(final double timeInterval,
-                                             final CoordinateTransformation c,
-                                             final CoordinateTransformation oldC,
-                                             final double vx, final double vy, final double vz,
-                                             final double oldVx, final double oldVy, final double oldVz,
-                                             final double x, final double y, final double z)
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vx, final double vy, final double vz,
+                                              final double oldVx, final double oldVy, final double oldVz,
+                                              final double x, final double y, final double z)
             throws WrongSizeException, RankDeficientMatrixException, DecomposerException {
 
         if (timeInterval > 0.0) {
@@ -930,9 +930,9 @@ public class ECIKinematicsEstimatorTest {
                 aveCbi = oldCbi.multiplyAndReturnNew(Matrix.identity(3, 3)
                         .addAndReturnNew(skewAlpha.multiplyByScalarAndReturnNew(
                                 (1.0 - Math.cos(magAlpha)) / magAlpha2)).addAndReturnNew(
-                                        skewAlpha.multiplyAndReturnNew(skewAlpha)
-                                                .multiplyByScalarAndReturnNew(
-                                                        (1.0 - Math.sin(magAlpha) / magAlpha) / magAlpha2)));
+                                skewAlpha.multiplyAndReturnNew(skewAlpha)
+                                        .multiplyByScalarAndReturnNew(
+                                                (1.0 - Math.sin(magAlpha) / magAlpha) / magAlpha2)));
             } else {
                 aveCbi = oldCbi;
             }

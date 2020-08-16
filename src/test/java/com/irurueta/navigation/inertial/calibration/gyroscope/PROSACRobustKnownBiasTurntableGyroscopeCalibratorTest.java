@@ -16105,7 +16105,7 @@ public class PROSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
                     nedPosition, rotationRate, timeInterval, measurements,
                     bias, mg, gg, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch(final IllegalArgumentException ignore) {
+        } catch (final IllegalArgumentException ignore) {
         }
         try {
             calibrator = new PROSACRobustKnownBiasTurntableGyroscopeCalibrator(
@@ -23164,7 +23164,7 @@ public class PROSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
@@ -23560,7 +23560,7 @@ public class PROSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
     }
-    
+
     private void assertEstimatedResult(
             final Matrix mg, final Matrix gg,
             final PROSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator) {

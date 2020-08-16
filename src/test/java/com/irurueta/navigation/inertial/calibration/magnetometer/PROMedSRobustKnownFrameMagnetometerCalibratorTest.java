@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 
 public class PROMedSRobustKnownFrameMagnetometerCalibratorTest implements
         RobustKnownFrameMagnetometerCalibratorListener {
@@ -1491,7 +1490,7 @@ public class PROMedSRobustKnownFrameMagnetometerCalibratorTest implements
         // check
         assertEquals(calibrator.getStopThreshold(), 1.0, 0.0);
     }
-    
+
     @Test
     public void testGetSetInitialHardIronX() throws LockedException {
         final PROMedSRobustKnownFrameMagnetometerCalibrator calibrator =

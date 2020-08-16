@@ -8567,7 +8567,7 @@ public class LMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustEasyGyroscopeCalibrator calibrator) {

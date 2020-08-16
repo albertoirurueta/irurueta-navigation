@@ -237,7 +237,8 @@ public class NEDMagneticFluxDensityTest {
         try {
             b.asArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -299,12 +300,12 @@ public class NEDMagneticFluxDensityTest {
         final NEDMagneticFluxDensity b3 = new NEDMagneticFluxDensity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(b1.equals((Object)b1));
+        assertTrue(b1.equals((Object) b1));
         assertTrue(b1.equals(b1));
         assertTrue(b1.equals(b2));
         assertFalse(b1.equals(b3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(b1.equals((Object)null));
+        assertFalse(b1.equals((Object) null));
         assertFalse(b1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(b1.equals(new Object()));

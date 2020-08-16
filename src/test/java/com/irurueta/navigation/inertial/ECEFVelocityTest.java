@@ -353,7 +353,8 @@ public class ECEFVelocityTest {
         try {
             velocity.asArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -408,12 +409,12 @@ public class ECEFVelocityTest {
         final ECEFVelocity velocity3 = new ECEFVelocity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(velocity1.equals((Object)velocity1));
+        assertTrue(velocity1.equals((Object) velocity1));
         assertTrue(velocity1.equals(velocity1));
         assertTrue(velocity1.equals(velocity2));
         assertFalse(velocity1.equals(velocity3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(velocity1.equals((Object)null));
+        assertFalse(velocity1.equals((Object) null));
         assertFalse(velocity1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(velocity1.equals(new Object()));

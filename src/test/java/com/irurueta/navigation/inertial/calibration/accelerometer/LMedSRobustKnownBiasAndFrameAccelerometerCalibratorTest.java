@@ -844,7 +844,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -933,7 +933,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1022,7 +1022,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1111,7 +1111,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1200,7 +1200,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1289,7 +1289,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1378,7 +1378,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1468,7 +1468,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1563,7 +1563,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1652,7 +1652,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1741,7 +1741,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1830,7 +1830,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -1919,7 +1919,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2009,7 +2009,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2098,7 +2098,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2187,7 +2187,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2277,7 +2277,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2376,7 +2376,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2475,7 +2475,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2574,7 +2574,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2673,7 +2673,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2772,7 +2772,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2871,7 +2871,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -2970,7 +2970,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3068,7 +3068,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3172,7 +3172,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3277,7 +3277,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3382,7 +3382,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3487,7 +3487,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3592,7 +3592,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3697,7 +3697,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3802,7 +3802,7 @@ public class LMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         bias2 = new double[3];
         calibrator.getBias(bias2);

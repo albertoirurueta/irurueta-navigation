@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         RobustEasyGyroscopeCalibratorListener {
@@ -9800,7 +9799,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
     }
-    
+
     @Test
     public void testGetSetAccelerometerBiasX() throws LockedException {
         final PROMedSRobustEasyGyroscopeCalibrator calibrator =
@@ -11534,7 +11533,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -11800,7 +11799,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12066,7 +12065,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12342,7 +12341,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12623,7 +12622,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -12897,7 +12896,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -13176,7 +13175,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -13457,7 +13456,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
                         randomizer.nextInt(0, 100) < OUTLIER_PERCENTAGE;
                 if (sequenceCanHaveOutliers) {
                     error = Math.abs(errorRandomizer.nextDouble());
-                }else {
+                } else {
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -13621,7 +13620,7 @@ public class PROMedSRobustEasyGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(RobustEasyGyroscopeCalibrator calibrator) {
         checkLocked((PROMedSRobustEasyGyroscopeCalibrator) calibrator);

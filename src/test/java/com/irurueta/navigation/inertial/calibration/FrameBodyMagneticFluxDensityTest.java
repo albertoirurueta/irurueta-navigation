@@ -843,7 +843,7 @@ public class FrameBodyMagneticFluxDensityTest {
         assertTrue(frameBodyMagneticFluxDensity1.equals(frameBodyMagneticFluxDensity2));
         assertFalse(frameBodyMagneticFluxDensity1.equals(frameBodyMagneticFluxDensity3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(frameBodyMagneticFluxDensity1.equals((Object)null));
+        assertFalse(frameBodyMagneticFluxDensity1.equals((Object) null));
         assertFalse(frameBodyMagneticFluxDensity1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(frameBodyMagneticFluxDensity1.equals(new Object()));
@@ -920,7 +920,7 @@ public class FrameBodyMagneticFluxDensityTest {
     private static BodyMagneticFluxDensity createMagneticFluxDensity(
             final NEDPosition position, final Date timestamp,
             final CoordinateTransformation cnb)
-            throws IOException  {
+            throws IOException {
         final WMMEarthMagneticFluxDensityEstimator wMMEstimator =
                 new WMMEarthMagneticFluxDensityEstimator();
         final NEDMagneticFluxDensity earthB = wMMEstimator.estimate(

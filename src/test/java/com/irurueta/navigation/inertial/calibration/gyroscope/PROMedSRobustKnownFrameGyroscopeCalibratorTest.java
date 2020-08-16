@@ -1456,7 +1456,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
     }
 
     @Test
-    public void testConstructor13() throws WrongSizeException{
+    public void testConstructor13() throws WrongSizeException {
         final double[] qualityScores = new double[
                 PROMedSRobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS];
         PROMedSRobustKnownFrameGyroscopeCalibrator calibrator =
@@ -3694,7 +3694,7 @@ public class PROMedSRobustKnownFrameGyroscopeCalibratorTest
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(final RobustKnownFrameGyroscopeCalibrator calibrator) {
         checkLocked((PROMedSRobustKnownFrameGyroscopeCalibrator) calibrator);

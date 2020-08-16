@@ -136,7 +136,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -197,7 +197,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -260,7 +260,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -321,7 +321,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -383,7 +383,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -452,7 +452,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -531,7 +531,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -629,7 +629,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertNull(calibrator.getEcefPosition());
         assertFalse(calibrator.getEcefPosition(null));
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -727,7 +727,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -799,7 +799,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -871,7 +871,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -943,7 +943,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1016,7 +1016,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1096,7 +1096,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1186,7 +1186,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1277,7 +1277,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1369,7 +1369,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1459,7 +1459,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1559,7 +1559,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1657,7 +1657,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1755,7 +1755,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1864,7 +1864,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1988,7 +1988,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2112,7 +2112,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2236,7 +2236,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2342,7 +2342,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2416,7 +2416,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2490,7 +2490,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2564,7 +2564,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2639,7 +2639,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2721,7 +2721,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2813,7 +2813,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2906,7 +2906,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3000,7 +3000,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3092,7 +3092,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3194,7 +3194,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3294,7 +3294,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3394,7 +3394,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3505,7 +3505,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3631,7 +3631,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3757,7 +3757,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3883,7 +3883,7 @@ public class KnownHardIronPositionAndInstantMagnetometerCalibratorTest implement
         assertTrue(calibrator.getEcefPosition(ecefPosition1));
         assertEquals(ecefPosition, ecefPosition1);
         assertNotNull(calibrator.getYear());
-        assertNotEquals(calibrator.getYear(), 0);
+        assertNotEquals(calibrator.getYear(), 0.0);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);

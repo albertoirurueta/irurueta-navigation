@@ -204,7 +204,7 @@ public class RobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 measurements, this, RobustEstimatorMethod.PROMedS);
 
         // check
-        assertTrue(calibrator instanceof  PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator);
+        assertTrue(calibrator instanceof PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator);
         assertSame(calibrator.getMeasurements(), measurements);
         assertSame(calibrator.getListener(), this);
 

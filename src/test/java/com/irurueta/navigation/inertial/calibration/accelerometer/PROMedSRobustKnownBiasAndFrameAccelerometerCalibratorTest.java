@@ -2780,7 +2780,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray, this);
+                        measurements, biasArray, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2888,7 +2888,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray, true);
+                        biasArray, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2996,7 +2996,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray, true, this);
+                        biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3106,7 +3106,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray, true);
+                        measurements, biasArray, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3216,7 +3216,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray, true, this);
+                        measurements, biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3550,7 +3550,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, ba);
+                        measurements, ba);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3665,7 +3665,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, ba, this);
+                        measurements, ba, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3778,7 +3778,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
-                true);
+                        true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3891,7 +3891,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
-                true, this);
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4006,7 +4006,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
-                true);
+                        true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4122,7 +4122,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
-                true, this);
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4235,7 +4235,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements);
+                        qualityScores, measurements);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4343,7 +4343,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, this);
+                        qualityScores, measurements, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4450,7 +4450,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, true);
+                        qualityScores, measurements, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4557,7 +4557,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, true, this);
+                        qualityScores, measurements, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4666,7 +4666,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ);
+                        qualityScores, biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4775,7 +4775,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ, this);
+                        qualityScores, biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4887,7 +4887,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ);
+                        qualityScores, measurements, biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -4998,7 +4998,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ, this);
+                        qualityScores, measurements, biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5107,7 +5107,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ, true);
+                        qualityScores, biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5216,7 +5216,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ, true, this);
+                        qualityScores, biasX, biasY, biasZ, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5327,7 +5327,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ, true);
+                        qualityScores, measurements, biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5438,8 +5438,8 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ, true,
-                this);
+                        qualityScores, measurements, biasX, biasY, biasZ, true,
+                        this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5555,7 +5555,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz);
+                        qualityScores, bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5670,7 +5670,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz, this);
+                        qualityScores, bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5788,7 +5788,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz);
+                        qualityScores, measurements, bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -5905,7 +5905,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz, this);
+                        qualityScores, measurements, bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6021,7 +6021,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz, true);
+                        qualityScores, bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6137,7 +6137,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz, true, this);
+                        qualityScores, bax, bay, baz, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6255,7 +6255,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz, true);
+                        qualityScores, measurements, bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6373,8 +6373,8 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz,
-                true, this);
+                        qualityScores, measurements, bax, bay, baz,
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6484,7 +6484,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray);
+                        qualityScores, biasArray);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6610,7 +6610,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray, this);
+                        qualityScores, biasArray, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6728,7 +6728,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray);
+                        qualityScores, measurements, biasArray);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6847,7 +6847,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray, this);
+                        qualityScores, measurements, biasArray, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -6963,7 +6963,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray, true);
+                        qualityScores, biasArray, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7079,7 +7079,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray, true, this);
+                        qualityScores, biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7198,7 +7198,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray, true);
+                        qualityScores, measurements, biasArray, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7317,7 +7317,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray, true, this);
+                        qualityScores, measurements, biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7434,7 +7434,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba);
+                        qualityScores, ba);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7555,7 +7555,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba, this);
+                        qualityScores, ba, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7678,7 +7678,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba);
+                        qualityScores, measurements, ba);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7801,7 +7801,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba, this);
+                        qualityScores, measurements, ba, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -7924,7 +7924,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba, true);
+                        qualityScores, ba, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -8047,7 +8047,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba, true, this);
+                        qualityScores, ba, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -8173,7 +8173,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba, true);
+                        qualityScores, measurements, ba, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -8298,7 +8298,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba, true, this);
+                        qualityScores, measurements, ba, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),

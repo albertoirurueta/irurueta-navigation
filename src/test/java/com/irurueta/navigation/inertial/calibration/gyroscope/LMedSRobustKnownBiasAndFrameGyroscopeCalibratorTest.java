@@ -4603,7 +4603,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
         // set new value
         calibrator.setStopThreshold(1.0);
-        
+
         // check
         assertEquals(calibrator.getStopThreshold(), 1.0, 0.0);
 
@@ -6263,7 +6263,7 @@ public class LMedSRobustKnownBiasAndFrameGyroscopeCalibratorTest
 
     @Override
     public void onCalibrateNextIteration(
-            final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator, 
+            final RobustKnownBiasAndFrameGyroscopeCalibrator calibrator,
             final int iteration) {
         checkLocked((LMedSRobustKnownBiasAndFrameGyroscopeCalibrator) calibrator);
         mCalibrateNextIteration++;

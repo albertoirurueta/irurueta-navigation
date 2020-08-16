@@ -20,7 +20,7 @@ public class INSTightlyCoupledKalmanInitializerTest {
     public void testInitialize() throws WrongSizeException {
         final INSTightlyCoupledKalmanInitializerConfig config = generateConfig();
 
-        final Matrix expected = Matrix.diagonal(new double[] {
+        final Matrix expected = Matrix.diagonal(new double[]{
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),

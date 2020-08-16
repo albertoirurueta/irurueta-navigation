@@ -29,8 +29,8 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
-import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
+import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.AngularSpeed;
@@ -624,7 +624,7 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
     @Test
     public void testCalibrateMultiplePositionsForGeneralCaseWithMinimumMeasuresAndNoNoise()
             throws WrongSizeException, InvalidSourceAndDestinationFrameTypeException,
-            LockedException, NotReadyException, CalibrationException {
+            LockedException, NotReadyException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {

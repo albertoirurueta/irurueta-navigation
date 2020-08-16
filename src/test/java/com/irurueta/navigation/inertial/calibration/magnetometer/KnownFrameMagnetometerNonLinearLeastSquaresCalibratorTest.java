@@ -2360,10 +2360,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2438,10 +2438,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2518,10 +2518,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2598,10 +2598,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2676,10 +2676,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2754,10 +2754,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2834,10 +2834,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2914,10 +2914,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2993,10 +2993,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3072,10 +3072,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3153,10 +3153,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3234,10 +3234,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3313,10 +3313,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3392,10 +3392,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3473,10 +3473,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3555,10 +3555,10 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         calibrator.getInitialHardIronAsMatrix(initialHardIronMatrix);
         assertEquals(initialHardIronMatrix, Matrix.newFromArray(mb));
         assertEquals(calibrator.getInitialMm(),
-                Matrix.diagonal(new double[]{ sx, sy, sz }));
+                Matrix.diagonal(new double[]{sx, sy, sz}));
         final Matrix initialMm = new Matrix(3, 3);
         calibrator.getInitialMm(initialMm);
-        assertEquals(initialMm, Matrix.diagonal(new double[]{ sx, sy, sz }));
+        assertEquals(initialMm, Matrix.diagonal(new double[]{sx, sy, sz}));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3693,7 +3693,7 @@ public class KnownFrameMagnetometerNonLinearLeastSquaresCalibratorTest implement
         final KnownFrameMagnetometerNonLinearLeastSquaresCalibrator calibrator =
                 new KnownFrameMagnetometerNonLinearLeastSquaresCalibrator(
                         hardIronX, hardIronY, hardIronZ, sx, sy, sz,
-                        mxy, mxz, myx, myz, mzx, mzy,this);
+                        mxy, mxz, myx, myz, mzx, mzy, this);
 
         // check default values
         assertEquals(calibrator.getInitialHardIronX(), hardIronX,

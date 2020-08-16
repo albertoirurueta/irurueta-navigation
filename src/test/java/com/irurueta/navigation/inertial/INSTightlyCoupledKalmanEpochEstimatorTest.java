@@ -382,7 +382,7 @@ public class INSTightlyCoupledKalmanEpochEstimatorTest {
                 2, 2,
                 phiMatrix.getSubmatrix(0, 0,
                         2, 2).subtractAndReturnNew(
-                                omegaIe.multiplyByScalarAndReturnNew(TIME_INTERVAL_SECONDS)));
+                        omegaIe.multiplyByScalarAndReturnNew(TIME_INTERVAL_SECONDS)));
 
         final Matrix estCbeOld = previousState.getBodyToEcefCoordinateTransformationMatrix();
         phiMatrix.setSubmatrix(0, 12,
@@ -399,8 +399,8 @@ public class INSTightlyCoupledKalmanEpochEstimatorTest {
                 5, 5,
                 phiMatrix.getSubmatrix(3, 3,
                         5, 5).subtractAndReturnNew(
-                                omegaIe.multiplyByScalarAndReturnNew(
-                                        2.0 * TIME_INTERVAL_SECONDS)));
+                        omegaIe.multiplyByScalarAndReturnNew(
+                                2.0 * TIME_INTERVAL_SECONDS)));
 
         final double sinPrevLat = Math.sin(previousLatitude);
         final double cosPrevLat = Math.cos(previousLatitude);
@@ -524,7 +524,7 @@ public class INSTightlyCoupledKalmanEpochEstimatorTest {
             deltaR.subtract(estRebeOld);
             final double range = Math.sqrt(Utils.dotProduct(
                     deltaR.transposeAndReturnNew(), deltaR));
-            predMeas.setElementAt(j , 0,
+            predMeas.setElementAt(j, 0,
                     range + xEstPropagated.getElementAtIndex(15));
 
             // Predict line of sight
@@ -534,10 +534,10 @@ public class INSTightlyCoupledKalmanEpochEstimatorTest {
             // Predict pseudo-range rate using (9.165)
             final Matrix rangeRate = uAseT.getSubmatrix(j,
                     0, j, 2).multiplyAndReturnNew(
-                            cei.multiplyAndReturnNew(measurementVelocity.addAndReturnNew(
-                                    omegaIe.multiplyAndReturnNew(measurementPosition)))
-                                    .subtractAndReturnNew(estVebeOld.addAndReturnNew(
-                                            omegaIe.multiplyAndReturnNew(estRebeOld))));
+                    cei.multiplyAndReturnNew(measurementVelocity.addAndReturnNew(
+                            omegaIe.multiplyAndReturnNew(measurementPosition)))
+                            .subtractAndReturnNew(estVebeOld.addAndReturnNew(
+                                    omegaIe.multiplyAndReturnNew(estRebeOld))));
 
             predMeas.setElementAt(j, 1,
                     rangeRate.getElementAtIndex(0)

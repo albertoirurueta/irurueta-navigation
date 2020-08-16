@@ -48,7 +48,7 @@ import java.util.Random;
 import static org.junit.Assert.*;
 
 public class MSACRobustKnownFrameMagnetometerCalibratorTest implements
-        RobustKnownFrameMagnetometerCalibratorListener{
+        RobustKnownFrameMagnetometerCalibratorListener {
 
     private static final double MIN_HARD_IRON = -1e-5;
     private static final double MAX_HARD_IRON = 1e-5;
@@ -2022,7 +2022,7 @@ public class MSACRobustKnownFrameMagnetometerCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(RobustKnownFrameMagnetometerCalibrator calibrator) {
         checkLocked((MSACRobustKnownFrameMagnetometerCalibrator) calibrator);
