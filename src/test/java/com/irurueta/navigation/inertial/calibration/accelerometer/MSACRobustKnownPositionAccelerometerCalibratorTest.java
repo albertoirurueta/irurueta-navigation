@@ -7741,5 +7741,5 @@ public class MSACRobustKnownPositionAccelerometerCalibratorTest implements
 
     private double getGyroNoiseRootPSD() {
         return 0.01 * DEG_TO_RAD / 60.0;
-    }    
+    }
 }

@@ -18,26 +18,35 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint3D;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class RangingAndRssiReadingLocated3DTest {
     private static final double FREQUENCY = 2.4e9;
 
-    public RangingAndRssiReadingLocated3DTest() { }
+    public RangingAndRssiReadingLocated3DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() throws AlgebraException {
@@ -61,8 +70,8 @@ public class RangingAndRssiReadingLocated3DTest {
 
 
         // test constructor with access point, distance, rssi and position
-        WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
         reading = new RangingAndRssiReadingLocated3D<>(ap, 1.2,
                 -50.0, position);
 
@@ -86,17 +95,20 @@ public class RangingAndRssiReadingLocated3DTest {
             reading = new RangingAndRssiReadingLocated3D<>(null,
                     1.2, -50.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0,
                     -50.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.2,
                     -50.0, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
         // test constructor with access point, distance, rssi, position and number
@@ -123,31 +135,36 @@ public class RangingAndRssiReadingLocated3DTest {
                     -50.0, position, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0,
                     -50.0, position, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.2,
                     -50.0, null, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.2,
                     -50.0, position, 0,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.2,
                     -50.0, position, 8,
                     -1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -194,27 +211,32 @@ public class RangingAndRssiReadingLocated3DTest {
                     -50.0, position, 0.1,
                     0.2);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0, -50.0,
                     position, 0.1, 0.2);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5, -50.0,
                     null, 0.1, 0.2);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5, -50.0,
                     position, 0.0, 0.2);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5, -50.0,
                     position, 0.1, 0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -244,54 +266,61 @@ public class RangingAndRssiReadingLocated3DTest {
                     0.2, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0,
                     -50.0, position, 0.1,
                     0.2, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5,
                     -50.0, null, 0.1,
                     0.2, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5,
                     -50.0, position, 0.0,
                     0.2, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5,
                     -50.0, position, 0.1,
                     0.0, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5,
                     -50.0, position, 0.1,
                     0.2, 0,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 1.5,
                     -50.0, position, 0.1,
                     0.2, 8,
                     -1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
         // test constructor with access point, distance, rssi, position and position covariance
-        Matrix cov = new Matrix(3, 3);
+        final Matrix cov = new Matrix(3, 3);
         reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
                 position, cov);
 
@@ -315,22 +344,26 @@ public class RangingAndRssiReadingLocated3DTest {
             reading = new RangingAndRssiReadingLocated3D<>(null,
                     2.0, -50.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0, -50.0,
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
-                    position, new Matrix(1,1));
+                    position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -358,37 +391,43 @@ public class RangingAndRssiReadingLocated3DTest {
                     2.0, -50.0, position, cov, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0, -50.0,
                     position, cov, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
                     null, cov, 8,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
-                    position, new Matrix(1,1),
+                    position, new Matrix(1, 1),
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
                     position, cov, 0,
                     7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.0, -50.0,
                     position, cov, 8,
                     -1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -398,7 +437,7 @@ public class RangingAndRssiReadingLocated3DTest {
         reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                 position, 0.1, 0.2, cov);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 2.5, 0.0);
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
@@ -436,33 +475,39 @@ public class RangingAndRssiReadingLocated3DTest {
             reading = new RangingAndRssiReadingLocated3D<>(null, 2.5, -50.0,
                     position, 0.1, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0, -50.0,
                     position, 0.1, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     null, 0.1, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.0, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.0, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.2,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -492,75 +537,84 @@ public class RangingAndRssiReadingLocated3DTest {
                     position, 0.1, 0.2, cov,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, -1.0, -50.0,
                     position, 0.1, 0.2, cov,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     null, 0.1, 0.2, cov,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.0, 0.2, cov,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.0, cov,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.2,
                     new Matrix(1, 1),
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.2,
                     new Matrix(2, 1),
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.2, cov,
                     0, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReadingLocated3D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.2, cov,
                     8, -1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
     }
 
     @Test
     public void testHasSameAccessPoint() {
-        WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
+        final WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
 
-        RangingAndRssiReadingLocated3D<WifiAccessPoint> reading1 = new RangingAndRssiReadingLocated3D<>(
+        final RangingAndRssiReadingLocated3D<WifiAccessPoint> reading1 = new RangingAndRssiReadingLocated3D<>(
                 ap1, 1.5, -50.0, position);
-        RangingAndRssiReadingLocated3D<WifiAccessPoint> reading2 = new RangingAndRssiReadingLocated3D<>(
+        final RangingAndRssiReadingLocated3D<WifiAccessPoint> reading2 = new RangingAndRssiReadingLocated3D<>(
                 ap1, 1.5, -50.0, position);
-        RangingAndRssiReadingLocated3D<WifiAccessPoint> reading3 = new RangingAndRssiReadingLocated3D<>(
+        final RangingAndRssiReadingLocated3D<WifiAccessPoint> reading3 = new RangingAndRssiReadingLocated3D<>(
                 ap2, 1.5, -50.0, position);
 
-        //check
+        // check
         assertTrue(reading1.hasSameSource(reading1));
         assertTrue(reading1.hasSameSource(reading2));
         assertFalse(reading1.hasSameSource(reading3));

@@ -15,7 +15,11 @@
  */
 package com.irurueta.navigation.indoor;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,42 +28,48 @@ import static org.junit.Assert.*;
 
 public class RangingFingerprintTest {
 
-    public RangingFingerprintTest() { }
+    public RangingFingerprintTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
         RangingFingerprint<RadioSource, RangingReading<RadioSource>> fingerprint =
                 new RangingFingerprint<>();
 
-        //check
+        // check
         assertNotNull(fingerprint.getReadings());
         assertTrue(fingerprint.getReadings().isEmpty());
 
-        //constructor with readings
-        List<RangingReading<RadioSource>> readings = new ArrayList<>();
+        // constructor with readings
+        final List<RangingReading<RadioSource>> readings = new ArrayList<>();
         fingerprint = new RangingFingerprint<>(readings);
 
-        //check
+        // check
         assertSame(fingerprint.getReadings(), readings);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         fingerprint = null;
         try {
             fingerprint = new RangingFingerprint<>(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(fingerprint);
     }
 }

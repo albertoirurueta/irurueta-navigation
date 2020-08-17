@@ -21,29 +21,28 @@ import static org.junit.Assert.*;
 
 public class ConstantsTest {
 
-    public ConstantsTest() { }
+    public ConstantsTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
-
-    @Test
-    public void testConstructor() {
-        Constants c = new Constants();
-        assertNotNull(c);
+    public void tearDown() {
     }
 
     @Test
     public void testConstants() {
         assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 6378137, 0.0);
-        assertEquals(Constants.EARTH_FLATTENING_WGS84, 1/298.257223563, 0.0);
+        assertEquals(Constants.EARTH_FLATTENING_WGS84, 1 / 298.257223563, 0.0);
     }
 }

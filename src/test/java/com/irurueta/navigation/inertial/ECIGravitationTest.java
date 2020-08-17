@@ -372,7 +372,8 @@ public class ECIGravitationTest {
         try {
             gravitation.asArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -425,12 +426,12 @@ public class ECIGravitationTest {
         final ECIGravitation gravitation3 = new ECIGravitation();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(gravitation1.equals((Object)gravitation1));
+        assertTrue(gravitation1.equals((Object) gravitation1));
         assertTrue(gravitation1.equals(gravitation1));
         assertTrue(gravitation1.equals(gravitation2));
         assertFalse(gravitation1.equals(gravitation3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(gravitation1.equals((Object)null));
+        assertFalse(gravitation1.equals((Object) null));
         assertFalse(gravitation1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(gravitation1.equals(new Object()));

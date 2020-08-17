@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
 
 public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorListener {
@@ -2146,9 +2145,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2243,9 +2242,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2340,9 +2339,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2435,9 +2434,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2529,9 +2528,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2625,9 +2624,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2721,9 +2720,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2820,9 +2819,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -2920,9 +2919,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -3022,9 +3021,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -3125,9 +3124,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -3226,9 +3225,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -3326,9 +3325,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -3428,9 +3427,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -3530,9 +3529,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         final Matrix mg3 = new Matrix(3, 3);
         calibrator.getInitialMg(mg3);
@@ -9626,9 +9625,9 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
             assertEquals(mCalibrateEnd, 0);
 
             //try {
-                calibrator.calibrate();
+            calibrator.calibrate();
             //} catch (final CalibrationException e) {
-                //continue;
+            //continue;
             //}
 
             // check
@@ -10049,12 +10048,12 @@ public class KnownBiasAndFrameGyroscopeNonLinearLeastSquaresCalibratorTest imple
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias((double[])null);
+            calibrator.setBias((double[]) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias((Matrix)null);
+            calibrator.setBias((Matrix) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

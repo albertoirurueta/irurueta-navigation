@@ -23,27 +23,32 @@ import static org.junit.Assert.*;
 
 public class PolygonResultTest {
 
-    public PolygonResultTest() { }
+    public PolygonResultTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        Random random = new Random();
-        int num = random.nextInt();
-        double perimeter = random.nextDouble();
-        double area = random.nextDouble();
-        PolygonResult result = new PolygonResult(num, perimeter, area);
+        final Random random = new Random();
+        final int num = random.nextInt();
+        final double perimeter = random.nextDouble();
+        final double area = random.nextDouble();
+        final PolygonResult result = new PolygonResult(num, perimeter, area);
 
         //check
         assertEquals(result.getNum(), num);
@@ -53,12 +58,12 @@ public class PolygonResultTest {
 
     @Test
     public void testGetSetNum() {
-        Random random = new Random();
-        int num1 = random.nextInt();
-        int num2 = random.nextInt();
-        double perimeter = random.nextDouble();
-        double area = random.nextDouble();
-        PolygonResult result = new PolygonResult(num1, perimeter, area);
+        final Random random = new Random();
+        final int num1 = random.nextInt();
+        final int num2 = random.nextInt();
+        final double perimeter = random.nextDouble();
+        final double area = random.nextDouble();
+        final PolygonResult result = new PolygonResult(num1, perimeter, area);
 
         //check
         assertEquals(result.getNum(), num1);
@@ -72,12 +77,12 @@ public class PolygonResultTest {
 
     @Test
     public void testGetSetPerimeter() {
-        Random random = new Random();
-        int num = random.nextInt();
-        double perimeter1 = random.nextDouble();
-        double perimeter2 = random.nextDouble();
-        double area = random.nextDouble();
-        PolygonResult result = new PolygonResult(num, perimeter1, area);
+        final Random random = new Random();
+        final int num = random.nextInt();
+        final double perimeter1 = random.nextDouble();
+        final double perimeter2 = random.nextDouble();
+        final double area = random.nextDouble();
+        final PolygonResult result = new PolygonResult(num, perimeter1, area);
 
         //check
         assertEquals(result.getPerimeter(), perimeter1, 0.0);
@@ -91,12 +96,12 @@ public class PolygonResultTest {
 
     @Test
     public void testGetSetArea() {
-        Random random = new Random();
-        int num = random.nextInt();
-        double perimeter = random.nextDouble();
-        double area1 = random.nextDouble();
-        double area2 = random.nextDouble();
-        PolygonResult result = new PolygonResult(num, perimeter, area1);
+        final Random random = new Random();
+        final int num = random.nextInt();
+        final double perimeter = random.nextDouble();
+        final double area1 = random.nextDouble();
+        final double area2 = random.nextDouble();
+        final PolygonResult result = new PolygonResult(num, perimeter, area1);
 
         //check
         assertEquals(result.getArea(), area1, 0.0);

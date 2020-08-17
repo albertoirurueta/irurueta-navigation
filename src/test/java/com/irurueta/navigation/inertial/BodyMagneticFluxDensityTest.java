@@ -236,7 +236,8 @@ public class BodyMagneticFluxDensityTest {
         try {
             b.asArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -298,12 +299,12 @@ public class BodyMagneticFluxDensityTest {
         final BodyMagneticFluxDensity b3 = new BodyMagneticFluxDensity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(b1.equals((Object)b1));
+        assertTrue(b1.equals((Object) b1));
         assertTrue(b1.equals(b1));
         assertTrue(b1.equals(b2));
         assertFalse(b1.equals(b3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(b1.equals((Object)null));
+        assertFalse(b1.equals((Object) null));
         assertFalse(b1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(b1.equals(new Object()));

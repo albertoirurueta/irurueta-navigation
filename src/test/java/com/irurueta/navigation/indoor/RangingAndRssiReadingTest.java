@@ -15,7 +15,11 @@
  */
 package com.irurueta.navigation.indoor;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -23,19 +27,24 @@ public class RangingAndRssiReadingTest {
 
     private static final double FREQUENCY = 2.4e9;
 
-    public RangingAndRssiReadingTest() { }
+    public RangingAndRssiReadingTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
@@ -56,7 +65,7 @@ public class RangingAndRssiReadingTest {
 
 
         // test constructor with access point, distance and RSSI
-        WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
+        final WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
         reading = new RangingAndRssiReading<>(ap, 1.2, -50.0);
 
         // check
@@ -77,11 +86,13 @@ public class RangingAndRssiReadingTest {
             reading = new RangingAndRssiReading<>(null, 1.2,
                     -50.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, -1.0, -50.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -105,22 +116,26 @@ public class RangingAndRssiReadingTest {
             reading = new RangingAndRssiReading<>(null, 1.2, -50,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, -1.0, -50.0,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.2, -50.0,
                     0, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.2, -50.0,
                     8, -1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -146,22 +161,26 @@ public class RangingAndRssiReadingTest {
             reading = new RangingAndRssiReading<>(null, 1.5,
                     -50.0, 0.1, 5.5);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, -1.0, -50.0,
                     0.1, 5.5);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.0, -50.0,
                     0.0, 5.5);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.0, -50.0,
                     0.1, 0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
 
 
@@ -188,53 +207,59 @@ public class RangingAndRssiReadingTest {
                     0.1, 5.5,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, -1.0, -50.0,
                     0.1, 5.5,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.0, -50.0,
                     0.0, 5.5,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.0, -50.0,
                     0.1, 0.0,
                     8, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.5, -50.0,
                     0.1, 5.5,
                     0, 7);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             reading = new RangingAndRssiReading<>(ap, 1.5, -50.0,
                     0.1, 5.5,
                     8, -1);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(reading);
     }
 
     @Test
     public void testHasSameAccessPoint() {
-        WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
+        final WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        RangingAndRssiReading<WifiAccessPoint> reading1 = new RangingAndRssiReading<>(ap1,
+        final RangingAndRssiReading<WifiAccessPoint> reading1 = new RangingAndRssiReading<>(ap1,
                 1.5, -50.0);
-        RangingAndRssiReading<WifiAccessPoint> reading2 = new RangingAndRssiReading<>(ap1,
+        final RangingAndRssiReading<WifiAccessPoint> reading2 = new RangingAndRssiReading<>(ap1,
                 1.5, -50.0);
-        RangingAndRssiReading<WifiAccessPoint> reading3 = new RangingAndRssiReading<>(ap2,
+        final RangingAndRssiReading<WifiAccessPoint> reading3 = new RangingAndRssiReading<>(ap2,
                 1.5, -50.0);
 
-        //check
+        // check
         assertTrue(reading1.hasSameSource(reading1));
         assertTrue(reading1.hasSameSource(reading2));
         assertFalse(reading1.hasSameSource(reading3));

@@ -19,7 +19,11 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,26 +33,31 @@ import static org.junit.Assert.*;
 
 public class BeaconLocated2DTest {
 
-    public BeaconLocated2DTest() { }
+    public BeaconLocated2DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() throws AlgebraException {
-        //test empty constructor
+        // test empty constructor
         BeaconLocated2D b = new BeaconLocated2D();
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -65,12 +74,12 @@ public class BeaconLocated2DTest {
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
 
-        //test constructor with identifiers, transmitted power and position
-        List<BeaconIdentifier> identifiers = new ArrayList<>();
-        InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        // test constructor with identifiers, transmitted power and position
+        final List<BeaconIdentifier> identifiers = new ArrayList<>();
+        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
         b = new BeaconLocated2D(identifiers, -50.0, position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -86,24 +95,26 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data and position
-        b = new BeaconLocated2D(identifiers, -50.0, "address", 1, 2,
-                3, "name", position);
+        // test constructor with all data and position
+        b = new BeaconLocated2D(identifiers, -50.0, "address", 1,
+                2, 3, "name", position);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -119,27 +130,29 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, "address", 1,
                     2, 3, "name", position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, "address", 1,
                     2, 3, "name", null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, position and
-        //position covariance
-        Matrix cov = new Matrix(2, 2);
+        // test constructor with identifiers, transmitted power, position and
+        // position covariance
+        final Matrix cov = new Matrix(2, 2);
         b = new BeaconLocated2D(identifiers, -50.0, position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -158,7 +171,7 @@ public class BeaconLocated2DTest {
         b = new BeaconLocated2D(identifiers, -50.0, position,
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -174,31 +187,34 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0,
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0,
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, position,
-                    new Matrix(1,1));
+                    new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position and position covariance
-        b = new BeaconLocated2D(identifiers, -50.0, "address", 1, 2,
-                3, "name", position, cov);
+        // test constructor with all data, position and position covariance
+        b = new BeaconLocated2D(identifiers, -50.0, "address", 1,
+                2, 3, "name", position, cov);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -214,10 +230,10 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        b = new BeaconLocated2D(identifiers, -50.0, "address", 1, 2,
-                3, "name", position, null);
+        b = new BeaconLocated2D(identifiers, -50.0, "address", 1,
+                2, 3, "name", position, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -233,31 +249,34 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, "address", 1,
                     2, 3, "name", position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, "address", 1,
                     2, 3, "name", null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, "address", 1,
                     2, 3, "name", position,
-                    new Matrix(1,1));
+                    new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, frequency and position
+        // test constructor with identifiers, transmitted power, frequency and position
         b = new BeaconLocated2D(identifiers, -50.0, 5.0e9, position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -273,29 +292,32 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, 5.0e9, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, -5.0e9, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, 5.0e9, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position and frequency
+        // test constructor with all data, position and frequency
         b = new BeaconLocated2D(identifiers, -50.0, 5.0e9,
                 "address", 1, 2, 3,
                 "name", position);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -311,35 +333,38 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, -5.0e9,
                     "address", 1, 2, 3,
                     "name", position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power, frequency, position and
-        //position covariance
+        // test constructor with identifiers, transmitted power, frequency, position and
+        // position covariance
         b = new BeaconLocated2D(identifiers, -50.0, 5.0e9, position,
                 cov);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -358,7 +383,7 @@ public class BeaconLocated2DTest {
         b = new BeaconLocated2D(identifiers, -50.0, 5.0e9, position,
                 null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -374,34 +399,38 @@ public class BeaconLocated2DTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, 5.0e9, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, -5.0e9, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, 5.0e9, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, 5.0e9, position,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data, position, position covariance and frequency
+        // test constructor with all data, position, position covariance and frequency
         b = new BeaconLocated2D(identifiers, -50.0, 5.0e9,
                 "address", 1, 2, 3,
                 "name", position, cov);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -421,7 +450,7 @@ public class BeaconLocated2DTest {
                 "address", 1, 2, 3,
                 "name", position, null);
 
-        //check
+        // check
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -438,83 +467,87 @@ public class BeaconLocated2DTest {
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new BeaconLocated2D(null, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, -5.0e9,
                     "address", 1, 2, 3,
                     "name", position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, 5.0e9,
                     "address", 1, 2, 3,
                     "name", null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new BeaconLocated2D(identifiers, -50.0, 5.0e9,
                     "address", 1, 2, 3,
-                    "name", position, new Matrix(1,2));
+                    "name", position, new Matrix(1, 2));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
     }
 
     @Test
     public void testEquals() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        long value1 = randomizer.nextLong();
-        BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
+        final long value1 = randomizer.nextLong();
+        final BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
                 Long.SIZE / Byte.SIZE);
 
-        long value2 = randomizer.nextLong();
-        BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
+        final long value2 = randomizer.nextLong();
+        final BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
                 Long.SIZE / Byte.SIZE);
 
-        long value3 = randomizer.nextLong();
-        BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
+        final long value3 = randomizer.nextLong();
+        final BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers1 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers1 = new ArrayList<>();
         identifiers1.add(id1);
         identifiers1.add(id2);
         identifiers1.add(id3);
 
-        long value4 = value1 + 1;
-        BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
+        final long value4 = value1 + 1;
+        final BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
                 Long.SIZE / Byte.SIZE);
 
-        long value5 = value2 + 1;
-        BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
+        final long value5 = value2 + 1;
+        final BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
                 Long.SIZE / Byte.SIZE);
 
-        long value6 = value3 + 1;
-        BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
+        final long value6 = value3 + 1;
+        final BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers2 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers2 = new ArrayList<>();
         identifiers2.add(id4);
         identifiers2.add(id5);
         identifiers2.add(id6);
 
-        InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
 
-        BeaconLocated2D b1 = new BeaconLocated2D(identifiers1,
+        final BeaconLocated2D b1 = new BeaconLocated2D(identifiers1,
                 -60.0, position);
-        BeaconLocated2D b2 = new BeaconLocated2D(identifiers1,
+        final BeaconLocated2D b2 = new BeaconLocated2D(identifiers1,
                 -50.0, position);
-        BeaconLocated2D b3 = new BeaconLocated2D(identifiers2,
+        final BeaconLocated2D b3 = new BeaconLocated2D(identifiers2,
                 -60.0, position);
 
-        //check
+        // check
         assertEquals(b1, b1);
         assertEquals(b1, b2);
         assertNotEquals(b1, b3);

@@ -1682,7 +1682,7 @@ public class AttitudeEstimatorTest {
 
         final CoordinateTransformation result = AttitudeEstimator
                 .getAttitude(latitude, height,
-                fx, fy, fz, bx, by, bz, declination);
+                        fx, fy, fz, bx, by, bz, declination);
 
         // check
         final double roll2 = result.getRollEulerAngle();

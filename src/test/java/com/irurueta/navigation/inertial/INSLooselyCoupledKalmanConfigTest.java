@@ -25,7 +25,6 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class INSLooselyCoupledKalmanConfigTest {
 
@@ -371,7 +370,7 @@ public class INSLooselyCoupledKalmanConfigTest {
 
         final INSLooselyCoupledKalmanConfig config1 =
                 new INSLooselyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
-                accelerometerBiasPSD, gyroBiasPSD, positionNoiseSD, velocityNoiseSD);
+                        accelerometerBiasPSD, gyroBiasPSD, positionNoiseSD, velocityNoiseSD);
         final INSLooselyCoupledKalmanConfig config2 =
                 new INSLooselyCoupledKalmanConfig();
 
@@ -466,12 +465,12 @@ public class INSLooselyCoupledKalmanConfigTest {
                 new INSLooselyCoupledKalmanConfig();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(config1.equals((Object)config1));
+        assertTrue(config1.equals((Object) config1));
         assertTrue(config1.equals(config1));
         assertTrue(config1.equals(config2));
         assertFalse(config1.equals(config3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(config1.equals((Object)null));
+        assertFalse(config1.equals((Object) null));
         assertFalse(config1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(config1.equals(new Object()));

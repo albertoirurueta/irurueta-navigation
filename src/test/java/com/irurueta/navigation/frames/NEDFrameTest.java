@@ -129,7 +129,8 @@ public class NEDFrameTest {
             frame = new NEDFrame(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -576,7 +577,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -610,7 +612,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -644,7 +647,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -678,7 +682,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -712,7 +717,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -746,7 +752,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -780,7 +787,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -815,7 +823,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -849,7 +858,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -885,7 +895,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -921,7 +932,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -957,7 +969,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -991,7 +1004,8 @@ public class NEDFrameTest {
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
         assertNull(frame);
 
 
@@ -1565,7 +1579,8 @@ public class NEDFrameTest {
             frame.setCoordinateTransformation(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) {
+        }
     }
 
     @Test
@@ -1760,12 +1775,12 @@ public class NEDFrameTest {
         final NEDFrame frame3 = new NEDFrame();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(frame1.equals((Object)frame1));
+        assertTrue(frame1.equals((Object) frame1));
         assertTrue(frame1.equals(frame1));
         assertTrue(frame1.equals(frame2));
         assertFalse(frame1.equals(frame3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(frame1.equals((Object)null));
+        assertFalse(frame1.equals((Object) null));
         assertFalse(frame1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(frame1.equals(new Object()));

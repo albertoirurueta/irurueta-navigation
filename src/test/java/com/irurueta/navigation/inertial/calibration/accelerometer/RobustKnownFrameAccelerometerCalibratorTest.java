@@ -465,7 +465,7 @@ public class RobustKnownFrameAccelerometerCalibratorTest implements
                 this, RobustEstimatorMethod.MSAC);
 
         // check
-        assertTrue(calibrator instanceof  MSACRobustKnownFrameAccelerometerCalibrator);
+        assertTrue(calibrator instanceof MSACRobustKnownFrameAccelerometerCalibrator);
         assertNull(calibrator.getQualityScores());
         assertSame(calibrator.getListener(), this);
 

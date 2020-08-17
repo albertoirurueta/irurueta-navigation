@@ -669,7 +669,7 @@ public class BodyKinematicsGeneratorTest {
             varOmegaZ = varOmegaZ * (double) i / (double) j + diff2 / j;
         }
 
-        final double rootPsdFx = Math.sqrt(varFx  * TIME_INTERVAL_SECONDS);
+        final double rootPsdFx = Math.sqrt(varFx * TIME_INTERVAL_SECONDS);
         final double rootPsdFy = Math.sqrt(varFy * TIME_INTERVAL_SECONDS);
         final double rootPsdFz = Math.sqrt(varFz * TIME_INTERVAL_SECONDS);
         final double rootPsdOmegaX = Math.sqrt(varOmegaX * TIME_INTERVAL_SECONDS);

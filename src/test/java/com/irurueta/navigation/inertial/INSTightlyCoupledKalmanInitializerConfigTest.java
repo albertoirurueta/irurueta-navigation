@@ -22,7 +22,6 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class INSTightlyCoupledKalmanInitializerConfigTest {
 
@@ -699,9 +698,9 @@ public class INSTightlyCoupledKalmanInitializerConfigTest {
                 MIN_VALUE, MAX_VALUE);
         final INSTightlyCoupledKalmanInitializerConfig config1 =
                 new INSTightlyCoupledKalmanInitializerConfig(initialAttitudeUncertainty,
-                initialVelocityUncertainty, initialPositionUncertainty,
-                initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                        initialVelocityUncertainty, initialPositionUncertainty,
+                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
+                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
 
         final INSTightlyCoupledKalmanInitializerConfig config2 =
                 new INSTightlyCoupledKalmanInitializerConfig();
@@ -835,12 +834,12 @@ public class INSTightlyCoupledKalmanInitializerConfigTest {
                 new INSTightlyCoupledKalmanInitializerConfig();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(config1.equals((Object)config1));
+        assertTrue(config1.equals((Object) config1));
         assertTrue(config1.equals(config1));
         assertTrue(config1.equals(config2));
         assertFalse(config1.equals(config3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(config1.equals((Object)null));
+        assertFalse(config1.equals((Object) null));
         assertFalse(config1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(config1.equals(new Object()));

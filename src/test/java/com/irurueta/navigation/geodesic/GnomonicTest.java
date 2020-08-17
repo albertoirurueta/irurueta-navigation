@@ -24,23 +24,28 @@ public class GnomonicTest {
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
-    public GnomonicTest() { }
+    public GnomonicTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        Gnomonic g = new Gnomonic(Geodesic.WGS84);
+        final Gnomonic g = new Gnomonic(Geodesic.WGS84);
 
         //check
         assertNotNull(Geodesic.WGS84);
@@ -50,17 +55,17 @@ public class GnomonicTest {
 
     @Test
     public void testForwardReverse() {
-        Gnomonic g = new Gnomonic(Geodesic.WGS84);
+        final Gnomonic g = new Gnomonic(Geodesic.WGS84);
 
         //use the following coordinates
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
-        GnomonicData data1 = g.forward(lat1, lon1, lat2, lon2);
-        GnomonicData data2 = g.reverse(data1.getLat0(), data1.getLon0(), data1.getX(), data1.getY());
+        final GnomonicData data1 = g.forward(lat1, lon1, lat2, lon2);
+        final GnomonicData data2 = g.reverse(data1.getLat0(), data1.getLon0(), data1.getX(), data1.getY());
 
         assertEquals(data1.getLat0(), lat1, 0.0);
         assertEquals(data1.getLon0(), lon1, 0.0);

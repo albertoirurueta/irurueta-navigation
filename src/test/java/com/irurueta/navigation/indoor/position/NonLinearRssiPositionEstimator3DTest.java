@@ -82,7 +82,7 @@ public class NonLinearRssiPositionEstimator3DTest implements
         assertNull(estimator.getCovariance());
 
         // constructor with sources
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -112,19 +112,21 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (List<WifiAccessPointLocated3D>)null);
+                    (List<WifiAccessPointLocated3D>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // constructor with fingerprint
-        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+        final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
         estimator = new NonLinearRssiPositionEstimator3D(fingerprint);
 
@@ -151,9 +153,10 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
+                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -184,17 +187,20 @@ public class NonLinearRssiPositionEstimator3DTest implements
         try {
             estimator = new NonLinearRssiPositionEstimator3D(null, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(sources,
-                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
+                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -247,14 +253,16 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (List<WifiAccessPointLocated3D>)null, this);
+                    (List<WifiAccessPointLocated3D>) null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -284,10 +292,11 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
+                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -320,19 +329,22 @@ public class NonLinearRssiPositionEstimator3DTest implements
             estimator = new NonLinearRssiPositionEstimator3D(
                     null, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(sources,
-                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
+                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -386,16 +398,18 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (List<WifiAccessPointLocated3D>)null,
+                    (List<WifiAccessPointLocated3D>) null,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(),
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -425,10 +439,11 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
+                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>) null,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -461,18 +476,21 @@ public class NonLinearRssiPositionEstimator3DTest implements
             estimator = new NonLinearRssiPositionEstimator3D(null, fingerprint,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(sources,
                     null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -527,16 +545,18 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (List<WifiAccessPointLocated3D>)null,
+                    (List<WifiAccessPointLocated3D>) null,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(),
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -567,10 +587,11 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
-                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
+                    (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>) null,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -603,31 +624,34 @@ public class NonLinearRssiPositionEstimator3DTest implements
             estimator = new NonLinearRssiPositionEstimator3D(null, fingerprint,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new NonLinearRssiPositionEstimator3D(sources,
                     null, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        NonLinearRssiPositionEstimator3D estimator =
+        final NonLinearRssiPositionEstimator3D estimator =
                 new NonLinearRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getInitialPosition());
 
         // set new value
-        InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D();
+        final InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D();
         estimator.setInitialPosition(initialPosition);
 
         // check
@@ -636,7 +660,7 @@ public class NonLinearRssiPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRadioSourcePositionCovarianceUsed() throws LockedException {
-        NonLinearRssiPositionEstimator3D estimator =
+        final NonLinearRssiPositionEstimator3D estimator =
                 new NonLinearRssiPositionEstimator3D();
 
         // check default value
@@ -651,7 +675,7 @@ public class NonLinearRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetFallbackDistanceStandardDeviation() throws LockedException {
-        NonLinearRssiPositionEstimator3D estimator =
+        final NonLinearRssiPositionEstimator3D estimator =
                 new NonLinearRssiPositionEstimator3D();
 
         // check default value
@@ -669,14 +693,14 @@ public class NonLinearRssiPositionEstimator3DTest implements
 
     @Test
     public void testGetSetSources() throws LockedException {
-        NonLinearRssiPositionEstimator3D estimator =
+        final NonLinearRssiPositionEstimator3D estimator =
                 new NonLinearRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getSources());
 
         // set new value
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -691,23 +715,25 @@ public class NonLinearRssiPositionEstimator3DTest implements
         try {
             estimator.setSources(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setSources(new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        NonLinearRssiPositionEstimator3D estimator =
+        final NonLinearRssiPositionEstimator3D estimator =
                 new NonLinearRssiPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getFingerprint());
 
         // set new value
-        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+        final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
         estimator.setFingerprint(fingerprint);
 
@@ -718,12 +744,13 @@ public class NonLinearRssiPositionEstimator3DTest implements
         try {
             estimator.setFingerprint(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        NonLinearRssiPositionEstimator3D estimator =
+        final NonLinearRssiPositionEstimator3D estimator =
                 new NonLinearRssiPositionEstimator3D();
 
         // check default size
@@ -739,53 +766,53 @@ public class NonLinearRssiPositionEstimator3DTest implements
     @Test
     public void testEstimateNoError() throws LockedException, NotReadyException,
             PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
 
-            NonLinearRssiPositionEstimator3D estimator =
+            final NonLinearRssiPositionEstimator3D estimator =
                     new NonLinearRssiPositionEstimator3D(sources, fingerprint,
                             this);
 
@@ -810,7 +837,7 @@ public class NonLinearRssiPositionEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             if (!position.equals(estimatedPosition, 10.0 * ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -824,64 +851,65 @@ public class NonLinearRssiPositionEstimator3DTest implements
         assertTrue(numValid > 0);
 
         // force NotReadyException
-        NonLinearRssiPositionEstimator2D estimator =
+        final NonLinearRssiPositionEstimator2D estimator =
                 new NonLinearRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateNoErrorWithInitialPosition() throws LockedException,
             NotReadyException, PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            double pathLossExponent = randomizer.nextDouble(
+            final double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
 
-            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-                String bssid = String.valueOf(i);
+                final double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                final double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                final WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
                         new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm, pathLossExponent,
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                final double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
                         distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+            final RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new RssiFingerprint<>(readings);
 
 
-            NonLinearRssiPositionEstimator3D estimator =
+            final NonLinearRssiPositionEstimator3D estimator =
                     new NonLinearRssiPositionEstimator3D(sources, fingerprint, position,
                             this);
 
@@ -906,7 +934,7 @@ public class NonLinearRssiPositionEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
                 continue;
             }
@@ -920,22 +948,23 @@ public class NonLinearRssiPositionEstimator3DTest implements
         assertTrue(numValid > 0);
 
         // force NotReadyException
-        NonLinearRssiPositionEstimator2D estimator =
+        final NonLinearRssiPositionEstimator2D estimator =
                 new NonLinearRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Override
-    public void onEstimateStart(RssiPositionEstimator<Point3D> estimator) {
+    public void onEstimateStart(final RssiPositionEstimator<Point3D> estimator) {
         estimateStart++;
         checkLocked((NonLinearRssiPositionEstimator3D) estimator);
     }
 
     @Override
-    public void onEstimateEnd(RssiPositionEstimator<Point3D> estimator) {
+    public void onEstimateEnd(final RssiPositionEstimator<Point3D> estimator) {
         estimateEnd++;
         checkLocked((NonLinearRssiPositionEstimator3D) estimator);
     }
@@ -944,43 +973,48 @@ public class NonLinearRssiPositionEstimator3DTest implements
         estimateStart = estimateEnd = 0;
     }
 
-    private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double pathLossExponent) {
+    private double receivedPower(final double equivalentTransmittedPower,
+                                 final double distance, final double pathLossExponent) {
         // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
+        final double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(NonLinearRssiPositionEstimator3D estimator) {
+    private void checkLocked(final NonLinearRssiPositionEstimator3D estimator) {
         try {
             estimator.setInitialPosition(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setRadioSourcePositionCovarianceUsed(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setSources(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setFingerprint(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimator.estimate();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
     }

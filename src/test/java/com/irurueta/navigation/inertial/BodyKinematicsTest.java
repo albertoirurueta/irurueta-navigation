@@ -27,7 +27,6 @@ import org.junit.Test;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class BodyKinematicsTest {
 
@@ -756,7 +755,8 @@ public class BodyKinematicsTest {
         try {
             k.asSpecificForceArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -819,7 +819,8 @@ public class BodyKinematicsTest {
         try {
             k.asAngularRateArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -895,12 +896,12 @@ public class BodyKinematicsTest {
         final BodyKinematics k3 = new BodyKinematics();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(k1.equals((Object)k1));
+        assertTrue(k1.equals((Object) k1));
         assertTrue(k1.equals(k1));
         assertTrue(k1.equals(k2));
         assertFalse(k1.equals(k3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(k1.equals((Object)null));
+        assertFalse(k1.equals((Object) null));
         assertFalse(k1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(k1.equals(new Object()));

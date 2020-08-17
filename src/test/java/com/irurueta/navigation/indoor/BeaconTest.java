@@ -16,7 +16,11 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,26 +30,31 @@ import static org.junit.Assert.*;
 
 public class BeaconTest {
 
-    public BeaconTest() { }
+    public BeaconTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        //test empty constructor
+        // test empty constructor
         Beacon b = new Beacon();
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -60,11 +69,11 @@ public class BeaconTest {
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
 
-        //test constructor with identifiers and transmitted power
-        List<BeaconIdentifier> identifiers = new ArrayList<>();
+        // test constructor with identifiers and transmitted power
+        final List<BeaconIdentifier> identifiers = new ArrayList<>();
         b = new Beacon(identifiers, -50.0);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -78,20 +87,21 @@ public class BeaconTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new Beacon(null, -50.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with all data
+        // test constructor with all data
         b = new Beacon(identifiers, -50.0, "address", 1, 2,
                 3, "name");
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -105,20 +115,21 @@ public class BeaconTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), Beacon.DEFAULT_FREQUENCY, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new Beacon(null, -50.0, "address", 1,
                     2, 3, "name");
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
 
-        //test constructor with identifiers, transmitted power and frequency
+        // test constructor with identifiers, transmitted power and frequency
         b = new Beacon(identifiers, -50.0, 5.0e9);
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -132,23 +143,25 @@ public class BeaconTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new Beacon(null, -50.0, 5.0e9);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new Beacon(identifiers, -50.0, -5.0e9);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
 
-        //test constructor with all data and frequency
-        b = new Beacon(identifiers, -50.0, 5.0e9, "address", 1, 2,
-                3, "name");
+        // test constructor with all data and frequency
+        b = new Beacon(identifiers, -50.0, 5.0e9, "address", 1,
+                2, 3, "name");
 
-        //check default values
+        // check default values
         assertNull(b.getId1());
         assertNull(b.getId2());
         assertNull(b.getId3());
@@ -162,45 +175,47 @@ public class BeaconTest {
         assertEquals(b.getType(), RadioSourceType.BEACON);
         assertEquals(b.getFrequency(), 5.0e9, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         b = null;
         try {
             b = new Beacon(null, -50.0, 5.0e9, "address",
                     1, 2, 3, "name");
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             b = new Beacon(identifiers, -50.0, -5.0e9, "address",
                     1, 2, 3, "name");
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(b);
     }
 
     @Test
     public void testGetIdentifier() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        long value1 = randomizer.nextLong();
-        BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
+        final long value1 = randomizer.nextLong();
+        final BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
                 Long.SIZE / Byte.SIZE);
 
-        long value2 = randomizer.nextLong();
-        BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
+        final long value2 = randomizer.nextLong();
+        final BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
                 Long.SIZE / Byte.SIZE);
 
-        long value3 = randomizer.nextLong();
-        BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
+        final long value3 = randomizer.nextLong();
+        final BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers = new ArrayList<>();
         identifiers.add(id1);
         identifiers.add(id2);
         identifiers.add(id3);
 
-        Beacon b = new Beacon(identifiers, -60.0);
+        final Beacon b = new Beacon(identifiers, -60.0);
 
-        //check
+        // check
         assertEquals(b.getIdentifier(0), id1);
         assertEquals(b.getIdentifier(1), id2);
         assertEquals(b.getIdentifier(2), id3);
@@ -215,48 +230,48 @@ public class BeaconTest {
 
     @Test
     public void testEquals() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        long value1 = randomizer.nextLong();
-        BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
+        final long value1 = randomizer.nextLong();
+        final BeaconIdentifier id1 = BeaconIdentifier.fromLong(value1,
                 Long.SIZE / Byte.SIZE);
 
-        long value2 = randomizer.nextLong();
-        BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
+        final long value2 = randomizer.nextLong();
+        final BeaconIdentifier id2 = BeaconIdentifier.fromLong(value2,
                 Long.SIZE / Byte.SIZE);
 
-        long value3 = randomizer.nextLong();
-        BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
+        final long value3 = randomizer.nextLong();
+        final BeaconIdentifier id3 = BeaconIdentifier.fromLong(value3,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers1 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers1 = new ArrayList<>();
         identifiers1.add(id1);
         identifiers1.add(id2);
         identifiers1.add(id3);
 
-        long value4 = value1 + 1;
-        BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
+        final long value4 = value1 + 1;
+        final BeaconIdentifier id4 = BeaconIdentifier.fromLong(value4,
                 Long.SIZE / Byte.SIZE);
 
-        long value5 = value2 + 1;
-        BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
+        final long value5 = value2 + 1;
+        final BeaconIdentifier id5 = BeaconIdentifier.fromLong(value5,
                 Long.SIZE / Byte.SIZE);
 
-        long value6 = value3 + 1;
-        BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
+        final long value6 = value3 + 1;
+        final BeaconIdentifier id6 = BeaconIdentifier.fromLong(value6,
                 Long.SIZE / Byte.SIZE);
 
-        List<BeaconIdentifier> identifiers2 = new ArrayList<>();
+        final List<BeaconIdentifier> identifiers2 = new ArrayList<>();
         identifiers2.add(id4);
         identifiers2.add(id5);
         identifiers2.add(id6);
 
 
-        Beacon b1 = new Beacon(identifiers1, -60.0);
-        Beacon b2 = new Beacon(identifiers1, -50.0);
-        Beacon b3 = new Beacon(identifiers2, -60.0);
+        final Beacon b1 = new Beacon(identifiers1, -60.0);
+        final Beacon b2 = new Beacon(identifiers1, -50.0);
+        final Beacon b3 = new Beacon(identifiers2, -60.0);
 
-        //check
+        // check
         assertEquals(b1, b1);
         assertEquals(b1, b2);
         assertNotEquals(b1, b3);

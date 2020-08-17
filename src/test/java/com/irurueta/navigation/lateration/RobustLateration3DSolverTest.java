@@ -19,325 +19,329 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Sphere;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class RobustLateration3DSolverTest implements
         RobustLaterationSolverListener<Point3D> {
 
-    public RobustLateration3DSolverTest() { }
+    public RobustLateration3DSolverTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testCreate() {
-        //create with method
+        // create with method
 
-        //RANSAC
+        // RANSAC
         RobustLateration3DSolver solver = RobustLateration3DSolver.create(
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with listener and method
 
-        //create with listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(this,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(this,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(this,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(this,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(this,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
-
-        //create with positions, distances and method
-        Point3D[] positions = {
+        // create with positions, distances and method
+        final Point3D[] positions = {
                 new InhomogeneousPoint3D(),
                 new InhomogeneousPoint3D(),
                 new InhomogeneousPoint3D(),
                 new InhomogeneousPoint3D()
         };
-        double[] distances = {1.0, 1.0, 1.0, 1.0};
+        final double[] distances = {1.0, 1.0, 1.0, 1.0};
 
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with positions, distances, standard deviations and method
+        final double[] standardDeviations = new double[4];
 
-        //create with positions, distances, standard deviations and method
-        double[] standardDeviations = new double[4];
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with positions, distances, listener and method
 
-        //create with positions, distances, listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with positions, distances, standard deviations, listener and
+        // method
 
-        //create with positions, distances, standard deviations, listener and
-        //method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
@@ -345,128 +349,126 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
-
-        //create with spheres and method
-        Sphere[] spheres = {
+        // create with spheres and method
+        final Sphere[] spheres = {
                 new Sphere(positions[0], distances[0]),
                 new Sphere(positions[1], distances[1]),
                 new Sphere(positions[2], distances[2]),
                 new Sphere(positions[3], distances[3])
         };
 
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(spheres,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(spheres,
                 RobustEstimatorMethod.LMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(spheres,
                 RobustEstimatorMethod.MSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(spheres,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(spheres,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with spheres, standard deviations and method
 
-        //create with spheres, standard deviations and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 RobustEstimatorMethod.LMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 RobustEstimatorMethod.MSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -474,63 +476,62 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with spheres, listener and method
 
-        //create with spheres, listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(spheres, this,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(spheres, this,
                 RobustEstimatorMethod.LMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(spheres, this,
                 RobustEstimatorMethod.MSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(spheres, this,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(spheres, this,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -538,15 +539,14 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with spheres, standard deviations, listener and method
 
-        //create with spheres, standard deviations, listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -554,12 +554,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -567,12 +567,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -580,12 +580,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 this, RobustEstimatorMethod.PROSAC);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -593,12 +593,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 this, RobustEstimatorMethod.PROMedS);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -607,207 +607,203 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores and method
+        final double[] qualityScores = new double[4];
 
-        //create with quality scores and method
-        double[] qualityScores = new double[4];
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, listener and method
 
-        //create with quality scores, listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, this,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, this,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, this,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, this,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, this,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, positions, distances and method
 
-        //create with quality scores, positions, distances and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, positions, distances, standard deviations
+        // and method
 
-        //create with quality scores, positions, distances, standard deviations
-        //and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -815,16 +811,15 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, positions, distance, standard deviations,
+        // listener and method
 
-        //create with quality scores, positions, distance, standard deviations,
-        //listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, this,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -832,12 +827,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, this,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -845,12 +840,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, this,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -858,12 +853,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, this,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -871,12 +866,12 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, this,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -885,58 +880,57 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, positions, distances, listener and method
 
-        //create with quality scores, positions, distances, listener and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -944,132 +938,130 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, spheres and method
 
-        //create with quality scores, spheres and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, spheres, standard deviations and method
 
-        //create with quality scores, spheres, standard deviations and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1077,17 +1069,16 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
+        // create with quality scores, spheres, standard deviations, listener
+        // and method
 
-        //create with quality scores, spheres, standard deviations, listener
-        //and method
-
-        //RANSAC
+        // RANSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1095,13 +1086,13 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof RANSACRobustLateration3DSolver);
 
-        //LMedS
+        // LMedS
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1109,13 +1100,13 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof LMedSRobustLateration3DSolver);
 
-        //MSAC
+        // MSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1123,13 +1114,13 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof MSACRobustLateration3DSolver);
 
-        //PROSAC
+        // PROSAC
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1137,13 +1128,13 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROSACRobustLateration3DSolver);
 
-        //PROMedS
+        // PROMedS
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1152,97 +1143,96 @@ public class RobustLateration3DSolverTest implements
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
 
-
-        //create with default method
+        // create with default method
         solver = RobustLateration3DSolver.create();
 
-        //check
+        // check
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with listener and default method
+        // create with listener and default method
         solver = RobustLateration3DSolver.create(this);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with positions, distances and default method
+        // create with positions, distances and default method
         solver = RobustLateration3DSolver.create(positions, distances);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with positions, distances, standard deviations and default method
+        // create with positions, distances, standard deviations and default method
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with positions, distances, listener and default method
+        // create with positions, distances, listener and default method
         solver = RobustLateration3DSolver.create(positions, distances, this);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with positions, distances, standard deviations, listener and
-        //default method
+        // create with positions, distances, standard deviations, listener and
+        // default method
         solver = RobustLateration3DSolver.create(positions, distances,
                 standardDeviations, this);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with spheres and default method
+        // create with spheres and default method
         solver = RobustLateration3DSolver.create(spheres);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with spheres, standard deviations and default method
+        // create with spheres, standard deviations and default method
         solver = RobustLateration3DSolver.create(spheres, standardDeviations);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with spheres, listener and default method
+        // create with spheres, listener and default method
         solver = RobustLateration3DSolver.create(spheres, this);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with spheres, standard deviations, listener and default method
+        // create with spheres, standard deviations, listener and default method
         solver = RobustLateration3DSolver.create(spheres, standardDeviations,
                 this);
 
-        //check
-        for(int i = 0; i < spheres.length; i++) {
+        // check
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1250,49 +1240,49 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores
+        // create with quality scores
         solver = RobustLateration3DSolver.create(qualityScores);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, listener and default method
+        // create with quality scores, listener and default method
         solver = RobustLateration3DSolver.create(qualityScores, this);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, positions, distances and default method
+        // create with quality scores, positions, distances and default method
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, positions, distances, standard deviations
-        //and default method
+        // create with quality scores, positions, distances, standard deviations
+        // and default method
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, positions, distances, standard deviations,
-        //listener and default method
+        // create with quality scores, positions, distances, standard deviations,
+        // listener and default method
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, standardDeviations, this);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -1300,51 +1290,51 @@ public class RobustLateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, positions, distances, listener and
-        //default method
+        // create with quality scores, positions, distances, listener and
+        // default method
         solver = RobustLateration3DSolver.create(qualityScores, positions,
                 distances, this);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getListener(), this);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, spheres and default method
+        // create with quality scores, spheres and default method
         solver = RobustLateration3DSolver.create(qualityScores, spheres);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, spheres, standard deviations and default
-        //method
+        // create with quality scores, spheres, standard deviations and default
+        // method
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
         assertTrue(solver instanceof PROMedSRobustLateration3DSolver);
 
-        //create with quality scores, spheres, standard deviations, listener and
-        //default method
+        // create with quality scores, spheres, standard deviations, listener and
+        // default method
         solver = RobustLateration3DSolver.create(qualityScores, spheres,
                 standardDeviations, this);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
-        for(int i = 0; i < spheres.length; i++) {
+        for (int i = 0; i < spheres.length; i++) {
             assertEquals(solver.getPositions()[i], spheres[i].getCenter());
             assertEquals(solver.getDistances()[i], spheres[i].getRadius(), 0.0);
         }
@@ -1354,16 +1344,22 @@ public class RobustLateration3DSolverTest implements
     }
 
     @Override
-    public void onSolveStart(RobustLaterationSolver<Point3D> solver) { }
+    public void onSolveStart(final RobustLaterationSolver<Point3D> solver) {
+    }
 
     @Override
-    public void onSolveEnd(RobustLaterationSolver<Point3D> solver) { }
+    public void onSolveEnd(final RobustLaterationSolver<Point3D> solver) {
+    }
 
     @Override
-    public void onSolveNextIteration(RobustLaterationSolver<Point3D> solver,
-                                     int iteration) { }
+    public void onSolveNextIteration(
+            final RobustLaterationSolver<Point3D> solver,
+            final int iteration) {
+    }
 
     @Override
-    public void onSolveProgressChange(RobustLaterationSolver<Point3D> solver,
-                                      float progress) { }
+    public void onSolveProgressChange(
+            final RobustLaterationSolver<Point3D> solver,
+            final float progress) {
+    }
 }

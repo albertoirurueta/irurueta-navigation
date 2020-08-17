@@ -20,7 +20,11 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.Random;
 
@@ -40,27 +44,32 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
     private static final double MIN_PATH_LOSS_EXPONENT = 1.6;
     private static final double MAX_PATH_LOSS_EXPONENT = 2.0;
 
-    public WifiAccessPointWithPowerAndLocated3DTest() { }
+    public WifiAccessPointWithPowerAndLocated3DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() throws AlgebraException {
-        //test empty constructor
+        // test empty constructor
         WifiAccessPointWithPowerAndLocated3D ap =
                 new WifiAccessPointWithPowerAndLocated3D();
 
-        //check default values
+        // check default values
         assertNull(ap.getBssid());
         assertEquals(ap.getFrequency(), 0.0, 0.0);
         assertNull(ap.getSsid());
@@ -74,16 +83,16 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
 
-        //test with bssid, frequency, transmitted power and position
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+        // test with bssid, frequency, transmitted power and position
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -96,31 +105,34 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, ssid, transmitted power and position
+        // test with bssid, frequency, ssid, transmitted power and position
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -133,33 +145,36 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     SSID, TRANSMITTED_POWER, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     SSID, TRANSMITTED_POWER, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, transmitted power, transmitted power
+        // test with bssid, frequency, transmitted power, transmitted power
         // standard deviation
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                 position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -176,7 +191,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, null, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -189,41 +204,45 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(-TRANSMITTED_POWER_STD),
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, ssid, transmitted power and transmitted power
-        //standard deviation
+        // test with bssid, frequency, ssid, transmitted power and transmitted power
+        // standard deviation
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -240,7 +259,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, null, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -253,39 +272,43 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY, SSID,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY, SSID,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, transmitted power, position and position
+        // test with bssid, frequency, transmitted power, position and position
         // covariance
         Matrix cov = new Matrix(Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH,
                 Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH);
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -301,7 +324,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, position, null);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -314,37 +337,41 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, ssid, transmitted power, position and
-        //position covariance
+        // test with bssid, frequency, ssid, transmitted power, position and
+        // position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -360,7 +387,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, position, null);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -373,38 +400,42 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     SSID, TRANSMITTED_POWER, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     SSID, TRANSMITTED_POWER, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, transmitted power, transmitted power standard
-        //deviation, position and position covariance
+        // test with bssid, frequency, transmitted power, transmitted power standard
+        // deviation, position and position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                 position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -422,7 +453,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, position,
                 null);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -435,47 +466,52 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(-TRANSMITTED_POWER_STD),
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     null, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD),
                     position, new Matrix(1, 1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, ssid, transmitted power,
+        // test with bssid, frequency, ssid, transmitted power,
         // transmitted power standard deviation, position and position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -493,7 +529,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, position,
                 null);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -506,47 +542,52 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position,
                     cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position,
                     cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, position,
                     cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, null,
                     cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, position,
                     new Matrix(1, 1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
-        //test with bssid, frequency, transmitted power, pathloss and position
-        double pathLossExponent = randomizer.nextDouble(
+        // test with bssid, frequency, transmitted power, pathloss and position
+        final double pathLossExponent = randomizer.nextDouble(
                 MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, pathLossExponent, position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -558,33 +599,36 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, transmitted power, transmitted power
-        //standard deviation, path loss exponent and position
+        // test with bssid, frequency, transmitted power, transmitted power
+        // standard deviation, path loss exponent and position
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -601,7 +645,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null,
                 pathLossExponent, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -613,42 +657,46 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent,
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, ssid, transmitted power, transmitted power
-        //standard deviation, path loss exponent and position
+        // test with bssid, frequency, ssid, transmitted power, transmitted power
+        // standard deviation, path loss exponent and position
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -665,7 +713,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 position);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -677,41 +725,45 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY, SSID,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY, SSID,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent,
                     position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, transmitted power, path loss, position and
-        //position covariance
+        // test with bssid, frequency, transmitted power, path loss, position and
+        // position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, pathLossExponent, position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -727,7 +779,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, pathLossExponent, position,
                 null);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -739,39 +791,43 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, null, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, pathLossExponent, position,
-                    new Matrix(1,1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, transmitted power, transmitted power standard
-        //deviation, path loss exponent, position and position covariance
+        // test with bssid, frequency, transmitted power, transmitted power standard
+        // deviation, path loss exponent, position and position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -789,7 +845,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 position, null);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -801,50 +857,55 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent,
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     null,
                     cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position,
                     new Matrix(1, 1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test with bssid, frequency, ssid, transmitted power, transmitted power
-        //standard deviation, path loss exponent, position and position covariance
+        // test with bssid, frequency, ssid, transmitted power, transmitted power
+        // standard deviation, path loss exponent, position and position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 position, cov);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -862,7 +923,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 position, null);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -874,48 +935,53 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent,
                     position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     null, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     position, new Matrix(1, 1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test constructor with bssid, frequency, tx power, tx power std deviation,
-        //pathloss, pathloss std deviation and position
+        // test constructor with bssid, frequency, tx power, tx power std deviation,
+        // pathloss, pathloss std deviation and position
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 PATHLOSS_STD, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -933,7 +999,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 null, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -945,48 +1011,53 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //fail IllegalArgumentException
+        // fail IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     -PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test constructor with bssid, frequency, ssid, tx power, tx power std deviation,
-        //pathloss, pathloss std deviation and position
+        // test constructor with bssid, frequency, ssid, tx power, tx power std deviation,
+        // pathloss, pathloss std deviation and position
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 PATHLOSS_STD, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -1004,7 +1075,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 null, position);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -1016,48 +1087,53 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //fail IllegalArgumentException
+        // fail IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, -TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, -PATHLOSS_STD, position);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, null);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test constructor with bssid, frequency, tx power, tx power std deviation,
-        //pathloss, pathloss std deviation, position and position covariance
+        // test constructor with bssid, frequency, tx power, tx power std deviation,
+        // pathloss, pathloss std deviation, position and position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 PATHLOSS_STD, position, cov);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -1075,7 +1151,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 null, position, null);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
@@ -1087,54 +1163,60 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //fail IllegalArgumentException
+        // fail IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     -PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                     PATHLOSS_STD, null, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
-                    PATHLOSS_STD, position, new Matrix(1,1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+                    PATHLOSS_STD, position, new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
 
-        //test constructor with bssid, frequency, ssid, tx power, tx power std deviation,
-        //pathloss, pathloss std deviation, position and position covariance
+        // test constructor with bssid, frequency, ssid, tx power, tx power std deviation,
+        // pathloss, pathloss std deviation, position and position covariance
         ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY, SSID,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent,
                 PATHLOSS_STD, position, cov);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -1152,7 +1234,7 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
                 TRANSMITTED_POWER, null, pathLossExponent,
                 null, position, null);
 
-        //check
+        // check
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
@@ -1164,90 +1246,95 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         assertNull(ap.getPathLossExponentStandardDeviation());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //fail IllegalArgumentException
+        // fail IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(null, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, -FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, -TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, -PATHLOSS_STD, position, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, null, cov);
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPointWithPowerAndLocated3D(BSSID, FREQUENCY,
                     SSID, TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
                     pathLossExponent, PATHLOSS_STD, position,
-                    new Matrix(1,1));
-            fail("IllgalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
     }
 
     @Test
     public void testEquals() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
-        WifiAccessPointWithPowerAndLocated3D ap1 =
+        final WifiAccessPointWithPowerAndLocated3D ap1 =
                 new WifiAccessPointWithPowerAndLocated3D("bssid1", FREQUENCY,
                         TRANSMITTED_POWER, position);
-        WifiAccessPointWithPowerAndLocated3D ap2 =
+        final WifiAccessPointWithPowerAndLocated3D ap2 =
                 new WifiAccessPointWithPowerAndLocated3D("bssid1", FREQUENCY,
                         TRANSMITTED_POWER, position);
-        WifiAccessPointWithPowerAndLocated3D ap3 =
+        final WifiAccessPointWithPowerAndLocated3D ap3 =
                 new WifiAccessPointWithPowerAndLocated3D("bssid2", FREQUENCY,
                         TRANSMITTED_POWER, position);
 
-        //check
-        //noinspection all
-        assertTrue(ap1.equals(ap1));
+        // check
+        assertEquals(ap1, ap1);
         assertEquals(ap1, ap2);
         assertNotEquals(ap1, ap3);
     }
 
     @Test
     public void testHashCode() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
-        WifiAccessPointWithPowerAndLocated3D ap1 =
+        final WifiAccessPointWithPowerAndLocated3D ap1 =
                 new WifiAccessPointWithPowerAndLocated3D("bssid1", FREQUENCY,
                         TRANSMITTED_POWER, position);
-        WifiAccessPointWithPowerAndLocated3D ap2 =
+        final WifiAccessPointWithPowerAndLocated3D ap2 =
                 new WifiAccessPointWithPowerAndLocated3D("bssid1", FREQUENCY,
                         TRANSMITTED_POWER, position);
-        WifiAccessPointWithPowerAndLocated3D ap3 =
+        final WifiAccessPointWithPowerAndLocated3D ap3 =
                 new WifiAccessPointWithPowerAndLocated3D("bssid2", FREQUENCY,
                         TRANSMITTED_POWER, position);
 
-        //check
+        // check
         assertEquals(ap1.hashCode(), ap2.hashCode());
         assertNotEquals(ap1.hashCode(), ap3.hashCode());
     }

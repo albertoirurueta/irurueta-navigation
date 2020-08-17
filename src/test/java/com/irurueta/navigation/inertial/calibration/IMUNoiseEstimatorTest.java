@@ -1930,9 +1930,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         final double rootPsdOmegaY = estimator.getRootPSDAngularRateY();
         final double rootPsdOmegaZ = estimator.getRootPSDAngularRateZ();
 
-        assertEquals(rootPsdFx, Math.sqrt(varFx  * timeInterval),
+        assertEquals(rootPsdFx, Math.sqrt(varFx * timeInterval),
                 SMALL_ABSOLUTE_ERROR);
-        assertEquals(rootPsdFy,Math.sqrt(varFy * timeInterval),
+        assertEquals(rootPsdFy, Math.sqrt(varFy * timeInterval),
                 SMALL_ABSOLUTE_ERROR);
         assertEquals(rootPsdFz, Math.sqrt(varFz * timeInterval),
                 SMALL_ABSOLUTE_ERROR);

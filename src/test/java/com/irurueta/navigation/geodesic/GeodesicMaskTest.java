@@ -15,31 +15,33 @@
  */
 package com.irurueta.navigation.geodesic;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class GeodesicMaskTest {
 
-    public GeodesicMaskTest() { }
+    public GeodesicMaskTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
-
-    @Test
-    public void testConstructor() {
-        GeodesicMask m = new GeodesicMask();
-        assertNotNull(m);
+    public void tearDown() {
     }
 
     @Test

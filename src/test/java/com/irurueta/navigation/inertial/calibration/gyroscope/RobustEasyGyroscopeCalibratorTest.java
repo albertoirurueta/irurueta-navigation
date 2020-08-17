@@ -1561,7 +1561,7 @@ public class RobustEasyGyroscopeCalibratorTest implements
         assertSame(calibrator.getQualityScores(), qualityScores);
     }
 
-   @Test
+    @Test
     public void testCreate19() throws WrongSizeException {
         final double[] qualityScores = new double[10];
         final List<BodyKinematicsSequence<StandardDeviationTimedBodyKinematics>> sequences =

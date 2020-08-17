@@ -18,7 +18,11 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint3D;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,89 +31,99 @@ import static org.junit.Assert.*;
 
 public class RangingFingerprintLocated3DTest {
 
-    public RangingFingerprintLocated3DTest() { }
+    public RangingFingerprintLocated3DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() throws AlgebraException {
-        //empty constructor
+        // empty constructor
         RangingFingerprintLocated3D<RadioSource, RangingReading<RadioSource>> fingerprint =
                 new RangingFingerprintLocated3D<>();
 
-        //check
+        // check
         assertNotNull(fingerprint.getReadings());
         assertTrue(fingerprint.getReadings().isEmpty());
         assertNull(fingerprint.getPosition());
         assertNull(fingerprint.getPositionCovariance());
 
 
-        //constructor with readings and position
-        List<RangingReading<RadioSource>> readings = new ArrayList<>();
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        // constructor with readings and position
+        final List<RangingReading<RadioSource>> readings = new ArrayList<>();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
         fingerprint = new RangingFingerprintLocated3D<>(readings, position);
 
-        //check
+        // check
         assertSame(fingerprint.getReadings(), readings);
         assertSame(fingerprint.getPosition(), position);
         assertNull(fingerprint.getPositionCovariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         fingerprint = null;
         try {
             fingerprint = new RangingFingerprintLocated3D<>(null, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             fingerprint = new RangingFingerprintLocated3D<>(readings, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(fingerprint);
 
 
-        //constructor with readings, position and position covariance
-        Matrix cov = new Matrix(3,3);
+        // constructor with readings, position and position covariance
+        final Matrix cov = new Matrix(3, 3);
         fingerprint = new RangingFingerprintLocated3D<>(readings, position, cov);
 
-        //check
+        // check
         assertSame(fingerprint.getReadings(), readings);
         assertSame(fingerprint.getPosition(), position);
         assertSame(fingerprint.getPositionCovariance(), cov);
 
         fingerprint = new RangingFingerprintLocated3D<>(readings, position, null);
 
-        //check
+        // check
         assertSame(fingerprint.getReadings(), readings);
         assertSame(fingerprint.getPosition(), position);
         assertNull(fingerprint.getPositionCovariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         fingerprint = null;
         try {
             fingerprint = new RangingFingerprintLocated3D<>(null,
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             fingerprint = new RangingFingerprintLocated3D<>(readings,
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             fingerprint = new RangingFingerprintLocated3D<>(readings,
-                    position, new Matrix(1,1));
+                    position, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(fingerprint);
     }
 }

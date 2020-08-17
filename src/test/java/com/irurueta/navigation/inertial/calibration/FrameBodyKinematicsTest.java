@@ -787,7 +787,7 @@ public class FrameBodyKinematicsTest {
         final FrameBodyKinematics frameBodyKinematics = new FrameBodyKinematics();
 
         // check default value
-       final Time timeInterval1 = frameBodyKinematics.getTimeIntervalAsTime();
+        final Time timeInterval1 = frameBodyKinematics.getTimeIntervalAsTime();
         assertEquals(timeInterval1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(timeInterval1.getUnit(), TimeUnit.SECOND);
 
@@ -1049,7 +1049,7 @@ public class FrameBodyKinematicsTest {
         assertTrue(frameBodyKinematics1.equals(frameBodyKinematics2));
         assertFalse(frameBodyKinematics1.equals(frameBodyKinematics3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(frameBodyKinematics1.equals((Object)null));
+        assertFalse(frameBodyKinematics1.equals((Object) null));
         assertFalse(frameBodyKinematics1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(frameBodyKinematics1.equals(new Object()));

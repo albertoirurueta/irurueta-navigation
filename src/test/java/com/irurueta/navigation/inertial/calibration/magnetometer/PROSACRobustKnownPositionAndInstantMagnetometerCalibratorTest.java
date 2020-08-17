@@ -11223,7 +11223,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibratorTest imple
         } catch (final IllegalArgumentException ignore) {
         }
     }
-    
+
     @Test
     public void testCalibrateGeneralNoNoiseInlier()
             throws IOException, LockedException, WrongSizeException,
@@ -11287,7 +11287,11 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibratorTest imple
             assertEquals(mCalibrateNextIteration, 0);
             assertEquals(mCalibrateProgressChange, 0);
 
-            calibrator.calibrate();
+            try {
+                calibrator.calibrate();
+            } catch (CalibrationException e) {
+                continue;
+            }
 
             // check
             assertTrue(calibrator.isReady());
@@ -11311,7 +11315,7 @@ public class PROSACRobustKnownPositionAndInstantMagnetometerCalibratorTest imple
             assertTrue(mm.equals(estimatedMm, ABSOLUTE_ERROR));
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
-            
+
             numValid++;
             break;
         }

@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
         RobustKnownBiasEasyGyroscopeCalibratorListener {
@@ -8373,7 +8372,7 @@ public class RANSACRobustKnownBiasEasyGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasEasyGyroscopeCalibrator calibrator) {

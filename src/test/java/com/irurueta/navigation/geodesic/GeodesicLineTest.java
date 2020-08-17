@@ -23,19 +23,24 @@ public class GeodesicLineTest {
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
-    public GeodesicLineTest() { }
+    public GeodesicLineTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
@@ -43,28 +48,28 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
 
         //check
         assertEquals(line.getLatitude(), lat1, 0.0);
         assertEquals(line.getLongitude(), lon1, 0.0);
         assertEquals(line.getAzimuth(), data1.getAzi1(), 0.0);
 
-        Pair p1 = GeoMath.sincosd(GeoMath.angRound(GeoMath.angNormalize(data1.getAzi1())));
-        Pair p2 = line.getAzimuthCosines();
+        final Pair p1 = GeoMath.sincosd(GeoMath.angRound(GeoMath.angNormalize(data1.getAzi1())));
+        final Pair p2 = line.getAzimuthCosines();
 
         assertEquals(p1.getFirst(), p2.getFirst(), ABSOLUTE_ERROR);
         assertEquals(p1.getSecond(), p2.getSecond(), ABSOLUTE_ERROR);
 
-        Pair p = line.getEquatorialAzimuthCosines();
+        final Pair p = line.getEquatorialAzimuthCosines();
         assertEquals(line.getEquatorialAzimuth(), GeoMath.atan2d(p.getFirst(), p.getSecond()),
                 ABSOLUTE_ERROR);
 
@@ -84,17 +89,17 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
-        GeodesicData data1b = line.position(data1.getS12());
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicData data1b = line.position(data1.getS12());
 
         assertEquals(data1.getLat1(), data1b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1b.getLon1(), ABSOLUTE_ERROR);
@@ -109,7 +114,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1b.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1b.getAreaS12(), ABSOLUTE_ERROR);
 
-        GeodesicData data1c = line.position(data1.getS12(), GeodesicMask.STANDARD);
+        final GeodesicData data1c = line.position(data1.getS12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1c.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1c.getLon1(), ABSOLUTE_ERROR);
@@ -124,7 +129,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1c.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1c.getAreaS12(), ABSOLUTE_ERROR);
 
-        GeodesicData data1d = line.position(false, data1.getS12(), GeodesicMask.STANDARD);
+        final GeodesicData data1d = line.position(false, data1.getS12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1d.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1d.getLon1(), ABSOLUTE_ERROR);
@@ -146,17 +151,17 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
-        GeodesicData data1b = line.arcPosition(data1.getA12());
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicData data1b = line.arcPosition(data1.getA12());
 
         assertEquals(data1.getLat1(), data1b.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1b.getLon1(), ABSOLUTE_ERROR);
@@ -171,7 +176,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1b.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1b.getAreaS12(), ABSOLUTE_ERROR);
 
-        GeodesicData data1c = line.arcPosition(data1.getA12(), GeodesicMask.STANDARD);
+        final GeodesicData data1c = line.arcPosition(data1.getA12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1c.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1c.getLon1(), ABSOLUTE_ERROR);
@@ -186,7 +191,7 @@ public class GeodesicLineTest {
         assertEquals(data1.getScaleM21(), data1c.getScaleM21(), ABSOLUTE_ERROR);
         assertEquals(data1.getAreaS12(), data1c.getAreaS12(), ABSOLUTE_ERROR);
 
-        GeodesicData data1d = line.position(true, data1.getA12(), GeodesicMask.STANDARD);
+        final GeodesicData data1d = line.position(true, data1.getA12(), GeodesicMask.STANDARD);
 
         assertEquals(data1.getLat1(), data1d.getLat1(), ABSOLUTE_ERROR);
         assertEquals(data1.getLon1(), data1d.getLon1(), ABSOLUTE_ERROR);
@@ -208,16 +213,16 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
         line.setDistance(data1.getS12());
 
         //check
@@ -234,16 +239,16 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
         line.setArc(data1.getA12());
 
         //check
@@ -260,16 +265,16 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
         line.genSetDistance(false, data1.getS12());
 
         //check
@@ -296,15 +301,15 @@ public class GeodesicLineTest {
         //41.382643,2.176700
         //41.382524,2.176861
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicLine line = new GeodesicLine(Geodesic.WGS84, lat1, lon1, data1.getAzi1());
 
         assertEquals(line.getCapabilities(), GeodesicMask.ALL |
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |

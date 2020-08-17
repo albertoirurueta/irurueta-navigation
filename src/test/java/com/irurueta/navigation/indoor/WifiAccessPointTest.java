@@ -15,7 +15,11 @@
  */
 package com.irurueta.navigation.indoor;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -25,98 +29,105 @@ public class WifiAccessPointTest {
     private static final String SSID = "ssid";
     private static final double FREQUENCY = 2.4e9;
 
-    public WifiAccessPointTest() { }
+    public WifiAccessPointTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        //test empty constructor
+        // test empty constructor
         WifiAccessPoint ap = new WifiAccessPoint();
 
-        //check default values
+        // check default values
         assertNull(ap.getBssid());
         assertEquals(ap.getFrequency(), 0.0, 0.0);
         assertNull(ap.getSsid());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //test constructor with BSSID
+        // test constructor with BSSID
         ap = new WifiAccessPoint(BSSID, FREQUENCY);
 
-        //check default values
+        // check default values
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPoint(null, FREQUENCY);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPoint(BSSID, -FREQUENCY);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
 
-        //test constructor with BSSID and SSID
+        // test constructor with BSSID and SSID
         ap = new WifiAccessPoint(BSSID, FREQUENCY, SSID);
 
-        //check default value
+        // check default value
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
         assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPoint(null, FREQUENCY, SSID);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             ap = new WifiAccessPoint(BSSID, -FREQUENCY, SSID);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(ap);
     }
 
     @Test
     public void testEquals() {
-        WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap2 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap3 = new WifiAccessPoint("bssid2", FREQUENCY);
+        final WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap2 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap3 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        //check
-        //noinspection all
-        assertTrue(ap1.equals(ap1));
+        // check
+        assertEquals(ap1, ap1);
         assertEquals(ap1, ap2);
         assertNotEquals(ap1, ap3);
 
-        //noinspection all
-        assertFalse(ap1.equals(null));
+        assertNotEquals(null, ap1);
         assertNotEquals(ap1, new Object());
     }
 
     @Test
     public void testHashCode() {
-        WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap2 = new WifiAccessPoint("bssid1", FREQUENCY);
-        WifiAccessPoint ap3 = new WifiAccessPoint("bssid2", FREQUENCY);
+        final WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap2 = new WifiAccessPoint("bssid1", FREQUENCY);
+        final WifiAccessPoint ap3 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        //check
+        // check
         assertEquals(ap1.hashCode(), ap2.hashCode());
         assertNotEquals(ap1.hashCode(), ap3.hashCode());
     }

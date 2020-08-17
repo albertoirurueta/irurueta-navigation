@@ -23,7 +23,11 @@ import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.Random;
 
@@ -56,19 +60,24 @@ public class MSACRobustLateration2DSolverTest implements
     private int solveNextIteration;
     private int solveProgressChange;
 
-    public MSACRobustLateration2DSolverTest() { }
+    public MSACRobustLateration2DSolverTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
@@ -146,11 +155,11 @@ public class MSACRobustLateration2DSolverTest implements
 
 
         // constructor with positions and distances
-        Point2D[] positions = new Point2D[3];
+        final Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
-        double[] distances = new double[3];
+        final double[] distances = new double[3];
         solver = new MSACRobustLateration2DSolver(positions, distances);
 
         // check correctness
@@ -187,31 +196,35 @@ public class MSACRobustLateration2DSolverTest implements
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        double[] wrong = new double[4];
-        Point2D[] shortPositions = new Point2D[1];
-        double[] shortDistances = new double[1];
+        final double[] wrong = new double[4];
+        final Point2D[] shortPositions = new Point2D[1];
+        final double[] shortDistances = new double[1];
         solver = null;
         try {
-            solver = new MSACRobustLateration2DSolver((Point2D[])null, distances);
+            solver = new MSACRobustLateration2DSolver((Point2D[]) null, distances);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
         // constructor with positions, distances and standard deviations
-        double[] standardDeviations = new double[3];
+        final double[] standardDeviations = new double[3];
         solver = new MSACRobustLateration2DSolver(positions, distances,
                 standardDeviations);
 
@@ -254,32 +267,38 @@ public class MSACRobustLateration2DSolverTest implements
             solver = new MSACRobustLateration2DSolver(null, distances,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, null,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, distances,
                     (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, wrong,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, distances,
                     wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortPositions,
                     shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
@@ -326,32 +345,38 @@ public class MSACRobustLateration2DSolverTest implements
             solver = new MSACRobustLateration2DSolver(null, distances,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, null,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, distances,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, wrong,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, distances,
                     wrong, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortPositions,
                     shortDistances, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
@@ -395,30 +420,34 @@ public class MSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration2DSolver((Point2D[])null, distances,
+            solver = new MSACRobustLateration2DSolver((Point2D[]) null, distances,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(positions, wrong,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortPositions,
                     shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
         // constructor with circles
-        Circle[] circles = new Circle[3];
+        final Circle[] circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
@@ -458,17 +487,19 @@ public class MSACRobustLateration2DSolverTest implements
         assertNull(solver.getEstimatedPosition());
 
         // force IllegalArgumentException
-        Circle[] shortCircles = new Circle[1];
+        final Circle[] shortCircles = new Circle[1];
 
         solver = null;
         try {
-            solver = new MSACRobustLateration2DSolver((Circle[])null);
+            solver = new MSACRobustLateration2DSolver((Circle[]) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortCircles);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
@@ -513,24 +544,28 @@ public class MSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration2DSolver((Circle[])null,
+            solver = new MSACRobustLateration2DSolver((Circle[]) null,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(circles,
                     (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortCircles,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(circles, wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
@@ -576,12 +611,14 @@ public class MSACRobustLateration2DSolverTest implements
             solver = new MSACRobustLateration2DSolver(null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortCircles,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
 
 
@@ -626,31 +663,35 @@ public class MSACRobustLateration2DSolverTest implements
         // force IllegalArgumentException
         solver = null;
         try {
-            solver = new MSACRobustLateration2DSolver((Circle[])null,
+            solver = new MSACRobustLateration2DSolver((Circle[]) null,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(circles,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(shortCircles,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver = new MSACRobustLateration2DSolver(circles, wrong,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(solver);
     }
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check initial value
@@ -667,37 +708,38 @@ public class MSACRobustLateration2DSolverTest implements
         try {
             solver.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetCircles() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check initial value
         assertNull(solver.getCircles());
 
         // set new value
-        Point2D[] positions = new Point2D[3];
+        final Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        double[] distances = new double[3];
+        final double[] distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        Circle[] circles = new Circle[3];
+        final Circle[] circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
         solver.setCircles(circles);
 
         // check
-        Circle[] circles2 = solver.getCircles();
+        final Circle[] circles2 = solver.getCircles();
         for (int i = 0; i < 3; i++) {
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
             assertEquals(circles[i].getRadius(), circles2[i].getRadius(), 0.0);
@@ -707,45 +749,47 @@ public class MSACRobustLateration2DSolverTest implements
         try {
             solver.setCircles(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setCircles(new Circle[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetCirclesAndStandardDeviations() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check initial value
         assertNull(solver.getCircles());
 
         // set new value
-        Point2D[] positions = new Point2D[3];
+        final Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        double[] distances = new double[3];
+        final double[] distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
-        double[] standardDeviations = new double[3];
+        final double[] standardDeviations = new double[3];
         standardDeviations[0] = randomizer.nextDouble();
         standardDeviations[1] = randomizer.nextDouble();
         standardDeviations[2] = randomizer.nextDouble();
 
-        Circle[] circles = new Circle[3];
+        final Circle[] circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
         solver.setCirclesAndStandardDeviations(circles, standardDeviations);
 
         // check
-        Circle[] circles2 = solver.getCircles();
+        final Circle[] circles2 = solver.getCircles();
         for (int i = 0; i < 3; i++) {
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
             assertEquals(circles[i].getRadius(), circles2[i].getRadius(), 0.0);
@@ -758,27 +802,31 @@ public class MSACRobustLateration2DSolverTest implements
             solver.setCirclesAndStandardDeviations(null,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setCirclesAndStandardDeviations(circles,
                     null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setCirclesAndStandardDeviations(new Circle[1],
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setCirclesAndStandardDeviations(circles,
                     new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check initial value
@@ -794,12 +842,13 @@ public class MSACRobustLateration2DSolverTest implements
         try {
             solver.setPreliminarySubsetSize(2);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -814,14 +863,14 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
         assertNull(solver.getInitialPosition());
 
         // set new value
-        Point2D p = Point2D.create();
+        final Point2D p = Point2D.create();
         solver.setInitialPosition(p);
 
         // check
@@ -830,7 +879,7 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetLinearSolverUsed() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -845,7 +894,7 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -860,7 +909,7 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetPreliminarySolutionRefined() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -875,7 +924,7 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -892,16 +941,18 @@ public class MSACRobustLateration2DSolverTest implements
         try {
             solver.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setProgressDelta(2.0f);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -918,16 +969,18 @@ public class MSACRobustLateration2DSolverTest implements
         try {
             solver.setConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setConfidence(2.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -944,12 +997,13 @@ public class MSACRobustLateration2DSolverTest implements
         try {
             solver.setMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -967,7 +1021,7 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -985,7 +1039,7 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -1000,9 +1054,9 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testGetSetPositionsAndDistances() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -1010,11 +1064,11 @@ public class MSACRobustLateration2DSolverTest implements
         assertNull(solver.getDistances());
 
         // set new values
-        Point2D[] positions = new Point2D[3];
+        final Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        double[] distances = new double[3];
+        final double[] distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
@@ -1026,32 +1080,36 @@ public class MSACRobustLateration2DSolverTest implements
         assertSame(solver.getDistances(), distances);
 
         // force IllegalArgumentException
-        double[] wrong = new double[4];
-        Point2D[] shortPositions = new Point2D[1];
-        double[] shortDistances = new double[1];
+        final double[] wrong = new double[4];
+        final Point2D[] shortPositions = new Point2D[1];
+        final double[] shortDistances = new double[1];
         try {
             solver.setPositionsAndDistances(null, distances);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsAndDistances(positions, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsAndDistances(positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsAndDistances(shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        MSACRobustLateration2DSolver solver =
+        final MSACRobustLateration2DSolver solver =
                 new MSACRobustLateration2DSolver();
 
         // check default value
@@ -1059,15 +1117,15 @@ public class MSACRobustLateration2DSolverTest implements
         assertNull(solver.getDistances());
 
         // set new values
-        Point2D[] positions = new Point2D[3];
+        final Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[2] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
-        double[] distances = new double[3];
+        final double[] distances = new double[3];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
-        double[] standardDeviations = new double[3];
+        final double[] standardDeviations = new double[3];
         standardDeviations[0] = randomizer.nextDouble();
         standardDeviations[1] = randomizer.nextDouble();
         standardDeviations[2] = randomizer.nextDouble();
@@ -1082,65 +1140,71 @@ public class MSACRobustLateration2DSolverTest implements
                 standardDeviations);
 
         // force IllegalArgumentException
-        double[] wrong = new double[4];
-        Point2D[] shortPositions = new Point2D[1];
-        double[] shortDistances = new double[1];
-        double[] shortStandardDeviations = new double[1];
+        final double[] wrong = new double[4];
+        final Point2D[] shortPositions = new Point2D[1];
+        final double[] shortDistances = new double[1];
+        final double[] shortStandardDeviations = new double[1];
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     null, distances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     positions, null, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     positions, distances, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     positions, wrong, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     positions, distances, wrong);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     shortPositions, shortDistances, shortStandardDeviations);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testSolveNoInlierErrorNoRefinement() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1165,7 +1229,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1190,7 +1254,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1202,27 +1267,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveNoInlierErrorWithRefinement() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1247,7 +1312,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1272,7 +1337,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1284,27 +1350,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveWithInlierErrorWithRefinement() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1330,7 +1396,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
@@ -1355,7 +1421,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1368,28 +1435,28 @@ public class MSACRobustLateration2DSolverTest implements
     @Test
     public void testSolveWithInlierErrorWithRefinementAndStandardDeviatons()
             throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
-            double[] standardDeviations = new double[numCircles];
+            final Circle[] circles = new Circle[numCircles];
+            final double[] standardDeviations = new double[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                     standardDeviations[i] = STD_OUTLIER_ERROR;
@@ -1421,7 +1488,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
@@ -1446,7 +1513,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1458,27 +1526,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveNoPreliminaryLinearSolver() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1503,7 +1571,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1528,7 +1596,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1540,27 +1609,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveInhomogeneousPreliminaryLinearSolver() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1586,7 +1655,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1611,7 +1680,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1623,27 +1693,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveHomogeneousPreliminaryLinearSolver() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1669,7 +1739,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1694,7 +1764,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1706,27 +1777,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveRefinePreliminarySolutions() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1752,7 +1823,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1777,7 +1848,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1789,27 +1861,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolvePreliminarySolutionsNotRefined() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1835,7 +1907,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1860,7 +1932,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1873,27 +1946,27 @@ public class MSACRobustLateration2DSolverTest implements
     @Test
     public void testSolveNNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement()
             throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -1919,7 +1992,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -1944,7 +2017,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -1956,27 +2030,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveLargerPreliminarySubsetSize() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -2002,7 +2076,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2027,7 +2101,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -2039,27 +2114,27 @@ public class MSACRobustLateration2DSolverTest implements
 
     @Test
     public void testSolveNoPreliminaryLinearSolverWithInitialPosition() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+            final int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                     randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
             InhomogeneousPoint2D center;
             double radius, error;
-            Circle[] circles = new Circle[numCircles];
+            final Circle[] circles = new Circle[numCircles];
             for (int i = 0; i < numCircles; i++) {
                 center = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
                         randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
                 radius = center.distanceTo(position);
 
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
@@ -2085,7 +2160,7 @@ public class MSACRobustLateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPosition = solver.solve();
+            final Point2D estimatedPosition = solver.solve();
 
             // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
@@ -2110,7 +2185,8 @@ public class MSACRobustLateration2DSolverTest implements
             try {
                 solver.solve();
                 fail("LockedException expected but not thrown");
-            } catch (NotReadyException ignore) { }
+            } catch (final NotReadyException ignore) {
+            }
 
             numValid++;
 
@@ -2121,27 +2197,27 @@ public class MSACRobustLateration2DSolverTest implements
     }
 
     @Override
-    public void onSolveStart(RobustLaterationSolver<Point2D> solver) {
+    public void onSolveStart(final RobustLaterationSolver<Point2D> solver) {
         solveStart++;
-        checkLocked((MSACRobustLateration2DSolver)solver);
+        checkLocked((MSACRobustLateration2DSolver) solver);
     }
 
     @Override
-    public void onSolveEnd(RobustLaterationSolver<Point2D> solver) {
+    public void onSolveEnd(final RobustLaterationSolver<Point2D> solver) {
         solveEnd++;
-        checkLocked((MSACRobustLateration2DSolver)solver);
+        checkLocked((MSACRobustLateration2DSolver) solver);
     }
 
     @Override
-    public void onSolveNextIteration(RobustLaterationSolver<Point2D> solver, int iteration) {
+    public void onSolveNextIteration(final RobustLaterationSolver<Point2D> solver, final int iteration) {
         solveNextIteration++;
-        checkLocked((MSACRobustLateration2DSolver)solver);
+        checkLocked((MSACRobustLateration2DSolver) solver);
     }
 
     @Override
-    public void onSolveProgressChange(RobustLaterationSolver<Point2D> solver, float progress) {
+    public void onSolveProgressChange(final RobustLaterationSolver<Point2D> solver, final float progress) {
         solveProgressChange++;
-        checkLocked((MSACRobustLateration2DSolver)solver);
+        checkLocked((MSACRobustLateration2DSolver) solver);
     }
 
     private void reset() {
@@ -2149,78 +2225,94 @@ public class MSACRobustLateration2DSolverTest implements
                 solveProgressChange = 0;
     }
 
-    private void checkLocked(MSACRobustLateration2DSolver solver) {
+    private void checkLocked(final MSACRobustLateration2DSolver solver) {
         try {
             solver.setPreliminarySubsetSize(3);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setInitialPosition(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setLinearSolverUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setHomogeneousLinearSolverUsed(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setPreliminarySolutionRefined(true);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setProgressDelta(0.5f);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setConfidence(0.5);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setMaxIterations(5);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setResultRefined(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setCovarianceKept(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setPositionsAndDistances(null, null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setPositionsDistancesAndStandardDeviations(
                     null, null, null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
 
         try {
             solver.setCircles(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setCirclesAndStandardDeviations(null, null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.setThreshold(0.5);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             solver.solve();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception ignore) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception ignore) {
             fail("LockedException expected but not thrown");
         }
     }

@@ -383,7 +383,8 @@ public class ECEFPositionTest {
         try {
             position.asArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -438,12 +439,12 @@ public class ECEFPositionTest {
         final ECEFPosition position3 = new ECEFPosition();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(position1.equals((Object)position1));
+        assertTrue(position1.equals((Object) position1));
         assertTrue(position1.equals(position1));
         assertTrue(position1.equals(position2));
         assertFalse(position1.equals(position3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(position1.equals((Object)null));
+        assertFalse(position1.equals((Object) null));
         assertFalse(position1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(position1.equals(new Object()));

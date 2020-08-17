@@ -73,7 +73,7 @@ public class RobustRangingPositionEstimator2DTest implements
 
 
         // create with sources and method
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
@@ -121,7 +121,7 @@ public class RobustRangingPositionEstimator2DTest implements
 
 
         // create with fingerprint and method
-        RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+        final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                 new RangingFingerprint<>();
 
         // RANSAC
@@ -406,8 +406,8 @@ public class RobustRangingPositionEstimator2DTest implements
 
 
         // create with quality scores and method
-        double[] sourceQualityScores = new double[3];
-        double[] fingerprintReadingQualityScores = new double[3];
+        final double[] sourceQualityScores = new double[3];
+        final double[] fingerprintReadingQualityScores = new double[3];
 
         // RANSAC
         estimator = RobustRangingPositionEstimator2D.create(sourceQualityScores,
@@ -1072,19 +1072,19 @@ public class RobustRangingPositionEstimator2DTest implements
 
     @Override
     public void onEstimateStart(
-            RobustRangingPositionEstimator<Point2D> estimator) { }
+            final RobustRangingPositionEstimator<Point2D> estimator) { }
 
     @Override
     public void onEstimateEnd(
-            RobustRangingPositionEstimator<Point2D> estimator) { }
+            final RobustRangingPositionEstimator<Point2D> estimator) { }
 
     @Override
     public void onEstimateNextIteration(
-            RobustRangingPositionEstimator<Point2D> estimator,
-            int iteration) { }
+            final RobustRangingPositionEstimator<Point2D> estimator,
+            final int iteration) { }
 
     @Override
     public void onEstimateProgressChange(
-            RobustRangingPositionEstimator<Point2D> estimator,
-            float progress) { }
+            final RobustRangingPositionEstimator<Point2D> estimator,
+            final float progress) { }
 }

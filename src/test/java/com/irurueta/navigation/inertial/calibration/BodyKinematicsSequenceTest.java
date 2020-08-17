@@ -338,13 +338,13 @@ public class BodyKinematicsSequenceTest {
 
         final Acceleration beforeMeanSpecificForceX =
                 new Acceleration(beforeMeanFx,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+                        AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration beforeMeanSpecificForceY =
                 new Acceleration(beforeMeanFy,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+                        AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration beforeMeanSpecificForceZ =
                 new Acceleration(beforeMeanFz,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+                        AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration afterMeanSpecificForceX =
                 new Acceleration(afterMeanFx,
                         AccelerationUnit.METERS_PER_SQUARED_SECOND);

@@ -329,7 +329,8 @@ public class NEDGravityTest {
         try {
             gravity.asArray(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -379,12 +380,12 @@ public class NEDGravityTest {
         final NEDGravity gravity3 = new NEDGravity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(gravity1.equals((Object)gravity1));
+        assertTrue(gravity1.equals((Object) gravity1));
         assertTrue(gravity1.equals(gravity1));
         assertTrue(gravity1.equals(gravity2));
         assertFalse(gravity1.equals(gravity3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(gravity1.equals((Object)null));
+        assertFalse(gravity1.equals((Object) null));
         assertFalse(gravity1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(gravity1.equals(new Object()));

@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class LMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest implements
         RobustKnownPositionAndInstantMagnetometerCalibratorListener {
@@ -120,7 +119,7 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest implem
         final double[] b2 = new double[3];
         calibrator.getInitialHardIron(b2);
         assertArrayEquals(b1, b2, 0.0);
-                final Matrix bm1 = calibrator.getInitialHardIronAsMatrix();
+        final Matrix bm1 = calibrator.getInitialHardIronAsMatrix();
         assertEquals(bm1, new Matrix(3, 1));
         final Matrix bm2 = new Matrix(3, 1);
         calibrator.getInitialHardIronAsMatrix(bm2);
@@ -260,7 +259,7 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest implem
 
     @Test
     public void testConstructor3() throws WrongSizeException {
-            final List<StandardDeviationBodyMagneticFluxDensity> measurements =
+        final List<StandardDeviationBodyMagneticFluxDensity> measurements =
                 Collections.emptyList();
         final LMedSRobustKnownPositionAndInstantMagnetometerCalibrator calibrator =
                 new LMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
@@ -428,7 +427,7 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest implem
 
     @Test
     public void testConstructor5() throws WrongSizeException {
-            final WorldMagneticModel magneticModel = new WorldMagneticModel();
+        final WorldMagneticModel magneticModel = new WorldMagneticModel();
         final LMedSRobustKnownPositionAndInstantMagnetometerCalibrator calibrator =
                 new LMedSRobustKnownPositionAndInstantMagnetometerCalibrator(
                         magneticModel);
@@ -6290,7 +6289,7 @@ public class LMedSRobustKnownPositionAndInstantMagnetometerCalibratorTest implem
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownPositionAndInstantMagnetometerCalibrator calibrator) {

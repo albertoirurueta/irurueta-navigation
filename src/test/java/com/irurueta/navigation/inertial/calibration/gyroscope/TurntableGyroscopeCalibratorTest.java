@@ -9362,7 +9362,7 @@ public class TurntableGyroscopeCalibratorTest implements
         }
         assertNull(calibrator);
     }
-    
+
     @Test
     public void testGetSetAccelerometerBiasX() throws LockedException {
         final TurntableGyroscopeCalibrator calibrator = new TurntableGyroscopeCalibrator();

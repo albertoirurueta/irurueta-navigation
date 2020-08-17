@@ -1893,7 +1893,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -1918,7 +1919,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -1943,7 +1945,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -1968,7 +1971,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -2033,7 +2037,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -2059,7 +2064,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -2085,7 +2091,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -2111,7 +2118,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -3941,7 +3949,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -3966,7 +3975,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -3991,7 +4001,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -4016,7 +4027,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -4081,7 +4093,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -4107,7 +4120,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -4133,7 +4147,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -4159,7 +4174,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6136,7 +6152,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6162,7 +6179,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6188,7 +6206,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6214,7 +6233,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6283,7 +6303,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6310,7 +6331,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6337,7 +6359,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -6363,7 +6386,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8295,7 +8319,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8321,7 +8346,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8347,7 +8373,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8373,7 +8400,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8442,7 +8470,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8469,7 +8498,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8496,7 +8526,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -8523,7 +8554,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -9053,7 +9085,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -9091,7 +9124,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -9611,7 +9645,8 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
@@ -9649,14 +9684,15 @@ public class RobustKnownBiasTurntableGyroscopeCalibratorTest implements
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertFalse(calibrator.isGDependentCrossBiasesEstimated());
-        assertEquals(calibrator.getBiasAsMatrix(), initialBias);        assertEquals(calibrator.getInitialMg(), initialMg);
+        assertEquals(calibrator.getBiasAsMatrix(), initialBias);
+        assertEquals(calibrator.getInitialMg(), initialMg);
         assertEquals(calibrator.getInitialGg(), initialGg);
         assertEquals(calibrator.getAccelerometerBiasAsMatrix(),
                 accelerometerBias);
         assertEquals(calibrator.getAccelerometerMa(), accelerometerMa);
         assertSame(calibrator.getListener(), this);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasTurntableGyroscopeCalibrator calibrator) {

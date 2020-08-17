@@ -34,34 +34,39 @@ public class GeoMathTest {
 
     private static final double ABSOLUTE_ERROR = 1e-9;
 
-    public GeoMathTest() { }
+    public GeoMathTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testSq() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         assertEquals(GeoMath.sq(x), x * x, 0.0);
     }
 
     @Test
     public void testHypot() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         assertEquals(GeoMath.hypot(x, y), Math.hypot(x, y), ABSOLUTE_ERROR);
 
         //test with negative values
@@ -73,9 +78,9 @@ public class GeoMathTest {
 
     @Test
     public void testLog1p() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         assertEquals(GeoMath.log1p(x), Math.log1p(x), ABSOLUTE_ERROR);
 
         //test for zero
@@ -84,9 +89,9 @@ public class GeoMathTest {
 
     @Test
     public void testAtanh() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         double y = Math.abs(x);
         y = Math.log1p(2 * y / (1 - y)) / 2;
@@ -98,10 +103,10 @@ public class GeoMathTest {
 
     @Test
     public void testCopysign() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         assertEquals(GeoMath.copysign(x, y), x, 0.0);
         assertEquals(GeoMath.copysign(x, -y), -x, 0.0);
@@ -109,25 +114,25 @@ public class GeoMathTest {
 
     @Test
     public void testCbrt() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        double x3 = x * x * x;
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x3 = x * x * x;
 
         assertEquals(GeoMath.cbrt(x3), x, ABSOLUTE_ERROR);
     }
 
     @Test
     public void testNorm() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        double angleDegrees = randomizer.nextDouble(MIN_DEGREES, MAX_DEGREES);
-        double angleRadians = Math.toRadians(angleDegrees);
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double angleDegrees = randomizer.nextDouble(MIN_DEGREES, MAX_DEGREES);
+        final double angleRadians = Math.toRadians(angleDegrees);
 
-        double sinX = Math.sin(angleRadians);
-        double cosX = Math.cos(angleRadians);
-        double r = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double sinX = Math.sin(angleRadians);
+        final double cosX = Math.cos(angleRadians);
+        final double r = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        Pair p = GeoMath.norm(r * sinX, r * cosX);
+        final Pair p = GeoMath.norm(r * sinX, r * cosX);
 
         assertEquals(p.getFirst(), sinX, ABSOLUTE_ERROR);
         assertEquals(p.getSecond(), cosX, ABSOLUTE_ERROR);
@@ -136,29 +141,30 @@ public class GeoMathTest {
         try {
             GeoMath.norm(0.0, 0.0);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testSum() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        double u = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        double v = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double u = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double v = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        Pair p = GeoMath.sum(u, v);
+        final Pair p = GeoMath.sum(u, v);
 
         assertEquals(p.getFirst(), u + v, ABSOLUTE_ERROR);
     }
 
     @Test
     public void testPolyval() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        double[] p = new double[3];
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double[] p = new double[3];
         randomizer.fill(p, MIN_VALUE, MAX_VALUE);
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        Polynomial polynomial = new Polynomial(p);
+        final Polynomial polynomial = new Polynomial(p);
         assertEquals(polynomial.evaluate(x),
                 GeoMath.polyval(p.length - 1, ArrayUtils.reverseAndReturnNew(p), 0, x), ABSOLUTE_ERROR);
     }
@@ -167,7 +173,7 @@ public class GeoMathTest {
     public void testAngRound() {
         assertEquals(GeoMath.angRound(0.0), 0.0, 0.0);
 
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         assertEquals(GeoMath.angRound(value), value, 0.0);
         assertEquals(GeoMath.angRound(-value), -value, 0.0);
@@ -187,32 +193,32 @@ public class GeoMathTest {
 
     @Test
     public void testLatFix() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         assertEquals(GeoMath.latFix(91.0), Double.NaN, 0.0);
 
-        double value = randomizer.nextDouble(0.0, 90.0);
+        final double value = randomizer.nextDouble(0.0, 90.0);
         assertEquals(GeoMath.latFix(value), value, 0.0);
     }
 
     @Test
     public void testAngDiff() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        Pair p = GeoMath.angDiff(x, y);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final Pair p = GeoMath.angDiff(x, y);
 
         assertEquals(p.getFirst(), y - x, ABSOLUTE_ERROR);
     }
 
     @Test
     public void testSincosd() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double x = randomizer.nextDouble(MIN_DEGREES, MAX_DEGREES);
+        final double x = randomizer.nextDouble(MIN_DEGREES, MAX_DEGREES);
 
-        Pair p = GeoMath.sincosd(x);
+        final Pair p = GeoMath.sincosd(x);
 
         assertEquals(p.getFirst(), Math.sin(Math.toRadians(x)), ABSOLUTE_ERROR);
         assertEquals(p.getSecond(), Math.cos(Math.toRadians(x)), ABSOLUTE_ERROR);
@@ -220,17 +226,17 @@ public class GeoMathTest {
 
     @Test
     public void testAtan2d() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
         assertEquals(GeoMath.angNormalize(Math.toDegrees(Math.atan2(y, x))), GeoMath.atan2d(y, x), ABSOLUTE_ERROR);
     }
 
     @Test
     public void testIsFinite() {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         assertTrue(GeoMath.isFinite(randomizer.nextDouble(MIN_VALUE, MAX_VALUE)));
         assertFalse(GeoMath.isFinite(Double.NaN));

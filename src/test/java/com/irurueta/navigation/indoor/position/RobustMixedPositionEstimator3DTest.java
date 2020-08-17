@@ -72,7 +72,7 @@ public class RobustMixedPositionEstimator3DTest implements
 
 
         // create with sources and method
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -120,7 +120,7 @@ public class RobustMixedPositionEstimator3DTest implements
 
 
         // create with fingerprint and method
-        Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+        final Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
                 new Fingerprint<>();
 
         // RANSAC
@@ -405,8 +405,8 @@ public class RobustMixedPositionEstimator3DTest implements
 
 
         // create with quality scores and method
-        double[] sourceQualityScores = new double[4];
-        double[] fingerprintReadingQualityScores = new double[4];
+        final double[] sourceQualityScores = new double[4];
+        final double[] fingerprintReadingQualityScores = new double[4];
 
         // RANSAC
         estimator = RobustMixedPositionEstimator3D.create(sourceQualityScores,
@@ -1067,16 +1067,20 @@ public class RobustMixedPositionEstimator3DTest implements
     }
 
     @Override
-    public void onEstimateStart(RobustMixedPositionEstimator<Point3D> estimator) { }
+    public void onEstimateStart(final RobustMixedPositionEstimator<Point3D> estimator) {
+    }
 
     @Override
-    public void onEstimateEnd(RobustMixedPositionEstimator<Point3D> estimator) { }
+    public void onEstimateEnd(final RobustMixedPositionEstimator<Point3D> estimator) {
+    }
 
     @Override
-    public void onEstimateNextIteration(RobustMixedPositionEstimator<Point3D> estimator,
-                                        int iteration) { }
+    public void onEstimateNextIteration(
+            final RobustMixedPositionEstimator<Point3D> estimator, final int iteration) {
+    }
 
     @Override
     public void onEstimateProgressChange(
-            RobustMixedPositionEstimator<Point3D> estimator, float progress) { }
+            final RobustMixedPositionEstimator<Point3D> estimator, final float progress) {
+    }
 }

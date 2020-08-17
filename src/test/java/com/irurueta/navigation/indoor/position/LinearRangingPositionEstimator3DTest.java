@@ -75,7 +75,7 @@ public class LinearRangingPositionEstimator3DTest implements
 
 
         // constructor with sources
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -99,19 +99,21 @@ public class LinearRangingPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new LinearRangingPositionEstimator3D(
-                    (List<WifiAccessPointLocated3D>)null);
+                    (List<WifiAccessPointLocated3D>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new LinearRangingPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
         // constructor with fingerprint
-        RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+        final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                 new RangingFingerprint<>();
         estimator = new LinearRangingPositionEstimator3D(fingerprint);
 
@@ -132,9 +134,10 @@ public class LinearRangingPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new LinearRangingPositionEstimator3D(
-                    (RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>>)null);
+                    (RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -159,17 +162,20 @@ public class LinearRangingPositionEstimator3DTest implements
         try {
             estimator = new LinearRangingPositionEstimator3D(null, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new LinearRangingPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new LinearRangingPositionEstimator3D(sources,
-                    (RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>>)null);
+                    (RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>>) null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -210,14 +216,16 @@ public class LinearRangingPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new LinearRangingPositionEstimator3D(
-                    (List<WifiAccessPointLocated3D>)null, this);
+                    (List<WifiAccessPointLocated3D>) null, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new LinearRangingPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -241,10 +249,11 @@ public class LinearRangingPositionEstimator3DTest implements
         estimator = null;
         try {
             estimator = new LinearRangingPositionEstimator3D(
-                    (RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>>)null,
+                    (RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>>) null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
 
 
@@ -271,31 +280,34 @@ public class LinearRangingPositionEstimator3DTest implements
             estimator = new LinearRangingPositionEstimator3D(null, fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new LinearRangingPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator = new LinearRangingPositionEstimator3D(sources, null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(estimator);
     }
 
     @Test
     public void testGetSetSources() throws LockedException {
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getSources());
 
         // set new value
-        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
@@ -310,23 +322,25 @@ public class LinearRangingPositionEstimator3DTest implements
         try {
             estimator.setSources(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             estimator.setSources(new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
 
         // check default value
         assertNull(estimator.getFingerprint());
 
         // set new value
-        RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+        final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                 new RangingFingerprint<>();
         estimator.setFingerprint(fingerprint);
 
@@ -337,12 +351,13 @@ public class LinearRangingPositionEstimator3DTest implements
         try {
             estimator.setFingerprint(null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
 
         // check default size
@@ -358,42 +373,42 @@ public class LinearRangingPositionEstimator3DTest implements
     @Test
     public void testEstimateNoErrorHomogeneous() throws LockedException, NotReadyException,
             PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
 
-            List<WifiAccessPointLocated3D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                String bssid = String.valueOf(i);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointLocated3D locatedAccessPoint =
+                final WifiAccessPointLocated3D locatedAccessPoint =
                         new WifiAccessPointLocated3D(bssid,
                                 FREQUENCY, accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
                 readings.add(new RangingReading<>(accessPoint, distance));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            LinearRangingPositionEstimator3D estimator =
+            final LinearRangingPositionEstimator3D estimator =
                     new LinearRangingPositionEstimator3D(sources, fingerprint,
                             this);
 
@@ -422,59 +437,60 @@ public class LinearRangingPositionEstimator3DTest implements
         }
 
         // force NotReadyException
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithErrorHomogeneous() throws LockedException, NotReadyException,
             PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                 0.0, ERROR_STD);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
 
-            List<WifiAccessPointLocated3D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                String bssid = String.valueOf(i);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointLocated3D locatedAccessPoint =
+                final WifiAccessPointLocated3D locatedAccessPoint =
                         new WifiAccessPointLocated3D(bssid,
                                 FREQUENCY, accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double error = errorRandomizer.nextDouble();
+                final double error = errorRandomizer.nextDouble();
 
                 readings.add(new RangingReading<>(accessPoint,
                         distance + error));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            LinearRangingPositionEstimator3D estimator =
+            final LinearRangingPositionEstimator3D estimator =
                     new LinearRangingPositionEstimator3D(sources, fingerprint,
                             this);
 
@@ -498,8 +514,8 @@ public class LinearRangingPositionEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
-            double distance = position.distanceTo(estimatedPosition);
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final double distance = position.distanceTo(estimatedPosition);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
@@ -511,53 +527,54 @@ public class LinearRangingPositionEstimator3DTest implements
         assertTrue(numValid > 0);
 
         // force NotReadyException
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateNoErrorInhomogeneous() throws LockedException, NotReadyException,
             PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
 
-            List<WifiAccessPointLocated3D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                String bssid = String.valueOf(i);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointLocated3D locatedAccessPoint =
+                final WifiAccessPointLocated3D locatedAccessPoint =
                         new WifiAccessPointLocated3D(bssid,
                                 FREQUENCY, accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
                 readings.add(new RangingReading<>(accessPoint, distance));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            LinearRangingPositionEstimator3D estimator =
+            final LinearRangingPositionEstimator3D estimator =
                     new LinearRangingPositionEstimator3D(sources, fingerprint,
                             this);
             estimator.setHomogeneousLinearSolverUsed(false);
@@ -582,64 +599,65 @@ public class LinearRangingPositionEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
         }
 
         // force NotReadyException
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Test
     public void testEstimateWithErrorInhomogeneous() throws LockedException, NotReadyException,
             PositionEstimationException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                 0.0, ERROR_STD);
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
-            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            final int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+            final InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
 
-            List<WifiAccessPointLocated3D> sources = new ArrayList<>();
-            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            final List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+            final List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                final InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
-                String bssid = String.valueOf(i);
+                final String bssid = String.valueOf(i);
 
-                WifiAccessPointLocated3D locatedAccessPoint =
+                final WifiAccessPointLocated3D locatedAccessPoint =
                         new WifiAccessPointLocated3D(bssid,
                                 FREQUENCY, accessPointPosition);
                 sources.add(locatedAccessPoint);
 
-                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+                final WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
-                double distance = position.distanceTo(accessPointPosition);
+                final double distance = position.distanceTo(accessPointPosition);
 
-                double error = errorRandomizer.nextDouble();
+                final double error = errorRandomizer.nextDouble();
 
                 readings.add(new RangingReading<>(accessPoint,
                         distance + error));
             }
 
-            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+            final RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
                     new RangingFingerprint<>(readings);
 
-            LinearRangingPositionEstimator3D estimator =
+            final LinearRangingPositionEstimator3D estimator =
                     new LinearRangingPositionEstimator3D(sources, fingerprint,
                             this);
             estimator.setHomogeneousLinearSolverUsed(false);
@@ -664,8 +682,8 @@ public class LinearRangingPositionEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
-            double distance = position.distanceTo(estimatedPosition);
+            final Point3D estimatedPosition = estimator.getEstimatedPosition();
+            final double distance = position.distanceTo(estimatedPosition);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
                 continue;
             }
@@ -677,22 +695,23 @@ public class LinearRangingPositionEstimator3DTest implements
         assertTrue(numValid > 0);
 
         // force NotReadyException
-        LinearRangingPositionEstimator3D estimator =
+        final LinearRangingPositionEstimator3D estimator =
                 new LinearRangingPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
+        } catch (final NotReadyException ignore) {
+        }
     }
 
     @Override
-    public void onEstimateStart(RangingPositionEstimator<Point3D> estimator) {
+    public void onEstimateStart(final RangingPositionEstimator<Point3D> estimator) {
         estimateStart++;
         checkLocked((LinearRangingPositionEstimator3D) estimator);
     }
 
     @Override
-    public void onEstimateEnd(RangingPositionEstimator<Point3D> estimator) {
+    public void onEstimateEnd(final RangingPositionEstimator<Point3D> estimator) {
         estimateEnd++;
         checkLocked((LinearRangingPositionEstimator3D) estimator);
     }
@@ -701,28 +720,32 @@ public class LinearRangingPositionEstimator3DTest implements
         estimateStart = estimateEnd = 0;
     }
 
-    private void checkLocked(LinearRangingPositionEstimator3D estimators) {
+    private void checkLocked(final LinearRangingPositionEstimator3D estimators) {
         try {
             estimators.setHomogeneousLinearSolverUsed(false);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimators.setSources(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimators.setFingerprint(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimators.setListener(null);
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+        } catch (final LockedException ignore) {
+        }
         try {
             estimators.estimate();
             fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
     }

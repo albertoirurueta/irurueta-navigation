@@ -8753,7 +8753,7 @@ public class PROMedSRobustKnownHardIronPositionAndInstantMagnetometerCalibratorT
                     new double[6], ecefPosition, measurements,
                     true, bm, this);
             fail("IllegalArgumentException expected but not thrown");
-        } catch(final IllegalArgumentException ignore) {
+        } catch (final IllegalArgumentException ignore) {
         }
         try {
             calibrator = new PROMedSRobustKnownHardIronPositionAndInstantMagnetometerCalibrator(

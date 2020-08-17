@@ -53,7 +53,7 @@ public class LocationUtils {
      * Constructor.
      * Prevents public instantiation.
      */
-    LocationUtils() {
+    private LocationUtils() {
     }
 
     /**

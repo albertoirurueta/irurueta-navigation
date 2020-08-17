@@ -23,27 +23,32 @@ import static org.junit.Assert.*;
 
 public class PairTest {
 
-    public PairTest() { }
+    public PairTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
-        Random r = new Random();
-        double first = r.nextDouble();
-        double second = r.nextDouble();
+        final Random r = new Random();
+        final double first = r.nextDouble();
+        final double second = r.nextDouble();
 
-        Pair p = new Pair(first, second);
+        final Pair p = new Pair(first, second);
 
         //check
         assertEquals(p.getFirst(), first, 0.0);
@@ -52,11 +57,11 @@ public class PairTest {
 
     @Test
     public void testGetSetFirst() {
-        Random r = new Random();
-        double value1 = r.nextDouble();
-        double value2 = r.nextDouble();
+        final Random r = new Random();
+        final double value1 = r.nextDouble();
+        final double value2 = r.nextDouble();
 
-        Pair p = new Pair(value1, 0.0);
+        final Pair p = new Pair(value1, 0.0);
 
         //check
         assertEquals(p.getFirst(), value1, 0.0);
@@ -70,11 +75,11 @@ public class PairTest {
 
     @Test
     public void testGetSetSecond() {
-        Random r = new Random();
-        double value1 = r.nextDouble();
-        double value2 = r.nextDouble();
+        final Random r = new Random();
+        final double value1 = r.nextDouble();
+        final double value2 = r.nextDouble();
 
-        Pair p = new Pair(0.0, value1);
+        final Pair p = new Pair(0.0, value1);
 
         //check
         assertEquals(p.getSecond(), value1, 0.0);

@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class KnownBiasEasyGyroscopeCalibratorTest implements
         KnownBiasEasyGyroscopeCalibratorListener {
@@ -266,7 +265,7 @@ public class KnownBiasEasyGyroscopeCalibratorTest implements
 
         KnownBiasEasyGyroscopeCalibrator calibrator =
                 new KnownBiasEasyGyroscopeCalibrator(
-                sequences, bg, mg, gg);
+                        sequences, bg, mg, gg);
 
 
         // check default values

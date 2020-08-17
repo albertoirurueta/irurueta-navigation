@@ -1504,7 +1504,7 @@ public class PROSACRobustKnownFrameGyroscopeCalibratorTest
     }
 
     @Test
-    public void testConstructor13() throws WrongSizeException{
+    public void testConstructor13() throws WrongSizeException {
         final double[] qualityScores = new double[
                 PROSACRobustKnownFrameGyroscopeCalibrator.MINIMUM_MEASUREMENTS];
         PROSACRobustKnownFrameGyroscopeCalibrator calibrator =

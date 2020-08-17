@@ -29,8 +29,8 @@ import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
-import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.calibration.FrameBodyKinematics;
+import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.AngularSpeed;
@@ -2622,12 +2622,12 @@ public class KnownBiasAndFrameGyroscopeLinearLeastSquaresCalibratorTest implemen
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias((double[])null);
+            calibrator.setBias((double[]) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias((Matrix)null);
+            calibrator.setBias((Matrix) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }

@@ -26,19 +26,24 @@ public class PolygonAreaTest {
 
     private static final double LARGE_ABSOLUTE_ERROR = 1e-6;
 
-    public PolygonAreaTest() { }
+    public PolygonAreaTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() {
@@ -67,7 +72,7 @@ public class PolygonAreaTest {
 
     @Test
     public void testClear() {
-        PolygonArea area = new PolygonArea(Geodesic.WGS84, true);
+        final PolygonArea area = new PolygonArea(Geodesic.WGS84, true);
 
         area.clear();
 
@@ -75,7 +80,7 @@ public class PolygonAreaTest {
         assertEquals(area.getMajorRadius(), Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
         assertEquals(area.getFlattening(), Constants.EARTH_FLATTENING_WGS84, 0.0);
 
-        Pair p = area.getCurrentPoint();
+        final Pair p = area.getCurrentPoint();
         assertEquals(p.getFirst(), Double.NaN, 0.0);
         assertEquals(p.getSecond(), Double.NaN, 0.0);
     }
@@ -88,26 +93,26 @@ public class PolygonAreaTest {
         //41.382790,2.177210
         //41.382911,2.177009
 
-        PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
-        PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
+        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
         polyArea.addPoint(lat2, lon2);
         area.addPoint(lat2, lon2);
 
-        double lat3 = 41.382790;
-        double lon3 = 2.177210;
+        final double lat3 = 41.382790;
+        final double lon3 = 2.177210;
         polyArea.addPoint(lat3, lon3);
         area.addPoint(lat3, lon3);
 
-        double lat4 = 41.382911;
-        double lon4 = 2.177009;
+        final double lat4 = 41.382911;
+        final double lon4 = 2.177009;
         polyArea.addPoint(lat4, lon4);
         area.addPoint(lat4, lon4);
 
@@ -134,17 +139,17 @@ public class PolygonAreaTest {
         //41.382790,2.177210
         //41.382911,2.177009
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
-        double lat3 = 41.382790;
-        double lon3 = 2.177210;
+        final double lat3 = 41.382790;
+        final double lon3 = 2.177210;
 
-        double lat4 = 41.382911;
-        double lon4 = 2.177009;
+        final double lat4 = 41.382911;
+        final double lon4 = 2.177009;
 
         assertNotNull(Geodesic.WGS84);
         GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
@@ -152,11 +157,11 @@ public class PolygonAreaTest {
         GeodesicData data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
         GeodesicData data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
 
-        PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
-        PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
+        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
 
-        PolygonArea polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
-        PolygonArea areaEdge = new PolygonArea(Geodesic.WGS84, false);
+        final PolygonArea polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
+        final PolygonArea areaEdge = new PolygonArea(Geodesic.WGS84, false);
 
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
@@ -184,11 +189,11 @@ public class PolygonAreaTest {
         polyAreaEdge.addEdge(data4.getAzi1(), data4.getS12());
         areaEdge.addEdge(data4.getAzi1(), data4.getS12());
 
-        PolygonResult polyResult = polyArea.compute();
-        PolygonResult areaResult = area.compute();
+        final PolygonResult polyResult = polyArea.compute();
+        final PolygonResult areaResult = area.compute();
 
-        PolygonResult polyEdgeResult = polyAreaEdge.compute();
-        PolygonResult areaEdgeResult = areaEdge.compute();
+        final PolygonResult polyEdgeResult = polyAreaEdge.compute();
+        final PolygonResult areaEdgeResult = areaEdge.compute();
 
         assertEquals(polyResult.getNum(), 5);
         assertEquals(polyResult.getPerimeter(), 121.34, 1.0);
@@ -216,7 +221,7 @@ public class PolygonAreaTest {
         //41.382790,2.177210
         //41.382911,2.177009
 
-        PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
 
         double lat = 41.382643;
         double lon = 2.176700;
@@ -244,7 +249,7 @@ public class PolygonAreaTest {
         result = area.compute(true, false);
 
         assertNotNull(Geodesic.WGS84);
-        double earthArea = Geodesic.WGS84.getEllipsoidArea();
+        final double earthArea = Geodesic.WGS84.getEllipsoidArea();
 
         assertEquals(result.getArea(), earthArea - 815.72, 1.0);
     }
@@ -257,62 +262,62 @@ public class PolygonAreaTest {
         //41.382790,2.177210
         //41.382911,2.177009
 
-        PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
-        PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
+        final PolygonArea polyArea = new PolygonArea(Geodesic.WGS84, true);
+        final PolygonArea area = new PolygonArea(Geodesic.WGS84, false);
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
         polyArea.addPoint(lat2, lon2);
         area.addPoint(lat2, lon2);
 
-        double lat3 = 41.382790;
-        double lon3 = 2.177210;
+        final double lat3 = 41.382790;
+        final double lon3 = 2.177210;
         polyArea.addPoint(lat3, lon3);
         area.addPoint(lat3, lon3);
 
-        double lat4 = 41.382911;
-        double lon4 = 2.177009;
+        final double lat4 = 41.382911;
+        final double lon4 = 2.177009;
         polyArea.addPoint(lat4, lon4);
         area.addPoint(lat4, lon4);
 
         //test
-        PolygonResult testPolyResult1 = polyArea.testPoint(lat1, lon1, false, true);
-        PolygonResult testAreaResult1 = area.testPoint(lat1, lon1, false, true);
+        final PolygonResult testPolyResult1 = polyArea.testPoint(lat1, lon1, false, true);
+        final PolygonResult testAreaResult1 = area.testPoint(lat1, lon1, false, true);
 
         //test reversed
-        PolygonResult testPolyResult2 = polyArea.testPoint(lat1, lon1, true, true);
-        PolygonResult testAreaResult2 = area.testPoint(lat1, lon1, true, true);
+        final PolygonResult testPolyResult2 = polyArea.testPoint(lat1, lon1, true, true);
+        final PolygonResult testAreaResult2 = area.testPoint(lat1, lon1, true, true);
 
         //test remaining earth surface
-        PolygonResult testPolyResult3 = polyArea.testPoint(lat1, lon1, true, false);
-        PolygonResult testAreaResult3 = area.testPoint(lat1, lon1, true, false);
+        final PolygonResult testPolyResult3 = polyArea.testPoint(lat1, lon1, true, false);
+        final PolygonResult testAreaResult3 = area.testPoint(lat1, lon1, true, false);
 
-        PolygonResult testPolyResult4 = polyArea.testPoint(lat1, lon1, false, false);
-        PolygonResult testAreaResult4 = area.testPoint(lat1, lon1, false, false);
+        final PolygonResult testPolyResult4 = polyArea.testPoint(lat1, lon1, false, false);
+        final PolygonResult testAreaResult4 = area.testPoint(lat1, lon1, false, false);
 
 
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
 
         //test
-        PolygonResult polyResult1 = polyArea.compute(false, true);
-        PolygonResult areaResult1 = area.compute(false, true);
+        final PolygonResult polyResult1 = polyArea.compute(false, true);
+        final PolygonResult areaResult1 = area.compute(false, true);
 
         //test reversed
-        PolygonResult polyResult2 = polyArea.compute(true, true);
-        PolygonResult areaResult2 = area.compute(true, true);
+        final PolygonResult polyResult2 = polyArea.compute(true, true);
+        final PolygonResult areaResult2 = area.compute(true, true);
 
         //test remaining earth surface
-        PolygonResult polyResult3 = polyArea.compute(true, false);
-        PolygonResult areaResult3 = area.compute(true, false);
+        final PolygonResult polyResult3 = polyArea.compute(true, false);
+        final PolygonResult areaResult3 = area.compute(true, false);
 
-        PolygonResult polyResult4 = polyArea.compute(false, false);
-        PolygonResult areaResult4 = area.compute(false, false);
+        final PolygonResult polyResult4 = polyArea.compute(false, false);
+        final PolygonResult areaResult4 = area.compute(false, false);
 
         assertEquals(testPolyResult1.getNum(), polyResult1.getNum());
         assertEquals(testPolyResult1.getArea(), polyResult1.getArea(), ABSOLUTE_ERROR);
@@ -355,26 +360,26 @@ public class PolygonAreaTest {
         //41.382790,2.177210
         //41.382911,2.177009
 
-        double lat1 = 41.382643;
-        double lon1 = 2.176700;
+        final double lat1 = 41.382643;
+        final double lon1 = 2.176700;
 
-        double lat2 = 41.382524;
-        double lon2 = 2.176861;
+        final double lat2 = 41.382524;
+        final double lon2 = 2.176861;
 
-        double lat3 = 41.382790;
-        double lon3 = 2.177210;
+        final double lat3 = 41.382790;
+        final double lon3 = 2.177210;
 
-        double lat4 = 41.382911;
-        double lon4 = 2.177009;
+        final double lat4 = 41.382911;
+        final double lon4 = 2.177009;
 
         assertNotNull(Geodesic.WGS84);
-        GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
-        GeodesicData data2 = Geodesic.WGS84.inverse(lat2, lon2, lat3, lon3);
-        GeodesicData data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
-        GeodesicData data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
+        final GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
+        final GeodesicData data2 = Geodesic.WGS84.inverse(lat2, lon2, lat3, lon3);
+        final GeodesicData data3 = Geodesic.WGS84.inverse(lat3, lon3, lat4, lon4);
+        final GeodesicData data4 = Geodesic.WGS84.inverse(lat4, lon4, lat1, lon1);
 
-        PolygonArea polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
-        PolygonArea areaEdge = new PolygonArea(Geodesic.WGS84, false);
+        final PolygonArea polyAreaEdge = new PolygonArea(Geodesic.WGS84, true);
+        final PolygonArea areaEdge = new PolygonArea(Geodesic.WGS84, false);
 
         polyAreaEdge.addPoint(lat1, lon1);
         areaEdge.addPoint(lat1, lon1);
@@ -389,42 +394,42 @@ public class PolygonAreaTest {
         areaEdge.addEdge(data3.getAzi1(), data3.getS12());
 
         //test
-        PolygonResult testPolyResult1 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
+        final PolygonResult testPolyResult1 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
                 true);
-        PolygonResult testAreaResult1 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, true);
+        final PolygonResult testAreaResult1 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, true);
 
         //test reversed
-        PolygonResult testPolyResult2 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
+        final PolygonResult testPolyResult2 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
                 true);
-        PolygonResult testAreaResult2 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, true);
+        final PolygonResult testAreaResult2 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, true);
 
         //test remaining earth surface
-        PolygonResult testPolyResult3 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
+        final PolygonResult testPolyResult3 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
                 false);
-        PolygonResult testAreaResult3 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, false);
+        final PolygonResult testAreaResult3 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, false);
 
-        PolygonResult testPolyResult4 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
+        final PolygonResult testPolyResult4 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
                 false);
-        PolygonResult testAreaResult4 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, false);
+        final PolygonResult testAreaResult4 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, false);
 
 
         polyAreaEdge.addEdge(data4.getAzi1(), data4.getS12());
         areaEdge.addEdge(data4.getAzi1(), data4.getS12());
 
         //test
-        PolygonResult polyEdgeResult1 = polyAreaEdge.compute(false, true);
-        PolygonResult areaEdgeResult1 = areaEdge.compute(false, true);
+        final PolygonResult polyEdgeResult1 = polyAreaEdge.compute(false, true);
+        final PolygonResult areaEdgeResult1 = areaEdge.compute(false, true);
 
         //test reversed
-        PolygonResult polyEdgeResult2 = polyAreaEdge.compute(true, true);
-        PolygonResult areaEdgeResult2 = areaEdge.compute(true, true);
+        final PolygonResult polyEdgeResult2 = polyAreaEdge.compute(true, true);
+        final PolygonResult areaEdgeResult2 = areaEdge.compute(true, true);
 
         //test remaining earth surface
-        PolygonResult polyEdgeResult3 = polyAreaEdge.compute(true, false);
-        PolygonResult areaEdgeResult3 = areaEdge.compute(true, false);
+        final PolygonResult polyEdgeResult3 = polyAreaEdge.compute(true, false);
+        final PolygonResult areaEdgeResult3 = areaEdge.compute(true, false);
 
-        PolygonResult polyEdgeResult4 = polyAreaEdge.compute(false, false);
-        PolygonResult areaEdgeResult4 = areaEdge.compute(false, false);
+        final PolygonResult polyEdgeResult4 = polyAreaEdge.compute(false, false);
+        final PolygonResult areaEdgeResult4 = areaEdge.compute(false, false);
 
         assertEquals(testPolyResult1.getNum(), polyEdgeResult1.getNum());
         assertEquals(testPolyResult1.getArea(), polyEdgeResult1.getArea(), ABSOLUTE_ERROR);

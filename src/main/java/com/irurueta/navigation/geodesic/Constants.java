@@ -65,6 +65,6 @@ public class Constants {
      * Constructor.
      * Prevents instantiation.
      */
-    Constants() {
+    private Constants() {
     }
 }

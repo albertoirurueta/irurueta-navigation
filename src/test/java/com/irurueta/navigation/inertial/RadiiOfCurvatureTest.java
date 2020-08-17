@@ -259,12 +259,12 @@ public class RadiiOfCurvatureTest {
         final RadiiOfCurvature radii3 = new RadiiOfCurvature();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(radii1.equals((Object)radii1));
+        assertTrue(radii1.equals((Object) radii1));
         assertTrue(radii1.equals(radii1));
         assertTrue(radii1.equals(radii2));
         assertFalse(radii1.equals(radii3));
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertFalse(radii1.equals((Object)null));
+        assertFalse(radii1.equals((Object) null));
         assertFalse(radii1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(radii1.equals(new Object()));

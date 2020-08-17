@@ -1725,7 +1725,7 @@ public class AngularRateFixerTest {
                     trueFx, trueFy, trueFz, bgx, bgy, bgz,
                     sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
                     g11, g21, g31, g12, g22, g32, g13, g23, g33,
-                    new Matrix(1,1));
+                    new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -1735,7 +1735,7 @@ public class AngularRateFixerTest {
                     trueFx, trueFy, trueFz, bgx, bgy, bgz,
                     sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
                     g11, g21, g31, g12, g22, g32, g13, g23, g33,
-                    new Matrix(3,3));
+                    new Matrix(3, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }

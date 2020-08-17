@@ -12660,7 +12660,7 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(
             final RobustKnownBiasTurntableGyroscopeCalibrator calibrator) {
@@ -13041,7 +13041,7 @@ public class MSACRobustKnownBiasTurntableGyroscopeCalibratorTest implements
         } catch (final LockedException ignore) {
         }
     }
-    
+
     private void assertEstimatedResult(
             final Matrix mg, final Matrix gg,
             final MSACRobustKnownBiasTurntableGyroscopeCalibrator calibrator) {

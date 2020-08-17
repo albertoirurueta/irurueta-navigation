@@ -21,7 +21,11 @@ import com.irurueta.navigation.indoor.RangingAndRssiReadingLocated2D;
 import com.irurueta.navigation.indoor.Utils;
 import com.irurueta.navigation.indoor.WifiAccessPoint;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,497 +43,501 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
     private static final double MIN_PATH_LOSS_EXPONENT = 1.6;
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testCreate() {
-        //create with method
+        // create with method
 
-        //RANSAC
+        // RANSAC
         RobustRangingAndRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 RobustRangingAndRssiRadioSourceEstimator2D.create(
                         RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings and method
-        List<RangingAndRssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-        WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+        // create with readings and method
+        final List<RangingAndRssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        final WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+            final InhomogeneousPoint2D position = new InhomogeneousPoint2D();
             readings.add(new RangingAndRssiReadingLocated2D<>(accessPoint,
                     0.0, 0.0, position));
         }
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with listener and method
+        // create with listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(this,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(this,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(this,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(this,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(this,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, listener and method
+        // create with readings, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, initial position and method
+        // create with readings, initial position and method
 
-        //RANSAC
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
+        // RANSAC
+        final InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial position and method
+        // create with initial position and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial position, listener and method
+        // create with initial position, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //check with readings, initial position, listener and method
+        // check with readings, initial position, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial transmitted power and method
+        // create with initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
-        Assert.assertEquals(estimator.getInitialTransmittedPower(),
+        assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, initial transmitted power and method
+        // create with readings, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -537,13 +545,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial transmitted power, listener and method
+        // create with initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -551,44 +559,44 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -596,13 +604,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //crate with readings, initial transmitted power, listener and method
+        // crate with readings, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -610,11 +618,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -622,11 +630,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -634,11 +642,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -646,11 +654,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -659,13 +667,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, initial position, initial transmitted power and method
+        // create with readings, initial position, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -673,11 +681,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -685,11 +693,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -697,11 +705,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -709,11 +717,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -722,57 +730,57 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial position, initial transmitted power and method
+        // create with initial position, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -780,13 +788,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial position, initial transmitted power, listener and method
+        // create with initial position, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -794,11 +802,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -806,11 +814,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -818,11 +826,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -830,11 +838,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -843,13 +851,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, initial position, initial transmitted power, listener and method
+        // create with readings, initial position, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -858,11 +866,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -871,11 +879,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -884,11 +892,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -897,11 +905,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -911,15 +919,15 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, initial position, initial transmitted power,
+        // create with readings, initial position, initial transmitted power,
         // initial path loss exponent and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -929,12 +937,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -944,12 +952,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -959,12 +967,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -974,12 +982,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -990,15 +998,15 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial position, initial transmitted power,
+        // create with initial position, initial transmitted power,
         // initial path loss exponent and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1007,12 +1015,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1021,12 +1029,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1035,12 +1043,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1049,12 +1057,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1064,14 +1072,14 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with initial position, initial transmitted power, listener and method
+        // create with initial position, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1081,12 +1089,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1096,12 +1104,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1111,12 +1119,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1126,12 +1134,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1142,15 +1150,15 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with readings, initial position, initial transmitted power,
+        // create with readings, initial position, initial transmitted power,
         // initial path loss exponent, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1161,12 +1169,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1177,12 +1185,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1193,12 +1201,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1209,12 +1217,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1226,403 +1234,403 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores and method
-        double[] qualityScores = new double[4];
+        // create with quality scores and method
+        final double[] qualityScores = new double[4];
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings and method
+        // create with quality scores, readings and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, listener and method
+        // create with quality scores, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, listener and method
+        // create with quality scores, readings, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial position and method
+        // create with quality scores, readings, initial position and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //create with quality scores, initial position and method
+        // create with quality scores, initial position and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial position, listener and method
+        // create with quality scores, initial position, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial position, listener and method
+        // create with quality scores, readings, initial position, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -1630,57 +1638,57 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial transmitted power and method
+        // create with quality scores, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1688,13 +1696,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial transmitted power and method
+        // create with quality scores, readings, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1702,11 +1710,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1714,11 +1722,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1726,11 +1734,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1738,11 +1746,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1751,13 +1759,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial transmitted power, listener and method
+        // create with quality scores, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1765,11 +1773,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMeds
+        // LMeds
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1777,11 +1785,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1789,11 +1797,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1801,11 +1809,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1814,13 +1822,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial transmitted power, listener and method
+        // create with quality scores, readings, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1829,11 +1837,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1842,11 +1850,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1855,11 +1863,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1868,11 +1876,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1882,13 +1890,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial position, initial transmitted power and method
+        // create with quality scores, readings, initial position, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1896,11 +1904,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1908,11 +1916,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1920,11 +1928,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1932,11 +1940,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1945,13 +1953,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial position, initial transmitted power and method
+        // create with quality scores, initial position, initial transmitted power and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1959,11 +1967,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1971,11 +1979,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1983,11 +1991,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -1995,11 +2003,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2008,13 +2016,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial position, initial transmitted power, listener and method
+        // create with quality scores, initial position, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2023,11 +2031,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2036,11 +2044,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2049,11 +2057,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2062,11 +2070,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2076,13 +2084,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial position, initial transmitted power, listener and method
+        // create with quality scores, readings, initial position, initial transmitted power, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2092,11 +2100,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2106,11 +2114,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2120,11 +2128,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2134,11 +2142,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2149,15 +2157,15 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial position,
+        // create with quality scores, readings, initial position,
         // initial transmitted power, initial path loss exponent and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2167,12 +2175,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2182,12 +2190,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2197,12 +2205,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2212,12 +2220,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2228,15 +2236,15 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial position, initial transmitted power,
-        //initial path loss exponent and method
+        // create with quality scores, initial position, initial transmitted power,
+        // initial path loss exponent and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2246,12 +2254,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2261,12 +2269,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2276,12 +2284,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2291,12 +2299,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2307,15 +2315,15 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, initial position, initial transmitted power,
+        // create with quality scores, initial position, initial transmitted power,
         // initial path loss exponent, listener and method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2326,12 +2334,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2342,12 +2350,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2358,12 +2366,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this,
                 RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2374,12 +2382,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2391,16 +2399,16 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with quality scores, readings, initial position,
+        // create with quality scores, readings, initial position,
         // initial transmitted power, initial path loss exponent, listener and
         // method
 
-        //RANSAC
+        // RANSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2412,12 +2420,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof RANSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //LMedS
+        // LMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.LMedS);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2429,12 +2437,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof LMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //MSAC
+        // MSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.MSAC);
 
-        //check
+        // check
         assertNull(estimator.getQualityScores());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2446,12 +2454,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof MSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROSAC
+        // PROSAC
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.PROSAC);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2463,12 +2471,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertSame(estimator.getListener(), this);
         assertTrue(estimator instanceof PROSACRobustRangingAndRssiRadioSourceEstimator2D);
 
-        //PROMedS
+        // PROMedS
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(qualityScores,
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this, RobustEstimatorMethod.PROMedS);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2481,80 +2489,80 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustRangingAndRssiRadioSourceEstimator2D);
 
 
-        //create with default method
+        // create with default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create();
 
-        //check
+        // check
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings and default method
+        // create with readings and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with listener and default method
+        // create with listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, listener and default method
+        // create with readings, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, this);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial position and default method
+        // create with readings, initial position and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial position
+        // create with initial position
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial position, listener and default method
+        // create with initial position, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, this);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial position, listener and default method
+        // create with readings, initial position, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, this);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
@@ -2562,11 +2570,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial transmitted power and default method
+        // create with initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -2574,22 +2582,22 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial transmitted power and default method
+        // create with readings, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial transmitted power, listener and default method
+        // create with initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 MAX_RSSI, this);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -2598,11 +2606,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial transmitted power, listener and default method
+        // create with readings, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2612,11 +2620,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial position, initial transmitted power and default method
+        // create with readings, initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2626,11 +2634,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial position, initial transmitted power and default method
+        // create with initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2639,11 +2647,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial position, initial transmitted power, listener and default method
+        // create with initial position, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2653,11 +2661,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial position, initial transmitted power, listener and default method
+        // create with readings, initial position, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2668,11 +2676,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial position, initial transmitted power and default method
+        // create with readings, initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2684,11 +2692,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial position, initial transmitted power and default method
+        // create with initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2699,11 +2707,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with initial position, initial transmitted power, listener and default method
+        // create with initial position, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2715,12 +2723,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with readings, initial position, initial transmitted power, listener and default method
+        // create with readings, initial position, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2733,43 +2741,43 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores and default method
+        // create with quality scores and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings and default method
+        // create with quality scores, readings and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, listener and default method
+        // create with quality scores, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getListener(), this);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, listener and default method
+        // create with quality scores, readings, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -2777,11 +2785,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial position and default method
+        // create with quality scores, readings, initial position and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2789,22 +2797,22 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial position and default method
+        // create with quality scores, initial position and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getMethod(),
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial position, listener and default method
+        // create with quality scores, initial position, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, initialPosition, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertSame(estimator.getListener(), this);
@@ -2812,11 +2820,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial position, listener and default method
+        // create with quality scores, readings, initial position, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, initialPosition, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2825,11 +2833,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial transmitted power and default method
+        // create with quality scores, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2838,11 +2846,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial transmitted power and default method
+        // create with quality scores, readings, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2852,11 +2860,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial transmitted power, listener and default method
+        // create with quality scores, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2866,11 +2874,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial transmitted power, listener and default method
+        // create with quality scores, readings, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2881,11 +2889,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial position, initial transmitted power and default method
+        // create with quality scores, readings, initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, initialPosition, MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2896,11 +2904,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial position, initial transmitted power and default method
+        // create with quality scores, initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, initialPosition, MAX_RSSI);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2910,11 +2918,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial position, initial transmitted power, listener and default method
+        // create with quality scores, initial position, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, initialPosition, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2925,11 +2933,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial position, initial transmitted power, listener and default method
+        // create with quality scores, readings, initial position, initial transmitted power, listener
+        // and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, initialPosition, MAX_RSSI, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2941,12 +2950,12 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial position, initial transmitted power and default method
+        // create with quality scores, readings, initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, initialPosition, MAX_RSSI,
                 MIN_PATH_LOSS_EXPONENT);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2959,11 +2968,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial position, initial transmitted power and default method
+        // create with quality scores, initial position, initial transmitted power and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2975,11 +2984,11 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, initial position, initial transmitted power, listener and default method
+        // create with quality scores, initial position, initial transmitted power, listener and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
@@ -2992,12 +3001,13 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_ROBUST_METHOD);
 
 
-        //create with quality scores, readings, initial position, initial transmitted power, listener and default method
+        // create with quality scores, readings, initial position, initial transmitted power, listener
+        // and default method
         estimator = RobustRangingAndRssiRadioSourceEstimator2D.create(
                 qualityScores, readings, initialPosition, MAX_RSSI,
                 MIN_PATH_LOSS_EXPONENT, this);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -3012,16 +3022,24 @@ public class RobustRangingAndRssiRadioSourceEstimator2DTest implements
     }
 
     @Override
-    public void onEstimateStart(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) { }
+    public void onEstimateStart(
+            final RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    }
 
     @Override
-    public void onEstimateEnd(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) { }
+    public void onEstimateEnd(
+            final RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    }
 
     @Override
-    public void onEstimateNextIteration(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
-                                        int iteration) { }
+    public void onEstimateNextIteration(
+            final RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
+            final int iteration) {
+    }
 
     @Override
-    public void onEstimateProgressChange(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
-                                         float progress) { }
+    public void onEstimateProgressChange(
+            final RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
+            final float progress) {
+    }
 }

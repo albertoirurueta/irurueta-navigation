@@ -35,7 +35,7 @@ public class INSLooselyCoupledKalmanInitializerTest {
     public void testInitialize() throws WrongSizeException {
         final INSLooselyCoupledKalmanInitializerConfig config = generateConfig();
 
-        final Matrix expected = Matrix.diagonal(new double[] {
+        final Matrix expected = Matrix.diagonal(new double[]{
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),

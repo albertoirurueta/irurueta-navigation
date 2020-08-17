@@ -6004,7 +6004,7 @@ public class MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibratorTest
 
     @Override
     public void onCalibrateProgressChange(
-            final RobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator, 
+            final RobustKnownHardIronPositionAndInstantMagnetometerCalibrator calibrator,
             final float progress) {
         checkLocked((MSACRobustKnownHardIronPositionAndInstantMagnetometerCalibrator) calibrator);
         mCalibrateProgressChange++;

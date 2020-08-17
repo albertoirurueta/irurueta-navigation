@@ -3253,7 +3253,7 @@ public class RANSACRobustKnownPositionAccelerometerCalibratorTest implements
         try {
             calibrator = new RANSACRobustKnownPositionAccelerometerCalibrator(
                     ecefPosition, measurements, true, new Matrix(
-                            3, 3), ma);
+                    3, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7272,7 +7272,7 @@ public class RANSACRobustKnownPositionAccelerometerCalibratorTest implements
             final RANSACRobustKnownPositionAccelerometerCalibrator calibrator =
                     new RANSACRobustKnownPositionAccelerometerCalibrator(
                             nedPosition, measurements, false,
-                             this);
+                            this);
             calibrator.setThreshold(LARGE_THRESHOLD);
 
             // estimate

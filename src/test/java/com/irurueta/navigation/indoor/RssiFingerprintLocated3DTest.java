@@ -18,7 +18,11 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,60 +31,67 @@ import static org.junit.Assert.*;
 
 public class RssiFingerprintLocated3DTest {
 
-    public RssiFingerprintLocated3DTest() { }
+    public RssiFingerprintLocated3DTest() {
+    }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+    }
 
     @AfterClass
-    public static void tearDownClass() { }
+    public static void tearDownClass() {
+    }
 
     @Before
-    public void setUp() { }
+    public void setUp() {
+    }
 
     @After
-    public void tearDown() { }
+    public void tearDown() {
+    }
 
     @Test
     public void testConstructor() throws WrongSizeException {
-        //test empty constructor
+        // test empty constructor
         RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
                 new RssiFingerprintLocated3D<>();
 
-        //check default values
+        // check default values
         assertTrue(f.getReadings().isEmpty());
         assertNull(f.getPosition());
         assertNull(f.getPositionCovariance());
 
 
-        //test with readings and position
-        List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
+        // test with readings and position
+        final List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+        final InhomogeneousPoint3D position = new InhomogeneousPoint3D();
         f = new RssiFingerprintLocated3D<>(readings, position);
 
-        //check
+        // check
         assertSame(f.getReadings(), readings);
         assertSame(f.getPosition(), position);
         assertNull(f.getPositionCovariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         f = null;
         try {
             f = new RssiFingerprintLocated3D<>(null, position);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             f = new RssiFingerprintLocated3D<>(readings, null);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(f);
 
 
-        //test with readings, position and covariance
-        Matrix cov = new Matrix(3, 3);
+        // test with readings, position and covariance
+        final Matrix cov = new Matrix(3, 3);
         f = new RssiFingerprintLocated3D<>(readings, position, cov);
 
-        //check
+        // check
         assertSame(f.getReadings(), readings);
         assertSame(f.getPosition(), position);
         assertSame(f.getPositionCovariance(), cov);
@@ -89,16 +100,19 @@ public class RssiFingerprintLocated3DTest {
         try {
             f = new RssiFingerprintLocated3D<>(null, position, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             f = new RssiFingerprintLocated3D<>(readings, null, cov);
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         try {
             f = new RssiFingerprintLocated3D<>(readings, position,
-                    new Matrix(1,1));
+                    new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        } catch (final IllegalArgumentException ignore) {
+        }
         assertNull(f);
     }
 }

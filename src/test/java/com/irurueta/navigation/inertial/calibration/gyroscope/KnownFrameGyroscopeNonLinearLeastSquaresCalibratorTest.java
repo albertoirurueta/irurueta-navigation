@@ -2555,9 +2555,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
-                0.0, initialSy, 0.0,
-                0.0, 0.0, initialSz });
+                new double[]{initialSx, 0.0, 0.0,
+                        0.0, initialSy, 0.0,
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -2670,9 +2670,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -2785,9 +2785,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -2898,9 +2898,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3009,9 +3009,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3122,9 +3122,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3235,9 +3235,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3351,9 +3351,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3469,9 +3469,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3589,9 +3589,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3709,9 +3709,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3828,9 +3828,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -3945,9 +3945,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -4064,9 +4064,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -4183,9 +4183,9 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, 0.0, 0.0,
+                new double[]{initialSx, 0.0, 0.0,
                         0.0, initialSy, 0.0,
-                        0.0, 0.0, initialSz });
+                        0.0, 0.0, initialSz});
         assertEquals(mg1, mg2);
         calibrator.getInitialMg(mg2);
         assertEquals(mg1, mg2);
@@ -4301,7 +4301,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -4423,7 +4423,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -4545,7 +4545,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -4665,7 +4665,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -4783,7 +4783,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -4903,7 +4903,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5023,7 +5023,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5147,7 +5147,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5273,7 +5273,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5401,7 +5401,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5529,7 +5529,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5656,7 +5656,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5781,7 +5781,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -5908,7 +5908,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -6035,7 +6035,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8002,7 +8002,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8148,7 +8148,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8296,7 +8296,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8444,7 +8444,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8590,7 +8590,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8734,7 +8734,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -8884,7 +8884,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9030,7 +9030,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9179,7 +9179,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9338,7 +9338,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9499,7 +9499,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9660,7 +9660,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9825,7 +9825,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -9982,7 +9982,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -10147,7 +10147,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
@@ -10306,7 +10306,7 @@ public class KnownFrameGyroscopeNonLinearLeastSquaresCalibratorTest implements
         final Matrix mg2 = new Matrix(3, 3);
         mg2.setSubmatrix(0, 0,
                 2, 2,
-                new double[]{ initialSx, initialMyx, initialMzx,
+                new double[]{initialSx, initialMyx, initialMzx,
                         initialMxy, initialSy, initialMzy,
                         initialMxz, initialMyz, initialSz});
         assertEquals(mg1, mg2);
