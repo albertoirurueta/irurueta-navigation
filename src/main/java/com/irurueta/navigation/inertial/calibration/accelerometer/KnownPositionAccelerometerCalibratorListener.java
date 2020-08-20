@@ -19,19 +19,6 @@ package com.irurueta.navigation.inertial.calibration.accelerometer;
  * Contains listener for accelerometer calibrator when the same position is known
  * for all measurements and orientation is unknown.
  */
-public interface KnownPositionAccelerometerCalibratorListener {
-
-    /**
-     * Called when calibration starts.
-     *
-     * @param calibrator calibrator that raised the event.
-     */
-    void onCalibrateStart(final KnownPositionAccelerometerCalibrator calibrator);
-
-    /**
-     * Called when calibration ends.
-     *
-     * @param calibrator calibrator that raised the event.
-     */
-    void onCalibrateEnd(final KnownPositionAccelerometerCalibrator calibrator);
+public interface KnownPositionAccelerometerCalibratorListener extends
+        BaseGravityNormAccelerometerCalibratorListener<KnownPositionAccelerometerCalibrator> {
 }

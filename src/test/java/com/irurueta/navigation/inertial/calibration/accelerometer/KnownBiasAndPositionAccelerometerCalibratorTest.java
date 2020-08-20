@@ -12,6 +12,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFPositionVelocityConverter;
 import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.ECEFGravity;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.navigation.inertial.NEDPosition;
@@ -20,6 +21,7 @@ import com.irurueta.navigation.inertial.calibration.BodyKinematicsGenerator;
 import com.irurueta.navigation.inertial.calibration.CalibrationException;
 import com.irurueta.navigation.inertial.calibration.IMUErrors;
 import com.irurueta.navigation.inertial.calibration.StandardDeviationBodyKinematics;
+import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.navigation.inertial.estimators.ECEFKinematicsEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Acceleration;
@@ -140,6 +142,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -220,6 +225,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -302,6 +310,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -384,6 +395,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -464,6 +478,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -545,6 +562,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -628,6 +648,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -711,6 +734,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -796,6 +822,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -882,6 +911,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -971,6 +1003,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1060,6 +1095,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1146,6 +1184,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1232,6 +1273,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1321,6 +1365,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1410,6 +1457,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1502,6 +1552,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1595,6 +1648,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1691,6 +1747,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1787,6 +1846,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1880,6 +1942,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -1973,6 +2038,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2069,6 +2137,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2165,6 +2236,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2256,6 +2330,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2350,6 +2427,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2444,6 +2524,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2535,6 +2618,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2626,6 +2712,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2719,6 +2808,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2813,6 +2905,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -2911,6 +3006,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3009,6 +3107,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3110,6 +3211,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3211,6 +3315,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3309,6 +3416,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3407,6 +3517,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3508,6 +3621,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3610,6 +3726,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3712,6 +3831,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3818,6 +3940,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -3924,6 +4049,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4027,6 +4155,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4130,6 +4261,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4236,6 +4370,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4342,6 +4479,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4451,6 +4591,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4560,6 +4703,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4673,6 +4819,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4786,6 +4935,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -4895,6 +5047,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -5005,6 +5160,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -5118,6 +5276,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -5231,6 +5392,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
     }
 
     @Test
@@ -5317,6 +5481,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5412,6 +5579,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5511,6 +5681,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5611,6 +5784,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5707,6 +5883,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5803,6 +5982,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -5903,6 +6085,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6003,6 +6188,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6098,6 +6286,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6199,6 +6390,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6303,6 +6497,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6408,6 +6605,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6509,6 +6709,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6611,6 +6814,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6718,6 +6924,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6823,6 +7032,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -6942,6 +7154,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7071,6 +7286,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7203,6 +7421,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7336,6 +7557,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7465,6 +7689,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7595,6 +7822,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7732,6 +7962,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7865,6 +8098,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -7992,6 +8228,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8087,6 +8333,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8185,6 +8441,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8284,6 +8550,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8380,6 +8656,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8476,6 +8762,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8574,6 +8870,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8672,6 +8978,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8773,6 +9089,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8874,6 +9200,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -8978,6 +9314,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9082,6 +9428,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9183,6 +9539,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9284,6 +9650,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9388,6 +9764,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9492,6 +9878,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9600,6 +9996,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9708,6 +10114,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9819,6 +10235,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -9930,6 +10356,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10038,6 +10474,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10146,6 +10592,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10257,6 +10713,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10368,6 +10834,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10474,6 +10950,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10583,6 +11069,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10692,6 +11188,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10798,6 +11304,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -10905,6 +11421,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11014,6 +11540,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11124,6 +11660,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11237,6 +11783,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11350,6 +11906,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11466,6 +12032,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11582,6 +12158,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11695,6 +12281,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11808,6 +12404,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -11924,6 +12530,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12040,6 +12656,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12158,6 +12784,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12279,6 +12915,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12400,6 +13046,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12518,6 +13174,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12636,6 +13302,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12757,6 +13433,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -12878,6 +13564,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13003,6 +13699,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13128,6 +13834,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13256,6 +13972,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13384,6 +14110,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13509,6 +14245,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13634,6 +14380,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13762,6 +14518,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13890,6 +14656,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -13991,6 +14767,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14103,6 +14889,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14218,6 +15014,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14333,6 +15139,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14445,6 +15261,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14557,6 +15383,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14672,6 +15508,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14787,6 +15633,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -14898,6 +15754,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15016,6 +15882,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15137,6 +16013,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15258,6 +16144,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15376,6 +16272,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15494,6 +16400,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15617,6 +16533,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15740,6 +16666,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -15875,6 +16811,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16021,6 +16967,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16170,6 +17126,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16319,6 +17285,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16465,6 +17441,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16611,6 +17597,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16760,6 +17756,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -16913,6 +17919,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -17040,6 +18056,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17135,6 +18161,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17233,6 +18269,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17332,6 +18378,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17428,6 +18484,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17524,6 +18590,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17622,6 +18698,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17720,6 +18806,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17821,6 +18917,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -17922,6 +19028,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18026,6 +19142,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18130,6 +19256,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18231,6 +19367,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18332,6 +19478,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18436,6 +19592,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18540,6 +19706,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18648,6 +19824,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18756,6 +19942,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18867,6 +20063,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -18978,6 +20184,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19086,6 +20302,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19194,6 +20420,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19305,6 +20541,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19416,6 +20662,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19522,6 +20778,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19631,6 +20897,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19740,6 +21016,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19846,6 +21132,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -19953,6 +21249,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20062,6 +21368,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20172,6 +21488,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20285,6 +21611,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20398,6 +21734,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20514,6 +21860,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20630,6 +21986,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20743,6 +22109,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20856,6 +22232,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -20972,6 +22358,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21088,6 +22484,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21206,6 +22612,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21327,6 +22743,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21448,6 +22874,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21566,6 +23002,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21684,6 +23130,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21805,6 +23261,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -21926,6 +23392,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22051,6 +23527,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22176,6 +23662,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22304,6 +23800,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22432,6 +23938,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22557,6 +24073,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22682,6 +24208,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22810,6 +24346,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -22938,6 +24484,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
     }
 
     @Test
@@ -23039,6 +24595,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23151,6 +24717,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23266,6 +24842,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23381,6 +24967,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23493,6 +25089,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23605,6 +25211,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23720,6 +25336,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23835,6 +25461,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -23946,6 +25582,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24064,6 +25710,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24185,6 +25841,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24306,6 +25972,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24424,6 +26100,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24542,6 +26228,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24665,6 +26361,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24788,6 +26494,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -24923,6 +26639,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25069,6 +26795,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25218,6 +26954,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25367,6 +27113,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25513,6 +27269,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25659,6 +27425,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25808,6 +27584,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
@@ -25961,6 +27747,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        assertNotNull(calibrator.getGroundTruthGravityNorm());
+        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
+                .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
         calibrator = null;
