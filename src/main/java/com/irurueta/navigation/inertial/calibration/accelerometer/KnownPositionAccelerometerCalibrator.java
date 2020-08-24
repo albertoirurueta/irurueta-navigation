@@ -1618,6 +1618,7 @@ public class KnownPositionAccelerometerCalibrator extends
      *                     and unknown different orientations.
      * @param initialBias  initial bias to find a solution.
      * @param listener     listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided bias matrix is not 3x1.
      */
     public KnownPositionAccelerometerCalibrator(
             final Collection<StandardDeviationBodyKinematics> measurements,

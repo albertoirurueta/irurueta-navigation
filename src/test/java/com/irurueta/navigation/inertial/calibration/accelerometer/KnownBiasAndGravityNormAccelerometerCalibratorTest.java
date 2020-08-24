@@ -51,8 +51,8 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class KnownBiasAndPositionAccelerometerCalibratorTest implements
-        KnownBiasAndPositionAccelerometerCalibrationListener {
+public class KnownBiasAndGravityNormAccelerometerCalibratorTest implements
+        KnownBiasAndGravityNormAccelerometerCalibratorListener {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -63,26 +63,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     private static final double MAX_ANGLE_DEGREES = 180.0;
 
     private static final double MIN_LATITUDE_DEGREES = -90.0;
-    private static final double MAX_LATITUDE_DEGREEs = 90.0;
+    private static final double MAX_LATITUDE_DEGREES = 90.0;
     private static final double MIN_LONGITUDE_DEGREES = -180.0;
     private static final double MAX_LONGITUDE_DEGREES = 180.0;
     private static final double MIN_HEIGHT = -50.0;
     private static final double MAX_HEIGHT = 50.0;
 
-    private static final int LARGE_MEASUREMENT_NUMBER = 100000;
+    private static final int LARGE_MEASUREMENT_NUMBER = 70000;
 
     private static final double ABSOLUTE_ERROR = 1e-8;
     private static final double LARGE_ABSOLUTE_ERROR = 5e-5;
 
-    private static final int TIMES = 100;
+    private static final int TIMES = 70;
 
     private int mCalibrateStart;
     private int mCalibrateEnd;
 
     @Test
     public void testConstructor1() throws WrongSizeException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -136,9 +136,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -164,8 +161,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testConstructor2() throws WrongSizeException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(this);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -219,9 +216,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -249,8 +243,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testConstructor3() throws WrongSizeException {
         final Collection<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -304,9 +298,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -334,174 +325,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testConstructor4() throws WrongSizeException {
         final Collection<StandardDeviationBodyKinematics> measurements =
                 Collections.emptyList();
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[3], 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, new Matrix(3, 1));
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
-        assertFalse(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor5() throws WrongSizeException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
-        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
-        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[3], 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, new Matrix(3, 1));
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor6() throws WrongSizeException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         this);
 
         // check default values
@@ -556,13 +381,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -583,12 +405,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testConstructor7() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                        true);
+    public void testConstructor5() throws WrongSizeException {
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(true);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -642,10 +461,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
+        assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -669,11 +485,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testConstructor8() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+    public void testConstructor6() throws WrongSizeException {
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, this);
 
         // check default values
@@ -728,9 +542,172 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor7() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[3], 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, new Matrix(3, 1));
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor8() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasY(), 0.0, 0.0);
+        assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[3], 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, new Matrix(3, 1));
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -761,8 +738,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(biasX, biasY, biasZ);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -816,9 +793,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -849,9 +823,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(biasX, biasY, biasZ,
-                        this);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -905,9 +879,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -941,8 +912,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         biasX, biasY, biasZ);
 
         // check default values
@@ -997,9 +968,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1033,8 +1001,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         biasX, biasY, biasZ, this);
 
         // check default values
@@ -1089,9 +1057,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1122,189 +1087,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        biasX, biasY, biasZ);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor14() throws WrongSizeException {
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        biasX, biasY, biasZ, this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor15() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, biasX, biasY, biasZ);
 
         // check default values
@@ -1359,9 +1143,182 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor14() throws WrongSizeException {
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        true, biasX, biasY, biasZ,
+                        this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor15() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, biasX, biasY, biasZ);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1395,8 +1352,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, biasX, biasY, biasZ, this);
 
         // check default values
@@ -1451,9 +1408,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1491,8 +1445,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bx, by, bz);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bx, by, bz);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -1546,9 +1500,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1586,8 +1537,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bx, by, bz,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bx, by, bz,
                         this);
 
         // check default values
@@ -1642,9 +1593,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1685,8 +1633,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         bx, by, bz);
 
         // check default values
@@ -1741,9 +1689,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -1784,8 +1729,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         bx, by, bz, this);
 
         // check default values
@@ -1840,9 +1785,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -1880,203 +1822,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        bx, by, bz);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor22() throws WrongSizeException {
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Acceleration bx = new Acceleration(biasX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by = new Acceleration(biasY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz = new Acceleration(biasZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        bx, by, bz, this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor23() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Acceleration bx = new Acceleration(biasX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by = new Acceleration(biasY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz = new Acceleration(biasZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, bx, by, bz);
 
         // check default values
@@ -2131,10 +1878,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
+        assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -2158,10 +1902,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testConstructor24() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
+    public void testConstructor22() throws WrongSizeException {
         final Matrix ba = generateBa();
         final double biasX = ba.getElementAtIndex(0);
         final double biasY = ba.getElementAtIndex(1);
@@ -2174,8 +1915,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, bx, by, bz, this);
 
         // check default values
@@ -2230,9 +1971,198 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor23() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Acceleration bx = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, bx, by, bz);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor24() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Acceleration bx = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, bx, by, bz, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2268,8 +2198,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double sy = ma.getElementAt(1, 1);
         final double sz = ma.getElementAt(2, 2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(biasX, biasY, biasZ,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        biasX, biasY, biasZ,
                         sx, sy, sz);
 
         // check default values
@@ -2324,9 +2255,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2365,8 +2293,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double sy = ma.getElementAt(1, 1);
         final double sz = ma.getElementAt(2, 2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -2421,9 +2349,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -2462,8 +2387,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double sy = ma.getElementAt(1, 1);
         final double sz = ma.getElementAt(2, 2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         biasX, biasY, biasZ, sx, sy, sz, this);
 
         // check default values
@@ -2518,9 +2443,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -2556,198 +2478,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double sy = ma.getElementAt(1, 1);
         final double sz = ma.getElementAt(2, 2);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        biasX, biasY, biasZ, sx, sy, sz);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor29() throws WrongSizeException {
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        biasX, biasY, biasZ, sx, sy, sz, this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor30() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -2802,211 +2534,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor31() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                        true, biasX, biasY, biasZ, sx, sy, sz,
-                        this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor32() throws WrongSizeException {
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-
-        final Acceleration bx = new Acceleration(biasX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by = new Acceleration(biasY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz = new Acceleration(biasZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bx, by, bz,
-                        sx, sy, sz);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
-        assertFalse(calibrator.isCommonAxisUsed());
+        assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
         assertFalse(calibrator.isReady());
         assertFalse(calibrator.isRunning());
         assertNull(calibrator.getEstimatedMa());
@@ -3027,7 +2558,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testConstructor33() throws WrongSizeException {
+    public void testConstructor29() throws WrongSizeException {
         final Matrix ba = generateBa();
         final double biasX = ba.getElementAtIndex(0);
         final double biasY = ba.getElementAtIndex(1);
@@ -3038,15 +2569,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double sy = ma.getElementAt(1, 1);
         final double sz = ma.getElementAt(2, 2);
 
-        final Acceleration bx = new Acceleration(biasX,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by = new Acceleration(biasY,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz = new Acceleration(biasZ,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bx, by, bz,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        true, biasX, biasY, biasZ,
                         sx, sy, sz, this);
 
         // check default values
@@ -3101,9 +2626,390 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor30() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, biasX, biasY, biasZ,
+                        sx, sy, sz);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor31() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, biasX, biasY, biasZ,
+                        sx, sy, sz, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor32() throws WrongSizeException {
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+
+        final Acceleration bx = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bx, by, bz,
+                        sx, sy, sz);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertNull(calibrator.getMeasurements());
+        assertFalse(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor33() throws WrongSizeException {
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+
+        final Acceleration bx = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bx, by, bz,
+                        sx, sy, sz, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, Matrix.diagonal(new double[]{sx, sy, sz}));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3149,8 +3055,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -3205,9 +3111,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3253,8 +3156,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -3309,9 +3212,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3354,8 +3254,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(true,
                         bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -3410,9 +3310,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3455,8 +3352,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(true,
                         bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -3511,9 +3408,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3559,8 +3453,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -3615,9 +3509,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3663,8 +3554,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, bx, by, bz, sx, sy, sz,
                         this);
 
@@ -3720,9 +3611,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -3764,116 +3652,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(biasX, biasY, biasZ,
-                        sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
-        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
-        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
-        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
-        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
-        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = new Matrix(3, 3);
-        ma1.setSubmatrix(0, 0,
-                2, 2,
-                new double[]{sx, myx, mzx,
-                        mxy, sy, mzy,
-                        mxz, myz, sz});
-        assertEquals(calibrator.getInitialMa(), ma1);
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertFalse(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-    }
-
-    @Test
-    public void testConstructor41() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-        final double mxy = ma.getElementAt(0, 1);
-        final double mxz = ma.getElementAt(0, 2);
-        final double myx = ma.getElementAt(1, 0);
-        final double myz = ma.getElementAt(1, 2);
-        final double mzx = ma.getElementAt(2, 0);
-        final double mzy = ma.getElementAt(2, 1);
-
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         biasX, biasY, biasZ, sx, sy, sz,
                         mxy, mxz, myx, myz, mzx, mzy);
 
@@ -3934,9 +3714,112 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertFalse(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+    }
+
+    @Test
+    public void testConstructor41() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+        final double mxy = ma.getElementAt(0, 1);
+        final double mxz = ma.getElementAt(0, 2);
+        final double myx = ma.getElementAt(1, 0);
+        final double myz = ma.getElementAt(1, 2);
+        final double mzx = ma.getElementAt(2, 0);
+        final double mzy = ma.getElementAt(2, 1);
+
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        biasX, biasY, biasZ, sx, sy, sz,
+                        mxy, mxz, myx, myz, mzx, mzy);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
+        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
+        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
+        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
+        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
+        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = new Matrix(3, 3);
+        ma1.setSubmatrix(0, 0,
+                2, 2,
+                new double[]{sx, myx, mzx,
+                        mxy, sy, mzy,
+                        mxz, myz, sz});
+        assertEquals(calibrator.getInitialMa(), ma1);
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -3981,8 +3864,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         biasX, biasY, biasZ, sx, sy, sz,
                         mxy, mxz, myx, myz, mzx, mzy, this);
 
@@ -4043,9 +3926,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -4087,9 +3967,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx,
                         myz, mzx, mzy);
 
         // check default values
@@ -4149,9 +4029,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -4193,9 +4070,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz, myx,
                         myz, mzx, mzy, this);
 
         // check default values
@@ -4255,9 +4132,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -4302,8 +4176,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, biasX, biasY, biasZ,
                         sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
 
@@ -4364,9 +4238,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -4411,8 +4282,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, biasX, biasY, biasZ,
                         sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy, this);
 
@@ -4473,9 +4344,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -4524,8 +4392,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bx, by, bz,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bx, by, bz,
                         sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
 
         // check default values
@@ -4585,9 +4453,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -4636,8 +4501,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bx, by, bz,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bx, by, bz,
                         sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy, this);
 
         // check default values
@@ -4697,9 +4562,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -4752,9 +4614,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, bx, by, bz,
-                        sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, bx, by, bz, sx, sy, sz,
+                        mxy, mxz, myx, myz, mzx, mzy);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -4813,9 +4676,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -4868,9 +4728,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, bx, by, bz,
-                        sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy, this);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, bx, by, bz, sx, sy, sz,
+                        mxy, mxz, myx, myz, mzx, mzy, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -4929,9 +4790,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -4980,9 +4838,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
-                        bx, by, bz, sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        true, bx, by, bz, sx, sy, sz,
+                        mxy, mxz, myx, myz, mzx, mzy);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -5041,9 +4900,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -5092,8 +4948,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(true,
                         bx, by, bz, sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
                         this);
 
@@ -5154,9 +5010,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -5208,8 +5061,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, bx, by, bz, sx, sy, sz,
                         mxy, mxz, myx, myz, mzx, mzy);
 
@@ -5270,9 +5123,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -5324,8 +5174,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration bz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                         true, bx, by, bz, sx, sy, sz,
                         mxy, mxz, myx, myz, mzx, mzy, this);
 
@@ -5386,9 +5236,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -5420,8 +5267,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bias);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bias);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -5475,9 +5322,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -5503,7 +5347,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -5518,212 +5363,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(bias, this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertFalse(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(new double[1],
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor57() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double[] bias = ba.getBuffer();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, bias);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
-        assertFalse(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor58() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double[] bias = ba.getBuffer();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, bias,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(bias,
                         this);
 
         // check default values
@@ -5778,9 +5419,206 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertFalse(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    new double[1], this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor57() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double[] bias = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, bias);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertFalse(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 10);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor58() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double[] bias = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, bias, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -5806,8 +5644,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -5822,209 +5660,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true, bias);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(true,
-                    new double[1]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor60() throws WrongSizeException {
-        final Matrix ba = generateBa();
-        final double[] bias = ba.getBuffer();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true, bias, this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(true,
-                    new double[1], this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor61() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double[] bias = ba.getBuffer();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, bias);
 
         // check default values
@@ -6079,10 +5716,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
+        assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -6107,7 +5741,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6116,18 +5750,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testConstructor62() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
+    public void testConstructor60() throws WrongSizeException {
         final Matrix ba = generateBa();
         final double[] bias = ba.getBuffer();
         final double biasX = ba.getElementAtIndex(0);
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, bias, this);
 
         // check default values
@@ -6182,9 +5813,206 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, new double[1], this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor61() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double[] bias = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, bias);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true, new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor62() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double[] bias = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, bias, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -6210,8 +6038,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true, new double[1],
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6225,8 +6054,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ba);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(ba);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6280,9 +6109,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -6308,13 +6134,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6329,8 +6155,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ba, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        ba, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6384,9 +6211,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -6412,13 +6236,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6436,8 +6260,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, ba);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, ba);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -6491,9 +6316,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -6519,13 +6341,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6543,8 +6365,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, ba,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements, ba,
                         this);
 
         // check default values
@@ -6599,9 +6421,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -6627,14 +6446,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    new Matrix(1, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, new Matrix(1, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, new Matrix(1, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -6648,222 +6469,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true, ba);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, new Matrix(1, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, new Matrix(1, 3));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor68() throws WrongSizeException {
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true, ba,
-                        this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = calibrator.getInitialMa();
-        assertEquals(ma1, new Matrix(3, 3));
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, new Matrix(1, 1),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, new Matrix(1, 3),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor69() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, ba);
 
         // check default values
@@ -6918,10 +6525,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
+        assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
         assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
@@ -6946,13 +6550,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -6961,17 +6565,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testConstructor70() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
+    public void testConstructor68() throws WrongSizeException {
         final Matrix ba = generateBa();
         final double biasX = ba.getElementAtIndex(0);
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, ba, this);
 
         // check default values
@@ -7026,9 +6627,220 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, new Matrix(1, 1),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, new Matrix(1, 3),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor69() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, ba);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor70() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, ba, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = calibrator.getInitialMa();
+        assertEquals(ma1, new Matrix(3, 3));
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -7054,16 +6866,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new Matrix(1, 1),
-                    this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new Matrix(1, 3),
-                    this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7088,8 +6900,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ba, ma);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(ba, ma);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7148,9 +6960,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -7176,25 +6985,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ba,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(ba,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ba,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(ba,
                     new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7220,8 +7029,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ba, ma, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        ba, ma, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7280,9 +7090,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -7308,25 +7115,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     new Matrix(1, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ba,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(ba,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ba,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(ba,
                     new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7355,8 +7162,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, ba, ma);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, ba, ma);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7415,9 +7223,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -7443,25 +7248,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     measurements, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     measurements, new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     measurements, ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     measurements, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7490,9 +7295,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements, ba, ma,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        measurements, ba, ma, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7551,9 +7356,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -7579,26 +7381,30 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    measurements, new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, new Matrix(1, 1), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    measurements, new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, new Matrix(1, 3), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    measurements, ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, ba, new Matrix(1, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    measurements, ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, ba, new Matrix(3, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -7623,8 +7429,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true, ba, ma);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(true, ba, ma);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -7683,9 +7489,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -7711,25 +7514,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
                     true, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -7755,284 +7558,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final double mzx = ma.getElementAt(2, 0);
         final double mzy = ma.getElementAt(2, 1);
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(true, ba, ma,
-                        this);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
-        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
-        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
-        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
-        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
-        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = new Matrix(3, 3);
-        ma1.setSubmatrix(0, 0,
-                2, 2,
-                new double[]{sx, myx, mzx,
-                        mxy, sy, mzy,
-                        mxz, myz, sz});
-        assertEquals(calibrator.getInitialMa(), ma1);
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertNull(calibrator.getMeasurements());
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertSame(calibrator.getListener(), this);
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, new Matrix(1, 1), ma,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, new Matrix(1, 3), ma,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, ba, new Matrix(1, 3),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(
-                    true, ba, new Matrix(3, 1),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor77() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-        final double mxy = ma.getElementAt(0, 1);
-        final double mxz = ma.getElementAt(0, 2);
-        final double myx = ma.getElementAt(1, 0);
-        final double myz = ma.getElementAt(1, 2);
-        final double mzx = ma.getElementAt(2, 0);
-        final double mzy = ma.getElementAt(2, 1);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                        true, ba, ma);
-
-        // check default values
-        assertEquals(calibrator.getBiasX(), biasX, 0.0);
-        assertEquals(calibrator.getBiasY(), biasY, 0.0);
-        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
-        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bx2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasXAsAcceleration(bx2);
-        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
-        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
-        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration by2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasYAsAcceleration(by2);
-        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
-        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
-        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final Acceleration bz2 = new Acceleration(0.0,
-                AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        calibrator.getBiasZAsAcceleration(bz2);
-        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
-        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        assertEquals(calibrator.getInitialSx(), sx, 0.0);
-        assertEquals(calibrator.getInitialSy(), sy, 0.0);
-        assertEquals(calibrator.getInitialSz(), sz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
-        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
-        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
-        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
-        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
-        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
-        final double[] bias1 = calibrator.getBias();
-        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
-        final double[] bias2 = new double[3];
-        calibrator.getBias(bias2);
-        assertArrayEquals(bias1, bias2, 0.0);
-        final Matrix b1 = calibrator.getBiasAsMatrix();
-        assertEquals(b1, ba);
-        final Matrix b2 = new Matrix(3, 1);
-        calibrator.getBiasAsMatrix(b2);
-        assertEquals(b1, b2);
-        final Matrix ma1 = new Matrix(3, 3);
-        ma1.setSubmatrix(0, 0,
-                2, 2,
-                new double[]{sx, myx, mzx,
-                        mxy, sy, mzy,
-                        mxz, myz, sz});
-        assertEquals(calibrator.getInitialMa(), ma1);
-        final Matrix ma2 = new Matrix(3, 3);
-        calibrator.getInitialMa(ma2);
-        assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-        assertSame(calibrator.getMeasurements(), measurements);
-        assertTrue(calibrator.isCommonAxisUsed());
-        assertNull(calibrator.getListener());
-        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
-        assertFalse(calibrator.isReady());
-        assertFalse(calibrator.isRunning());
-        assertNull(calibrator.getEstimatedMa());
-        assertNull(calibrator.getEstimatedSx());
-        assertNull(calibrator.getEstimatedSy());
-        assertNull(calibrator.getEstimatedSz());
-        assertNull(calibrator.getEstimatedMxy());
-        assertNull(calibrator.getEstimatedMxz());
-        assertNull(calibrator.getEstimatedMyx());
-        assertNull(calibrator.getEstimatedMyz());
-        assertNull(calibrator.getEstimatedMzx());
-        assertNull(calibrator.getEstimatedMzy());
-        assertNull(calibrator.getEstimatedCovariance());
-        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        assertNull(calibrator.getGroundTruthGravityNorm());
-        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
-        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
-
-        // Force IllegalArgumentException
-        calibrator = null;
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new Matrix(1, 1), ma);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new Matrix(1, 3), ma);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, ba, new Matrix(1, 3));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, ba, new Matrix(3, 1));
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (final IllegalArgumentException ignore) {
-        }
-        assertNull(calibrator);
-    }
-
-    @Test
-    public void testConstructor78() throws WrongSizeException {
-        final Collection<StandardDeviationBodyKinematics> measurements =
-                Collections.emptyList();
-
-        final Matrix ba = generateBa();
-        final double biasX = ba.getElementAtIndex(0);
-        final double biasY = ba.getElementAtIndex(1);
-        final double biasZ = ba.getElementAtIndex(2);
-
-        final Matrix ma = generateMaCommonAxis();
-        final double sx = ma.getElementAt(0, 0);
-        final double sy = ma.getElementAt(1, 1);
-        final double sz = ma.getElementAt(2, 2);
-        final double mxy = ma.getElementAt(0, 1);
-        final double mxz = ma.getElementAt(0, 2);
-        final double myx = ma.getElementAt(1, 0);
-        final double myz = ma.getElementAt(1, 2);
-        final double mzx = ma.getElementAt(2, 0);
-        final double mzy = ma.getElementAt(2, 1);
-
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
                         true, ba, ma, this);
 
         // check default values
@@ -8092,9 +7619,280 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertNull(calibrator.getEcefPosition());
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
+        assertNull(calibrator.getMeasurements());
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertSame(calibrator.getListener(), this);
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, new Matrix(1, 1), ma,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, new Matrix(1, 3), ma,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, ba, new Matrix(1, 3),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    true, ba, new Matrix(3, 1),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor77() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+        final double mxy = ma.getElementAt(0, 1);
+        final double mxz = ma.getElementAt(0, 2);
+        final double myx = ma.getElementAt(1, 0);
+        final double myz = ma.getElementAt(1, 2);
+        final double mzx = ma.getElementAt(2, 0);
+        final double mzy = ma.getElementAt(2, 1);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, ba, ma);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
+        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
+        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
+        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
+        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
+        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = new Matrix(3, 3);
+        ma1.setSubmatrix(0, 0,
+                2, 2,
+                new double[]{sx, myx, mzx,
+                        mxy, sy, mzy,
+                        mxz, myz, sz});
+        assertEquals(calibrator.getInitialMa(), ma1);
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
+        assertSame(calibrator.getMeasurements(), measurements);
+        assertTrue(calibrator.isCommonAxisUsed());
+        assertNull(calibrator.getListener());
+        assertEquals(calibrator.getMinimumRequiredMeasurements(), 7);
+        assertFalse(calibrator.isReady());
+        assertFalse(calibrator.isRunning());
+        assertNull(calibrator.getEstimatedMa());
+        assertNull(calibrator.getEstimatedSx());
+        assertNull(calibrator.getEstimatedSy());
+        assertNull(calibrator.getEstimatedSz());
+        assertNull(calibrator.getEstimatedMxy());
+        assertNull(calibrator.getEstimatedMxz());
+        assertNull(calibrator.getEstimatedMyx());
+        assertNull(calibrator.getEstimatedMyz());
+        assertNull(calibrator.getEstimatedMzx());
+        assertNull(calibrator.getEstimatedMzy());
+        assertNull(calibrator.getEstimatedCovariance());
+        assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
+        assertNull(calibrator.getGroundTruthGravityNorm());
+        assertNull(calibrator.getGroundTruthGravityNormAsAcceleration());
+        assertFalse(calibrator.getGroundTruthGravityNormAsAcceleration(null));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 1), ma);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 3), ma);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true, ba,
+                    new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true, ba,
+                    new Matrix(3, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+    }
+
+    @Test
+    public void testConstructor78() throws WrongSizeException {
+        final Collection<StandardDeviationBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final Matrix ma = generateMaCommonAxis();
+        final double sx = ma.getElementAt(0, 0);
+        final double sy = ma.getElementAt(1, 1);
+        final double sz = ma.getElementAt(2, 2);
+        final double mxy = ma.getElementAt(0, 1);
+        final double mxz = ma.getElementAt(0, 2);
+        final double myx = ma.getElementAt(1, 0);
+        final double myz = ma.getElementAt(1, 2);
+        final double mzx = ma.getElementAt(2, 0);
+        final double mzy = ma.getElementAt(2, 1);
+
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(measurements,
+                        true, ba, ma, this);
+
+        // check default values
+        assertEquals(calibrator.getBiasX(), biasX, 0.0);
+        assertEquals(calibrator.getBiasY(), biasY, 0.0);
+        assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
+        final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
+        assertEquals(bx1.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bx2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasXAsAcceleration(bx2);
+        assertEquals(bx2.getValue().doubleValue(), biasX, 0.0);
+        assertEquals(bx2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by1 = calibrator.getBiasYAsAcceleration();
+        assertEquals(by1.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration by2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasYAsAcceleration(by2);
+        assertEquals(by2.getValue().doubleValue(), biasY, 0.0);
+        assertEquals(by2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
+        assertEquals(bz1.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bz2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        calibrator.getBiasZAsAcceleration(bz2);
+        assertEquals(bz2.getValue().doubleValue(), biasZ, 0.0);
+        assertEquals(bz2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(calibrator.getInitialSx(), sx, 0.0);
+        assertEquals(calibrator.getInitialSy(), sy, 0.0);
+        assertEquals(calibrator.getInitialSz(), sz, 0.0);
+        assertEquals(calibrator.getInitialMxy(), mxy, 0.0);
+        assertEquals(calibrator.getInitialMxz(), mxz, 0.0);
+        assertEquals(calibrator.getInitialMyx(), myx, 0.0);
+        assertEquals(calibrator.getInitialMyz(), myz, 0.0);
+        assertEquals(calibrator.getInitialMzx(), mzx, 0.0);
+        assertEquals(calibrator.getInitialMzy(), mzy, 0.0);
+        final double[] bias1 = calibrator.getBias();
+        assertArrayEquals(bias1, new double[]{biasX, biasY, biasZ}, 0.0);
+        final double[] bias2 = new double[3];
+        calibrator.getBias(bias2);
+        assertArrayEquals(bias1, bias2, 0.0);
+        final Matrix b1 = calibrator.getBiasAsMatrix();
+        assertEquals(b1, ba);
+        final Matrix b2 = new Matrix(3, 1);
+        calibrator.getBiasAsMatrix(b2);
+        assertEquals(b1, b2);
+        final Matrix ma1 = new Matrix(3, 3);
+        ma1.setSubmatrix(0, 0,
+                2, 2,
+                new double[]{sx, myx, mzx,
+                        mxy, sy, mzy,
+                        mxz, myz, sz});
+        assertEquals(calibrator.getInitialMa(), ma1);
+        final Matrix ma2 = new Matrix(3, 3);
+        calibrator.getInitialMa(ma2);
+        assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -8120,29 +7918,31 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new Matrix(1, 1), ma,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 1), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, new Matrix(1, 3), ma,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true,
+                    new Matrix(1, 3), ma,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, ba, new Matrix(1, 3),
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true, ba, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(measurements,
-                    true, ba, new Matrix(3, 1),
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    measurements, true, ba, new Matrix(3, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -8154,7 +7954,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testConstructor79() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8164,9 +7964,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -8220,11 +8023,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -8243,23 +8041,31 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
     public void testConstructor80() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8269,9 +8075,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -8325,11 +8135,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -8348,16 +8153,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -8367,7 +8180,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8377,9 +8190,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -8433,11 +8250,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -8456,16 +8268,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -8475,7 +8295,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8485,10 +8305,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -8542,11 +8365,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -8565,23 +8383,31 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
     public void testConstructor83() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8591,9 +8417,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true);
 
         // check default values
@@ -8648,11 +8477,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -8671,23 +8495,31 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
     public void testConstructor84() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8697,9 +8529,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, this);
 
         // check default values
@@ -8754,11 +8589,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -8777,16 +8607,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -8795,7 +8633,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
                 Collections.emptyList();
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8805,10 +8643,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
+                        measurements, true);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -8862,11 +8703,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -8885,16 +8721,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, true);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -8903,7 +8747,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
                 Collections.emptyList();
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -8913,10 +8757,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
+                        measurements, true, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -8970,11 +8817,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -8993,16 +8835,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, true, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9014,7 +8864,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9024,9 +8874,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ);
 
         // check default values
@@ -9081,11 +8934,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -9104,16 +8952,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9125,7 +8981,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9135,9 +8991,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ, this);
 
         // check default values
@@ -9192,11 +9051,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -9215,16 +9069,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, biasX, biasY, biasZ, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9239,7 +9101,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9249,9 +9111,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ);
 
         // check default values
@@ -9306,11 +9172,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -9329,16 +9190,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9353,7 +9223,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9363,9 +9233,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, this);
 
         // check default values
@@ -9420,11 +9294,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -9443,16 +9312,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    biasX, biasY, biasZ, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9464,7 +9342,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9474,9 +9352,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ);
 
         // check default values
@@ -9531,11 +9412,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -9554,16 +9430,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9575,7 +9459,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9585,10 +9469,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                        true, biasX, biasY, biasZ, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
+                        true, biasX, biasY, biasZ,
+                        this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -9642,11 +9530,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -9665,16 +9548,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, biasX, biasY, biasZ,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9689,7 +9581,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9699,9 +9591,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ);
 
         // check default values
@@ -9756,11 +9652,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -9779,16 +9670,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
-        assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9803,7 +9702,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9813,9 +9712,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, this);
 
         // check default values
@@ -9870,11 +9773,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -9893,16 +9791,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, biasX, biasY, biasZ, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -9921,7 +9828,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -9931,10 +9838,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                        bx, by, bz);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, bx, by, bz);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -9988,11 +9898,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -10011,16 +9916,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10039,7 +9952,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10049,9 +9962,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, this);
 
         // check default values
@@ -10106,11 +10022,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -10129,16 +10040,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator =
+                    new KnownBiasAndGravityNormAccelerometerCalibrator(
+                            -gravityNorm, bx, by, bz, this);
+            fail("IllegalArgumentException but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10160,7 +10080,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10170,10 +10090,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        bx, by, bz);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, bx, by, bz);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -10227,11 +10150,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -10250,16 +10168,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10281,7 +10207,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10291,9 +10217,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, this);
 
         // check default values
@@ -10348,11 +10278,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -10371,16 +10296,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10399,7 +10333,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10409,9 +10343,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz);
 
         // check default values
@@ -10466,11 +10403,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -10489,16 +10421,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10517,7 +10457,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10527,9 +10467,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, this);
 
         // check default values
@@ -10584,11 +10527,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -10607,16 +10545,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10638,7 +10584,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10648,9 +10594,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz);
 
         // check default values
@@ -10705,11 +10655,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -10728,16 +10673,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10759,7 +10713,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10769,9 +10723,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, this);
 
         // check default values
@@ -10826,11 +10784,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -10849,16 +10802,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10875,7 +10837,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -10885,9 +10847,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -10942,11 +10907,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -10965,16 +10925,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, biasX, biasY, biasZ, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -10994,7 +10962,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11004,9 +10972,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -11061,11 +11033,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -11084,16 +11051,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11113,7 +11089,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11123,9 +11099,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz, this);
 
         // check default values
@@ -11180,11 +11160,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -11203,16 +11178,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11229,7 +11213,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11239,10 +11223,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                        true, biasX, biasY, biasZ, sx, sy, sz);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
+                        true, biasX, biasY, biasZ,
+                        sx, sy, sz);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -11296,11 +11284,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -11319,16 +11302,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, biasX, biasY, biasZ, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11345,7 +11336,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11355,9 +11346,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz,
                         this);
 
@@ -11413,11 +11407,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -11436,16 +11425,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, biasX, biasY, biasZ, sx, sy, sz,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11465,7 +11463,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11475,10 +11473,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, biasX, biasY, biasZ, sx, sy, sz);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
+                        true, biasX, biasY, biasZ,
+                        sx, sy, sz);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -11532,11 +11535,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -11555,16 +11553,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, biasX, biasY, biasZ,
+                    sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11584,7 +11592,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11594,9 +11602,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, sx, sy, sz,
                         this);
 
@@ -11652,11 +11664,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -11675,16 +11682,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, biasX, biasY, biasZ, sx, sy, sz,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11708,7 +11725,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11718,9 +11735,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -11775,11 +11795,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -11798,16 +11813,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11831,7 +11854,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11841,9 +11864,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -11898,11 +11924,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -11921,16 +11942,24 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bx, by, bz, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -11957,7 +11986,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -11967,9 +11996,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -12024,11 +12057,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -12047,16 +12075,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12083,7 +12120,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12093,9 +12130,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -12150,11 +12191,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -12173,16 +12209,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12206,7 +12251,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12216,9 +12261,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -12273,11 +12321,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -12296,16 +12339,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bx, by, bz,
+                    sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12329,7 +12381,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12339,10 +12391,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                        true, bx, by, bz, sx, sy, sz, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
+                        true, bx, by, bz, sx, sy, sz,
+                        this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -12396,11 +12452,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -12419,16 +12470,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bx, by, bz, sx, sy, sz,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12455,7 +12515,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12465,9 +12525,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -12522,11 +12586,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -12545,16 +12604,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12581,7 +12649,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12591,9 +12659,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -12648,11 +12720,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -12671,16 +12738,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12703,7 +12779,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12713,9 +12789,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -12776,11 +12855,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -12799,16 +12873,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, biasX, biasY, biasZ, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12834,7 +12917,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12844,9 +12927,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -12907,11 +12994,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -12930,16 +13012,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -12965,7 +13057,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -12975,9 +13067,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -13038,11 +13134,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -13061,16 +13152,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13093,7 +13194,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13103,9 +13204,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -13166,11 +13270,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -13189,16 +13288,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, biasX, biasY, biasZ,
+                    sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13221,7 +13329,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13231,9 +13339,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -13294,11 +13405,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -13317,16 +13423,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, biasX, biasY, biasZ, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13352,7 +13467,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13362,11 +13477,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
-                        myx, myz, mzx, mzy);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
+                        true, biasX, biasY, biasZ,
+                        sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -13425,11 +13544,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -13448,16 +13562,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, biasX, biasY, biasZ,
+                    sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13483,7 +13607,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13493,11 +13617,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
-                        myx, myz, mzx, mzy, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
+                        true, biasX, biasY, biasZ,
+                        sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
+                        this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -13556,11 +13685,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -13579,16 +13703,27 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, biasX, biasY, biasZ,
+                    sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13618,7 +13753,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13628,9 +13763,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -13691,11 +13829,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -13714,16 +13847,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13753,7 +13895,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13763,9 +13905,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -13826,11 +13971,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -13849,16 +13989,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -13891,7 +14040,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -13901,9 +14050,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -13964,11 +14117,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -13987,16 +14135,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -14029,7 +14187,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14039,9 +14197,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -14102,11 +14264,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -14125,16 +14282,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -14164,7 +14331,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14174,9 +14341,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -14237,11 +14407,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -14260,16 +14425,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -14299,7 +14473,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14309,9 +14483,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -14372,11 +14549,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -14395,16 +14567,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -14437,7 +14618,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14447,11 +14628,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, bx, by, bz, sx, sy, sz, mxy, mxz,
-                        myx, myz, mzx, mzy);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
+                        true, bx, by, bz, sx, sy, sz,
+                        mxy, mxz, myx, myz, mzx, mzy);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -14510,11 +14695,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -14533,16 +14713,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -14575,7 +14765,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14585,11 +14775,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, bx, by, bz, sx, sy, sz, mxy, mxz,
-                        myx, myz, mzx, mzy, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
+                        true, bx, by, bz, sx, sy, sz,
+                        mxy, mxz, myx, myz, mzx, mzy, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -14648,11 +14842,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -14671,16 +14860,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -14693,7 +14892,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14703,9 +14902,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, bias);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, bias);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -14759,11 +14962,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -14782,10 +14980,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -14796,7 +14992,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                     new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -14814,7 +15016,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14824,10 +15026,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, bias,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, bias, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -14881,11 +15086,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -14904,10 +15104,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -14918,8 +15116,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -14939,7 +15143,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -14949,9 +15153,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, bias);
 
         // check default values
@@ -15006,11 +15213,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -15029,10 +15231,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15043,8 +15243,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15064,7 +15270,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15074,9 +15280,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, bias, this);
 
         // check default values
@@ -15131,11 +15340,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -15154,10 +15358,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15168,8 +15370,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15186,7 +15394,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15196,9 +15404,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bias);
 
         // check default values
@@ -15253,11 +15464,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -15276,10 +15482,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15290,8 +15494,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15308,7 +15518,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15318,9 +15528,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bias, this);
 
         // check default values
@@ -15375,11 +15588,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -15398,10 +15606,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15412,8 +15618,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new double[1],
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15433,7 +15646,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15443,10 +15656,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        true, bias);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
+                        measurements, true, bias);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -15500,11 +15716,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -15523,10 +15734,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15537,8 +15746,15 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true, new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, true, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
+                    new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15558,7 +15774,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15568,9 +15784,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bias, this);
 
         // check default values
@@ -15625,11 +15845,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -15648,10 +15863,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15662,8 +15875,16 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
+                    new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15680,7 +15901,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15690,9 +15911,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, ba);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, ba);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -15746,11 +15971,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -15769,10 +15989,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15783,14 +16001,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15807,7 +16031,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15817,10 +16041,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, ba,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, ba, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -15874,11 +16101,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -15897,10 +16119,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -15911,14 +16131,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, ba, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -15938,7 +16165,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -15948,10 +16175,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        ba);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, ba);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -16005,11 +16235,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -16028,10 +16253,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16042,14 +16265,22 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -16069,7 +16300,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16079,10 +16310,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
-                        ba, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, ba, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -16136,11 +16370,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -16159,10 +16388,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16173,14 +16400,22 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, ba, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -16197,7 +16432,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16207,9 +16442,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba);
 
         // check default values
@@ -16264,11 +16502,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -16287,10 +16520,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16301,14 +16532,22 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -16325,7 +16564,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16335,9 +16574,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba, this);
 
         // check default values
@@ -16392,11 +16634,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -16415,10 +16652,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16429,15 +16664,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 1),
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, ba, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new Matrix(1, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 3),
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -16458,7 +16699,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16468,9 +16709,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba);
 
         // check default values
@@ -16525,11 +16770,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -16548,10 +16788,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16562,15 +16800,22 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, ba);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -16591,7 +16836,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16601,9 +16846,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba, this);
 
         // check default values
@@ -16658,11 +16907,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -16681,10 +16925,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16695,15 +16937,22 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, ba, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -16732,7 +16981,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16742,9 +16991,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, ba, ma);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, ba, ma);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -16803,11 +17056,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -16826,10 +17074,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16840,26 +17086,32 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 1), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 3), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    ba, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    ba, new Matrix(3, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -16887,7 +17139,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -16897,9 +17149,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         ba, ma, this);
 
         // check default values
@@ -16959,11 +17214,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -16982,10 +17232,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -16996,26 +17244,34 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(1, 3), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -17046,7 +17302,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17056,9 +17312,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, ba, ma);
 
         // check default values
@@ -17118,11 +17377,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -17141,10 +17395,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -17155,26 +17407,36 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 1), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 3), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, ba, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, ba, new Matrix(3, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -17205,7 +17467,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17215,9 +17477,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, ba, ma, this);
 
         // check default values
@@ -17277,11 +17542,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -17300,10 +17560,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -17314,26 +17572,36 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(1, 3), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -17361,7 +17629,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17371,9 +17639,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba, ma);
 
         // check default values
@@ -17433,11 +17704,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -17456,10 +17722,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -17470,26 +17734,36 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 1), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 3), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, ba, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, ba, new Matrix(3, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba,
+                    new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba,
+                    new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -17517,7 +17791,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17527,9 +17801,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba, ma, this);
 
         // check default values
@@ -17589,11 +17866,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -17612,10 +17884,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -17626,26 +17896,36 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, true, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new Matrix(1, 1),
+                    ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new Matrix(1, 3),
+                    ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    true, ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba, new Matrix(1, 3),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba, new Matrix(3, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -17676,7 +17956,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17686,9 +17966,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba, ma);
 
         // check default values
@@ -17748,11 +18032,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -17771,10 +18050,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -17785,29 +18062,36 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, ba, ma);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -17839,7 +18123,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17849,9 +18133,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba, ma, this);
 
         // check default values
@@ -17911,11 +18199,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -17934,10 +18217,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
-        assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration()
                 .equals(gravity.getNormAsAcceleration(), ABSOLUTE_ERROR));
@@ -17948,29 +18229,36 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         // Force IllegalArgumentException
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    -gravityNorm, measurements,
+                    true, ba, ma, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(ecefPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -17982,7 +18270,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testConstructor157() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -17992,9 +18280,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -18048,11 +18339,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -18071,8 +18357,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18081,13 +18365,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
     public void testConstructor158() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18097,9 +18394,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -18153,11 +18454,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -18176,8 +18472,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18186,6 +18480,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -18195,7 +18502,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18205,9 +18512,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -18261,11 +18572,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -18284,8 +18590,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18294,6 +18598,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -18303,7 +18620,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18313,10 +18630,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -18370,11 +18690,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -18393,8 +18708,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18403,13 +18716,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
     public void testConstructor161() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18419,9 +18745,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true);
 
         // check default values
@@ -18476,11 +18805,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -18499,8 +18823,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18509,13 +18831,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
     public void testConstructor162() throws WrongSizeException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18525,9 +18860,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, this);
 
         // check default values
@@ -18582,11 +18920,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -18605,8 +18938,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18615,6 +18946,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -18623,7 +18967,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
                 Collections.emptyList();
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18633,9 +18977,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true);
 
         // check default values
@@ -18690,11 +19038,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -18713,8 +19056,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18723,6 +19064,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -18731,7 +19086,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
                 Collections.emptyList();
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18741,9 +19096,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, this);
 
         // check default values
@@ -18798,11 +19157,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -18821,8 +19175,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18831,6 +19183,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -18842,7 +19208,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18852,9 +19218,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ);
 
         // check default values
@@ -18909,11 +19278,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -18932,8 +19296,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -18942,6 +19304,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -18953,7 +19328,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -18963,9 +19338,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ, this);
 
         // check default values
@@ -19020,11 +19398,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -19043,8 +19416,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19053,6 +19424,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, biasX, biasY, biasZ,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19067,7 +19452,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19077,9 +19462,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ);
 
         // check default values
@@ -19134,11 +19523,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -19157,8 +19541,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19167,6 +19549,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19181,7 +19577,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19191,9 +19587,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, this);
 
         // check default values
@@ -19248,11 +19648,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -19271,8 +19666,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19281,6 +19674,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    biasX, biasY, biasZ, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19292,7 +19699,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19302,10 +19709,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                        true, biasX, biasY, biasZ);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, true, biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -19359,11 +19769,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -19382,8 +19787,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19392,6 +19795,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19403,7 +19819,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19413,9 +19829,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, this);
 
         // check default values
@@ -19470,11 +19889,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -19493,8 +19907,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19503,6 +19915,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    biasX, biasY, biasZ, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19517,7 +19943,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19527,9 +19953,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ);
 
         // check default values
@@ -19584,11 +20014,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -19607,8 +20032,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19617,6 +20040,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, biasX, biasY, biasZ);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19631,7 +20068,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19641,9 +20078,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, this);
 
         // check default values
@@ -19698,11 +20139,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -19721,8 +20157,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19731,6 +20165,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, biasX, biasY, biasZ, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19749,7 +20197,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19759,9 +20207,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz);
 
         // check default values
@@ -19816,11 +20267,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -19839,8 +20285,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19849,6 +20293,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19867,7 +20324,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19877,9 +20334,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, this);
 
         // check default values
@@ -19934,11 +20394,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -19957,8 +20412,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -19967,6 +20420,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -19988,7 +20454,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -19998,10 +20464,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
-                        bx, by, bz);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, bx, by, bz);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -20055,11 +20524,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -20078,8 +20542,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20088,6 +20550,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20109,7 +20584,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20119,9 +20594,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, this);
 
         // check default values
@@ -20176,11 +20655,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -20199,8 +20673,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20209,6 +20681,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20227,7 +20713,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20237,9 +20723,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz);
 
         // check default values
@@ -20294,11 +20783,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -20317,8 +20801,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20327,6 +20809,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20345,7 +20841,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20355,9 +20851,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, this);
 
         // check default values
@@ -20412,11 +20911,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -20435,8 +20929,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20445,6 +20937,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20466,7 +20972,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20476,9 +20982,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz);
 
         // check default values
@@ -20533,11 +21043,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -20556,8 +21061,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20566,6 +21069,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bx, by, bz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20587,7 +21104,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20597,9 +21114,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, this);
 
         // check default values
@@ -20654,11 +21175,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -20677,8 +21193,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20687,6 +21201,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, true,
+                    bx, by, bz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20703,7 +21231,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20713,9 +21241,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -20770,11 +21301,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -20793,8 +21319,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20803,6 +21327,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, biasX, biasY, biasZ, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20822,7 +21359,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20832,9 +21369,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -20889,11 +21430,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -20912,8 +21448,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -20922,6 +21456,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -20941,7 +21489,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -20951,9 +21499,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz, this);
 
         // check default values
@@ -21008,11 +21560,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -21031,8 +21578,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21041,6 +21586,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21057,7 +21616,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21067,9 +21626,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -21124,11 +21686,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -21147,8 +21704,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21157,6 +21712,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, biasX, biasY, biasZ,
+                    sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21173,7 +21742,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21183,9 +21752,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz,
                         this);
 
@@ -21241,11 +21813,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -21264,8 +21831,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21274,6 +21839,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    biasX, biasY, biasZ,
+                    sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21293,7 +21873,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21303,9 +21883,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, sx, sy, sz);
 
         // check default values
@@ -21360,11 +21944,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -21383,8 +21962,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21393,6 +21970,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, biasX, biasY, biasZ, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21412,7 +22003,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21422,9 +22013,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, sx, sy, sz,
                         this);
 
@@ -21480,11 +22075,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -21503,8 +22093,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21513,6 +22101,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, biasX, biasY, biasZ, sx, sy, sz,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21536,7 +22139,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21546,9 +22149,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -21603,11 +22209,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -21626,8 +22227,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21636,6 +22235,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm,
+                    bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21659,7 +22272,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21669,9 +22282,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -21726,11 +22342,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -21749,8 +22360,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21759,6 +22368,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bx, by, bz, sx, sy, sz,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21785,7 +22408,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21795,9 +22418,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -21852,11 +22479,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -21875,8 +22497,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -21885,6 +22505,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -21911,7 +22545,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -21921,9 +22555,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -21978,11 +22616,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -22001,8 +22634,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22011,6 +22642,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22034,7 +22679,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22044,9 +22689,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -22101,11 +22749,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -22124,8 +22767,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22134,6 +22775,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22157,7 +22812,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22167,9 +22822,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -22224,11 +22882,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -22247,8 +22900,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22257,6 +22908,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bx, by, bz, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22283,7 +22948,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22293,9 +22958,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, sx, sy, sz);
 
         // check default values
@@ -22350,11 +23019,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -22373,8 +23037,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22383,6 +23045,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22409,7 +23085,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22419,9 +23095,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, sx, sy, sz, this);
 
         // check default values
@@ -22476,11 +23156,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -22499,8 +23174,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22509,6 +23182,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22531,7 +23218,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22541,9 +23228,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -22604,11 +23294,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -22627,8 +23312,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22637,6 +23320,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, biasX, biasY, biasZ, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22662,7 +23359,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22672,9 +23369,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -22735,11 +23436,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -22758,8 +23454,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22768,6 +23462,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22793,7 +23502,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22803,9 +23512,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -22866,11 +23579,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -22889,8 +23597,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -22899,6 +23605,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -22921,7 +23642,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -22931,9 +23652,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -22994,11 +23718,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -23017,8 +23736,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23027,6 +23744,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, biasX, biasY, biasZ,
+                    sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23049,7 +23780,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23059,9 +23790,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -23122,11 +23856,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -23145,8 +23874,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23155,6 +23882,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, biasX, biasY, biasZ,
+                    sx, sy, sz, mxy, mxz, myx, myz, mzx, mzy,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23180,7 +23922,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23190,9 +23932,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -23253,11 +23999,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -23276,8 +24017,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23286,6 +24025,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23311,7 +24065,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23321,9 +24075,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -23384,11 +24142,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -23407,8 +24160,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23417,6 +24168,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, biasX, biasY, biasZ, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23446,7 +24212,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23456,9 +24222,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -23519,11 +24288,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -23542,8 +24306,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23552,6 +24314,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bx, by, bz, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23581,7 +24357,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23591,9 +24367,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -23654,11 +24433,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -23677,8 +24451,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23687,6 +24459,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bx, by, bz, sx, sy, sz,
+                    mxy, mxz, myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23719,7 +24505,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23729,9 +24515,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -23792,11 +24582,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -23815,8 +24600,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23825,6 +24608,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23857,7 +24655,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -23867,9 +24665,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -23930,11 +24732,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -23953,8 +24750,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -23963,6 +24758,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -23992,7 +24802,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24002,9 +24812,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -24065,11 +24878,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -24088,8 +24896,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24098,6 +24904,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -24127,7 +24948,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24137,9 +24958,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -24200,11 +25024,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -24223,8 +25042,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24233,6 +25050,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -24265,7 +25097,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24275,9 +25107,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy);
 
@@ -24338,11 +25174,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -24361,8 +25192,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24371,6 +25200,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -24403,7 +25247,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24413,9 +25257,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bx, by, bz, sx, sy, sz, mxy, mxz,
                         myx, myz, mzx, mzy, this);
 
@@ -24476,11 +25324,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -24499,8 +25342,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24509,6 +25350,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
         assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
+
+        // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        calibrator = null;
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bx, by, bz, sx, sy, sz, mxy, mxz,
+                    myx, myz, mzx, mzy, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -24521,7 +25377,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24531,9 +25387,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, bias);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, bias);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -24587,11 +25447,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -24610,8 +25465,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24622,10 +25475,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -24642,7 +25504,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24652,10 +25514,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, bias,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, bias, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -24709,11 +25574,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -24732,8 +25592,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24744,10 +25602,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -24767,7 +25634,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24777,10 +25644,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                        measurements, bias);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, bias);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -24834,11 +25704,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -24857,8 +25722,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24869,10 +25732,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -24892,7 +25764,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -24902,9 +25774,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, bias, this);
 
         // check default values
@@ -24959,11 +25834,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -24982,8 +25852,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -24994,10 +25862,20 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25014,7 +25892,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25024,10 +25902,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                        true, bias);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, true, bias);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -25081,11 +25962,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -25104,8 +25980,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25116,10 +25990,19 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25136,7 +26019,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25146,9 +26029,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, bias, this);
 
         // check default values
@@ -25203,11 +26089,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -25226,8 +26107,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25238,10 +26117,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true,
+                    bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25261,7 +26151,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25271,9 +26161,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bias);
 
         // check default values
@@ -25328,11 +26222,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -25351,8 +26240,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25363,10 +26250,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true, new double[1]);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bias);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    true, new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25386,7 +26284,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25396,9 +26294,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, bias, this);
 
         // check default values
@@ -25453,11 +26355,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -25476,8 +26373,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25488,10 +26383,21 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true, new double[1], this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, bias, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    true, new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25508,7 +26414,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25518,9 +26424,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, ba);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, ba);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -25574,11 +26484,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -25597,8 +26502,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25609,16 +26512,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, ba);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25635,7 +26548,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25645,10 +26558,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, ba,
-                        this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, ba, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -25702,11 +26618,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -25725,8 +26636,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25737,16 +26646,27 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25766,7 +26686,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25776,10 +26696,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
-                        ba);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, ba);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -25833,11 +26756,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -25856,8 +26774,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25868,16 +26784,27 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -25897,7 +26824,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -25907,9 +26834,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         ba, this);
 
         // check default values
@@ -25964,11 +26895,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -25987,8 +26913,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -25999,16 +26923,28 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    ba, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -26025,7 +26961,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26035,9 +26971,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba);
 
         // check default values
@@ -26092,11 +27031,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -26115,8 +27049,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26127,16 +27059,27 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, ba);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -26153,7 +27096,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26163,10 +27106,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                        true, ba, this);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, true, ba, this);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -26220,11 +27166,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -26243,8 +27184,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26255,17 +27194,26 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 1),
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, ba, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new Matrix(1, 1),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 3),
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, new Matrix(1, 3),
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -26286,7 +27234,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26296,9 +27244,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba);
 
         // check default values
@@ -26353,11 +27305,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -26376,8 +27323,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26388,17 +27333,27 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, ba);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -26419,7 +27374,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26429,9 +27384,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba, this);
 
         // check default values
@@ -26486,11 +27445,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -26509,8 +27463,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26521,17 +27473,27 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, ba, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -26560,7 +27522,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26570,9 +27532,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, ba, ma);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, ba, ma);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -26631,11 +27597,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -26654,8 +27615,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26666,27 +27625,37 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 1), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 3), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    ba, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -26715,7 +27684,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26725,9 +27694,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         ba, ma, this);
 
         // check default values
@@ -26787,11 +27759,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -26810,8 +27777,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26822,28 +27787,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 1), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, new Matrix(1, 3), ma,
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(1, 3),
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, ba, new Matrix(3, 1),
+                    this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -26874,7 +27852,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -26884,9 +27862,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, ba, ma);
 
         // check default values
@@ -26946,11 +27927,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -26969,8 +27945,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -26981,28 +27955,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 1), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 3), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, ba, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, ba, new Matrix(3, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -27033,7 +28020,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -27043,9 +28030,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         measurements, ba, ma, this);
 
         // check default values
@@ -27105,11 +28095,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertFalse(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -27128,8 +28113,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -27140,28 +28123,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, ba, ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements,
+                    new Matrix(1, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(1, 3), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, ba,
+                    new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -27189,7 +28185,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -27199,9 +28195,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba, ma);
 
         // check default values
@@ -27261,11 +28260,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -27284,8 +28278,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -27296,28 +28288,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 1), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 3), ma);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, ba, new Matrix(1, 3));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, ba, new Matrix(3, 1));
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba,
+                    new Matrix(1, 3));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba,
+                    new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -27345,7 +28350,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -27355,9 +28360,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(gravityNorm,
                         true, ba, ma, this);
 
         // check default values
@@ -27417,11 +28425,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertNull(calibrator.getMeasurements());
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -27440,8 +28443,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -27452,28 +28453,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 1), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, true, ba, ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, new Matrix(1, 3), ma, this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, ba, new Matrix(1, 3), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true,
+                    new Matrix(1, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    true, ba, new Matrix(3, 1), this);
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba,
+                    new Matrix(1, 3), this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, true, ba,
+                    new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
@@ -27504,7 +28518,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -27514,10 +28528,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
-                        true, ba, ma);
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements, true,
+                        ba, ma);
 
         // check default values
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
@@ -27576,11 +28594,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertNull(calibrator.getListener());
@@ -27599,8 +28612,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -27611,31 +28622,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements, true,
+                    ba, ma);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3), ma);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(1, 3));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(3, 1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -27667,7 +28688,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
         final double longitude = Math.toRadians(
                 randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
         final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
@@ -27677,9 +28698,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final ECEFVelocity ecefVelocity = new ECEFVelocity();
         NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
                 ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
 
-        KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator(nedPosition, measurements,
+        KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator(
+                        gravityNorm, measurements,
                         true, ba, ma, this);
 
         // check default values
@@ -27739,11 +28764,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
-        assertTrue(calibrator.getEcefPosition().equals(ecefPosition, ABSOLUTE_ERROR));
-        assertTrue(calibrator.getNedPosition().equals(nedPosition, ABSOLUTE_ERROR));
-        final NEDPosition nedPosition1 = new NEDPosition();
-        assertTrue(calibrator.getNedPosition(nedPosition1));
-        assertTrue(nedPosition.equals(nedPosition1, ABSOLUTE_ERROR));
         assertSame(calibrator.getMeasurements(), measurements);
         assertTrue(calibrator.isCommonAxisUsed());
         assertSame(calibrator.getListener(), this);
@@ -27762,8 +28782,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedMzy());
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getEstimatedChiSq(), 0.0, 0.0);
-        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
-                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
         assertNotNull(calibrator.getGroundTruthGravityNorm());
         assertEquals(gravity.getNorm(), calibrator.getGroundTruthGravityNorm(), ABSOLUTE_ERROR);
         assertNotNull(calibrator.getGroundTruthGravityNormAsAcceleration());
@@ -27774,31 +28792,41 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertTrue(gravity.getNormAsAcceleration().equals(g, ABSOLUTE_ERROR));
 
         // Force IllegalArgumentException
+        final Acceleration invalidGravityNorm = new Acceleration(
+                -gravity.getNorm(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
         calibrator = null;
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    invalidGravityNorm, measurements,
+                    true, ba, ma, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        try {
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 1), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     new Matrix(1, 3), ma, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(1, 3), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         try {
-            calibrator = new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                    measurements, true,
+            calibrator = new KnownBiasAndGravityNormAccelerometerCalibrator(
+                    gravityNorm, measurements, true,
                     ba, new Matrix(3, 1), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -27808,8 +28836,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetBiasX() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
 
@@ -27825,8 +28853,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetBiasY() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
 
@@ -27842,8 +28870,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetBiasZ() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
 
@@ -27859,8 +28887,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetBiasXAsAcceleration() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         final Acceleration bx1 = calibrator.getBiasXAsAcceleration();
@@ -27887,8 +28915,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetBiasYAsAcceleration() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         final Acceleration by1 = calibrator.getBiasYAsAcceleration();
@@ -27915,8 +28943,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetBiasZAsAcceleration() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         final Acceleration bz1 = calibrator.getBiasZAsAcceleration();
@@ -27943,8 +28971,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testSetBias1() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -27967,8 +28995,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testSetBias2() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
@@ -27998,8 +29026,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSx() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
 
@@ -28015,8 +29043,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSy() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialSy(), 0.0, 0.0);
 
@@ -28032,8 +29060,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialSz() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialSz(), 0.0, 0.0);
 
@@ -28049,8 +29077,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMxy() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
 
@@ -28066,8 +29094,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMxz() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
 
@@ -28083,8 +29111,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMyx() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
 
@@ -28100,8 +29128,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMyz() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
 
@@ -28117,8 +29145,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMzx() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
 
@@ -28134,8 +29162,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMzy() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
 
@@ -28153,8 +29181,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testSetInitialScalingFactors()
             throws WrongSizeException, LockedException {
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -28179,8 +29207,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testSetInitialCrossCouplingErrors()
             throws WrongSizeException, LockedException {
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
@@ -28214,8 +29242,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     public void testSetInitialScalingFactorsAndCrossCouplingErrors()
             throws WrongSizeException, LockedException {
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default values
         assertEquals(calibrator.getInitialSx(), 0.0, 0.0);
@@ -28256,9 +29284,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialBias() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+    public void testGetSetBias() throws LockedException {
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         final double[] bias1 = calibrator.getBias();
@@ -28291,11 +29319,11 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialBiasAsMatrix() throws WrongSizeException,
+    public void testGetSetBiasAsMatrix() throws WrongSizeException,
             LockedException {
 
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         final Matrix bias1 = calibrator.getBiasAsMatrix();
@@ -28338,8 +29366,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetInitialMa() throws WrongSizeException, LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // test default value
         final Matrix ma1 = calibrator.getInitialMa();
@@ -28381,66 +29409,9 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetEcefPosition() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
-
-        // check default value
-        assertNull(calibrator.getEcefPosition());
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
-        final NEDVelocity nedVelocity = new NEDVelocity();
-        final ECEFPosition ecefPosition = new ECEFPosition();
-        final ECEFVelocity ecefVelocity = new ECEFVelocity();
-        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
-                ecefPosition, ecefVelocity);
-
-        calibrator.setPosition(ecefPosition);
-
-        // check
-        assertSame(calibrator.getEcefPosition(), ecefPosition);
-    }
-
-    @Test
-    public void testGetSetNedPosition() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
-
-        // check default value
-        assertNull(calibrator.getNedPosition());
-        assertFalse(calibrator.getNedPosition(null));
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-        final NEDPosition nedPosition1 = new NEDPosition(latitude, longitude, height);
-
-        calibrator.setPosition(nedPosition1);
-
-        // check
-        final NEDPosition nedPosition2 = calibrator.getNedPosition();
-        final NEDPosition nedPosition3 = new NEDPosition();
-        calibrator.getNedPosition(nedPosition3);
-
-        assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
-        assertTrue(nedPosition1.equals(nedPosition3, ABSOLUTE_ERROR));
-    }
-
-    @Test
     public void testGetSetMeasurements() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getMeasurements());
@@ -28456,8 +29427,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testIsSetCommonAxisUsed() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         assertFalse(calibrator.isCommonAxisUsed());
@@ -28471,8 +29442,8 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check default value
         assertNull(calibrator.getListener());
@@ -28485,9 +29456,83 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Test
+    public void testGetSetGroundTruthGravityNorm1() throws LockedException {
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
+
+        // check default value
+        assertNull(calibrator.getGroundTruthGravityNorm());
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double latitude = Math.toRadians(
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+        final double longitude = Math.toRadians(
+                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+        final NEDVelocity nedVelocity = new NEDVelocity();
+        final ECEFPosition ecefPosition = new ECEFPosition();
+        final ECEFVelocity ecefVelocity = new ECEFVelocity();
+        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final double gravityNorm = gravity.getNorm();
+
+        calibrator.setGroundTruthGravityNorm(gravityNorm);
+
+        // check
+        assertEquals(gravityNorm, calibrator.getGroundTruthGravityNorm(),
+                0.0);
+        assertEquals(gravity.getNormAsAcceleration(),
+                calibrator.getGroundTruthGravityNormAsAcceleration());
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertEquals(gravity.getNormAsAcceleration(), g);
+    }
+
+    @Test
+    public void testGetSetGroundTruthGravityNorm2() throws LockedException {
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
+
+        // check default value
+        assertNull(calibrator.getGroundTruthGravityNorm());
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double latitude = Math.toRadians(
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+        final double longitude = Math.toRadians(
+                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+        final NEDVelocity nedVelocity = new NEDVelocity();
+        final ECEFPosition ecefPosition = new ECEFPosition();
+        final ECEFVelocity ecefVelocity = new ECEFVelocity();
+        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+        final Acceleration gravityNorm = gravity.getNormAsAcceleration();
+
+        calibrator.setGroundTruthGravityNorm(gravityNorm);
+
+        // check
+        assertEquals(gravity.getNorm(),
+                calibrator.getGroundTruthGravityNorm(), 0.0);
+        assertEquals(gravityNorm,
+                calibrator.getGroundTruthGravityNormAsAcceleration());
+        final Acceleration g = new Acceleration(0.0, AccelerationUnit.G);
+        assertTrue(calibrator.getGroundTruthGravityNormAsAcceleration(g));
+        assertEquals(gravityNorm, g);
+    }
+
+    @Test
     public void testIsReady() throws LockedException {
-        final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                new KnownBiasAndPositionAccelerometerCalibrator();
+        final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                new KnownBiasAndGravityNormAccelerometerCalibrator();
 
         // check
         assertFalse(calibrator.isReady());
@@ -28506,7 +29551,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         calibrator.setCommonAxisUsed(false);
 
         final List<StandardDeviationBodyKinematics> measurements2 = new ArrayList<>();
-        for (int i = 0; i < KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL; i++) {
+        for (int i = 0; i < KnownBiasAndGravityNormAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL; i++) {
             measurements2.add(new StandardDeviationBodyKinematics());
         }
         calibrator.setMeasurements(measurements2);
@@ -28515,16 +29560,29 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         assertFalse(calibrator.isReady());
 
 
-        // set position
-        final ECEFPosition position = new ECEFPosition();
-        calibrator.setPosition(position);
+        // set gravity norm
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double latitude = Math.toRadians(
+                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+        final double longitude = Math.toRadians(
+                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+        final NEDVelocity nedVelocity = new NEDVelocity();
+        final ECEFPosition ecefPosition = new ECEFPosition();
+        final ECEFVelocity ecefVelocity = new ECEFVelocity();
+        NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                ecefPosition, ecefVelocity);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
+
+        calibrator.setGroundTruthGravityNorm(gravity.getNorm());
 
         assertTrue(calibrator.isReady());
 
-
         // set enough measurements for common axis case
         measurements2.clear();
-        for (int i = 0; i < KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS; i++) {
+        for (int i = 0; i < KnownBiasAndGravityNormAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS; i++) {
             measurements2.add(new StandardDeviationBodyKinematics());
         }
         calibrator.setMeasurements(measurements2);
@@ -28562,18 +29620,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
             final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+            final NEDVelocity nedVelocity = new NEDVelocity();
+            final ECEFPosition ecefPosition = new ECEFPosition();
+            final ECEFVelocity ecefVelocity = new ECEFVelocity();
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                    ecefPosition, ecefVelocity);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                    ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
 
             final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
             final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
             final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
 
             final List<StandardDeviationBodyKinematics> measurements = new ArrayList<>();
-            for (int i = 0; i < KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL; i++) {
+            for (int i = 0; i < KnownBiasAndGravityNormAccelerometerCalibrator.MINIMUM_MEASUREMENTS_GENERAL; i++) {
                 final double roll = Math.toRadians(
                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
                 final double pitch = Math.toRadians(
@@ -28608,9 +29673,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                    new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                            measurements, false, ba, ma, this);
+            final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                    new KnownBiasAndGravityNormAccelerometerCalibrator(
+                            gravity.getNorm(), measurements,
+                            false, ba, ma, this);
 
             // estimate
             reset();
@@ -28670,11 +29736,18 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
             final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+            final NEDVelocity nedVelocity = new NEDVelocity();
+            final ECEFPosition ecefPosition = new ECEFPosition();
+            final ECEFVelocity ecefVelocity = new ECEFVelocity();
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                    ecefPosition, ecefVelocity);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                    ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
 
             final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
             final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
@@ -28716,9 +29789,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
             // When we have a large number of measurements, we do not need to provide
             // an initial solution as it will probably converge to true true solution
-            final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                    new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                            measurements, false, ba, this);
+            final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                    new KnownBiasAndGravityNormAccelerometerCalibrator(
+                            gravity.getNorm(),
+                            measurements, false, this);
 
             // estimate
             reset();
@@ -28741,9 +29815,6 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
             final Matrix estimatedMa = calibrator.getEstimatedMa();
 
-            // since we have used the minimum number of measurements,
-            // result is quite unstable (calibration exception is usually thrown)
-            // and inaccurate.
             if (!ma.equals(estimatedMa, 6.0 * LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -28783,18 +29854,25 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
             final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+            final NEDVelocity nedVelocity = new NEDVelocity();
+            final ECEFPosition ecefPosition = new ECEFPosition();
+            final ECEFVelocity ecefVelocity = new ECEFVelocity();
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                    ecefPosition, ecefVelocity);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                    ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
 
             final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
             final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
             final double angularRateStandardDeviation = getGyroNoiseRootPSD() / sqrtTimeInterval;
 
             final List<StandardDeviationBodyKinematics> measurements = new ArrayList<>();
-            for (int i = 0; i < KnownBiasAndPositionAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS; i++) {
+            for (int i = 0; i < KnownBiasAndGravityNormAccelerometerCalibrator.MINIMUM_MEASUREMENTS_COMON_Z_AXIS; i++) {
                 final double roll = Math.toRadians(
                         randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
                 final double pitch = Math.toRadians(
@@ -28829,9 +29907,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
             // When we have the minimum number of measurements, we need to provide
             // an initial solution close to the true solution
-            final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                    new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                            measurements, true, ba, ma, this);
+            final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                    new KnownBiasAndGravityNormAccelerometerCalibrator(
+                            gravity.getNorm(), measurements,
+                            true, ba, ma, this);
 
             // estimate
             reset();
@@ -28891,11 +29970,18 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
             final Random random = new Random();
             final UniformRandomizer randomizer = new UniformRandomizer(random);
             final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double longitude = Math.toRadians(
                     randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
             final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+            final NEDVelocity nedVelocity = new NEDVelocity();
+            final ECEFPosition ecefPosition = new ECEFPosition();
+            final ECEFVelocity ecefVelocity = new ECEFVelocity();
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(nedPosition, nedVelocity,
+                    ecefPosition, ecefVelocity);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(
+                    ecefPosition.getX(), ecefPosition.getY(), ecefPosition.getZ());
 
             final double sqrtTimeInterval = Math.sqrt(TIME_INTERVAL_SECONDS);
             final double specificForceStandardDeviation = getAccelNoiseRootPSD() / sqrtTimeInterval;
@@ -28937,9 +30023,10 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
 
             // When we have a large number of measurements, we do not need to provide
             // an initial solution as it will probably converge to true true solution
-            final KnownBiasAndPositionAccelerometerCalibrator calibrator =
-                    new KnownBiasAndPositionAccelerometerCalibrator(nedPosition,
-                            measurements, true, ba, this);
+            final KnownBiasAndGravityNormAccelerometerCalibrator calibrator =
+                    new KnownBiasAndGravityNormAccelerometerCalibrator(
+                            gravity.getNorm(), measurements,
+                            true, this);
 
             // estimate
             reset();
@@ -28977,15 +30064,13 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     @Override
-    public void onCalibrateStart(
-            final KnownBiasAndPositionAccelerometerCalibrator calibrator) {
+    public void onCalibrateStart(final KnownBiasAndGravityNormAccelerometerCalibrator calibrator) {
         checkLocked(calibrator);
         mCalibrateStart++;
     }
 
     @Override
-    public void onCalibrateEnd(
-            final KnownBiasAndPositionAccelerometerCalibrator calibrator) {
+    public void onCalibrateEnd(final KnownBiasAndGravityNormAccelerometerCalibrator calibrator) {
         checkLocked(calibrator);
         mCalibrateEnd++;
     }
@@ -28995,7 +30080,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         mCalibrateEnd = 0;
     }
 
-    private void checkLocked(final KnownBiasAndPositionAccelerometerCalibrator calibrator) {
+    private void checkLocked(final KnownBiasAndGravityNormAccelerometerCalibrator calibrator) {
         assertTrue(calibrator.isRunning());
         try {
             calibrator.setBiasX(0.0);
@@ -29118,12 +30203,12 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setPosition((ECEFPosition) null);
+            calibrator.setGroundTruthGravityNorm(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setPosition((NEDPosition) null);
+            calibrator.setGroundTruthGravityNorm((Acceleration) null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
@@ -29154,14 +30239,14 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     private Matrix generateBa() {
         return Matrix.newFromArray(new double[]{
                 900 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
-                -1300 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
+                -1000 * MICRO_G_TO_METERS_PER_SECOND_SQUARED,
                 800 * MICRO_G_TO_METERS_PER_SECOND_SQUARED});
     }
 
     private Matrix generateBg() {
         return Matrix.newFromArray(new double[]{
                 -9 * DEG_TO_RAD / 3600.0,
-                13 * DEG_TO_RAD / 3600.0,
+                10 * DEG_TO_RAD / 3600.0,
                 -8 * DEG_TO_RAD / 3600.0});
     }
 
@@ -29170,7 +30255,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
         result.fromArray(new double[]{
                 500e-6, -300e-6, 200e-6,
                 -150e-6, -600e-6, 250e-6,
-                -250e-6, 100e-6, 450e-6
+                -250e-6, 70e-6, 450e-6
         }, false);
 
         return result;
@@ -29211,7 +30296,7 @@ public class KnownBiasAndPositionAccelerometerCalibratorTest implements
     }
 
     private double getAccelNoiseRootPSD() {
-        return 100.0 * MICRO_G_TO_METERS_PER_SECOND_SQUARED;
+        return 70.0 * MICRO_G_TO_METERS_PER_SECOND_SQUARED;
     }
 
     private double getGyroNoiseRootPSD() {
