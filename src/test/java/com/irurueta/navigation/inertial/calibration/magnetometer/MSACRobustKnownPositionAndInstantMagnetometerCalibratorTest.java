@@ -5922,8 +5922,6 @@ public class MSACRobustKnownPositionAndInstantMagnetometerCalibratorTest impleme
 
             assertEstimatedResult(estimatedHardIron, estimatedMm, calibrator);
 
-            assertNotNull(calibrator.getEstimatedCovariance());
-
             numValid++;
             break;
         }
