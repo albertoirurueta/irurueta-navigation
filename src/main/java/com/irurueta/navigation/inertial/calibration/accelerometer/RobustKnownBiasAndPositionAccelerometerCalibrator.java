@@ -6171,8 +6171,9 @@ public abstract class RobustKnownBiasAndPositionAccelerometerCalibrator {
      * @param preliminaryResult a preliminary result.
      * @return computed error.
      */
-    protected double computeError(final StandardDeviationBodyKinematics measurement,
-                                  final PreliminaryResult preliminaryResult) {
+    protected double computeError(
+            final StandardDeviationBodyKinematics measurement,
+            final PreliminaryResult preliminaryResult) {
 
         try {
             // We know that measured specific force is:
@@ -6239,8 +6240,9 @@ public abstract class RobustKnownBiasAndPositionAccelerometerCalibrator {
      * @param samplesIndices indices of samples picked by the robust estimator.
      * @param solutions      list where estimated preliminary solution will be stored.
      */
-    protected void computePreliminarySolutions(final int[] samplesIndices,
-                                               final List<PreliminaryResult> solutions) {
+    protected void computePreliminarySolutions(
+            final int[] samplesIndices,
+            final List<PreliminaryResult> solutions) {
 
         final List<StandardDeviationBodyKinematics> measurements = new ArrayList<>();
 
