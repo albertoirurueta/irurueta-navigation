@@ -53,7 +53,7 @@ import com.irurueta.units.TimeUnit;
  * <p>
  * Notice that in order to compute accelerometer and gyroscope biases, body position
  * and orientation must be known to account for gravity and Earth rotation effects.
- * If only noise PSD's levels are required {@link IMUNoiseEstimator} can be used
+ * If only noise PSD's levels are required  can be used
  * instead, if body position and orientation is not available.
  */
 public class IMUBiasEstimator {

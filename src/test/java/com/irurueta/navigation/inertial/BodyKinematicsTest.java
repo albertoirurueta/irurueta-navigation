@@ -17,6 +17,8 @@ package com.irurueta.navigation.inertial;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
@@ -54,9 +56,22 @@ public class BodyKinematicsTest {
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), 0.0, 0.0);
+
+        AccelerationTriad triad1 = k.getSpecificForceTriad();
+        assertEquals(0.0, triad1.getValueX(), 0.0);
+        assertEquals(0.0, triad1.getValueY(), 0.0);
+        assertEquals(0.0, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+
+        AngularSpeedTriad triad2 = k.getAngularRateTriad();
+        assertEquals(0.0, triad2.getValueX(), 0.0);
+        assertEquals(0.0, triad2.getValueY(), 0.0);
+        assertEquals(0.0, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
 
         assertEquals(k.getSpecificForceNorm(), 0.0, 0.0);
         assertEquals(k.getSpecificForceNormAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -85,9 +100,22 @@ public class BodyKinematicsTest {
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), fx, 0.0);
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), fy, 0.0);
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), fz, 0.0);
+
+        triad1 = k.getSpecificForceTriad();
+        assertEquals(fx, triad1.getValueX(), 0.0);
+        assertEquals(fy, triad1.getValueY(), 0.0);
+        assertEquals(fz, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+
+        triad2 = k.getAngularRateTriad();
+        assertEquals(0.0, triad2.getValueX(), 0.0);
+        assertEquals(0.0, triad2.getValueY(), 0.0);
+        assertEquals(0.0, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
 
         final double normF = Math.sqrt(fx * fx + fy * fy + fz * fz);
         assertEquals(k.getSpecificForceNorm(), normF, 0.0);
@@ -119,9 +147,22 @@ public class BodyKinematicsTest {
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), fx, 0.0);
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), fy, 0.0);
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), fz, 0.0);
+
+        triad1 = k.getSpecificForceTriad();
+        assertEquals(fx, triad1.getValueX(), 0.0);
+        assertEquals(fy, triad1.getValueY(), 0.0);
+        assertEquals(fz, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), angularRateX, 0.0);
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), angularRateY, 0.0);
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), angularRateZ, 0.0);
+
+        triad2 = k.getAngularRateTriad();
+        assertEquals(angularRateX, triad2.getValueX(), 0.0);
+        assertEquals(angularRateY, triad2.getValueY(), 0.0);
+        assertEquals(angularRateZ, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
 
         final double angularRateNorm = Math.sqrt(angularRateX * angularRateX +
                 angularRateY * angularRateY + angularRateZ * angularRateZ);
@@ -151,9 +192,22 @@ public class BodyKinematicsTest {
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), fx, 0.0);
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), fy, 0.0);
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), fz, 0.0);
+
+        triad1 = k.getSpecificForceTriad();
+        assertEquals(fx, triad1.getValueX(), 0.0);
+        assertEquals(fy, triad1.getValueY(), 0.0);
+        assertEquals(fz, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+
+        triad2 = k.getAngularRateTriad();
+        assertEquals(0.0, triad2.getValueX(), 0.0);
+        assertEquals(0.0, triad2.getValueY(), 0.0);
+        assertEquals(0.0, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
 
         assertEquals(k.getSpecificForceNorm(), normF, 0.0);
         assertEquals(k.getSpecificForceNormAsAcceleration().getValue().doubleValue(), normF, 0.0);
@@ -181,9 +235,22 @@ public class BodyKinematicsTest {
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), 0.0, 0.0);
+
+        triad1 = k.getSpecificForceTriad();
+        assertEquals(0.0, triad1.getValueX(), 0.0);
+        assertEquals(0.0, triad1.getValueY(), 0.0);
+        assertEquals(0.0, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), angularRateX, 0.0);
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), angularRateY, 0.0);
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), angularRateZ, 0.0);
+
+        triad2 = k.getAngularRateTriad();
+        assertEquals(angularRateX, triad2.getValueX(), 0.0);
+        assertEquals(angularRateY, triad2.getValueY(), 0.0);
+        assertEquals(angularRateZ, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
 
         assertEquals(k.getSpecificForceNorm(), 0.0, 0.0);
         assertEquals(k.getSpecificForceNormAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -208,9 +275,61 @@ public class BodyKinematicsTest {
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), fx, 0.0);
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), fy, 0.0);
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), fz, 0.0);
+
+        triad1 = k.getSpecificForceTriad();
+        assertEquals(fx, triad1.getValueX(), 0.0);
+        assertEquals(fy, triad1.getValueY(), 0.0);
+        assertEquals(fz, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), angularRateX, 0.0);
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), angularRateY, 0.0);
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), angularRateZ, 0.0);
+
+        triad2 = k.getAngularRateTriad();
+        assertEquals(angularRateX, triad2.getValueX(), 0.0);
+        assertEquals(angularRateY, triad2.getValueY(), 0.0);
+        assertEquals(angularRateZ, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
+
+        assertEquals(k.getSpecificForceNorm(), normF, 0.0);
+        assertEquals(k.getSpecificForceNormAsAcceleration().getValue().doubleValue(), normF, 0.0);
+        assertEquals(k.getSpecificForceNormAsAcceleration().getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(k.getAngularRateNorm(), angularRateNorm, 0.0);
+        assertEquals(k.getAngularSpeedNorm().getValue().doubleValue(), angularRateNorm, 0.0);
+        assertEquals(k.getAngularSpeedNorm().getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+
+
+        // test constructor with triads
+        k = new BodyKinematics(triad1, triad2);
+
+        // check default values
+        assertEquals(k.getFx(), fx, 0.0);
+        assertEquals(k.getFy(), fy, 0.0);
+        assertEquals(k.getFz(), fz, 0.0);
+        assertEquals(k.getAngularRateX(), angularRateX, 0.0);
+        assertEquals(k.getAngularRateY(), angularRateY, 0.0);
+        assertEquals(k.getAngularRateZ(), angularRateZ, 0.0);
+
+        assertEquals(k.getSpecificForceX().getValue().doubleValue(), fx, 0.0);
+        assertEquals(k.getSpecificForceY().getValue().doubleValue(), fy, 0.0);
+        assertEquals(k.getSpecificForceZ().getValue().doubleValue(), fz, 0.0);
+
+        triad1 = k.getSpecificForceTriad();
+        assertEquals(fx, triad1.getValueX(), 0.0);
+        assertEquals(fy, triad1.getValueY(), 0.0);
+        assertEquals(fz, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
+        assertEquals(k.getAngularSpeedX().getValue().doubleValue(), angularRateX, 0.0);
+        assertEquals(k.getAngularSpeedY().getValue().doubleValue(), angularRateY, 0.0);
+        assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), angularRateZ, 0.0);
+
+        triad2 = k.getAngularRateTriad();
+        assertEquals(angularRateX, triad2.getValueX(), 0.0);
+        assertEquals(angularRateY, triad2.getValueY(), 0.0);
+        assertEquals(angularRateZ, triad2.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad2.getUnit());
 
         assertEquals(k.getSpecificForceNorm(), normF, 0.0);
         assertEquals(k.getSpecificForceNormAsAcceleration().getValue().doubleValue(), normF, 0.0);
@@ -418,6 +537,36 @@ public class BodyKinematicsTest {
     }
 
     @Test
+    public void testGetSetSpecificForceTriad() {
+        final BodyKinematics k = new BodyKinematics();
+
+        // check default value
+        final AccelerationTriad triad1 = k.getSpecificForceTriad();
+        assertEquals(0.0, triad1.getValueX(), 0.0);
+        assertEquals(0.0, triad1.getValueY(), 0.0);
+        assertEquals(0.0, triad1.getValueZ(), 0.0);
+        assertEquals(AccelerationUnit.METERS_PER_SQUARED_SECOND, triad1.getUnit());
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fz = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+
+        final AccelerationTriad triad2 = new AccelerationTriad(
+                AccelerationUnit.METERS_PER_SQUARED_SECOND, fx, fy, fz);
+        k.setSpecificForceTriad(triad2);
+
+        // check
+        final AccelerationTriad triad3 = k.getSpecificForceTriad();
+        final AccelerationTriad triad4 = new AccelerationTriad();
+        k.getSpecificForceTriad(triad4);
+
+        assertEquals(triad2, triad3);
+        assertEquals(triad2, triad4);
+    }
+
+    @Test
     public void testGetSetAngularRateX() {
         final BodyKinematics k = new BodyKinematics();
 
@@ -495,6 +644,40 @@ public class BodyKinematicsTest {
         assertEquals(k.getAngularRateX(), angularRateX, 0.0);
         assertEquals(k.getAngularRateY(), angularRateY, 0.0);
         assertEquals(k.getAngularRateZ(), angularRateZ, 0.0);
+    }
+
+    @Test
+    public void testGetSetAngularSpeedTriad() {
+        final BodyKinematics k = new BodyKinematics();
+
+        // check default value
+        final AngularSpeedTriad triad1 = k.getAngularRateTriad();
+        assertEquals(0.0, triad1.getValueX(), 0.0);
+        assertEquals(0.0, triad1.getValueY(), 0.0);
+        assertEquals(0.0, triad1.getValueZ(), 0.0);
+        assertEquals(AngularSpeedUnit.RADIANS_PER_SECOND, triad1.getUnit());
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double angularRateX = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateY = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+
+        final AngularSpeedTriad triad2 = new AngularSpeedTriad(
+                AngularSpeedUnit.RADIANS_PER_SECOND,
+                angularRateX, angularRateY, angularRateZ);
+        k.setAngularRateTriad(triad2);
+
+        // check
+        final AngularSpeedTriad triad3 = k.getAngularRateTriad();
+        final AngularSpeedTriad triad4 = new AngularSpeedTriad();
+        k.getAngularRateTriad(triad4);
+
+        assertEquals(triad2, triad3);
+        assertEquals(triad2, triad4);
     }
 
     @Test

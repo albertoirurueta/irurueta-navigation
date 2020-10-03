@@ -17,6 +17,8 @@ package com.irurueta.navigation.inertial;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.calibration.AccelerationTriad;
+import com.irurueta.navigation.inertial.calibration.AngularSpeedTriad;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
 import com.irurueta.units.AccelerationUnit;
@@ -182,6 +184,18 @@ public class BodyKinematics implements Serializable, Cloneable {
                           final AngularSpeed angularSpeedZ) {
         setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);
         setAngularSpeedCoordinates(angularSpeedX, angularSpeedY, angularSpeedZ);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param specificForceTriad specific force triad.
+     * @param angularSpeedTriad  angular speed triad.
+     */
+    public BodyKinematics(final AccelerationTriad specificForceTriad,
+                          final AngularSpeedTriad angularSpeedTriad) {
+        setSpecificForceTriad(specificForceTriad);
+        setAngularRateTriad(angularSpeedTriad);
     }
 
     /**
@@ -398,6 +412,41 @@ public class BodyKinematics implements Serializable, Cloneable {
     }
 
     /**
+     * Gets specific force triad of accelerometer measurements.
+     *
+     * @return specific force triad.
+     */
+    public AccelerationTriad getSpecificForceTriad() {
+        return new AccelerationTriad(AccelerationUnit.METERS_PER_SQUARED_SECOND,
+                mFx, mFy, mFz);
+    }
+
+    /**
+     * Gets specific force triad of accelerometer measurements.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getSpecificForceTriad(final AccelerationTriad result) {
+        result.setValueCoordinatesAndUnit(mFx, mFy, mFz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets specific force triad of accelerometer measurements.
+     *
+     * @param triad specific force triad.
+     */
+    public void setSpecificForceTriad(final AccelerationTriad triad) {
+        final AccelerationUnit unit = triad.getUnit();
+        mFx = AccelerationConverter.convert(triad.getValueX(), unit,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        mFy = AccelerationConverter.convert(triad.getValueY(), unit,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        mFz = AccelerationConverter.convert(triad.getValueZ(), unit,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
      * Gets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      *
@@ -603,6 +652,41 @@ public class BodyKinematics implements Serializable, Cloneable {
         setAngularSpeedX(angularSpeedX);
         setAngularSpeedY(angularSpeedY);
         setAngularSpeedZ(angularSpeedZ);
+    }
+
+    /**
+     * Gets angular rate triad of gyroscope measurements.
+     *
+     * @return angular rate triad.
+     */
+    public AngularSpeedTriad getAngularRateTriad() {
+        return new AngularSpeedTriad(AngularSpeedUnit.RADIANS_PER_SECOND,
+                mAngularRateX, mAngularRateY, mAngularRateZ);
+    }
+
+    /**
+     * Gets angular rate triad of gyroscope measurements.
+     *
+     * @param result angular rate triad.
+     */
+    public void getAngularRateTriad(final AngularSpeedTriad result) {
+        result.setValueCoordinatesAndUnit(mAngularRateX, mAngularRateY, mAngularRateZ,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Sets angular rate triad of gyroscope measurements.
+     *
+     * @param triad angular rate triad.
+     */
+    public void setAngularRateTriad(final AngularSpeedTriad triad) {
+        final AngularSpeedUnit unit = triad.getUnit();
+        mAngularRateX = AngularSpeedConverter.convert(triad.getValueX(), unit,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        mAngularRateY = AngularSpeedConverter.convert(triad.getValueY(), unit,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        mAngularRateZ = AngularSpeedConverter.convert(triad.getValueZ(), unit,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 
     /**

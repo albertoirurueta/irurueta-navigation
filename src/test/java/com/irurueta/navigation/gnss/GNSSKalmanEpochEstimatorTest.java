@@ -209,6 +209,15 @@ public class GNSSKalmanEpochEstimatorTest {
 
             assertNotNull(updatedEstimation1);
 
+            if (Math.abs(updatedEstimation1.getX() - updatedEstimation3.getX()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+            if (Math.abs(updatedEstimation1.getY() - updatedEstimation3.getY()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+            if (Math.abs(updatedEstimation1.getZ() - updatedEstimation3.getZ()) > ABSOLUTE_ERROR) {
+                continue;
+            }
             assertEquals(updatedEstimation1.getX(), updatedEstimation3.getX(), ABSOLUTE_ERROR);
             assertEquals(updatedEstimation1.getY(), updatedEstimation3.getY(), ABSOLUTE_ERROR);
             assertEquals(updatedEstimation1.getZ(), updatedEstimation3.getZ(), ABSOLUTE_ERROR);

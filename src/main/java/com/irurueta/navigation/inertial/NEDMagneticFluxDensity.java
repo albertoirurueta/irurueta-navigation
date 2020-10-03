@@ -17,6 +17,10 @@ package com.irurueta.navigation.inertial;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.calibration.MagneticFluxDensityTriad;
+import com.irurueta.units.MagneticFluxDensity;
+import com.irurueta.units.MagneticFluxDensityConverter;
+import com.irurueta.units.MagneticFluxDensityUnit;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -70,6 +74,30 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param bn north component of magnetic flux density.
+     * @param be east component of magnetic flux density.
+     * @param bd down component of magnetic flux density.
+     */
+    public NEDMagneticFluxDensity(
+            final MagneticFluxDensity bn,
+            final MagneticFluxDensity be,
+            final MagneticFluxDensity bd) {
+        setCoordinates(bn, be, bd);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param triad triad containing magnetic flux density values, where x,y,z
+     *              coordinates correspond to north, east, down coordinates.
+     */
+    public NEDMagneticFluxDensity(final MagneticFluxDensityTriad triad) {
+        setCoordinates(triad);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param input instance to copy data from.
      */
     public NEDMagneticFluxDensity(final NEDMagneticFluxDensity input) {
@@ -97,6 +125,34 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
     }
 
     /**
+     * Gets north component of magnetic flux density.
+     *
+     * @return north component of magnetic flux density.
+     */
+    public MagneticFluxDensity getBnAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mBn, MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets north component of magnetic flux density.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBnAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        result.setValue(mBn);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets north component of magnetic flux density.
+     *
+     * @param bn north component of magnetic flux density.
+     */
+    public void setBn(final MagneticFluxDensity bn) {
+        mBn = convertMagneticFluxDensity(bn);
+    }
+
+    /**
      * Gets east component of magnetic flux density expressed in Teslas
      * (T).
      *
@@ -114,6 +170,34 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
      */
     public void setBe(final double be) {
         mBe = be;
+    }
+
+    /**
+     * Gets east component of magnetic flux density.
+     *
+     * @return east component of magnetic flux density.
+     */
+    public MagneticFluxDensity getBeAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mBe, MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets east component of magnetic flux density.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBeAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        result.setValue(mBe);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets east component of magnetic flux density.
+     *
+     * @param be east component of magnetic flux density.
+     */
+    public void setBe(final MagneticFluxDensity be) {
+        mBe = convertMagneticFluxDensity(be);
     }
 
     /**
@@ -137,6 +221,34 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
     }
 
     /**
+     * Gets down component of magnetic flux density.
+     *
+     * @return down component of magnetic flux density.
+     */
+    public MagneticFluxDensity getBdAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(mBd, MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets down component of magnetic flux density.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getBdAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        result.setValue(mBd);
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets down component of magnetic flux density.
+     *
+     * @param bd down component of magnetic flux density.
+     */
+    public void setBd(final MagneticFluxDensity bd) {
+        mBd = convertMagneticFluxDensity(bd);
+    }
+
+    /**
      * Sets NED coordinates of magnetic flux density expressed in Teslas (T).
      *
      * @param bn north component of magnetic flux density.
@@ -151,6 +263,54 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
     }
 
     /**
+     * Sets NED coordinates of magnetic flux density.
+     *
+     * @param bn north component of magnetic flux density.
+     * @param be east component of magnetic flux density.
+     * @param bd down component of magnetic flux density.
+     */
+    public void setCoordinates(
+            final MagneticFluxDensity bn,
+            final MagneticFluxDensity be,
+            final MagneticFluxDensity bd) {
+        setCoordinates(convertMagneticFluxDensity(bn),
+                convertMagneticFluxDensity(be), convertMagneticFluxDensity(bd));
+    }
+
+    /**
+     * Gets NED coordinates of magnetic flux density as a triad.
+     * x,y,z coordinates correspond to north, east, down coordinates.
+     *
+     * @return NED coordinates of magnetic flux density as a triad.
+     */
+    public MagneticFluxDensityTriad getCoordinatesAsTriad() {
+        return new MagneticFluxDensityTriad(MagneticFluxDensityUnit.TESLA, mBn, mBe, mBd);
+    }
+
+    /**
+     * Gets NED coordinates of magnetic flux density as a triad.
+     * x,y,z coordinates correspond to north, east, down coordinates.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getCoordinatesAsTriad(final MagneticFluxDensityTriad result) {
+        result.setValueCoordinatesAndUnit(mBn, mBe, mBd, MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Sets NED coordinates of magnetic flux density.
+     *
+     * @param triad triad containing magnetic flux density values, where x,y,z
+     *              coordinates correspond to north, east, down coordinates.
+     */
+    public void setCoordinates(final MagneticFluxDensityTriad triad) {
+        final double bn = convertMagneticFluxDensity(triad.getValueX(), triad.getUnit());
+        final double be = convertMagneticFluxDensity(triad.getValueY(), triad.getUnit());
+        final double bd = convertMagneticFluxDensity(triad.getValueZ(), triad.getUnit());
+        setCoordinates(bn, be, bd);
+    }
+
+    /**
      * Gets magnetic flux density magnitude (e.g. norm) expressed in
      * Teslas (T).
      *
@@ -158,6 +318,25 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
      */
     public double getNorm() {
         return Math.sqrt(mBn * mBn + mBe * mBe + mBd * mBd);
+    }
+
+    /**
+     * Gets magnetic flux density magnitude (e.g. norm).
+     *
+     * @return magnetic flux density magnitude.
+     */
+    public MagneticFluxDensity getNormAsMagneticFluxDensity() {
+        return new MagneticFluxDensity(getNorm(), MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Gets magnetic flux density magnitude (e.g. norm).
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getNormAsMagneticFluxDensity(final MagneticFluxDensity result) {
+        result.setValue(getNorm());
+        result.setUnit(MagneticFluxDensityUnit.TESLA);
     }
 
     /**
@@ -328,5 +507,28 @@ public class NEDMagneticFluxDensity implements Serializable, Cloneable {
         final NEDMagneticFluxDensity result = (NEDMagneticFluxDensity) super.clone();
         copyTo(result);
         return result;
+    }
+
+    /**
+     * Converts magnetic flux density to Teslas.
+     *
+     * @param b magnetic flux density to be converted.
+     * @return converted value.
+     */
+    private double convertMagneticFluxDensity(final MagneticFluxDensity b) {
+        return MagneticFluxDensityConverter.convert(b.getValue().doubleValue(),
+                b.getUnit(), MagneticFluxDensityUnit.TESLA);
+    }
+
+    /**
+     * Converts magnetic flux density to Teslas.
+     *
+     * @param value value to be converted.
+     * @param unit unit of value to be converted
+     * @return converted value.
+     */
+    private double convertMagneticFluxDensity(
+            final double value, final MagneticFluxDensityUnit unit) {
+        return MagneticFluxDensityConverter.convert(value, unit, MagneticFluxDensityUnit.TESLA);
     }
 }

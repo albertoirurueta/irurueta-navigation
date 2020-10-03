@@ -13,39 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial.calibration;
+package com.irurueta.navigation.inertial.calibration.noise;
+
+import com.irurueta.units.Measurement;
 
 /**
- * Listener for IMUNoiseEstimatorListener to handle generated events.
+ * Base listener for {@link AccumulatedMeasurementNoiseEstimator} to handle generated events.
+ *
+ * @param <U> a measurement unit type.
+ * @param <M> a measurement type.
+ * @param <E> an estimator type.
  */
-public interface IMUNoiseEstimatorListener {
+public interface AccumulatedMeasurementNoiseEstimatorListener<U extends Enum<?>,
+        M extends Measurement<U>, E extends AccumulatedMeasurementNoiseEstimator<U, M, E, ?>> {
 
     /**
      * Called when estimation starts.
      *
      * @param estimator estimator that raised the event.
      */
-    void onStart(final IMUNoiseEstimator estimator);
+    void onStart(final E estimator);
 
     /**
-     * Called when a body kinematics sample is added containing new IMU
-     * (accelerometer + gyroscope) measures.
+     * Called when a measurement sample is added containing new measures.
      *
      * @param estimator estimator that raised the event.
      */
-    void onBodyKinematicsAdded(final IMUNoiseEstimator estimator);
-
-    /**
-     * Called when estimation finishes after processing all required samples.
-     *
-     * @param estimator estimator that raised the event.
-     */
-    void onFinish(final IMUNoiseEstimator estimator);
+    void onMeasurementAdded(final E estimator);
 
     /**
      * Called when estimation is reset.
      *
      * @param estimator estimator that raised the event.
      */
-    void onReset(final IMUNoiseEstimator estimator);
+    void onReset(final E estimator);
 }
